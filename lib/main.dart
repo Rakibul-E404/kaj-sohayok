@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/routes/routes.dart';
 
+import 'bindings/controllers_binding.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -19,8 +21,9 @@ class MyApp extends StatelessWidget {
       builder: (_, child) {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
-          initialRoute: Routes.splashScreen,
+          initialRoute: Routes.onboardingScreen,
           getPages: Routes.appRoutes,
+          initialBinding: ControllerBinder(),
         );
       },
     );
