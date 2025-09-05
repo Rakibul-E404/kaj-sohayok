@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -10,7 +11,12 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       body: Center(
-        child: Text("Splash Screen", style: TextStyle(fontSize: 20.sp)),
+        child: Image.asset(
+          height: 250.h,
+          width: 250.w,
+          fit: BoxFit.cover,
+          Assets.images.appLogo.path,
+        ),
       ),
     );
   }

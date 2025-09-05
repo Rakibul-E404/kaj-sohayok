@@ -1,15 +1,24 @@
 import 'dart:io';
 import 'package:flutter/material.dart'; // 👈 Needed for BuildContext, Widget, FadeTransition
 import 'package:get/get.dart';
-import 'package:kaz_bd/features/welcome/splash/splash_screen.dart';
+import 'package:kaz_bd/features/welcome/onboarding/onboarding_screen.dart';
+import 'package:kaz_bd/features/welcome/splash/presentation/splash_screen.dart';
 
 class Routes {
   static const String splashScreen = '/';
+  static const String onboardingScreen = '/onboarding_screen';
 
   static final appRoutes = [
     GetPage(
       name: splashScreen,
       page: () => SplashScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+    GetPage(
+      name: onboardingScreen,
+      page: () => OnboardingScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),

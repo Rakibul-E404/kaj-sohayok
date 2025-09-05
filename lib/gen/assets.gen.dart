@@ -25,15 +25,81 @@ class $AssetsFontsGen {
   List<String> get values => [interVariableFontOpszWght, satoshiVariable];
 }
 
+class $AssetsIconsGen {
+  const $AssetsIconsGen();
+
+  /// File path: assets/icons/calendar_logo.svg
+  String get calendarLogo => 'assets/icons/calendar_logo.svg';
+
+  /// File path: assets/icons/gender_logo.svg
+  String get genderLogo => 'assets/icons/gender_logo.svg';
+
+  /// File path: assets/icons/location_logo.svg
+  String get locationLogo => 'assets/icons/location_logo.svg';
+
+  /// File path: assets/icons/lock_icon.svg
+  String get lockIcon => 'assets/icons/lock_icon.svg';
+
+  /// File path: assets/icons/mail_icon.svg
+  String get mailIcon => 'assets/icons/mail_icon.svg';
+
+  /// File path: assets/icons/person_icon.svg
+  String get personIcon => 'assets/icons/person_icon.svg';
+
+  /// File path: assets/icons/rocket.svg
+  String get rocket => 'assets/icons/rocket.svg';
+
+  /// File path: assets/icons/service_provider_logo.svg
+  String get serviceProviderLogo => 'assets/icons/service_provider_logo.svg';
+
+  /// File path: assets/icons/user_logo_gray.svg
+  String get userLogoGray => 'assets/icons/user_logo_gray.svg';
+
+  /// List of all assets
+  List<String> get values => [
+    calendarLogo,
+    genderLogo,
+    locationLogo,
+    lockIcon,
+    mailIcon,
+    personIcon,
+    rocket,
+    serviceProviderLogo,
+    userLogoGray,
+  ];
+}
+
 class $AssetsImagesGen {
   const $AssetsImagesGen();
+
+  /// File path: assets/images/app_logo.png
+  AssetGenImage get appLogo =>
+      const AssetGenImage('assets/images/app_logo.png');
+
+  /// File path: assets/images/below_indicator.png
+  AssetGenImage get belowIndicator =>
+      const AssetGenImage('assets/images/below_indicator.png');
+
+  /// File path: assets/images/done_image.png
+  AssetGenImage get doneImage =>
+      const AssetGenImage('assets/images/done_image.png');
 
   /// File path: assets/images/error_image.png
   AssetGenImage get errorImage =>
       const AssetGenImage('assets/images/error_image.png');
 
+  /// File path: assets/images/onboarding_image.png
+  AssetGenImage get onboardingImage =>
+      const AssetGenImage('assets/images/onboarding_image.png');
+
   /// List of all assets
-  List<AssetGenImage> get values => [errorImage];
+  List<AssetGenImage> get values => [
+    appLogo,
+    belowIndicator,
+    doneImage,
+    errorImage,
+    onboardingImage,
+  ];
 }
 
 class $AssetsLottieGen {
@@ -80,6 +146,7 @@ class Assets {
   const Assets._();
 
   static const $AssetsFontsGen fonts = $AssetsFontsGen();
+  static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
   static const $AssetsLottieGen lottie = $AssetsLottieGen();
 }
