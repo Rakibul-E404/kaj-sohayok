@@ -40,7 +40,7 @@ class CustomElevatedButton extends StatelessWidget {
         height: buttonHeight ?? 50.h,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: onTap == null ? Colors.grey : buttonColor ?? Colors.green,
+          color: buttonColor ?? AppColors.c778beb,
           border: isButtonBorderUsed
               ? Border.all(
                   color: buttonBorderColor ?? AppColors.c000000,

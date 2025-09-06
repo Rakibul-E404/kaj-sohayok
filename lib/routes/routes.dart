@@ -1,14 +1,21 @@
 import 'dart:io';
 import 'package:flutter/material.dart'; // 👈 Needed for BuildContext, Widget, FadeTransition
 import 'package:get/get.dart';
+import 'package:kaz_bd/features/auth/sign_in/presentation/sign_in_screen.dart';
+import 'package:kaz_bd/features/auth/sign_up/presentation/sign_up_screen.dart';
+import 'package:kaz_bd/features/welcome/choose_role/presentation/choose_role_screen.dart';
 import 'package:kaz_bd/features/welcome/onboarding/onboarding_screen.dart';
 import 'package:kaz_bd/features/welcome/splash/presentation/splash_screen.dart';
 
 class Routes {
   static const String splashScreen = '/';
   static const String onboardingScreen = '/onboarding_screen';
+  static const String chooseRoleScreen = '/choose_role_screen';
+  static const String signInScreen = '/signInscreen';
+  static const String signUpScreen = '/signup_screen';
 
   static final appRoutes = [
+    ///Splash Screen
     GetPage(
       name: splashScreen,
       page: () => SplashScreen(),
@@ -16,9 +23,38 @@ class Routes {
       customTransition: _customTransition(),
       transitionDuration: _duration(),
     ),
+
+    ///Onboarding Screen
     GetPage(
       name: onboardingScreen,
       page: () => OnboardingScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///Chose Role Screen
+    GetPage(
+      name: chooseRoleScreen,
+      page: () => ChooseRoleScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///Sign In Screen
+    GetPage(
+      name: signInScreen,
+      page: () => SignInScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///Sign Up Screen
+    GetPage(
+      name: signUpScreen,
+      page: () => SignUpScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),

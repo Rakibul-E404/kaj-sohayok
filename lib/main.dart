@@ -15,7 +15,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(360, 690),
+      // designSize: const Size(375, 812),
+      designSize: const Size(402, 874),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (_, child) {
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: Routes.onboardingScreen,
           getPages: Routes.appRoutes,
-          initialBinding: ControllerBinder(),
+          initialBinding: ControllerBindings(),
         );
       },
     );
