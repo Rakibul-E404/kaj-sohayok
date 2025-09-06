@@ -40,6 +40,7 @@ final class CustomFormField extends StatelessWidget {
   final EdgeInsetsGeometry? contentPadding;
   final TextStyle? hintTextStyle;
   final Color? borderColor;
+  final Widget? child;
 
   const CustomFormField({
     super.key,
@@ -75,6 +76,7 @@ final class CustomFormField extends StatelessWidget {
     this.hintFontSize,
     this.hintTextStyle,
     this.borderColor,
+    this.child,
   });
 
   @override
@@ -110,8 +112,10 @@ final class CustomFormField extends StatelessWidget {
           contentPadding: contentPadding ?? EdgeInsets.zero,
           hintText: hintText,
           hintStyle:
-              hintTextStyle ?? TextFontStyle.headline14w500c698dadStyleSatoshi,
+              hintTextStyle ?? TextFontStyle.headline14w500c8c8c8cStyleSatoshi,
           labelText: labelText,
+          labelStyle:
+              labelStyle ?? TextFontStyle.headline14w500c292E34StyleSatoshi,
           errorStyle: TextStyle(
             fontSize: 10.sp,
             fontWeight: FontWeight.w400,
@@ -122,22 +126,19 @@ final class CustomFormField extends StatelessWidget {
             borderRadius: BorderRadius.circular(borderRadius ?? 12.r),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: borderColor ?? AppColors.ce7e5df),
+            borderSide: BorderSide(color: borderColor ?? AppColors.c778beb),
             borderRadius: BorderRadius.circular(borderRadius ?? 12.r),
           ),
-          // disabledBorder: OutlineInputBorder(
-          //   borderRadius: BorderRadius.circular(borderRadius ?? 48.0.r),
-          //   borderSide: const BorderSide(
-          //     // color: disableColor ?? AppColors.c6D6D6D.withOpacity(0.19),
-          //     width: 1,
-          //   ),
-          // ),
+          disabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: borderColor ?? AppColors.cb4b4b4),
+            borderRadius: BorderRadius.circular(borderRadius ?? 12.r),
+          ),
           errorBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: Colors.red),
             borderRadius: BorderRadius.circular(borderRadius ?? 12.r),
           ),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: borderColor ?? AppColors.ce7e5df),
+            borderSide: BorderSide(color: borderColor ?? AppColors.cb4b4b4),
             borderRadius: BorderRadius.circular(borderRadius ?? 12.r),
           ),
         ),
