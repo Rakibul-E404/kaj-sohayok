@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/controllers/sign_up_screen_controller.dart';
+import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/features/auth/sign_up/widgets/gender_selection.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 
@@ -13,6 +14,7 @@ import '../../../../constants/text_font_style.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../../helpers/custom_text_form_field.dart';
 import '../../../../helpers/ui_helpers.dart';
+import '../../../../routes/routes.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
@@ -86,15 +88,7 @@ class SignUpScreen extends StatelessWidget {
                   labelText: "User Name",
                   hintText: "Enter username",
                   // hintTextStyle: ,
-                  prefixIcon: Container(
-                    padding: EdgeInsets.all(4.sp),
-                    decoration: BoxDecoration(
-                      color: AppColors.c8c8c8c,
-                      shape: BoxShape.circle,
-                    ),
-
-                    child: Icon(Icons.person, color: AppColors.cFFFFFF),
-                  ),
+                  prefixIcon: SvgPicture.asset(Assets.icons.personIcon),
                 ),
                 UIHelper.verticalSpace(16.h),
 
@@ -108,22 +102,32 @@ class SignUpScreen extends StatelessWidget {
                 UIHelper.verticalSpace(16.h),
 
                 /// Section : Mobile Number Form Field
-                CustomFormField(
-                  labelText: "Your Number",
-                  hintText: "Enter Your Number",
-                  prefixIcon: CountryCodePicker(
-                    onChanged: (country) {
-                      log(
-                        "Selected country: ${country.name}, ${country.dialCode}",
-                      );
+                Obx(() {
+                  return CustomFormField(
+                    labelText: "Your Number",
+                    hintText: "Enter Your Number",
+                    gapBetweenPrefixIconAndDivider: 2.w,
+                    onChanged: (value) {
+                      controller.isMobileNumberEmpty.value = value.isEmpty;
                     },
-                    initialSelection: 'BD',
-                    favorite: ['+880', 'BD'],
-                    showCountryOnly: false,
-                    showOnlyCountryWhenClosed: false,
-                    alignLeft: false,
-                  ),
-                ),
+                    prefixIconPadding: 0.sp,
+                    prefixIcon: CountryCodePicker(
+                      padding: EdgeInsets.zero,
+                      showFlag: controller.isMobileNumberEmpty.value,
+                      onChanged: (country) {
+                        log(
+                          "Selected country: ${country.name}, ${country.dialCode}",
+                        );
+                      },
+                      initialSelection: 'BD',
+                      favorite: ['+880', 'BD'],
+                      showCountryOnly: false,
+                      showOnlyCountryWhenClosed: false,
+                      alignLeft: false,
+                    ),
+                  );
+                }),
+
                 UIHelper.verticalSpace(16.h),
 
                 ///Section : Location Form Field
@@ -157,23 +161,122 @@ class SignUpScreen extends StatelessWidget {
                 UIHelper.verticalSpace(16.h),
 
                 ///Section : Gender Form Field
-                // InkWell(
-                //   onTap: () {
-                //     GenderSelectionWidget();
-                //   },
-                //   child: CustomFormField(
-                //     controller: controller.genderController,
-                //     labelText: "Gender",
-                //     hintText: "Select gender ",
-                //     isEnabled: false,
-                //     prefixIcon: SvgPicture.asset(
-                //       fit: BoxFit.contain,
-                //       Assets.icons.genderLogo,
-                //     ),
-                //   ),
-                // ),
                 GenderSelectionWidget(),
                 UIHelper.verticalSpace(16.h),
+
+                ///Section : Password Form Field
+                Obx(() {
+                  return CustomFormField(
+                    labelText: "Password",
+                    hintText: "Enter Password",
+                    isPass: true,
+
+                    isObsecure: controller.isVisible.value,
+                    prefixIcon: SvgPicture.asset(
+                      fit: BoxFit.contain,
+                      Assets.icons.lockIcon,
+                    ),
+                    suffixIcon: InkWell(
+                      onTap: () {
+                        log(
+                          "Password visibility Icon taped! ${controller.isVisible.value}",
+                        );
+                        controller.setPasswrdVisibility();
+                      },
+                      child: Icon(
+                        controller.isVisible.value
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: AppColors.c6b6b6b,
+                      ),
+                    ),
+                  );
+                }),
+                UIHelper.verticalSpace(24.h),
+
+                ///Section : Button -> Check
+                ///Section : By creating an account, I accept the Terms & Conditions & Privacy Policy.
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Obx(() {
+                      return Checkbox(
+                        value: controller.isCheckboxTaped.value,
+                        onChanged: (value) {
+                          log(
+                            "Terms & Condition checkbox Taped! ${controller.isCheckboxTaped.value}",
+                          );
+                          controller.setCheckboxValue(value!);
+                        },
+                        activeColor: AppColors.c778beb,
+                        side: BorderSide(color: AppColors.c8c8c8c),
+                      );
+                    }),
+                    UIHelper.horizontalSpace(10.w),
+
+                    Expanded(
+                      child: Text(
+                        "By creating an account, I accept the Terms & Conditions & Privacy Policy.",
+                        style: TextFontStyle.headline12w400c000000StyleSatoshi,
+                      ),
+                    ),
+                  ],
+                ),
+                UIHelper.verticalSpace(32.h),
+
+                ///Section : Button : Sign up
+                CustomElevatedButton(onTap: () {}, buttonTitle: "Sign Up"),
+                UIHelper.verticalSpace(32.h),
+
+                ///Section : Already have account...
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Already have account?",
+                      style: TextFontStyle.headline14w500c606060StyleSatoshi,
+                    ),
+                    UIHelper.horizontalSpace(10.w),
+                    InkWell(
+                      onTap: () {
+                        log("Sign Up Button Taped!");
+                        Get.toNamed(Routes.signInScreen);
+                      },
+                      child: Text(
+                        "Sign in",
+                        style: TextFontStyle.headline14w700c000000StyleSatoshi,
+                      ),
+                    ),
+                  ],
+                ),
+                UIHelper.verticalSpace(32.h),
+
+                /// Section : Text -> OR
+                Text(
+                  "OR",
+                  style: TextFontStyle.headline10w700c000000StyleSatoshi,
+                ),
+                UIHelper.verticalSpace(32.h),
+
+                ///Section : Button -> Sign Up with google
+                CustomElevatedButton(
+                  onTap: () {
+                    log("Sign Up with google button taped!");
+                  },
+                  buttonColor: AppColors.ce6e6e6,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(Assets.icons.googleIcon),
+                      UIHelper.horizontalSpace(10.w),
+                      Text(
+                        "Sign up with Google",
+                        style: TextFontStyle.headline12w500c000000StyleSatoshi,
+                      ),
+                    ],
+                  ),
+                ),
+                UIHelper.verticalSpace(32.h),
               ],
             ),
           ),

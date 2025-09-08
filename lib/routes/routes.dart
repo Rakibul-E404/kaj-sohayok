@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart'; // 👈 Needed for BuildContext, Widget, FadeTransition
 import 'package:get/get.dart';
+import 'package:kaz_bd/features/auth/forgot_password/presentation/forgot_password_screen.dart';
 import 'package:kaz_bd/features/auth/sign_in/presentation/sign_in_screen.dart';
 import 'package:kaz_bd/features/auth/sign_up/presentation/sign_up_screen.dart';
 import 'package:kaz_bd/features/welcome/choose_role/presentation/choose_role_screen.dart';
@@ -11,8 +12,9 @@ class Routes {
   static const String splashScreen = '/';
   static const String onboardingScreen = '/onboarding_screen';
   static const String chooseRoleScreen = '/choose_role_screen';
-  static const String signInScreen = '/signInscreen';
+  static const String signInScreen = '/sign_in_screen';
   static const String signUpScreen = '/signup_screen';
+  static const String forgotPasswordScreen = '/forgot_password_screen';
 
   static final appRoutes = [
     ///Splash Screen
@@ -55,6 +57,15 @@ class Routes {
     GetPage(
       name: signUpScreen,
       page: () => SignUpScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///Forgot Password Screen
+    GetPage(
+      name: forgotPasswordScreen,
+      page: () => ForgotPasswordScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),

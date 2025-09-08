@@ -34,6 +34,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/gender_logo.svg
   String get genderLogo => 'assets/icons/gender_logo.svg';
 
+  /// File path: assets/icons/googleIcon.svg
+  String get googleIcon => 'assets/icons/googleIcon.svg';
+
   /// File path: assets/icons/location_logo.svg
   String get locationLogo => 'assets/icons/location_logo.svg';
 
@@ -43,8 +46,12 @@ class $AssetsIconsGen {
   /// File path: assets/icons/mail_icon.svg
   String get mailIcon => 'assets/icons/mail_icon.svg';
 
-  /// File path: assets/icons/person_icon.svg
-  String get personIcon => 'assets/icons/person_icon.svg';
+  /// File path: assets/icons/personIcon.svg
+  String get personIcon => 'assets/icons/personIcon.svg';
+
+  /// File path: assets/icons/personIcon_white_background.svg
+  String get personIconWhiteBackground =>
+      'assets/icons/personIcon_white_background.svg';
 
   /// File path: assets/icons/rocket.svg
   String get rocket => 'assets/icons/rocket.svg';
@@ -59,10 +66,12 @@ class $AssetsIconsGen {
   List<String> get values => [
     calendarLogo,
     genderLogo,
+    googleIcon,
     locationLogo,
     lockIcon,
     mailIcon,
     personIcon,
+    personIconWhiteBackground,
     rocket,
     serviceProviderLogo,
     userLogoGray,

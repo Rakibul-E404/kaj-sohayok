@@ -18,17 +18,35 @@ class GenderSelectionWidget extends StatelessWidget {
         return InputDecorator(
           decoration: InputDecoration(
             contentPadding: EdgeInsets.all(10.sp),
-            labelText: "Gender",
+            labelText:
+                controller.selectedGender == null ||
+                    controller.selectedGender == null
+                ? null
+                : "Gender",
             hintText: "Select gender",
             prefixIcon: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.w),
-              child: SvgPicture.asset(
-                fit: BoxFit.contain,
-                Assets.icons.genderLogo,
+              padding: EdgeInsets.only(
+                left: 12.w,
+                right: 0.w,
+              ), // No right padding
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SvgPicture.asset(
+                    fit: BoxFit.contain,
+                    Assets.icons.genderLogo,
+                  ),
+                  SizedBox(width: 8.w),
+                  Container(
+                    height: 24.h,
+                    width: 2.sp,
+                    color: AppColors.cd9d9d9,
+                  ),
+                ],
               ),
             ),
             prefixIconConstraints: BoxConstraints(
-              minWidth: 40.w,
+              minWidth: 24.w,
               minHeight: 40.h,
             ),
             border: OutlineInputBorder(
