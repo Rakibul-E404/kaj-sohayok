@@ -107,6 +107,7 @@ class SignInScreen extends StatelessWidget {
                 CustomElevatedButton(
                   onTap: () {
                     log("Sign In Button taped!");
+                    Get.toNamed(Routes.navigationScreen);
                   },
                   buttonTitle: "Sign in",
                 ),

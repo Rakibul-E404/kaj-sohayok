@@ -8,6 +8,7 @@ import 'package:kaz_bd/features/auth/sign_up/presentation/sign_up_screen.dart';
 import 'package:kaz_bd/features/welcome/choose_role/presentation/choose_role_screen.dart';
 import 'package:kaz_bd/features/welcome/onboarding/onboarding_screen.dart';
 import 'package:kaz_bd/features/welcome/splash/presentation/splash_screen.dart';
+import 'package:kaz_bd/navigation_screen.dart';
 
 import '../features/auth/verify_otp/verify_otp_screen.dart';
 
@@ -20,6 +21,7 @@ class Routes {
   static const String forgotPasswordScreen = '/forgot_password_screen';
   static const String verifyOtpScreen = '/verify_otp_screen';
   static const String setNewPasswordScreen = '/set_newpassword_screen';
+  static const String navigationScreen = '/navigation_screen';
 
   static final appRoutes = [
     ///Splash Screen
@@ -89,6 +91,15 @@ class Routes {
     GetPage(
       name: setNewPasswordScreen,
       page: () => SetNewPasswordScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///Navigation Screen
+    GetPage(
+      name: navigationScreen,
+      page: () => NavigationScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),

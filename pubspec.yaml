@@ -54,6 +54,7 @@ dependencies:
   dotlottie_loader: ^0.0.5
   country_code_picker: ^3.4.0
   dropdown_button2: ^2.3.9
+  custom_navigation_bar: ^0.8.2
 
 
 dev_dependencies:
