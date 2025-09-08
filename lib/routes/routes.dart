@@ -2,11 +2,14 @@ import 'dart:io';
 import 'package:flutter/material.dart'; // 👈 Needed for BuildContext, Widget, FadeTransition
 import 'package:get/get.dart';
 import 'package:kaz_bd/features/auth/forgot_password/presentation/forgot_password_screen.dart';
+import 'package:kaz_bd/features/auth/set_new_password/presentation/set_new_password_screen.dart';
 import 'package:kaz_bd/features/auth/sign_in/presentation/sign_in_screen.dart';
 import 'package:kaz_bd/features/auth/sign_up/presentation/sign_up_screen.dart';
 import 'package:kaz_bd/features/welcome/choose_role/presentation/choose_role_screen.dart';
 import 'package:kaz_bd/features/welcome/onboarding/onboarding_screen.dart';
 import 'package:kaz_bd/features/welcome/splash/presentation/splash_screen.dart';
+
+import '../features/auth/verify_otp/verify_otp_screen.dart';
 
 class Routes {
   static const String splashScreen = '/';
@@ -15,6 +18,8 @@ class Routes {
   static const String signInScreen = '/sign_in_screen';
   static const String signUpScreen = '/signup_screen';
   static const String forgotPasswordScreen = '/forgot_password_screen';
+  static const String verifyOtpScreen = '/verify_otp_screen';
+  static const String setNewPasswordScreen = '/set_newpassword_screen';
 
   static final appRoutes = [
     ///Splash Screen
@@ -66,6 +71,24 @@ class Routes {
     GetPage(
       name: forgotPasswordScreen,
       page: () => ForgotPasswordScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///Forgot Password Screen
+    GetPage(
+      name: verifyOtpScreen,
+      page: () => VerifyOtpScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///SetNew Password Screen
+    GetPage(
+      name: setNewPasswordScreen,
+      page: () => SetNewPasswordScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),

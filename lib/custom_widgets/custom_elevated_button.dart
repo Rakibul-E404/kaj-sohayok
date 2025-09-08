@@ -56,7 +56,7 @@ class CustomElevatedButton extends StatelessWidget {
                 buttonTitle ?? "",
                 style:
                     textStyle ??
-                    TextFontStyle.headline16w500cFFFFFFStyleSatoshi,
+                    TextFontStyle.headline16w700cFFFFFFStyleSatoshi,
               ),
         ),
       ),

@@ -45,7 +45,7 @@ class ChooseRoleScreen extends StatelessWidget {
                 ///Section -> Text : Choose your role below
                 Text(
                   "Choose Your Role Below",
-                  style: TextFontStyle.headline20w700c202020StyleSatoshi,
+                  style: TextFontStyle.headline24w700c202020StyleSatoshi,
                 ),
                 UIHelper.verticalSpace(14.h),
 

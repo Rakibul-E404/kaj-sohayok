@@ -101,6 +101,10 @@ class $AssetsImagesGen {
   AssetGenImage get onboardingImage =>
       const AssetGenImage('assets/images/onboarding_image.png');
 
+  /// File path: assets/images/reset_done_image.png
+  AssetGenImage get resetDoneImage =>
+      const AssetGenImage('assets/images/reset_done_image.png');
+
   /// List of all assets
   List<AssetGenImage> get values => [
     appLogo,
@@ -108,6 +112,7 @@ class $AssetsImagesGen {
     doneImage,
     errorImage,
     onboardingImage,
+    resetDoneImage,
   ];
 }
 

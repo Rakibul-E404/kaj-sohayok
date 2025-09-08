@@ -55,7 +55,7 @@ class SignInScreen extends StatelessWidget {
                 ///Section : Text -> sign in your account
                 Text(
                   "Sign In Your Account",
-                  style: TextFontStyle.headline20w700c000000StyleSatoshi,
+                  style: TextFontStyle.headline24w700c000000StyleSatoshi,
                 ),
                 UIHelper.verticalSpace(14.h),
 
