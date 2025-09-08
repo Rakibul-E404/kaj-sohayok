@@ -28,7 +28,6 @@ class SignUpScreenController extends GetxController {
   }
 
   ///Function To Pick Gender
-
   String? selectedGender;
 
   void setGender(String? value) {
@@ -38,4 +37,20 @@ class SignUpScreenController extends GetxController {
     }
     update(); // triggers UI update
   }
+
+  ///Function To Set Password Visibility
+  RxBool isVisible = false.obs;
+
+  void setPasswrdVisibility() {
+    isVisible.value = !isVisible.value;
+  }
+
+  ///Function To Set CheckBox Value of Terms & Conditions
+  RxBool isCheckboxTaped = false.obs;
+  void setCheckboxValue(bool newValue) {
+    isCheckboxTaped.value = newValue;
+  }
+
+  ///Function to Show IconFlag at MobileNumberFormField
+  RxBool isMobileNumberEmpty = true.obs;
 }

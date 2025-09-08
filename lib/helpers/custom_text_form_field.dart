@@ -7,6 +7,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kaz_bd/helpers/ui_helpers.dart';
 import '../constants/text_font_style.dart';
 import '../gen/colors.gen.dart';
 
@@ -22,6 +23,8 @@ final class CustomFormField extends StatelessWidget {
   final bool? validation;
   final Widget? suffixIcon;
   final Widget? prefixIcon;
+  final double? prefixIconPadding;
+  final double? gapBetweenPrefixIconAndDivider;
   final bool isObsecure;
   final bool isPass;
   final FocusNode? focusNode;
@@ -54,6 +57,8 @@ final class CustomFormField extends StatelessWidget {
     this.validation = false,
     this.suffixIcon,
     this.prefixIcon,
+    this.prefixIconPadding,
+    this.gapBetweenPrefixIconAndDivider,
     this.isObsecure = false,
     this.isPass = false,
     this.focusNode,
@@ -105,10 +110,40 @@ final class CustomFormField extends StatelessWidget {
         decoration: InputDecoration(
           filled: true,
           fillColor: AppColors.cFFFFFF,
-          suffixIcon: suffixIcon,
-          prefixIcon: prefixIcon != null
-              ? Padding(padding: EdgeInsets.all(12.sp), child: prefixIcon)
+          suffixIcon: suffixIcon != null
+              ? Padding(padding: EdgeInsets.all(12.sp), child: suffixIcon)
               : null,
+          // prefixIcon: prefixIcon != null
+          //     ? Padding(
+          //         padding: prefixIconPadding == null
+          //             ? EdgeInsets.all(12.sp)
+          //             : EdgeInsets.all(prefixIconPadding ?? 12.sp),
+          //         child: prefixIcon,
+          //       )
+          //     : null,
+          prefixIcon: prefixIcon != null
+              ? Padding(
+                  padding: prefixIconPadding == null
+                      ? EdgeInsets.all(12.sp)
+                      : EdgeInsets.all(prefixIconPadding ?? 12.sp),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      prefixIcon!,
+                      UIHelper.horizontalSpace(
+                        gapBetweenPrefixIconAndDivider ?? 16.w,
+                      ),
+                      Container(
+                        height: 24.h,
+                        width: 2.sp,
+                        color: AppColors.cd9d9d9,
+                      ),
+                      UIHelper.horizontalSpace(8.w),
+                    ],
+                  ),
+                )
+              : null,
+
           contentPadding: contentPadding ?? EdgeInsets.zero,
           hintText: hintText,
           hintStyle:

@@ -81,7 +81,7 @@ class ChooseRoleScreen extends StatelessWidget {
                     Get.toNamed(Routes.signUpScreen);
                   },
                   showBorder: true,
-                  userTypeIcon: Assets.icons.personIcon,
+                  userTypeIcon: Assets.icons.personIconWhiteBackground,
                   cardTitle: "Join As a User",
                   userType: appUserType.buyer,
                 ),

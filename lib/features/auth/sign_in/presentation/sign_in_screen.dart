@@ -90,6 +90,7 @@ class SignInScreen extends StatelessWidget {
                 InkWell(
                   onTap: () {
                     log("Forgot Password button Taped!");
+                    Get.toNamed(Routes.forgotPasswordScreen);
                   },
                   child: Align(
                     alignment: Alignment.centerRight,
