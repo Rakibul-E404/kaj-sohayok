@@ -1,11 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/custom_text_form_field.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
+import 'package:kaz_bd/routes/routes.dart';
 
 import '../../../../gen/assets.gen.dart';
 
@@ -69,7 +73,13 @@ class ForgotPasswordScreen extends StatelessWidget {
               Spacer(),
 
               ///Section : Button -> Send OTP
-              CustomElevatedButton(onTap: () {}, buttonTitle: "Send OTP"),
+              CustomElevatedButton(
+                onTap: () {
+                  log("Send OTP Button Pressed!");
+                  Get.toNamed(Routes.verifyOtpScreen);
+                },
+                buttonTitle: "Send OTP",
+              ),
               UIHelper.verticalSpace(32.h),
             ],
           ),
