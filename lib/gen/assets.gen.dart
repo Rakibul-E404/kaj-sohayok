@@ -28,14 +28,26 @@ class $AssetsFontsGen {
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
+  /// File path: assets/icons/bell_icon.svg
+  String get bellIcon => 'assets/icons/bell_icon.svg';
+
+  /// File path: assets/icons/bookings_icon.svg
+  String get bookingsIcon => 'assets/icons/bookings_icon.svg';
+
   /// File path: assets/icons/calendar_logo.svg
   String get calendarLogo => 'assets/icons/calendar_logo.svg';
+
+  /// File path: assets/icons/chat_icon.svg
+  String get chatIcon => 'assets/icons/chat_icon.svg';
 
   /// File path: assets/icons/gender_logo.svg
   String get genderLogo => 'assets/icons/gender_logo.svg';
 
   /// File path: assets/icons/googleIcon.svg
   String get googleIcon => 'assets/icons/googleIcon.svg';
+
+  /// File path: assets/icons/home_icon.svg
+  String get homeIcon => 'assets/icons/home_icon.svg';
 
   /// File path: assets/icons/location_logo.svg
   String get locationLogo => 'assets/icons/location_logo.svg';
@@ -53,8 +65,14 @@ class $AssetsIconsGen {
   String get personIconWhiteBackground =>
       'assets/icons/personIcon_white_background.svg';
 
+  /// File path: assets/icons/profile_icon.svg
+  String get profileIcon => 'assets/icons/profile_icon.svg';
+
   /// File path: assets/icons/rocket.svg
   String get rocket => 'assets/icons/rocket.svg';
+
+  /// File path: assets/icons/search_icon.svg
+  String get searchIcon => 'assets/icons/search_icon.svg';
 
   /// File path: assets/icons/service_provider_logo.svg
   String get serviceProviderLogo => 'assets/icons/service_provider_logo.svg';
@@ -64,15 +82,21 @@ class $AssetsIconsGen {
 
   /// List of all assets
   List<String> get values => [
+    bellIcon,
+    bookingsIcon,
     calendarLogo,
+    chatIcon,
     genderLogo,
     googleIcon,
+    homeIcon,
     locationLogo,
     lockIcon,
     mailIcon,
     personIcon,
     personIconWhiteBackground,
+    profileIcon,
     rocket,
+    searchIcon,
     serviceProviderLogo,
     userLogoGray,
   ];
@@ -97,6 +121,10 @@ class $AssetsImagesGen {
   AssetGenImage get errorImage =>
       const AssetGenImage('assets/images/error_image.png');
 
+  /// File path: assets/images/hero_banner_image.png
+  AssetGenImage get heroBannerImage =>
+      const AssetGenImage('assets/images/hero_banner_image.png');
+
   /// File path: assets/images/onboarding_image.png
   AssetGenImage get onboardingImage =>
       const AssetGenImage('assets/images/onboarding_image.png');
@@ -105,14 +133,25 @@ class $AssetsImagesGen {
   AssetGenImage get resetDoneImage =>
       const AssetGenImage('assets/images/reset_done_image.png');
 
+  /// File path: assets/images/service_Image.png
+  AssetGenImage get serviceImage =>
+      const AssetGenImage('assets/images/service_Image.png');
+
+  /// File path: assets/images/specific_service_image.png
+  AssetGenImage get specificServiceImage =>
+      const AssetGenImage('assets/images/specific_service_image.png');
+
   /// List of all assets
   List<AssetGenImage> get values => [
     appLogo,
     belowIndicator,
     doneImage,
     errorImage,
+    heroBannerImage,
     onboardingImage,
     resetDoneImage,
+    serviceImage,
+    specificServiceImage,
   ];
 }
 

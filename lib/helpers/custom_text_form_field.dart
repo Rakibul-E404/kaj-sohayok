@@ -44,6 +44,7 @@ final class CustomFormField extends StatelessWidget {
   final TextStyle? hintTextStyle;
   final Color? borderColor;
   final Widget? child;
+  final bool? showVerticalDivider;
 
   const CustomFormField({
     super.key,
@@ -81,6 +82,7 @@ final class CustomFormField extends StatelessWidget {
     this.hintFontSize,
     this.hintTextStyle,
     this.borderColor,
+    this.showVerticalDivider = true,
     this.child,
   });
 
@@ -130,15 +132,17 @@ final class CustomFormField extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       prefixIcon!,
-                      UIHelper.horizontalSpace(
-                        gapBetweenPrefixIconAndDivider ?? 16.w,
-                      ),
-                      Container(
-                        height: 24.h,
-                        width: 2.sp,
-                        color: AppColors.cd9d9d9,
-                      ),
-                      UIHelper.horizontalSpace(8.w),
+                      if (showVerticalDivider ?? true) ...[
+                        UIHelper.horizontalSpace(
+                          gapBetweenPrefixIconAndDivider ?? 16.w,
+                        ),
+                        Container(
+                          height: 24.h,
+                          width: 2.sp,
+                          color: AppColors.cd9d9d9,
+                        ),
+                        UIHelper.horizontalSpace(8.w),
+                      ],
                     ],
                   ),
                 )
