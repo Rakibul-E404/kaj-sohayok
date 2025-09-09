@@ -225,7 +225,13 @@ class SignUpScreen extends StatelessWidget {
                 UIHelper.verticalSpace(32.h),
 
                 ///Section : Button : Sign up
-                CustomElevatedButton(onTap: () {}, buttonTitle: "Sign Up"),
+                CustomElevatedButton(
+                  onTap: () {
+                    log("Sign Button Taped!");
+                    Get.toNamed(Routes.signInScreen);
+                  },
+                  buttonTitle: "Sign Up",
+                ),
                 UIHelper.verticalSpace(32.h),
 
                 ///Section : Already have account...

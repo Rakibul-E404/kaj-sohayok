@@ -5,6 +5,9 @@ import 'package:kaz_bd/features/auth/forgot_password/presentation/forgot_passwor
 import 'package:kaz_bd/features/auth/set_new_password/presentation/set_new_password_screen.dart';
 import 'package:kaz_bd/features/auth/sign_in/presentation/sign_in_screen.dart';
 import 'package:kaz_bd/features/auth/sign_up/presentation/sign_up_screen.dart';
+import 'package:kaz_bd/features/normal_user/all_categories/presentation/all_categories_screen.dart';
+import 'package:kaz_bd/features/normal_user/notification/presentation/notification_screen.dart';
+import 'package:kaz_bd/features/normal_user/services_of_specific_category/presentation/services_of_specific_category_screen.dart';
 import 'package:kaz_bd/features/welcome/choose_role/presentation/choose_role_screen.dart';
 import 'package:kaz_bd/features/welcome/onboarding/onboarding_screen.dart';
 import 'package:kaz_bd/features/welcome/splash/presentation/splash_screen.dart';
@@ -22,6 +25,10 @@ class Routes {
   static const String verifyOtpScreen = '/verify_otp_screen';
   static const String setNewPasswordScreen = '/set_newpassword_screen';
   static const String navigationScreen = '/navigation_screen';
+  static const String notificationScreen = '/notification_screen';
+  static const String allCategoriesScreen = '/allCategories_screen';
+  static const String servicesOfSpecificCategoryScreen =
+      '/services_of_specific_category_screen';
 
   static final appRoutes = [
     ///Splash Screen
@@ -100,6 +107,33 @@ class Routes {
     GetPage(
       name: navigationScreen,
       page: () => NavigationScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///Notification Screen
+    GetPage(
+      name: notificationScreen,
+      page: () => NotificationScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///Notification Screen
+    GetPage(
+      name: allCategoriesScreen,
+      page: () => AllCategoriesScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///Services Of Specific Category Screen Screen
+    GetPage(
+      name: servicesOfSpecificCategoryScreen,
+      page: () => ServicesOfSpecificCategoryScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),
