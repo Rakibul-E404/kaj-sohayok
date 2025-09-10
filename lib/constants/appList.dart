@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kaz_bd/gen/assets.gen.dart';
 
 import '../features/normal_user/home/models/category_mode.dart';
 
@@ -85,5 +86,14 @@ class AppList {
     CategoryModel(categoryIcon: Icons.pool, categoryName: 'Swimming'),
     CategoryModel(categoryIcon: Icons.camera_alt, categoryName: 'Photography'),
     CategoryModel(categoryIcon: Icons.school, categoryName: 'Tutoring'),
+  ];
+
+  static List imageList = [
+    Assets.images.serviceImage.path,
+    Assets.images.heroBannerImage.path,
+    Assets.images.userImage.path,
+    Assets.images.specificServiceImage.path,
+    Assets.images.heroBannerImage.path,
+    Assets.images.userImage.path,
   ];
 }
