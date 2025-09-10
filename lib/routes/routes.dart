@@ -6,10 +6,11 @@ import 'package:kaz_bd/features/auth/set_new_password/presentation/set_new_passw
 import 'package:kaz_bd/features/auth/sign_in/presentation/sign_in_screen.dart';
 import 'package:kaz_bd/features/auth/sign_up/presentation/sign_up_screen.dart';
 import 'package:kaz_bd/features/normal_user/all_categories/presentation/all_categories_screen.dart';
+import 'package:kaz_bd/features/normal_user/details/presentation/details_screen.dart';
 import 'package:kaz_bd/features/normal_user/notification/presentation/notification_screen.dart';
 import 'package:kaz_bd/features/normal_user/services_of_specific_category/presentation/services_of_specific_category_screen.dart';
 import 'package:kaz_bd/features/welcome/choose_role/presentation/choose_role_screen.dart';
-import 'package:kaz_bd/features/welcome/onboarding/onboarding_screen.dart';
+import 'package:kaz_bd/features/welcome/onboarding/presentation/onboarding_screen.dart';
 import 'package:kaz_bd/features/welcome/splash/presentation/splash_screen.dart';
 import 'package:kaz_bd/navigation_screen.dart';
 
@@ -29,6 +30,7 @@ class Routes {
   static const String allCategoriesScreen = '/allCategories_screen';
   static const String servicesOfSpecificCategoryScreen =
       '/services_of_specific_category_screen';
+  static const String serviceDetailsScreen = '/service_details_screen';
 
   static final appRoutes = [
     ///Splash Screen
@@ -130,10 +132,19 @@ class Routes {
       transitionDuration: _duration(),
     ),
 
-    ///Services Of Specific Category Screen Screen
+    ///Services Of Specific Category Screen
     GetPage(
       name: servicesOfSpecificCategoryScreen,
       page: () => ServicesOfSpecificCategoryScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///service Details Screen
+    GetPage(
+      name: serviceDetailsScreen,
+      page: () => DetailsScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),

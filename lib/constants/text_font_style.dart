@@ -69,6 +69,20 @@ class TextFontStyle {
     fontSize: 14.sp,
     fontWeight: FontWeight.w500,
   );
+  static final headline14w700c989898StyleSatoshi = TextStyle(
+    fontFamily: 'Satoshi',
+    fontFamilyFallback: const ['Itern', 'Satoshi'],
+    color: AppColors.c989898,
+    fontSize: 14.sp,
+    fontWeight: FontWeight.w700,
+  );
+  static final headline14w400c4d4d4dStyleSatoshi = TextStyle(
+    fontFamily: 'Satoshi',
+    fontFamilyFallback: const ['Itern', 'Satoshi'],
+    color: AppColors.c4d4d4d,
+    fontSize: 14.sp,
+    fontWeight: FontWeight.w400,
+  );
   static final headline16w500cFFFFFFStyleSatoshi = TextStyle(
     fontFamily: 'Satoshi',
     fontFamilyFallback: const ['Itern', 'Satoshi'],
@@ -97,10 +111,24 @@ class TextFontStyle {
     fontSize: 16.sp,
     fontWeight: FontWeight.w700,
   );
+  static final headline18w700c778bebStyleSatoshi = TextStyle(
+    fontFamily: 'Satoshi',
+    fontFamilyFallback: const ['Itern', 'Satoshi'],
+    color: AppColors.c778beb,
+    fontSize: 18.sp,
+    fontWeight: FontWeight.w700,
+  );
   static final headline16w500c000000StyleSatoshi = TextStyle(
     fontFamily: 'Satoshi',
     fontFamilyFallback: const ['Itern', 'Satoshi'],
     color: AppColors.c000000,
+    fontSize: 16.sp,
+    fontWeight: FontWeight.w500,
+  );
+  static final headline16w500c202020StyleSatoshi = TextStyle(
+    fontFamily: 'Satoshi',
+    fontFamilyFallback: const ['Itern', 'Satoshi'],
+    color: AppColors.c202020,
     fontSize: 16.sp,
     fontWeight: FontWeight.w500,
   );
@@ -139,6 +167,7 @@ class TextFontStyle {
     fontSize: 10.sp,
     fontWeight: FontWeight.w400,
   );
+
   static final headline20w700c000000StyleSatoshi = TextStyle(
     fontFamily: 'Satoshi',
     fontFamilyFallback: const ['Itern', 'Satoshi'],
@@ -182,6 +211,13 @@ class TextFontStyle {
     fontSize: 12.sp,
     fontWeight: FontWeight.w400,
   );
+  static final headline12w400cFFFFFFStyleSatoshi = TextStyle(
+    fontFamily: 'Satoshi',
+    fontFamilyFallback: const ['Itern', 'Satoshi'],
+    color: AppColors.cFFFFFF,
+    fontSize: 12.sp,
+    fontWeight: FontWeight.w400,
+  );
   static final headline12w400c4d4d4dStyleSatoshi = TextStyle(
     fontFamily: 'Satoshi',
     fontFamilyFallback: const ['Itern', 'Satoshi'],
@@ -201,6 +237,14 @@ class TextFontStyle {
     fontFamilyFallback: const ['Itern', 'Satoshi'],
     color: AppColors.c000000,
     fontSize: 12.sp,
+    fontWeight: FontWeight.w500,
+  );
+
+  static final headline10w500c000000StyleSatoshi = TextStyle(
+    fontFamily: 'Satoshi',
+    fontFamilyFallback: const ['Itern', 'Satoshi'],
+    color: AppColors.c000000,
+    fontSize: 10.sp,
     fontWeight: FontWeight.w500,
   );
   static final headline12w500c6a6a6aStyleSatoshi = TextStyle(

@@ -12,8 +12,8 @@ import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/routes/routes.dart';
 
-import '../../../controllers/onboarding_controller.dart';
-import 'widgets/get_started_button.dart';
+import '../../../../controllers/onboarding_controller.dart';
+import '../widgets/get_started_button.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});

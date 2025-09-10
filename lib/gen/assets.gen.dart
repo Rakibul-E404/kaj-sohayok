@@ -37,6 +37,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/calendar_logo.svg
   String get calendarLogo => 'assets/icons/calendar_logo.svg';
 
+  /// File path: assets/icons/call_icon.svg
+  String get callIcon => 'assets/icons/call_icon.svg';
+
   /// File path: assets/icons/chat_icon.svg
   String get chatIcon => 'assets/icons/chat_icon.svg';
 
@@ -57,6 +60,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/mail_icon.svg
   String get mailIcon => 'assets/icons/mail_icon.svg';
+
+  /// File path: assets/icons/message_icon.svg
+  String get messageIcon => 'assets/icons/message_icon.svg';
 
   /// File path: assets/icons/personIcon.svg
   String get personIcon => 'assets/icons/personIcon.svg';
@@ -85,6 +91,7 @@ class $AssetsIconsGen {
     bellIcon,
     bookingsIcon,
     calendarLogo,
+    callIcon,
     chatIcon,
     genderLogo,
     googleIcon,
@@ -92,6 +99,7 @@ class $AssetsIconsGen {
     locationLogo,
     lockIcon,
     mailIcon,
+    messageIcon,
     personIcon,
     personIconWhiteBackground,
     profileIcon,
@@ -141,6 +149,10 @@ class $AssetsImagesGen {
   AssetGenImage get specificServiceImage =>
       const AssetGenImage('assets/images/specific_service_image.png');
 
+  /// File path: assets/images/user_image.jpg
+  AssetGenImage get userImage =>
+      const AssetGenImage('assets/images/user_image.jpg');
+
   /// List of all assets
   List<AssetGenImage> get values => [
     appLogo,
@@ -152,6 +164,7 @@ class $AssetsImagesGen {
     resetDoneImage,
     serviceImage,
     specificServiceImage,
+    userImage,
   ];
 }
 
