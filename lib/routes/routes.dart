@@ -8,6 +8,7 @@ import 'package:kaz_bd/features/auth/sign_up/presentation/sign_up_screen.dart';
 import 'package:kaz_bd/features/normal_user/all_categories/presentation/all_categories_screen.dart';
 import 'package:kaz_bd/features/normal_user/details/presentation/details_screen.dart';
 import 'package:kaz_bd/features/normal_user/notification/presentation/notification_screen.dart';
+import 'package:kaz_bd/features/normal_user/provider_details/presentation/provider_details_screen.dart';
 import 'package:kaz_bd/features/normal_user/services_of_specific_category/presentation/services_of_specific_category_screen.dart';
 import 'package:kaz_bd/features/welcome/choose_role/presentation/choose_role_screen.dart';
 import 'package:kaz_bd/features/welcome/onboarding/presentation/onboarding_screen.dart';
@@ -31,6 +32,8 @@ class Routes {
   static const String servicesOfSpecificCategoryScreen =
       '/services_of_specific_category_screen';
   static const String serviceDetailsScreen = '/service_details_screen';
+  static const String serviceProviderProfileDetailsScreen =
+      '/service_propvider_profile_details_screen';
 
   static final appRoutes = [
     ///Splash Screen
@@ -145,6 +148,15 @@ class Routes {
     GetPage(
       name: serviceDetailsScreen,
       page: () => DetailsScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///serviceProviderProfileDetailsScreen
+    GetPage(
+      name: serviceProviderProfileDetailsScreen,
+      page: () => ProviderDetailsScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),
