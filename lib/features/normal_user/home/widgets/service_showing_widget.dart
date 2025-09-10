@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kaz_bd/constants/app_constant_text.dart';
 
 import '../../../../constants/text_font_style.dart';
 import '../../../../gen/colors.gen.dart';
@@ -64,7 +65,7 @@ class ServiceWidget extends StatelessWidget {
                 children: [
                   const TextSpan(text: 'Start from '),
                   TextSpan(
-                    text: '\$$initialPayablePrice',
+                    text: '${AppText.bdTkSign}$initialPayablePrice',
                     style: TextFontStyle.headline16w700c778bebStyleSatoshi,
                   ),
                 ],
