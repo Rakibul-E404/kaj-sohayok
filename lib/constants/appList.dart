@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kaz_bd/features/normal_user/provider_details/model/profile_tile_model.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 
 import '../features/normal_user/home/models/category_mode.dart';
@@ -95,5 +96,15 @@ class AppList {
     Assets.images.specificServiceImage.path,
     Assets.images.heroBannerImage.path,
     Assets.images.userImage.path,
+  ];
+
+  static List<ProfileTileModel> profileTileList = [
+    ProfileTileModel(title: "Occupation", data: "AC-Repair"),
+    ProfileTileModel(title: "Years of Experience", data: "4 Years"),
+    ProfileTileModel(title: "Name", data: "Ripon Mia"),
+    ProfileTileModel(title: "Phone Number", data: "1233333333"),
+    ProfileTileModel(title: "Location", data: "Rangpur Bangladesh"),
+    ProfileTileModel(title: "Date of Birth", data: "11-11-2025"),
+    ProfileTileModel(title: "Gender", data: "Male"),
   ];
 }

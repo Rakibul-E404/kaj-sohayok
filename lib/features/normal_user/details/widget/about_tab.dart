@@ -3,9 +3,11 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
+import 'package:kaz_bd/routes/routes.dart';
 
 import '../../../../constants/text_font_style.dart';
 import '../../../../custom_widgets/custom_text_with_readmore_button.dart';
@@ -122,6 +124,7 @@ class AboutTab extends StatelessWidget {
           CustomElevatedButton(
             onTap: () {
               log("Button Taped -> Book Services Now");
+              Get.toNamed(Routes.serviceProviderProfileDetailsScreen);
             },
             buttonTitle: "Book Services Now",
           ),
