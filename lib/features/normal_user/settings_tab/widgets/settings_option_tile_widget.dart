@@ -10,50 +10,55 @@ class SettingsOptionTileWidget extends StatelessWidget {
   final String prefixIcon;
   final String title;
   final bool isLast;
+  final void Function()? onTap;
 
   const SettingsOptionTileWidget({
     super.key,
     required this.prefixIcon,
     required this.title,
     this.isLast = false,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 1.sw,
-      alignment: Alignment.center,
-      padding: EdgeInsets.all(10.sp),
-      decoration: BoxDecoration(
-        color: AppColors.cFFFFFF,
-        border: Border.all(color: AppColors.ce6e6e6),
-        borderRadius: BorderRadius.circular(8.r),
-      ),
-      child: Row(
-        children: [
-          /// Section: Settings Option Icon
-          title == "Contact Us"
-              ? Icon(Icons.help, size: 20.sp, color: AppColors.c92a2ef)
-              : SvgPicture.asset(prefixIcon, height: 20.sp, width: 20.sp),
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: 1.sw,
+        alignment: Alignment.center,
+        padding: EdgeInsets.all(10.sp),
+        decoration: BoxDecoration(
+          color: AppColors.cFFFFFF,
+          border: Border.all(color: AppColors.ce6e6e6),
+          borderRadius: BorderRadius.circular(8.r),
+        ),
+        child: Row(
+          children: [
+            /// Section: Settings Option Icon
+            title == "Contact Us"
+                ? Icon(Icons.help, size: 20.sp, color: AppColors.c92a2ef)
+                : SvgPicture.asset(prefixIcon, height: 20.sp, width: 20.sp),
 
-          UIHelper.horizontalSpace(10.w),
+            UIHelper.horizontalSpace(10.w),
 
-          /// Section: Settings Option Name
-          Text(
-            title,
-            style: TextFontStyle.headline16w500c202020StyleSatoshi.copyWith(
-              color: isLast ? AppColors.cee3333 : null,
+            /// Section: Settings Option Name
+            Text(
+              title,
+              style: TextFontStyle.headline16w500c202020StyleSatoshi.copyWith(
+                color: isLast ? AppColors.cee3333 : null,
+              ),
             ),
-          ),
 
-          const Spacer(),
+            const Spacer(),
 
-          Icon(
-            Icons.keyboard_arrow_right_rounded,
-            size: 24.sp,
-            color: AppColors.c858c94,
-          ),
-        ],
+            Icon(
+              Icons.keyboard_arrow_right_rounded,
+              size: 24.sp,
+              color: AppColors.c858c94,
+            ),
+          ],
+        ),
       ),
     );
   }
