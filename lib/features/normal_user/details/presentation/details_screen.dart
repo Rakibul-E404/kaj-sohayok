@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:kaz_bd/constants/app_constant_text.dart';
-import 'package:kaz_bd/features/normal_user/details/widget/tab_showing_widget.dart';
+import 'package:kaz_bd/features/normal_user/details/widget/about_tab.dart';
+import 'package:kaz_bd/features/normal_user/details/widget/gallery_tab.dart';
+import 'package:kaz_bd/features/normal_user/details/widget/reviews_tab.dart';
+import 'package:kaz_bd/custom_widgets/tab_showing_widget.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import '../../../../constants/text_font_style.dart';
+import '../../../../controllers/details_screen_controller.dart';
 import '../widget/sliver_tab_bar_delegate_helper_widget.dart';
 
 class DetailsScreen extends StatefulWidget {
@@ -17,6 +22,10 @@ class DetailsScreen extends StatefulWidget {
 
 class _DetailsScreenState extends State<DetailsScreen>
     with SingleTickerProviderStateMixin {
+  final DetailsScreenController detailsController = Get.put(
+    DetailsScreenController(),
+  );
+
   late TabController tabController;
 
   @override
@@ -142,7 +151,7 @@ class _DetailsScreenState extends State<DetailsScreen>
                 child: TabBar(
                   controller: tabController,
                   labelStyle: TextFontStyle.headline14w500c4d4d4dStyleSatoshi,
-                  unselectedLabelColor: Colors.grey,
+                  unselectedLabelColor: AppColors.c4d4d4d,
                   indicatorColor: AppColors.c778beb,
                   dividerColor: AppColors.c778beb,
                   indicatorSize: TabBarIndicatorSize.tab,
@@ -157,7 +166,11 @@ class _DetailsScreenState extends State<DetailsScreen>
             ),
           ),
         ],
-        body: TabShowingWidget(tabController: tabController),
+        body: TabShowingWidget(
+          tabController: tabController,
+          controller: detailsController.tabIndex,
+          tabViews: [AboutTab(), GalleryTab(), ReviewsTab()],
+        ),
       ),
     );
   }

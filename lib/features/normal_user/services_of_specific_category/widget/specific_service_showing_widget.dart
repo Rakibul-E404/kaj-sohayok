@@ -84,7 +84,7 @@ class SpecificServiceShowingWidget extends StatelessWidget {
             lineThickness: 1.sp,
             dashLength: 4.w,
             dashGapLength: 4.w,
-            dashColor: Colors.grey,
+            dashColor: AppColors.cb4b4b4,
           ),
           UIHelper.verticalSpace(8.h),
 

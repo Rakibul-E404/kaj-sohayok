@@ -9,7 +9,7 @@ import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 
 import '../../../../constants/text_font_style.dart';
-import '../widget/profile_tile_widget.dart';
+import '../../../../custom_widgets/profile_tile_widget.dart';
 
 class ProviderDetailsScreen extends StatelessWidget {
   const ProviderDetailsScreen({super.key});
