@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import '../controllers/change_password_screen_controller.dart';
 import '../controllers/home_page_controller.dart';
 import '../controllers/onboarding_controller.dart';
 import '../controllers/otp_validation_controller.dart';
@@ -18,5 +19,6 @@ class ControllerBindings extends Bindings {
     Get.lazyPut(() => SetNewPasswordScreenController());
     Get.lazyPut(() => HomePageController());
     Get.lazyPut(() => UserProfileScreenController());
+    Get.lazyPut(() => ChangePasswordScreenController());
   }
 }
