@@ -28,6 +28,9 @@ class $AssetsFontsGen {
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
+  /// File path: assets/icons/about_us_icon.svg
+  String get aboutUsIcon => 'assets/icons/about_us_icon.svg';
+
   /// File path: assets/icons/bell_icon.svg
   String get bellIcon => 'assets/icons/bell_icon.svg';
 
@@ -43,14 +46,23 @@ class $AssetsIconsGen {
   /// File path: assets/icons/chat_icon.svg
   String get chatIcon => 'assets/icons/chat_icon.svg';
 
+  /// File path: assets/icons/edit_icon.svg
+  String get editIcon => 'assets/icons/edit_icon.svg';
+
   /// File path: assets/icons/gender_logo.svg
   String get genderLogo => 'assets/icons/gender_logo.svg';
 
   /// File path: assets/icons/googleIcon.svg
   String get googleIcon => 'assets/icons/googleIcon.svg';
 
+  /// File path: assets/icons/help_icon.svg
+  String get helpIcon => 'assets/icons/help_icon.svg';
+
   /// File path: assets/icons/home_icon.svg
   String get homeIcon => 'assets/icons/home_icon.svg';
+
+  /// File path: assets/icons/keyIcon.svg
+  String get keyIcon => 'assets/icons/keyIcon.svg';
 
   /// File path: assets/icons/location_logo.svg
   String get locationLogo => 'assets/icons/location_logo.svg';
@@ -58,11 +70,17 @@ class $AssetsIconsGen {
   /// File path: assets/icons/lock_icon.svg
   String get lockIcon => 'assets/icons/lock_icon.svg';
 
+  /// File path: assets/icons/log_out_icon.svg
+  String get logOutIcon => 'assets/icons/log_out_icon.svg';
+
   /// File path: assets/icons/mail_icon.svg
   String get mailIcon => 'assets/icons/mail_icon.svg';
 
   /// File path: assets/icons/message_icon.svg
   String get messageIcon => 'assets/icons/message_icon.svg';
+
+  /// File path: assets/icons/pen_edit_icon.svg
+  String get penEditIcon => 'assets/icons/pen_edit_icon.svg';
 
   /// File path: assets/icons/personIcon.svg
   String get personIcon => 'assets/icons/personIcon.svg';
@@ -70,6 +88,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/personIcon_white_background.svg
   String get personIconWhiteBackground =>
       'assets/icons/personIcon_white_background.svg';
+
+  /// File path: assets/icons/privacy_policy_icon.svg
+  String get privacyPolicyIcon => 'assets/icons/privacy_policy_icon.svg';
 
   /// File path: assets/icons/profile_icon.svg
   String get profileIcon => 'assets/icons/profile_icon.svg';
@@ -83,30 +104,45 @@ class $AssetsIconsGen {
   /// File path: assets/icons/service_provider_logo.svg
   String get serviceProviderLogo => 'assets/icons/service_provider_logo.svg';
 
+  /// File path: assets/icons/terms_conditions_icon.svg
+  String get termsConditionsIcon => 'assets/icons/terms_conditions_icon.svg';
+
   /// File path: assets/icons/user_logo_gray.svg
   String get userLogoGray => 'assets/icons/user_logo_gray.svg';
 
+  /// File path: assets/icons/verified_icon.svg
+  String get verifiedIcon => 'assets/icons/verified_icon.svg';
+
   /// List of all assets
   List<String> get values => [
+    aboutUsIcon,
     bellIcon,
     bookingsIcon,
     calendarLogo,
     callIcon,
     chatIcon,
+    editIcon,
     genderLogo,
     googleIcon,
+    helpIcon,
     homeIcon,
+    keyIcon,
     locationLogo,
     lockIcon,
+    logOutIcon,
     mailIcon,
     messageIcon,
+    penEditIcon,
     personIcon,
     personIconWhiteBackground,
+    privacyPolicyIcon,
     profileIcon,
     rocket,
     searchIcon,
     serviceProviderLogo,
+    termsConditionsIcon,
     userLogoGray,
+    verifiedIcon,
   ];
 }
 

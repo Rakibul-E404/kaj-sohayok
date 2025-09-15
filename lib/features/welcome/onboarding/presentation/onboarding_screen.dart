@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
-import 'package:kaz_bd/features/welcome/onboarding/widgets/select_language_widget.dart';
+import 'package:kaz_bd/custom_widgets/select_language_widget.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
@@ -72,7 +72,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               ///Section : Button -> English, Bangla
               SelectLanguage(
                 tabController: _tabController,
-                controller: controller,
+                tabIndex: controller.tabIndex,
+                onTabChange: controller.changeTab,
                 leftTabTitle: "English",
                 rightTabTitle: "বাংলা",
               ),

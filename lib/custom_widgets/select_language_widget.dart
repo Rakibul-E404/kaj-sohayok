@@ -1,25 +1,29 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../../../constants/text_font_style.dart';
-import '../../../../controllers/onboarding_controller.dart';
-import '../../../../gen/colors.gen.dart';
+import '../constants/text_font_style.dart';
+import '../gen/colors.gen.dart';
 
 class SelectLanguage extends StatelessWidget {
   const SelectLanguage({
     super.key,
     required TabController tabController,
-    required this.controller,
     required this.leftTabTitle,
     required this.rightTabTitle,
+    required this.tabIndex,
+    required this.onTabChange,
   }) : _tabController = tabController;
 
   final TabController _tabController;
-  final OnboardingController controller;
   final String leftTabTitle;
   final String rightTabTitle;
+
+  /// Reactive variable to track the selected tab
+  final RxInt tabIndex;
+
+  /// Function to call when tab changes
+  final void Function(int index) onTabChange;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +39,7 @@ class SelectLanguage extends StatelessWidget {
           child: TabBar(
             splashFactory: NoSplash.splashFactory,
             controller: _tabController,
-            onTap: controller.changeTab,
+            onTap: onTabChange,
             labelPadding: EdgeInsets.zero,
             indicatorColor: Colors.transparent,
             indicatorWeight: 0,
@@ -44,18 +48,10 @@ class SelectLanguage extends StatelessWidget {
             indicator: BoxDecoration(
               color: AppColors.c778beb,
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(
-                  controller.tabIndex.value == 0 ? 100.r : 0.r,
-                ),
-                bottomLeft: Radius.circular(
-                  controller.tabIndex.value == 0 ? 100.r : 0.r,
-                ),
-                topRight: Radius.circular(
-                  controller.tabIndex.value == 1 ? 100.r : 0.r,
-                ),
-                bottomRight: Radius.circular(
-                  controller.tabIndex.value == 1 ? 100.r : 0.r,
-                ),
+                topLeft: Radius.circular(tabIndex.value == 0 ? 100.r : 0.r),
+                bottomLeft: Radius.circular(tabIndex.value == 0 ? 100.r : 0.r),
+                topRight: Radius.circular(tabIndex.value == 1 ? 100.r : 0.r),
+                bottomRight: Radius.circular(tabIndex.value == 1 ? 100.r : 0.r),
               ),
             ),
             labelColor: Colors.amber,
@@ -69,7 +65,7 @@ class SelectLanguage extends StatelessWidget {
                       leftTabTitle,
                       style: TextFontStyle.headline10w700cFFFFFFStyleSatoshi
                           .copyWith(
-                            color: controller.tabIndex.value == 0
+                            color: tabIndex.value == 0
                                 ? AppColors.cFFFFFF
                                 : AppColors.c000000,
                           ),
@@ -81,12 +77,12 @@ class SelectLanguage extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.center,
                   child: Obx(() {
-                    log("Tab Index : ${controller.tabIndex.value}");
+                    log("Tab Index : ${tabIndex.value}");
                     return Text(
                       rightTabTitle,
                       style: TextFontStyle.headline10w700cFFFFFFStyleSatoshi
                           .copyWith(
-                            color: controller.tabIndex.value == 0
+                            color: tabIndex.value == 0
                                 ? AppColors.c000000
                                 : AppColors.cFFFFFF,
                           ),
