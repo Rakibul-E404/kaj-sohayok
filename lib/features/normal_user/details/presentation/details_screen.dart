@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -11,6 +13,8 @@ import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import '../../../../constants/text_font_style.dart';
 import '../../../../controllers/details_screen_controller.dart';
+import '../../../../custom_widgets/custom_elevated_button.dart';
+import '../../../../routes/routes.dart';
 import '../widget/sliver_tab_bar_delegate_helper_widget.dart';
 
 class DetailsScreen extends StatefulWidget {
@@ -44,6 +48,7 @@ class _DetailsScreenState extends State<DetailsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
+
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: AppColors.scaffoldBackgroundColor,

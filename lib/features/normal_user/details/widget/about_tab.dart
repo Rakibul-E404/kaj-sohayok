@@ -44,78 +44,83 @@ class AboutTab extends StatelessWidget {
           ///Section : Service Provider
           ///Section : Message
           ///Section : Call
-          Container(
-            width: 1.sw,
-            padding: EdgeInsets.all(12.sp),
-            decoration: BoxDecoration(
-              color: AppColors.cFFFFFF,
-              border: Border.all(color: AppColors.cb4b4b4),
-              borderRadius: BorderRadius.circular(8.r),
-            ),
+          InkWell(
+            onTap: () {
+              Get.toNamed(Routes.serviceProviderProfileDetailsScreen);
+            },
+            child: Container(
+              width: 1.sw,
+              padding: EdgeInsets.all(12.sp),
+              decoration: BoxDecoration(
+                color: AppColors.cFFFFFF,
+                border: Border.all(color: AppColors.cb4b4b4),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
 
-            child: Row(
-              children: [
-                ///Section : Service Provider Image
-                CircleAvatar(
-                  radius: 20.r,
-                  backgroundImage: AssetImage(Assets.images.userImage.path),
-                ),
-                UIHelper.horizontalSpace(6.w),
+              child: Row(
+                children: [
+                  ///Section : Service Provider Image
+                  CircleAvatar(
+                    radius: 20.r,
+                    backgroundImage: AssetImage(Assets.images.userImage.path),
+                  ),
+                  UIHelper.horizontalSpace(6.w),
 
-                ///Section : Service Provider Name
-                ///Section : Service Provider
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ///Section : Service Provider Name
-                    Text(
-                      "Ripon Mia",
-                      style: TextFontStyle.headline16w500c202020StyleSatoshi,
-                    ),
-                    UIHelper.verticalSpace(2.h),
-
-                    ///Section : Service Provider
-                    Text(
-                      "Services Provider",
-                      style: TextFontStyle.headline10w500c4d4d4dStyleSatoshi,
-                    ),
-                  ],
-                ),
-                Spacer(),
-
-                ///Section : Message
-                ///Section : Call
-                Row(
-                  children: [
-                    ///Section : Message
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        padding: EdgeInsets.all(6.sp),
-                        decoration: BoxDecoration(
-                          color: AppColors.cbababa,
-                          shape: BoxShape.circle,
-                        ),
-                        child: SvgPicture.asset(Assets.icons.messageIcon),
+                  ///Section : Service Provider Name
+                  ///Section : Service Provider
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ///Section : Service Provider Name
+                      Text(
+                        "Ripon Mia",
+                        style: TextFontStyle.headline16w500c202020StyleSatoshi,
                       ),
-                    ),
-                    UIHelper.horizontalSpace(8.w),
+                      UIHelper.verticalSpace(2.h),
 
-                    ///Section : Call
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        padding: EdgeInsets.all(6.sp),
-                        decoration: BoxDecoration(
-                          color: AppColors.cbababa,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(Icons.call, color: AppColors.cFFFFFF),
+                      ///Section : Service Provider
+                      Text(
+                        "Services Provider",
+                        style: TextFontStyle.headline10w500c4d4d4dStyleSatoshi,
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                  Spacer(),
+
+                  ///Section : Message
+                  ///Section : Call
+                  Row(
+                    children: [
+                      ///Section : Message
+                      InkWell(
+                        onTap: () {},
+                        child: Container(
+                          padding: EdgeInsets.all(6.sp),
+                          decoration: BoxDecoration(
+                            color: AppColors.cbababa,
+                            shape: BoxShape.circle,
+                          ),
+                          child: SvgPicture.asset(Assets.icons.messageIcon),
+                        ),
+                      ),
+                      UIHelper.horizontalSpace(8.w),
+
+                      ///Section : Call
+                      InkWell(
+                        onTap: () {},
+                        child: Container(
+                          padding: EdgeInsets.all(6.sp),
+                          decoration: BoxDecoration(
+                            color: AppColors.cbababa,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(Icons.call, color: AppColors.cFFFFFF),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
           UIHelper.verticalSpace(24.h),
@@ -124,7 +129,7 @@ class AboutTab extends StatelessWidget {
           CustomElevatedButton(
             onTap: () {
               log("Button Taped -> Book Services Now");
-              Get.toNamed(Routes.serviceProviderProfileDetailsScreen);
+              Get.toNamed(Routes.bookingDateScreen);
             },
             buttonTitle: "Book Services Now",
           ),
