@@ -7,6 +7,7 @@ import 'package:kaz_bd/features/auth/sign_in/presentation/sign_in_screen.dart';
 import 'package:kaz_bd/features/auth/sign_up/presentation/sign_up_screen.dart';
 import 'package:kaz_bd/features/common_screens/about_us/presentation/about_us_screen.dart';
 import 'package:kaz_bd/features/common_screens/contact_us/presentation/contact_us_screen.dart';
+import 'package:kaz_bd/features/common_screens/edit_profile/presentation/edit_profile_screen.dart';
 import 'package:kaz_bd/features/common_screens/privacy_policy/presentation/privacy_policy_screen.dart';
 import 'package:kaz_bd/features/common_screens/terms_and_conditions/presentation/terms_and_conditions_screen.dart';
 import 'package:kaz_bd/features/normal_user/all_categories/presentation/all_categories_screen.dart';
@@ -39,6 +40,7 @@ class Routes {
   static const String termsAndConditionsScreen = '/terms_and_conditions_screen';
   static const String aboutUsScreen = '/about_us_screen';
   static const String contactUsScreen = '/contact_us_screen';
+  static const String editProfileScreen = '/edit_profile_screen';
   static const String servicesOfSpecificCategoryScreen =
       '/services_of_specific_category_screen';
   static const String serviceDetailsScreen = '/service_details_screen';
@@ -212,6 +214,15 @@ class Routes {
     GetPage(
       name: contactUsScreen,
       page: () => ContactUsScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///editProfileScreen
+    GetPage(
+      name: editProfileScreen,
+      page: () => EditProfileScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),
