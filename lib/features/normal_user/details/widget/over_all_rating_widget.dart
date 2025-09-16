@@ -48,7 +48,7 @@ class OverallRatingWidget extends StatelessWidget {
         // ===== Total Reviews Text =====
         Text(
           '$totalReviews Reviews', // Example: "250 Reviews"
-          style: TextFontStyle.headline14w400c000000StyleSatoshi,
+          style: TextFontStyle.headline14w400c111111StyleSatoshi,
         ),
       ],
     );

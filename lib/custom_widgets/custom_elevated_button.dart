@@ -14,6 +14,7 @@ class CustomElevatedButton extends StatelessWidget {
   final bool isButtonBorderUsed;
   final Color? buttonColor;
   final TextStyle? textStyle;
+  final double? buttonBorderWidth;
 
   final void Function()? onTap;
 
@@ -29,6 +30,7 @@ class CustomElevatedButton extends StatelessWidget {
     this.onTap,
     this.buttonColor,
     this.textStyle,
+    this.buttonBorderWidth,
   });
 
   @override
@@ -44,7 +46,7 @@ class CustomElevatedButton extends StatelessWidget {
           border: isButtonBorderUsed
               ? Border.all(
                   color: buttonBorderColor ?? AppColors.c000000,
-                  width: 1.sp,
+                  width: buttonBorderWidth ?? 1.sp,
                 )
               : null,
           borderRadius: BorderRadius.circular(borderRadius ?? 10.r),
