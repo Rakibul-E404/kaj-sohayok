@@ -12,10 +12,14 @@ import 'package:kaz_bd/features/common_screens/privacy_policy/presentation/priva
 import 'package:kaz_bd/features/common_screens/terms_and_conditions/presentation/terms_and_conditions_screen.dart';
 import 'package:kaz_bd/features/normal_user/all_categories/presentation/all_categories_screen.dart';
 import 'package:kaz_bd/features/common_screens/change_password/presentation/change_password_screen.dart';
+import 'package:kaz_bd/features/normal_user/booking_date/presentation/booking_date_screen.dart';
 import 'package:kaz_bd/features/normal_user/details/presentation/details_screen.dart';
 import 'package:kaz_bd/features/normal_user/notification/presentation/notification_screen.dart';
 import 'package:kaz_bd/features/normal_user/provider_profile_details/presentation/provider_profile_details_screen.dart';
+import 'package:kaz_bd/features/normal_user/search_location/presentation/search_location_screen.dart';
+import 'package:kaz_bd/features/normal_user/service_preview/presentation/service_preview_screen.dart';
 import 'package:kaz_bd/features/normal_user/services_of_specific_category/presentation/services_of_specific_category_screen.dart';
+import 'package:kaz_bd/features/normal_user/work_completed_details/presentation/work_completed_details_screen.dart';
 import 'package:kaz_bd/features/welcome/choose_role/presentation/choose_role_screen.dart';
 import 'package:kaz_bd/features/welcome/onboarding/presentation/onboarding_screen.dart';
 import 'package:kaz_bd/features/welcome/splash/presentation/splash_screen.dart';
@@ -41,6 +45,11 @@ class Routes {
   static const String aboutUsScreen = '/about_us_screen';
   static const String contactUsScreen = '/contact_us_screen';
   static const String editProfileScreen = '/edit_profile_screen';
+  static const String servicePreviewScreen = '/service_preview_screen';
+  static const String bookingDateScreen = '/booking_date_screen';
+  static const String searchLocationScreen = '/search_location_screen';
+  static const String workCompletedDetailsScreen =
+      '/work_completed_details_screen';
   static const String servicesOfSpecificCategoryScreen =
       '/services_of_specific_category_screen';
   static const String serviceDetailsScreen = '/service_details_screen';
@@ -223,6 +232,42 @@ class Routes {
     GetPage(
       name: editProfileScreen,
       page: () => EditProfileScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///workCompletedDetailsScreen
+    GetPage(
+      name: workCompletedDetailsScreen,
+      page: () => WorkCompletedDetailsScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///servicePreviewScreen
+    GetPage(
+      name: servicePreviewScreen,
+      page: () => ServicesPreviewScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///bookingDateScreen
+    GetPage(
+      name: bookingDateScreen,
+      page: () => BookingDateScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///searchLocationScreen
+    GetPage(
+      name: searchLocationScreen,
+      page: () => SearchLocationScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),

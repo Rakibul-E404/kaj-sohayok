@@ -82,6 +82,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/pen_edit_icon.svg
   String get penEditIcon => 'assets/icons/pen_edit_icon.svg';
 
+  /// File path: assets/icons/pencil_edit_icon.svg
+  String get pencilEditIcon => 'assets/icons/pencil_edit_icon.svg';
+
   /// File path: assets/icons/personIcon.svg
   String get personIcon => 'assets/icons/personIcon.svg';
 
@@ -133,6 +136,7 @@ class $AssetsIconsGen {
     mailIcon,
     messageIcon,
     penEditIcon,
+    pencilEditIcon,
     personIcon,
     personIconWhiteBackground,
     privacyPolicyIcon,
@@ -193,6 +197,10 @@ class $AssetsImagesGen {
   AssetGenImage get userImage =>
       const AssetGenImage('assets/images/user_image.jpg');
 
+  /// File path: assets/images/verified_check_icon.png
+  AssetGenImage get verifiedCheckIcon =>
+      const AssetGenImage('assets/images/verified_check_icon.png');
+
   /// List of all assets
   List<AssetGenImage> get values => [
     appLogo,
@@ -206,6 +214,7 @@ class $AssetsImagesGen {
     serviceImage,
     specificServiceImage,
     userImage,
+    verifiedCheckIcon,
   ];
 }
 

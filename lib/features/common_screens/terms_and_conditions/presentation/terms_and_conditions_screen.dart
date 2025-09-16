@@ -14,7 +14,10 @@ class TermsAndConditionsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text("Terms & conditions"),
+        title: Text(
+          "Terms & conditions",
+          style: TextFontStyle.headline18w700c000000StyleSatoshi,
+        ),
         centerTitle: true,
         backgroundColor: AppColors.scaffoldBackgroundColor,
       ),
