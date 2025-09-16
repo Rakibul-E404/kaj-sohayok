@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:kaz_bd/routes/routes.dart';
 
 import '../../../../constants/appList.dart';
 import '../../../../constants/text_font_style.dart';
@@ -25,65 +27,79 @@ class ProfileTab extends StatelessWidget {
             ///Section : Ratings
             ///Section : Message
             ///Section : Call
-            Container(
-              width: 1.sw,
+            Card(
+              child: Container(
+                width: 1.sw,
 
-              decoration: BoxDecoration(
-                // color: Colors.amber,
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 1.sw,
-
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 10.h,
+                decoration: BoxDecoration(
+                  color: AppColors.cFFFFFF,
+                  borderRadius: BorderRadius.circular(16.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.ca4b1f2.withAlpha(80),
+                      blurRadius: 12.r,
+                      offset: const Offset(0, 6),
                     ),
-                    decoration: BoxDecoration(
-                      color: AppColors.cf1f3fd,
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(16.r),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 1.sw,
+
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 10.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.cf1f3fd,
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(16.r),
+                        ),
+                      ),
+
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Profile information",
+                            style:
+                                TextFontStyle.headline16w700c000000StyleSatoshi,
+                          ),
+
+                          InkWell(
+                            onTap: () {
+                              Get.toNamed(Routes.editProfileScreen);
+                            },
+                            child: SvgPicture.asset(Assets.icons.penEditIcon),
+                          ),
+                        ],
                       ),
                     ),
+                    UIHelper.verticalSpace(10.h),
 
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Profile information",
-                          style:
-                              TextFontStyle.headline16w700c000000StyleSatoshi,
-                        ),
-
-                        SvgPicture.asset(Assets.icons.penEditIcon),
-                      ],
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.w),
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: AppList.userProfileList.length,
+                        separatorBuilder: (context, index) =>
+                            UIHelper.verticalSpace(10.h),
+                        itemBuilder: (context, index) {
+                          var data = AppList.userProfileList[index];
+                          return ProfileTileWidget(
+                            onTap: () {},
+                            title: data.title,
+                            data: data.data,
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                  UIHelper.verticalSpace(10.h),
-
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10.w),
-                    child: ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: AppList.userProfileList.length,
-                      separatorBuilder: (context, index) =>
-                          UIHelper.verticalSpace(10.h),
-                      itemBuilder: (context, index) {
-                        var data = AppList.userProfileList[index];
-                        return ProfileTileWidget(
-                          onTap: () {},
-                          title: data.title,
-                          data: data.data,
-                        );
-                      },
-                    ),
-                  ),
-                  UIHelper.verticalSpace(10.h),
-                ],
+                    UIHelper.verticalSpace(10.h),
+                  ],
+                ),
               ),
             ),
           ],
