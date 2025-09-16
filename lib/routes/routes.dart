@@ -5,8 +5,12 @@ import 'package:kaz_bd/features/auth/forgot_password/presentation/forgot_passwor
 import 'package:kaz_bd/features/auth/set_new_password/presentation/set_new_password_screen.dart';
 import 'package:kaz_bd/features/auth/sign_in/presentation/sign_in_screen.dart';
 import 'package:kaz_bd/features/auth/sign_up/presentation/sign_up_screen.dart';
+import 'package:kaz_bd/features/common_screens/about_us/presentation/about_us_screen.dart';
+import 'package:kaz_bd/features/common_screens/contact_us/presentation/contact_us_screen.dart';
+import 'package:kaz_bd/features/common_screens/privacy_policy/presentation/privacy_policy_screen.dart';
+import 'package:kaz_bd/features/common_screens/terms_and_conditions/presentation/terms_and_conditions_screen.dart';
 import 'package:kaz_bd/features/normal_user/all_categories/presentation/all_categories_screen.dart';
-import 'package:kaz_bd/features/normal_user/change_password/presentation/change_password_screen.dart';
+import 'package:kaz_bd/features/common_screens/change_password/presentation/change_password_screen.dart';
 import 'package:kaz_bd/features/normal_user/details/presentation/details_screen.dart';
 import 'package:kaz_bd/features/normal_user/notification/presentation/notification_screen.dart';
 import 'package:kaz_bd/features/normal_user/provider_profile_details/presentation/provider_profile_details_screen.dart';
@@ -31,6 +35,10 @@ class Routes {
   static const String notificationScreen = '/notification_screen';
   static const String allCategoriesScreen = '/allCategories_screen';
   static const String changePasswordScreen = '/change_password_screen';
+  static const String privacyPolicyScreen = '/privacy_policy_screen';
+  static const String termsAndConditionsScreen = '/terms_and_conditions_screen';
+  static const String aboutUsScreen = '/about_us_screen';
+  static const String contactUsScreen = '/contact_us_screen';
   static const String servicesOfSpecificCategoryScreen =
       '/services_of_specific_category_screen';
   static const String serviceDetailsScreen = '/service_details_screen';
@@ -168,6 +176,42 @@ class Routes {
     GetPage(
       name: changePasswordScreen,
       page: () => ChangePasswordScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///privacyPolicyScreen
+    GetPage(
+      name: privacyPolicyScreen,
+      page: () => PrivacyPolicyScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///termsAndConditionsScreen
+    GetPage(
+      name: termsAndConditionsScreen,
+      page: () => TermsAndConditionsScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///aboutUsScreen
+    GetPage(
+      name: aboutUsScreen,
+      page: () => AboutUsScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///contactUsScreen
+    GetPage(
+      name: contactUsScreen,
+      page: () => ContactUsScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),

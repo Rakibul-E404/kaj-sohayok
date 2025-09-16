@@ -169,6 +169,10 @@ class $AssetsImagesGen {
   AssetGenImage get heroBannerImage =>
       const AssetGenImage('assets/images/hero_banner_image.png');
 
+  /// File path: assets/images/log_out_image.png
+  AssetGenImage get logOutImage =>
+      const AssetGenImage('assets/images/log_out_image.png');
+
   /// File path: assets/images/onboarding_image.png
   AssetGenImage get onboardingImage =>
       const AssetGenImage('assets/images/onboarding_image.png');
@@ -196,6 +200,7 @@ class $AssetsImagesGen {
     doneImage,
     errorImage,
     heroBannerImage,
+    logOutImage,
     onboardingImage,
     resetDoneImage,
     serviceImage,

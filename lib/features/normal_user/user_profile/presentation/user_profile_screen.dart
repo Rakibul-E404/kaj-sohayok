@@ -126,21 +126,26 @@ class _UserProfileScreenState extends State<UserProfileScreen>
             SliverPersistentHeader(
               pinned: true,
               delegate: SliverTabBarDelegateHelper(
-                minHeight: 23.h,
-                maxHeight: 23.h,
+                minHeight: 40.h,
+                maxHeight: 40.h,
                 child: Container(
                   color: AppColors.scaffoldBackgroundColor,
                   padding: EdgeInsets.symmetric(
                     horizontal: UIHelper.kDefaulutPadding(),
                   ),
                   child: TabBar(
+                    tabAlignment: TabAlignment.start,
+                    isScrollable: true,
                     controller: _profileOptionsTabController,
                     labelStyle: TextFontStyle.headline14w500c4d4d4dStyleSatoshi,
                     unselectedLabelColor: AppColors.c4d4d4d,
                     indicatorColor: AppColors.c778beb,
                     dividerColor: AppColors.c778beb,
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    labelPadding: EdgeInsets.symmetric(horizontal: 4.w),
+                    indicatorSize: TabBarIndicatorSize.label,
+                    // labelPadding: EdgeInsets.symmetric(
+                    //   horizontal: 4.w,
+                    //   vertical: 8.h,
+                    // ),
                     indicatorWeight: 4.h,
                     tabs: const [
                       Tab(text: "Profile"),
