@@ -14,7 +14,10 @@ class AboutUsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text("About us"),
+        title: Text(
+          "About us",
+          style: TextFontStyle.headline18w700c000000StyleSatoshi,
+        ),
         centerTitle: true,
         backgroundColor: AppColors.scaffoldBackgroundColor,
       ),
