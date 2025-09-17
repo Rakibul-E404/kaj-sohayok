@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:kaz_bd/features/normal_user/work_completed_details/presentation/work_completed_details_screen.dart';
 import 'package:kaz_bd/routes/routes.dart';
-
 import 'bindings/controllers_binding.dart';
 
 void main() {
@@ -21,8 +21,10 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (_, child) {
         return GetMaterialApp(
+          // home: WorkCompletedDetailsScreen(),
           debugShowCheckedModeBanner: false,
-          initialRoute: Routes.onboardingScreen,
+          // initialRoute: Routes.onboardingScreen,
+          initialRoute: Routes.workCompletedDetailsScreen,
           getPages: Routes.appRoutes,
           initialBinding: ControllerBindings(),
         );
