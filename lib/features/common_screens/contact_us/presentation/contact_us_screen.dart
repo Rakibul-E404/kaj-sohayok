@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../constants/text_font_style.dart';
 import '../../../../gen/colors.gen.dart';
 import '../widgets/contact_tile_widget.dart';
 
@@ -30,7 +31,10 @@ class ContactUsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text("Contact us"),
+        title: Text(
+          "Contact us",
+          style: TextFontStyle.headline18w700c000000StyleSatoshi,
+        ),
         centerTitle: true,
         backgroundColor: AppColors.scaffoldBackgroundColor,
       ),
