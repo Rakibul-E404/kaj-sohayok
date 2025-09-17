@@ -116,6 +116,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/verified_icon.svg
   String get verifiedIcon => 'assets/icons/verified_icon.svg';
 
+  /// File path: assets/icons/wallet_icon.svg
+  String get walletIcon => 'assets/icons/wallet_icon.svg';
+
   /// List of all assets
   List<String> get values => [
     aboutUsIcon,
@@ -147,6 +150,7 @@ class $AssetsIconsGen {
     termsConditionsIcon,
     userLogoGray,
     verifiedIcon,
+    walletIcon,
   ];
 }
 

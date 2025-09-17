@@ -84,7 +84,7 @@ class PaymentHistoryShowingCard extends StatelessWidget {
             ),
             UIHelper.verticalSpace(12.h),
 
-            ///Sesction : Divider
+            ///Section : Divider
             DottedLine(
               direction: Axis.horizontal,
               lineLength: double.infinity,
