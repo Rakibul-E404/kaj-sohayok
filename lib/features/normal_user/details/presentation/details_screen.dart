@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/constants/app_constant_text.dart';
+import 'package:kaz_bd/constants/app_enums.dart';
 import 'package:kaz_bd/features/normal_user/details/widget/about_tab.dart';
 import 'package:kaz_bd/features/normal_user/details/widget/gallery_tab.dart';
 import 'package:kaz_bd/features/normal_user/details/widget/reviews_tab.dart';
@@ -31,11 +32,37 @@ class _DetailsScreenState extends State<DetailsScreen>
   );
 
   late TabController tabController;
+  late BookingStatusEnum? status;
+  late bool hideBookServiceNowButton;
+  late bool isRoutedFromBookingTab;
 
   @override
   void initState() {
     super.initState();
     tabController = TabController(length: 3, vsync: this);
+
+    ///setting the accepted arguments initial value
+    status = Get.arguments?["status"] as BookingStatusEnum?;
+
+    hideBookServiceNowButton = _getButtonVisibility(status);
+
+    ///hideBookServiceNowButton is a boolean type value it's value is being used to detarmine
+    /// wither the routing has come from the bookings tab or not
+    isRoutedFromBookingTab = hideBookServiceNowButton;
+  }
+
+  bool _getButtonVisibility(BookingStatusEnum? status) {
+    switch (status) {
+      case BookingStatusEnum.pending:
+      case BookingStatusEnum.acceptedBooking:
+      case BookingStatusEnum.inProgress:
+      case BookingStatusEnum.paymentRequest:
+      case BookingStatusEnum.canceled:
+      case BookingStatusEnum.workCompleted:
+        return true;
+      default:
+        return false;
+    }
   }
 
   @override
@@ -46,6 +73,9 @@ class _DetailsScreenState extends State<DetailsScreen>
 
   @override
   Widget build(BuildContext context) {
+    log(
+      "hideBookServiceNowButton Value --------------/////----- : $hideBookServiceNowButton",
+    );
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
 
@@ -174,9 +204,29 @@ class _DetailsScreenState extends State<DetailsScreen>
         body: TabShowingWidget(
           tabController: tabController,
           controller: detailsController.tabIndex,
-          tabViews: [AboutTab(), GalleryTab(), ReviewsTab()],
+          tabViews: [
+            AboutTab(isRoutedFromBookingTab: isRoutedFromBookingTab),
+            GalleryTab(),
+            ReviewsTab(),
+          ],
         ),
       ),
+
+      /// --- Single Button (shared across all tabs) ---
+      bottomNavigationBar: hideBookServiceNowButton
+          ? null
+          : Container(
+              width: 1.sw,
+              padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),
+              color: Colors.transparent,
+
+              child: CustomElevatedButton(
+                onTap: () {
+                  Get.toNamed(Routes.bookingDateScreen);
+                },
+                buttonTitle: "Book Services Now",
+              ),
+            ),
     );
   }
 }
