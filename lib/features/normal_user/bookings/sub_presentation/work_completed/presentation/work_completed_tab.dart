@@ -7,6 +7,7 @@ import '../../../../../../constants/app_enums.dart';
 import '../../../../../../gen/assets.gen.dart';
 import '../../../../../../helpers/ui_helpers.dart';
 import '../../../../../../routes/routes.dart';
+import '../widgets/show_review_giving_alert_dialog.dart';
 
 class WorkCompletedTab extends StatelessWidget {
   const WorkCompletedTab({super.key});
@@ -20,12 +21,15 @@ class WorkCompletedTab extends StatelessWidget {
         return BookingDetailsCardWidget(
           onTap: () {
             Get.toNamed(
-              Routes.serviceDetailsScreen,
+              Routes.workCompletedDetailsScreen,
               arguments: {"status": BookingStatusEnum.workCompleted},
             );
           },
           isWorkCompletedTab: true,
-          isWorkCompletedTabGiveReviewOnTap: () {},
+          isReviewGiven: index % 2 == 0 ? true : false,
+          isWorkCompletedTabGiveReviewOnTap: () {
+            showReviewGivingAlertDialog();
+          },
           title: "Jfdlskfjkl",
           initialPayablePrice: "54",
           location: "sdkfjsldk",

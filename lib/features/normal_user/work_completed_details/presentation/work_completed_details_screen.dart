@@ -255,23 +255,11 @@ class WorkCompletedDetailsScreen extends StatelessWidget {
 }
 */
 
-
-
-
-
 ///
 ///----------adding video player
 ///
 
-
-
-
-
-
-
 import 'dart:developer';
-
-import 'package:dotted_border/dotted_border.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -285,18 +273,20 @@ import 'package:video_player/video_player.dart';
 
 import '../../../../gen/colors.gen.dart';
 import '../../../../routes/routes.dart';
-import '../widgets/address_and_order_date_tile.dart';
-import '../widgets/proof_of_work_showing_widget.dart';
-import '../widgets/workCompleteDateAndTimeWidget.dart';
+import '../../../../custom_widgets/address_and_order_date_tile.dart';
+import '../../../../custom_widgets/proof_of_work_showing_widget.dart';
+import '../../../../custom_widgets/workCompleteDateAndTimeWidget.dart';
 
 class WorkCompletedDetailsScreen extends StatefulWidget {
   const WorkCompletedDetailsScreen({super.key});
 
   @override
-  State<WorkCompletedDetailsScreen> createState() => _WorkCompletedDetailsScreenState();
+  State<WorkCompletedDetailsScreen> createState() =>
+      _WorkCompletedDetailsScreenState();
 }
 
-class _WorkCompletedDetailsScreenState extends State<WorkCompletedDetailsScreen> {
+class _WorkCompletedDetailsScreenState
+    extends State<WorkCompletedDetailsScreen> {
   late VideoPlayerController _videoController;
   bool _isVideoInitialized = false;
 
@@ -309,7 +299,9 @@ class _WorkCompletedDetailsScreenState extends State<WorkCompletedDetailsScreen>
   void _initializeVideoPlayer() {
     // Try multiple video sources - replace with your actual video URL
     _videoController = VideoPlayerController.networkUrl(
-      Uri.parse('https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'),
+      Uri.parse(
+        'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+      ),
     );
 
     // Alternative working URLs you can try:
@@ -319,21 +311,24 @@ class _WorkCompletedDetailsScreenState extends State<WorkCompletedDetailsScreen>
     // For local asset video, use:
     // _videoController = VideoPlayerController.asset('assets/videos/sample_video.mp4');
 
-    _videoController.initialize().then((_) {
-      if (mounted) {
-        setState(() {
-          _isVideoInitialized = true;
+    _videoController
+        .initialize()
+        .then((_) {
+          if (mounted) {
+            setState(() {
+              _isVideoInitialized = true;
+            });
+            log('Video initialized successfully');
+          }
+        })
+        .catchError((error) {
+          log('Video initialization error: $error');
+          if (mounted) {
+            setState(() {
+              _isVideoInitialized = false;
+            });
+          }
         });
-        log('Video initialized successfully');
-      }
-    }).catchError((error) {
-      log('Video initialization error: $error');
-      if (mounted) {
-        setState(() {
-          _isVideoInitialized = false;
-        });
-      }
-    });
 
     // Add listener for video state changes
     _videoController.addListener(() {
@@ -362,9 +357,7 @@ class _WorkCompletedDetailsScreenState extends State<WorkCompletedDetailsScreen>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircularProgressIndicator(
-                color: AppColors.c778beb,
-              ),
+              CircularProgressIndicator(color: AppColors.c778beb),
               UIHelper.verticalSpace(8.h),
               Text(
                 'Loading video...',
@@ -429,7 +422,9 @@ class _WorkCompletedDetailsScreenState extends State<WorkCompletedDetailsScreen>
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
-                        _videoController.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                        _videoController.value.isPlaying
+                            ? Icons.pause
+                            : Icons.play_arrow,
                         color: Colors.white,
                         size: 32.sp,
                       ),
@@ -782,13 +777,13 @@ class _WorkCompletedDetailsScreenState extends State<WorkCompletedDetailsScreen>
                           Text(
                             "Other Parts",
                             style:
-                            TextFontStyle.headline16w500c202020StyleSatoshi,
+                                TextFontStyle.headline16w500c202020StyleSatoshi,
                           ),
 
                           Text(
                             "${AppText.bdTkSign}${300.50}",
                             style:
-                            TextFontStyle.headline16w500c202020StyleSatoshi,
+                                TextFontStyle.headline16w500c202020StyleSatoshi,
                           ),
                         ],
                       ),
