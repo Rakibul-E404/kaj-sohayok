@@ -14,7 +14,8 @@ import '../../../../custom_widgets/custom_text_with_readmore_button.dart';
 import '../../../../helpers/ui_helpers.dart';
 
 class AboutTab extends StatelessWidget {
-  const AboutTab({super.key});
+  final bool isRoutedFromBookingTab;
+  const AboutTab({super.key, required this.isRoutedFromBookingTab});
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +98,9 @@ class AboutTab extends StatelessWidget {
                         child: Container(
                           padding: EdgeInsets.all(6.sp),
                           decoration: BoxDecoration(
-                            color: AppColors.cbababa,
+                            color: isRoutedFromBookingTab
+                                ? AppColors.c778beb
+                                : AppColors.cbababa,
                             shape: BoxShape.circle,
                           ),
                           child: SvgPicture.asset(Assets.icons.messageIcon),
@@ -111,7 +114,9 @@ class AboutTab extends StatelessWidget {
                         child: Container(
                           padding: EdgeInsets.all(6.sp),
                           decoration: BoxDecoration(
-                            color: AppColors.cbababa,
+                            color: isRoutedFromBookingTab
+                                ? AppColors.c778beb
+                                : AppColors.cbababa,
                             shape: BoxShape.circle,
                           ),
                           child: Icon(Icons.call, color: AppColors.cFFFFFF),
@@ -123,16 +128,16 @@ class AboutTab extends StatelessWidget {
               ),
             ),
           ),
-          UIHelper.verticalSpace(24.h),
+          UIHelper.verticalSpace(30.h),
 
           ///Section : Button -> Book Services Now
-          CustomElevatedButton(
-            onTap: () {
-              log("Button Taped -> Book Services Now");
-              Get.toNamed(Routes.bookingDateScreen);
-            },
-            buttonTitle: "Book Services Now",
-          ),
+          // CustomElevatedButton(
+          //   onTap: () {
+          //     log("Button Taped -> Book Services Now");
+          //     Get.toNamed(Routes.bookingDateScreen);
+          //   },
+          //   buttonTitle: "Book Services Now",
+          // ),
         ],
       ),
     );

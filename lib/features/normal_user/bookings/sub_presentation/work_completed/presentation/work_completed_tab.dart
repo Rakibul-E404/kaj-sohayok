@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:kaz_bd/features/normal_user/bookings/widgets/bookings_details_card_widget.dart';
 
+import '../../../../../../constants/app_enums.dart';
 import '../../../../../../gen/assets.gen.dart';
 import '../../../../../../helpers/ui_helpers.dart';
+import '../../../../../../routes/routes.dart';
 
 class WorkCompletedTab extends StatelessWidget {
   const WorkCompletedTab({super.key});
@@ -15,6 +18,12 @@ class WorkCompletedTab extends StatelessWidget {
       separatorBuilder: (context, index) => UIHelper.verticalSpace(24.h),
       itemBuilder: (context, index) {
         return BookingDetailsCardWidget(
+          onTap: () {
+            Get.toNamed(
+              Routes.serviceDetailsScreen,
+              arguments: {"status": BookingStatusEnum.workCompleted},
+            );
+          },
           isWorkCompletedTab: true,
           isWorkCompletedTabGiveReviewOnTap: () {},
           title: "Jfdlskfjkl",

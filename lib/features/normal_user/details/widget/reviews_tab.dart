@@ -51,6 +51,7 @@ class ReviewsTab extends StatelessWidget {
               );
             },
           ),
+          UIHelper.verticalSpace(30.h),
         ],
       ),
     );
