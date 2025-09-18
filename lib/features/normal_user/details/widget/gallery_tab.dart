@@ -57,6 +57,7 @@ class _GalleryTabState extends State<GalleryTab> {
               );
             },
           ),
+          UIHelper.verticalSpace(30.h),
         ],
       ),
     );

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
+import '../../../../../../constants/app_enums.dart';
 import '../../../../../../gen/assets.gen.dart';
 import '../../../../../../helpers/ui_helpers.dart';
+import '../../../../../../routes/routes.dart';
 import '../../../widgets/bookings_details_card_widget.dart';
 
 class PaymentRequestTab extends StatelessWidget {
@@ -15,6 +18,12 @@ class PaymentRequestTab extends StatelessWidget {
       separatorBuilder: (context, index) => UIHelper.verticalSpace(24.h),
       itemBuilder: (context, index) {
         return BookingDetailsCardWidget(
+          onTap: () {
+            Get.toNamed(
+              Routes.serviceDetailsScreen,
+              arguments: {"status": BookingStatusEnum.paymentRequest},
+            );
+          },
           isPaymentRequestTab: true,
           isPaymentRequestTabPayOnTap: () {},
           isPaymentRequestTabViewOnTap: () {},
