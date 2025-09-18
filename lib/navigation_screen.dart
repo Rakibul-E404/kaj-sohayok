@@ -178,14 +178,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:kaz_bd/features/auth/forgot_password/presentation/forgot_password_screen.dart';
-import 'package:kaz_bd/features/auth/sign_in/presentation/sign_in_screen.dart';
-import 'package:kaz_bd/features/auth/verify_otp/verify_otp_screen.dart';
 import 'package:kaz_bd/features/normal_user/bookings/presentation/bookings_screen.dart';
 import 'package:kaz_bd/features/normal_user/home/presentation/home_screen.dart';
 import 'package:kaz_bd/features/normal_user/messages/message_list.dart';
 import 'package:kaz_bd/features/normal_user/user_profile/presentation/user_profile_screen.dart';
-import 'package:kaz_bd/features/welcome/choose_role/presentation/choose_role_screen.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 

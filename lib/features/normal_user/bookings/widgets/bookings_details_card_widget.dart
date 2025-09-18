@@ -44,6 +44,7 @@ class BookingDetailsCardWidget extends StatelessWidget {
 
   final bool isWorkCompletedTab;
   final void Function()? isWorkCompletedTabGiveReviewOnTap;
+  final bool isReviewGiven;
 
   const BookingDetailsCardWidget({
     Key? key,
@@ -70,6 +71,7 @@ class BookingDetailsCardWidget extends StatelessWidget {
     this.isPaymentRequestTabPayOnTap,
     this.isCanceledTabCancelOnTap,
     this.isWorkCompletedTabGiveReviewOnTap,
+    this.isReviewGiven = false,
   }) : super(key: key);
 
   @override
@@ -336,7 +338,7 @@ class BookingDetailsCardWidget extends StatelessWidget {
                   )
                 :
                   ///Section : Work Completed Tab -> Button -> Give a Review
-                  isWorkCompletedTab
+                  isWorkCompletedTab && isReviewGiven
                 ? Align(
                     alignment: Alignment.centerRight,
                     child: CustomElevatedButton(

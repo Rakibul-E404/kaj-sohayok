@@ -13,6 +13,7 @@ import 'package:kaz_bd/features/common_screens/terms_and_conditions/presentation
 import 'package:kaz_bd/features/normal_user/all_categories/presentation/all_categories_screen.dart';
 import 'package:kaz_bd/features/common_screens/change_password/presentation/change_password_screen.dart';
 import 'package:kaz_bd/features/normal_user/booking_date/presentation/booking_date_screen.dart';
+import 'package:kaz_bd/features/normal_user/bookings_payments_request_details/presentation/bookings_payment_request_details_screen.dart';
 import 'package:kaz_bd/features/normal_user/details/presentation/details_screen.dart';
 import 'package:kaz_bd/features/normal_user/notification/presentation/notification_screen.dart';
 import 'package:kaz_bd/features/normal_user/provider_profile_details/presentation/provider_profile_details_screen.dart';
@@ -48,6 +49,8 @@ class Routes {
   static const String servicePreviewScreen = '/service_preview_screen';
   static const String bookingDateScreen = '/booking_date_screen';
   static const String searchLocationScreen = '/search_location_screen';
+  static const String bookingsPaymentRequestDetailsScreen =
+      '/bookings_payment_request_details_screen';
   static const String workCompletedDetailsScreen =
       '/work_completed_details_screen';
   static const String servicesOfSpecificCategoryScreen =
@@ -268,6 +271,15 @@ class Routes {
     GetPage(
       name: searchLocationScreen,
       page: () => SearchLocationScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///bookingsPaymentRequestDetailsScreen
+    GetPage(
+      name: bookingsPaymentRequestDetailsScreen,
+      page: () => BookingsPaymentRequestDetailsScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),

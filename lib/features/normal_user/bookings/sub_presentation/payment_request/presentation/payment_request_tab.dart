@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -18,15 +20,18 @@ class PaymentRequestTab extends StatelessWidget {
       separatorBuilder: (context, index) => UIHelper.verticalSpace(24.h),
       itemBuilder: (context, index) {
         return BookingDetailsCardWidget(
-          onTap: () {
+          onTap: null,
+          isPaymentRequestTab: true,
+          isPaymentRequestTabPayOnTap: () {
+            log("My Bookings Screen Payment Request Tab Pay Button Taped!");
+          },
+          isPaymentRequestTabViewOnTap: () {
+            log("My Bookings Screen Payment Request Tab View Button Taped!");
             Get.toNamed(
-              Routes.serviceDetailsScreen,
+              Routes.bookingsPaymentRequestDetailsScreen,
               arguments: {"status": BookingStatusEnum.paymentRequest},
             );
           },
-          isPaymentRequestTab: true,
-          isPaymentRequestTabPayOnTap: () {},
-          isPaymentRequestTabViewOnTap: () {},
           title: "Jfdlskfjkl",
           initialPayablePrice: "54",
           location: "sdkfjsldk",
