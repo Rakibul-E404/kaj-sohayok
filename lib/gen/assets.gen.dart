@@ -98,11 +98,17 @@ class $AssetsIconsGen {
   /// File path: assets/icons/profile_icon.svg
   String get profileIcon => 'assets/icons/profile_icon.svg';
 
+  /// File path: assets/icons/remove_icon.svg
+  String get removeIcon => 'assets/icons/remove_icon.svg';
+
   /// File path: assets/icons/rocket.svg
   String get rocket => 'assets/icons/rocket.svg';
 
   /// File path: assets/icons/search_icon.svg
   String get searchIcon => 'assets/icons/search_icon.svg';
+
+  /// File path: assets/icons/search_icon_fat.svg
+  String get searchIconFat => 'assets/icons/search_icon_fat.svg';
 
   /// File path: assets/icons/service_provider_logo.svg
   String get serviceProviderLogo => 'assets/icons/service_provider_logo.svg';
@@ -144,8 +150,10 @@ class $AssetsIconsGen {
     personIconWhiteBackground,
     privacyPolicyIcon,
     profileIcon,
+    removeIcon,
     rocket,
     searchIcon,
+    searchIconFat,
     serviceProviderLogo,
     termsConditionsIcon,
     userLogoGray,

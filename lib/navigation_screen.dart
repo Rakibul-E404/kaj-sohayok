@@ -180,7 +180,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kaz_bd/features/normal_user/bookings/presentation/bookings_screen.dart';
 import 'package:kaz_bd/features/normal_user/home/presentation/home_screen.dart';
-import 'package:kaz_bd/features/normal_user/messages/message_list.dart';
+import 'package:kaz_bd/features/normal_user/chat_list/presentation/chat_list_screen.dart';
 import 'package:kaz_bd/features/normal_user/user_profile/presentation/user_profile_screen.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';

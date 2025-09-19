@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kaz_bd/constants/appList.dart';
 import 'package:kaz_bd/features/normal_user/details/widget/image_preview_widget.dart';
+
 import '../../../../helpers/ui_helpers.dart';
 
 class GalleryTab extends StatefulWidget {

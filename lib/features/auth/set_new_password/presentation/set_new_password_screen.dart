@@ -12,7 +12,7 @@ import 'package:kaz_bd/routes/routes.dart';
 
 import '../../../../constants/text_font_style.dart';
 import '../../../../gen/assets.gen.dart';
-import '../../../../helpers/custom_text_form_field.dart';
+import '../../../../custom_widgets/custom_text_form_field.dart';
 
 class SetNewPasswordScreen extends StatelessWidget {
   SetNewPasswordScreen({super.key});

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/custom_widgets/profile_tile_widget.dart';
-import 'package:kaz_bd/helpers/custom_text_form_field.dart';
+import 'package:kaz_bd/custom_widgets/custom_text_form_field.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 
 import '../../../../constants/text_font_style.dart';
