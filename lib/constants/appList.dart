@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:kaz_bd/features/normal_user/provider_profile_details/model/profile_tile_model.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 
+import '../features/normal_user/chat_inbox/model/chat_message_model.dart';
 import '../features/normal_user/home/models/category_mode.dart';
+import '../features/normal_user/chat_list/model/message_model.dart';
+import '../features/normal_user/chat_list/presentation/chat_list_screen.dart';
 import '../features/normal_user/user_profile/models/settings_options_model.dart';
 
 class AppList {
@@ -137,5 +140,90 @@ class AppList {
     ProfileTileModel(title: "Address", data: "Rangpur Bangladesh"),
     ProfileTileModel(title: "Date of Birth", data: "11-11-1999"),
     ProfileTileModel(title: "Gender", data: "Male"),
+  ];
+
+  static final List<MessageModel> messages = [
+    MessageModel(
+      name: 'Rocky Parker',
+      lastMessage: 'Your okay fine.',
+      time: '08:36 am',
+      isUnread: true,
+      totalUnrededMessage: 5,
+    ),
+    MessageModel(
+      name: 'Jobless Community Jobless Community',
+      lastMessage: 'Your okay fine.',
+      time: '08:36 am',
+      isUnread: false,
+      totalUnrededMessage: 0,
+    ),
+    MessageModel(
+      name: 'IT Job',
+      lastMessage: 'Your okay fine.',
+      time: '08:36 am',
+      isUnread: false,
+      totalUnrededMessage: 0,
+    ),
+    MessageModel(
+      name: 'Abir Parker',
+      lastMessage: 'Your okay fine.',
+      time: '08:36 am',
+      isUnread: true,
+      totalUnrededMessage: 7,
+    ),
+    MessageModel(
+      name: 'IT Job',
+      lastMessage: 'Your okay fine.',
+      time: '08:36 am',
+      isUnread: false,
+      totalUnrededMessage: 0,
+    ),
+    MessageModel(
+      name: 'Imtiaz Chowdhury',
+      lastMessage: 'Your okay fine.',
+      time: '08:36 am',
+      isUnread: true,
+      totalUnrededMessage: 7,
+    ),
+    MessageModel(
+      name: 'Abir Parker',
+      lastMessage: 'Your okay fine.',
+      time: '08:36 am',
+      isUnread: true,
+      totalUnrededMessage: 7,
+    ),
+    MessageModel(
+      name: 'IT Job',
+      lastMessage: 'Your okay fine.',
+      time: '08:36 am',
+      isUnread: false,
+      totalUnrededMessage: 0,
+    ),
+    MessageModel(
+      name: 'Imtiaz Chowdhury',
+      lastMessage: 'Your okay fine.',
+      time: '08:36 am',
+      isUnread: true,
+      totalUnrededMessage: 7,
+    ),
+  ];
+
+  static final List<ChatMessageModel> chatInboxMessageList = [
+    ChatMessageModel(message: "Hyyy!!!", isSentByMe: true, time: "3:00 pm"),
+    ChatMessageModel(
+      message: "When are we meeting? It's been so long!",
+      isSentByMe: false,
+      time: "3:01 pm",
+    ),
+    ChatMessageModel(
+      message: "Hyyyy.... georg.",
+      isSentByMe: true,
+      time: "3:02 pm",
+    ),
+    ChatMessageModel(
+      message: "Next week for sure.",
+      isSentByMe: false,
+      time: "3:02 pm",
+    ),
   ];
 }

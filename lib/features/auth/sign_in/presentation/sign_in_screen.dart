@@ -8,7 +8,7 @@ import 'package:kaz_bd/controllers/sign_in_screen_controller.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
-import 'package:kaz_bd/helpers/custom_text_form_field.dart';
+import 'package:kaz_bd/custom_widgets/custom_text_form_field.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/routes/routes.dart';
 

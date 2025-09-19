@@ -8,7 +8,7 @@ import 'package:kaz_bd/constants/appList.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
-import 'package:kaz_bd/helpers/custom_text_form_field.dart';
+import 'package:kaz_bd/custom_widgets/custom_text_form_field.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/routes/routes.dart';
 
