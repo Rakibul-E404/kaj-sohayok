@@ -29,6 +29,7 @@ import 'package:kaz_bd/features/welcome/splash/presentation/splash_screen.dart';
 import 'package:kaz_bd/navigation_screen.dart';
 
 import '../features/auth/verify_otp/verify_otp_screen.dart';
+import '../features/service_provider/profile_under_review/presentation/profile_under_review_screen.dart';
 
 class Routes {
   ///Section : Common Screens Routing
@@ -68,6 +69,7 @@ class Routes {
   static const String joinAsServiceProviderScreen =
       '/join_as_service_provider_screen';
   static const String moreInformationScreen = '/more_information_screen';
+  static const String profileUnderReviewScreen = '/profile_under_screen';
 
   static final appRoutes = [
     ///Section : Normal User Screens & Common Screens
@@ -311,6 +313,15 @@ class Routes {
     GetPage(
       name: moreInformationScreen,
       page: () => MoreInformationScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///ProfileUnderReviewScreen
+    GetPage(
+      name: profileUnderReviewScreen,
+      page: () => ProfileUnderReviewScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),
