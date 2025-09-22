@@ -56,6 +56,7 @@ class CustomElevatedButton extends StatelessWidget {
               child ??
               Text(
                 buttonTitle ?? "",
+                textAlign: TextAlign.center,
                 style:
                     textStyle ??
                     TextFontStyle.headline16w700cFFFFFFStyleSatoshi,

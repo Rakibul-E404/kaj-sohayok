@@ -1,3 +1,6 @@
+///Section : Use Types
+enum UserType { normalUser, serviceProvider }
+
 ///Section : My Bookings Screen Enums
 enum BookingStatusEnum {
   pending,
