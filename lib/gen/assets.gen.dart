@@ -173,6 +173,10 @@ class $AssetsImagesGen {
   AssetGenImage get belowIndicator =>
       const AssetGenImage('assets/images/below_indicator.png');
 
+  /// File path: assets/images/colored_clock_image.png
+  AssetGenImage get coloredClockImage =>
+      const AssetGenImage('assets/images/colored_clock_image.png');
+
   /// File path: assets/images/delete_image.png
   AssetGenImage get deleteImage =>
       const AssetGenImage('assets/images/delete_image.png');
@@ -193,6 +197,10 @@ class $AssetsImagesGen {
   AssetGenImage get logOutImage =>
       const AssetGenImage('assets/images/log_out_image.png');
 
+  /// File path: assets/images/medal_image.png
+  AssetGenImage get medalImage =>
+      const AssetGenImage('assets/images/medal_image.png');
+
   /// File path: assets/images/onboarding_image.png
   AssetGenImage get onboardingImage =>
       const AssetGenImage('assets/images/onboarding_image.png');
@@ -205,9 +213,17 @@ class $AssetsImagesGen {
   AssetGenImage get serviceImage =>
       const AssetGenImage('assets/images/service_Image.png');
 
+  /// File path: assets/images/service_provider_image.png
+  AssetGenImage get serviceProviderImage =>
+      const AssetGenImage('assets/images/service_provider_image.png');
+
   /// File path: assets/images/specific_service_image.png
   AssetGenImage get specificServiceImage =>
       const AssetGenImage('assets/images/specific_service_image.png');
+
+  /// File path: assets/images/upload_icon.png
+  AssetGenImage get uploadIcon =>
+      const AssetGenImage('assets/images/upload_icon.png');
 
   /// File path: assets/images/user_image.jpg
   AssetGenImage get userImage =>
@@ -217,21 +233,30 @@ class $AssetsImagesGen {
   AssetGenImage get verifiedCheckIcon =>
       const AssetGenImage('assets/images/verified_check_icon.png');
 
+  /// File path: assets/images/wallet_image.png
+  AssetGenImage get walletImage =>
+      const AssetGenImage('assets/images/wallet_image.png');
+
   /// List of all assets
   List<AssetGenImage> get values => [
     appLogo,
     belowIndicator,
+    coloredClockImage,
     deleteImage,
     doneImage,
     errorImage,
     heroBannerImage,
     logOutImage,
+    medalImage,
     onboardingImage,
     resetDoneImage,
     serviceImage,
+    serviceProviderImage,
     specificServiceImage,
+    uploadIcon,
     userImage,
     verifiedCheckIcon,
+    walletImage,
   ];
 }
 

@@ -21,6 +21,8 @@ import 'package:kaz_bd/features/normal_user/search_location/presentation/search_
 import 'package:kaz_bd/features/normal_user/service_preview/presentation/service_preview_screen.dart';
 import 'package:kaz_bd/features/normal_user/services_of_specific_category/presentation/services_of_specific_category_screen.dart';
 import 'package:kaz_bd/features/normal_user/work_completed_details/presentation/work_completed_details_screen.dart';
+import 'package:kaz_bd/features/service_provider/join_as_service_provider/presentation/join_as_service_provider_screen.dart';
+import 'package:kaz_bd/features/service_provider/more_information/presentation/more_information_screen.dart';
 import 'package:kaz_bd/features/welcome/choose_role/presentation/choose_role_screen.dart';
 import 'package:kaz_bd/features/welcome/onboarding/presentation/onboarding_screen.dart';
 import 'package:kaz_bd/features/welcome/splash/presentation/splash_screen.dart';
@@ -29,6 +31,9 @@ import 'package:kaz_bd/navigation_screen.dart';
 import '../features/auth/verify_otp/verify_otp_screen.dart';
 
 class Routes {
+  ///Section : Common Screens Routing
+  ///Section : Normal Users Routing
+
   static const String splashScreen = '/';
   static const String onboardingScreen = '/onboarding_screen';
   static const String chooseRoleScreen = '/choose_role_screen';
@@ -59,7 +64,13 @@ class Routes {
   static const String serviceProviderProfileDetailsScreen =
       '/service_propvider_profile_details_screen';
 
+  ///Section : Service Provider Routing
+  static const String joinAsServiceProviderScreen =
+      '/join_as_service_provider_screen';
+  static const String moreInformationScreen = '/more_information_screen';
+
   static final appRoutes = [
+    ///Section : Normal User Screens & Common Screens
     ///Splash Screen
     GetPage(
       name: splashScreen,
@@ -280,6 +291,26 @@ class Routes {
     GetPage(
       name: bookingsPaymentRequestDetailsScreen,
       page: () => BookingsPaymentRequestDetailsScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///Section : Service Provider Screen
+
+    ///bookingsPaymentRequestDetailsScreen
+    GetPage(
+      name: joinAsServiceProviderScreen,
+      page: () => JoinAsServiceProviderScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///bookingsPaymentRequestDetailsScreen
+    GetPage(
+      name: moreInformationScreen,
+      page: () => MoreInformationScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),
