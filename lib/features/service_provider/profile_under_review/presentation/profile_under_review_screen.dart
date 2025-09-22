@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:kaz_bd/custom_widgets/custom_card.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
+import 'package:kaz_bd/routes/routes.dart';
 
 import '../../../../constants/app_constant_text.dart';
 import '../../../../constants/text_font_style.dart';
@@ -26,7 +28,12 @@ class ProfileUnderReviewScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ///Section : App LOGO
-                  Image.asset(Assets.images.appLogo.path, width: 1.sw),
+                  InkWell(
+                    onTap: () {
+                      Get.toNamed(Routes.setupFaceVerificationScreen);
+                    },
+                    child: Image.asset(Assets.images.appLogo.path, width: 1.sw),
+                  ),
 
                   ///Section : Text -> Your Profile is under Review
                   RichText(

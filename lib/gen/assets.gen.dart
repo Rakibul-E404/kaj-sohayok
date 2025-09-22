@@ -189,6 +189,10 @@ class $AssetsImagesGen {
   AssetGenImage get errorImage =>
       const AssetGenImage('assets/images/error_image.png');
 
+  /// File path: assets/images/face_verification_image.png
+  AssetGenImage get faceVerificationImage =>
+      const AssetGenImage('assets/images/face_verification_image.png');
+
   /// File path: assets/images/hero_banner_image.png
   AssetGenImage get heroBannerImage =>
       const AssetGenImage('assets/images/hero_banner_image.png');
@@ -245,6 +249,7 @@ class $AssetsImagesGen {
     deleteImage,
     doneImage,
     errorImage,
+    faceVerificationImage,
     heroBannerImage,
     logOutImage,
     medalImage,
