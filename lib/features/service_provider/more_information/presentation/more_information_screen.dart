@@ -7,6 +7,7 @@ import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
+import 'package:kaz_bd/routes/routes.dart';
 
 import '../../../../controllers/more_information_screen_controller.dart';
 import '../widgets/more_info_screen_image_uploading_widget.dart';
@@ -104,6 +105,7 @@ class MoreInformationScreen extends StatelessWidget {
                     CustomElevatedButton(
                       onTap: () {
                         log("Back Button Taped!");
+                        Get.back();
                       },
                       buttonWidth: 150.w,
                       buttonTitle: "Back",
@@ -118,6 +120,7 @@ class MoreInformationScreen extends StatelessWidget {
                     CustomElevatedButton(
                       onTap: () {
                         log("Next Button Taped!");
+                        Get.toNamed(Routes.profileUnderReviewScreen);
                       },
                       buttonWidth: 150.w,
                       buttonTitle: "Next",
