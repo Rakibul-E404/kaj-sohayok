@@ -6,10 +6,27 @@ import '../features/normal_user/chat_inbox/model/chat_message_model.dart';
 import '../features/normal_user/home/models/category_mode.dart';
 import '../features/normal_user/chat_list/model/message_model.dart';
 import '../features/normal_user/chat_list/presentation/chat_list_screen.dart';
+import '../features/normal_user/notification/model/notification_model.dart';
 import '../features/normal_user/user_profile/models/settings_options_model.dart';
 
 class AppList {
   static final List<String> genderList = ["Male", "Female", "Other"];
+
+  static List<NotificationModel> notificationList = [
+    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+  ];
 
   // Pages of categories
   static final List<List<CategoryModel>> categories = [

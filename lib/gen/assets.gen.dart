@@ -169,6 +169,10 @@ class $AssetsImagesGen {
   AssetGenImage get appLogo =>
       const AssetGenImage('assets/images/app_logo.png');
 
+  /// File path: assets/images/bell_image.png
+  AssetGenImage get bellImage =>
+      const AssetGenImage('assets/images/bell_image.png');
+
   /// File path: assets/images/below_indicator.png
   AssetGenImage get belowIndicator =>
       const AssetGenImage('assets/images/below_indicator.png');
@@ -244,6 +248,7 @@ class $AssetsImagesGen {
   /// List of all assets
   List<AssetGenImage> get values => [
     appLogo,
+    bellImage,
     belowIndicator,
     coloredClockImage,
     deleteImage,
