@@ -1,7 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kaz_bd/constants/appList.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
+import 'package:kaz_bd/features/normal_user/notification/widget/no_notification_widget.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
@@ -24,23 +28,29 @@ class NotificationScreen extends StatelessWidget {
         backgroundColor: AppColors.scaffoldBackgroundColor,
       ),
 
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsetsGeometry.all(UIHelper.kDefaulutPadding()),
-          child: ListView.separated(
-            itemCount: 20,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            separatorBuilder: (context, index) => UIHelper.verticalSpace(16.h),
-            itemBuilder: (context, index) {
-              return NotificationShowingWidget(
-                notificationIcon: Assets.icons.bellIcon,
-                notificationTitle: "Your Password Updated Successfully!",
-                notificationTime: "10",
-              );
-            },
-          ),
-        ),
+      body: Padding(
+        padding: EdgeInsetsGeometry.all(UIHelper.kDefaulutPadding()),
+        child: AppList.notificationList.isEmpty
+            ? Center(child: NoNotificationWidget())
+            : ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: AppList.notificationList.length,
+                separatorBuilder: (context, index) =>
+                    UIHelper.verticalSpace(16.h),
+                itemBuilder: (context, index) {
+                  var data = AppList.notificationList[index];
+
+                  log(
+                    "Is Notification List Empty ? : ${AppList.notificationList.isEmpty}",
+                  );
+                  return NotificationShowingWidget(
+                    notificationIcon: Assets.icons.bellIcon,
+                    notificationTitle: data.title,
+                    notificationTime: data.time.toString(),
+                  );
+                },
+              ),
       ),
     );
   }
