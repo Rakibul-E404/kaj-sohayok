@@ -76,38 +76,43 @@ class FaceVerificationScreen extends StatelessWidget {
 
               Spacer(),
 
+              Obx(() {
+                return controller.status.value ==
+                        FaceVerificationStatus.verifying
+                    ? Text(
+                        "${(controller.progress.value * 100).toInt()}%",
+                        style: TextFontStyle.headline24w700c000000StyleSatoshi,
+                      )
+                    : SizedBox.shrink();
+              }),
+              UIHelper.verticalSpace(16.h),
+              Obx(() {
+                return controller.status.value ==
+                        FaceVerificationStatus.verifying
+                    ? Text(
+                        "verifying your face...",
+                        style: TextFontStyle.headline24w700c000000StyleSatoshi,
+                      )
+                    : SizedBox.shrink();
+              }),
+              UIHelper.verticalSpace(16.h),
+
+              Spacer(),
+
               /// Section: Progress Indicator + Button
               Obx(() {
-                return Column(
-                  children: [
-                    if (controller.status.value ==
-                        FaceVerificationStatus.verifying)
-                      Padding(
-                        padding: EdgeInsets.only(bottom: 10.h),
-                        child: LinearProgressIndicator(
-                          value: controller.progress.value,
-                          minHeight: 5.h,
-                          backgroundColor: Colors.grey[300],
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            Colors.amber,
-                          ),
-                        ),
-                      ),
-                    CustomElevatedButton(
-                      onTap: () => controller.onButtonTap(context),
-                      buttonTitle:
-                          controller.status.value ==
-                              FaceVerificationStatus.initial
-                          ? "Scan My Face"
-                          : controller.status.value ==
-                                FaceVerificationStatus.capture
-                          ? "Capture Image"
-                          : controller.status.value ==
-                                FaceVerificationStatus.verifying
-                          ? "Verifying"
-                          : "Done",
-                    ),
-                  ],
+                return CustomElevatedButton(
+                  onTap: () => controller.onButtonTap(context),
+                  buttonTitle:
+                      controller.status.value == FaceVerificationStatus.initial
+                      ? "Scan My Face"
+                      : controller.status.value ==
+                            FaceVerificationStatus.capture
+                      ? "Capture Image"
+                      : controller.status.value ==
+                            FaceVerificationStatus.verifying
+                      ? "Verifying"
+                      : "Done",
                 );
               }),
               UIHelper.verticalSpace(20.h),
