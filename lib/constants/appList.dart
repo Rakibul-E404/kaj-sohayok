@@ -13,19 +13,19 @@ class AppList {
   static final List<String> genderList = ["Male", "Female", "Other"];
 
   static List<NotificationModel> notificationList = [
-    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    // NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
+    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
   ];
 
   // Pages of categories

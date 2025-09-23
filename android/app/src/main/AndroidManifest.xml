@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<!-- CAMERA permission -->
+    <uses-permission android:name="android.permission.CAMERA" />
     <application
         android:label="kaz_bd"
         android:name="${applicationName}"

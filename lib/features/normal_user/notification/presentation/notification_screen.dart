@@ -33,8 +33,8 @@ class NotificationScreen extends StatelessWidget {
         child: AppList.notificationList.isEmpty
             ? Center(child: NoNotificationWidget())
             : ListView.separated(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
+                // shrinkWrap: true,
+                // physics: const NeverScrollableScrollPhysics(),
                 itemCount: AppList.notificationList.length,
                 separatorBuilder: (context, index) =>
                     UIHelper.verticalSpace(16.h),

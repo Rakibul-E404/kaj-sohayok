@@ -30,7 +30,7 @@ import 'package:kaz_bd/navigation_screen.dart';
 
 import '../features/auth/verify_otp/verify_otp_screen.dart';
 import '../features/service_provider/profile_under_review/presentation/profile_under_review_screen.dart';
-import '../features/service_provider/set_up_face_verification/presentation/set_up_face_verification_screen.dart';
+import '../features/service_provider/face_verification/presentation/face_verification_screen.dart';
 
 class Routes {
   ///Section : Common Screens Routing
@@ -71,8 +71,7 @@ class Routes {
       '/join_as_service_provider_screen';
   static const String moreInformationScreen = '/more_information_screen';
   static const String profileUnderReviewScreen = '/profile_under_screen';
-  static const String setupFaceVerificationScreen =
-      '/setup_face_verification_screen';
+  static const String faceVerificationScreen = '/face_verification_screen';
 
   static final appRoutes = [
     ///Section : Normal User Screens & Common Screens
@@ -332,8 +331,8 @@ class Routes {
 
     ///SetUpFaceVerificationScreen
     GetPage(
-      name: setupFaceVerificationScreen,
-      page: () => SetUpFaceVerificationScreen(),
+      name: faceVerificationScreen,
+      page: () => FaceVerificationScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),

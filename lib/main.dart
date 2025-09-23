@@ -1,11 +1,17 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:kaz_bd/helpers/di.dart';
 import 'package:kaz_bd/routes/routes.dart';
 
 import 'bindings/controllers_binding.dart';
 
-void main() {
+List<CameraDescription>? cameras;
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await diSetup();
+  cameras = await availableCameras();
   runApp(MyApp());
 }
 
@@ -23,8 +29,8 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           // home: WorkCompletedDetailsScreen(),
           debugShowCheckedModeBanner: false,
-          initialRoute: Routes.onboardingScreen,
-          // initialRoute: Routes.joinAsServiceProviderScreen,
+          // initialRoute: Routes.onboardingScreen,
+          initialRoute: Routes.joinAsServiceProviderScreen,
           getPages: Routes.appRoutes,
           initialBinding: ControllerBindings(),
         );
