@@ -10,3 +10,6 @@ enum BookingStatusEnum {
   canceled,
   workCompleted,
 }
+
+/// FaceVerificationState states
+enum FaceVerificationStatus { initial, capture, verifying, done }

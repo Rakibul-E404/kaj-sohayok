@@ -30,7 +30,7 @@ class ProfileUnderReviewScreen extends StatelessWidget {
                   ///Section : App LOGO
                   InkWell(
                     onTap: () {
-                      Get.toNamed(Routes.setupFaceVerificationScreen);
+                      Get.toNamed(Routes.faceVerificationScreen);
                     },
                     child: Image.asset(Assets.images.appLogo.path, width: 1.sw),
                   ),

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../controllers/change_password_screen_controller.dart';
 import '../controllers/chat_inbox_screen_controller.dart';
 import '../controllers/edit_profile_screen_controller.dart';
+import '../controllers/face_verification_controller.dart';
 import '../controllers/home_page_controller.dart';
 import '../controllers/message_screen_controller.dart';
 import '../controllers/more_information_screen_controller.dart';
@@ -28,5 +29,6 @@ class ControllerBindings extends Bindings {
     Get.lazyPut(() => MessageScreenController());
     Get.lazyPut(() => ChatInboxScreenController());
     Get.lazyPut(() => MoreInformationScreenController());
+    Get.lazyPut(() => FaceVerificationController());
   }
 }
