@@ -15,7 +15,7 @@ import 'package:kaz_bd/features/common_screens/change_password/presentation/chan
 import 'package:kaz_bd/features/normal_user/booking_date/presentation/booking_date_screen.dart';
 import 'package:kaz_bd/features/normal_user/bookings_payments_request_details/presentation/bookings_payment_request_details_screen.dart';
 import 'package:kaz_bd/features/normal_user/details/presentation/details_screen.dart';
-import 'package:kaz_bd/features/normal_user/notification/presentation/notification_screen.dart';
+import 'package:kaz_bd/features/common_screens/notification/presentation/notification_screen.dart';
 import 'package:kaz_bd/features/normal_user/provider_profile_details/presentation/provider_profile_details_screen.dart';
 import 'package:kaz_bd/features/normal_user/search_location/presentation/search_location_screen.dart';
 import 'package:kaz_bd/features/normal_user/service_preview/presentation/service_preview_screen.dart';
@@ -23,6 +23,10 @@ import 'package:kaz_bd/features/normal_user/services_of_specific_category/presen
 import 'package:kaz_bd/features/normal_user/work_completed_details/presentation/work_completed_details_screen.dart';
 import 'package:kaz_bd/features/service_provider/join_as_service_provider/presentation/join_as_service_provider_screen.dart';
 import 'package:kaz_bd/features/service_provider/more_information/presentation/more_information_screen.dart';
+import 'package:kaz_bd/features/service_provider/svp_accepted_bookings/presentation/svp_accepted_bookings_screen.dart';
+import 'package:kaz_bd/features/service_provider/svp_home/presentation/svp_home_screen.dart';
+import 'package:kaz_bd/features/service_provider/svp_job_details/presentation/svp_job_details_screen.dart';
+import 'package:kaz_bd/features/service_provider/svp_job_request/presentation/svp_job_request_screen.dart';
 import 'package:kaz_bd/features/welcome/choose_role/presentation/choose_role_screen.dart';
 import 'package:kaz_bd/features/welcome/onboarding/presentation/onboarding_screen.dart';
 import 'package:kaz_bd/features/welcome/splash/presentation/splash_screen.dart';
@@ -72,6 +76,10 @@ class Routes {
   static const String moreInformationScreen = '/more_information_screen';
   static const String profileUnderReviewScreen = '/profile_under_screen';
   static const String faceVerificationScreen = '/face_verification_screen';
+  static const String svpHomeScreen = '/svp_home_screen';
+  static const String svpJobRequestScreen = '/svp_job_request_creen';
+  static const String svpJobDetailsScreen = '/svp_job_details_creen';
+  static const String svpAcceptedBookingsScreen = '/svp_AcceptedBookings_creen';
 
   static final appRoutes = [
     ///Section : Normal User Screens & Common Screens
@@ -333,6 +341,42 @@ class Routes {
     GetPage(
       name: faceVerificationScreen,
       page: () => FaceVerificationScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///svpHomeScreen
+    GetPage(
+      name: svpHomeScreen,
+      page: () => SvpHomeScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///svpJobRequestScreen
+    GetPage(
+      name: svpJobRequestScreen,
+      page: () => SvpJobRequestScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///svpJobDetailsScreen
+    GetPage(
+      name: svpJobDetailsScreen,
+      page: () => SvpJobDetailsScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///svpAcceptedBookingsScreen
+    GetPage(
+      name: svpAcceptedBookingsScreen,
+      page: () => SvpAcceptedBookingsScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),

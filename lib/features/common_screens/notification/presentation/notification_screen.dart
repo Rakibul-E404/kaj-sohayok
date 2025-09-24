@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kaz_bd/constants/appList.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
-import 'package:kaz_bd/features/normal_user/notification/widget/no_notification_widget.dart';
+import 'package:kaz_bd/features/common_screens/notification/widget/no_notification_widget.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';

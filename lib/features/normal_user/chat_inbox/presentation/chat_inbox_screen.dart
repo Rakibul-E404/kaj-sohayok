@@ -57,43 +57,41 @@ class _PersonalInboxState extends State<PersonalInbox> {
           ],
         ),
         leadingWidth: 100.w,
-        title: Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ///Section : User Name
-              Text(
-                widget.name,
-                style: TextStyle(
-                  color: AppColors.c111111,
-                  fontSize: 16, // Slightly smaller font
-                ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ///Section : User Name
+            Text(
+              widget.name,
+              style: TextStyle(
+                color: AppColors.c111111,
+                fontSize: 16, // Slightly smaller font
               ),
-              UIHelper.verticalSpace(2.h),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+            UIHelper.verticalSpace(2.h),
 
-              ///Section : User Active Status
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircleAvatar(backgroundColor: Colors.green, radius: 4),
-                  SizedBox(width: 6), // Reduced spacing
-                  Flexible(
-                    child: Text(
-                      "Active Now",
-                      style: TextStyle(
-                        color: AppColors.c111111,
-                        fontSize: 12, // Smaller font
-                      ),
-                      overflow: TextOverflow.ellipsis,
+            ///Section : User Active Status
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircleAvatar(backgroundColor: Colors.green, radius: 4),
+                SizedBox(width: 6), // Reduced spacing
+                Flexible(
+                  child: Text(
+                    "Active Now",
+                    style: TextStyle(
+                      color: AppColors.c111111,
+                      fontSize: 12, // Smaller font
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+          ],
         ),
         backgroundColor: AppColors.cFFFFFF,
         actions: [
@@ -108,21 +106,7 @@ class _PersonalInboxState extends State<PersonalInbox> {
             },
             child: Icon(Icons.call, color: AppColors.c999999),
           ),
-
-          /// Video call button
-          InkWell(
-            onTap: () {
-              Get.snackbar(
-                "Video Call..",
-                "Video Call button has been taped!",
-                snackPosition: SnackPosition.TOP,
-              );
-            },
-            child: Icon(
-              CupertinoIcons.video_camera_solid,
-              color: AppColors.c92a2ef,
-            ),
-          ),
+          UIHelper.horizontalSpace(10.w),
 
           // More options button
           InkWell(
