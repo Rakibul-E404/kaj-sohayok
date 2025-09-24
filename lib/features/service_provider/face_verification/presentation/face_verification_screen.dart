@@ -61,7 +61,7 @@ class FaceVerificationScreen extends StatelessWidget {
                   // Initial placeholder
                   displayWidget = Image.asset(
                     Assets.images.faceVerificationImage.path,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                   );
                 }
 
@@ -91,7 +91,7 @@ class FaceVerificationScreen extends StatelessWidget {
                         FaceVerificationStatus.verifying
                     ? Text(
                         "verifying your face...",
-                        style: TextFontStyle.headline24w700c000000StyleSatoshi,
+                        style: TextFontStyle.headline16w500c4d4d4dStyleSatoshi,
                       )
                     : SizedBox.shrink();
               }),
