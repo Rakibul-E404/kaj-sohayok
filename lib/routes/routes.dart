@@ -28,6 +28,7 @@ import 'package:kaz_bd/features/service_provider/svp_home/presentation/svp_home_
 import 'package:kaz_bd/features/service_provider/svp_in_progress/presentation/svp_in_progress_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_job_details/presentation/svp_job_details_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_job_request/presentation/svp_job_request_screen.dart';
+import 'package:kaz_bd/features/service_provider/svp_pending_payment_request_details/presentation/svp_pending_payment_request_details_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_submit_work_form/presentation/svp_submit_work_form_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_work_completed/presentation/svp_work_completed_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_work_completed_details/presentation/svp_work_completed_details_screen.dart';
@@ -90,6 +91,8 @@ class Routes {
   static const String svpWorkCompletedScreen = '/svp_WorkCompleted_screen';
   static const String svpWorkCompletedDetailsScreen =
       '/svp_WorkCompleted_Details_screen';
+  static const String svpPendingPaymentRequestDetailsScreen =
+      '/svp_PendingPayment_Details_screen';
 
   static final appRoutes = [
     ///Section : Normal User Screens & Common Screens
@@ -423,6 +426,15 @@ class Routes {
     GetPage(
       name: svpWorkCompletedDetailsScreen,
       page: () => SvpWorkCompletedDetailsScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///svpPendingPaymentRequestDetailsScreen
+    GetPage(
+      name: svpPendingPaymentRequestDetailsScreen,
+      page: () => SvpPendingPaymentRequestDetailsScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),

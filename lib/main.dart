@@ -30,7 +30,8 @@ class MyApp extends StatelessWidget {
           // home: WorkCompletedDetailsScreen(),
           debugShowCheckedModeBanner: false,
           // initialRoute: Routes.onboardingScreen,
-          initialRoute: Routes.joinAsServiceProviderScreen,
+          // initialRoute: Routes.joinAsServiceProviderScreen,
+          initialRoute: Routes.navigationScreen,
           getPages: Routes.appRoutes,
           initialBinding: ControllerBindings(),
         );
