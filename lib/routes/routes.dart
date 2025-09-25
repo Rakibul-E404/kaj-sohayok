@@ -25,8 +25,12 @@ import 'package:kaz_bd/features/service_provider/join_as_service_provider/presen
 import 'package:kaz_bd/features/service_provider/more_information/presentation/more_information_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_accepted_bookings/presentation/svp_accepted_bookings_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_home/presentation/svp_home_screen.dart';
+import 'package:kaz_bd/features/service_provider/svp_in_progress/presentation/svp_in_progress_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_job_details/presentation/svp_job_details_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_job_request/presentation/svp_job_request_screen.dart';
+import 'package:kaz_bd/features/service_provider/svp_submit_work_form/presentation/svp_submit_work_form_screen.dart';
+import 'package:kaz_bd/features/service_provider/svp_work_completed/presentation/svp_work_completed_screen.dart';
+import 'package:kaz_bd/features/service_provider/svp_work_completed_details/presentation/svp_work_completed_details_screen.dart';
 import 'package:kaz_bd/features/welcome/choose_role/presentation/choose_role_screen.dart';
 import 'package:kaz_bd/features/welcome/onboarding/presentation/onboarding_screen.dart';
 import 'package:kaz_bd/features/welcome/splash/presentation/splash_screen.dart';
@@ -77,9 +81,15 @@ class Routes {
   static const String profileUnderReviewScreen = '/profile_under_screen';
   static const String faceVerificationScreen = '/face_verification_screen';
   static const String svpHomeScreen = '/svp_home_screen';
-  static const String svpJobRequestScreen = '/svp_job_request_creen';
-  static const String svpJobDetailsScreen = '/svp_job_details_creen';
-  static const String svpAcceptedBookingsScreen = '/svp_AcceptedBookings_creen';
+  static const String svpJobRequestScreen = '/svp_job_request_screen';
+  static const String svpJobDetailsScreen = '/svp_job_details_screen';
+  static const String svpAcceptedBookingsScreen =
+      '/svp_AcceptedBookings_screen';
+  static const String svpInProgressScreen = '/svp_InProgress_screen';
+  static const String svpSubmitWorkFormScreen = '/svp_Submit_Work_Form_screen';
+  static const String svpWorkCompletedScreen = '/svp_WorkCompleted_screen';
+  static const String svpWorkCompletedDetailsScreen =
+      '/svp_WorkCompleted_Details_screen';
 
   static final appRoutes = [
     ///Section : Normal User Screens & Common Screens
@@ -377,6 +387,42 @@ class Routes {
     GetPage(
       name: svpAcceptedBookingsScreen,
       page: () => SvpAcceptedBookingsScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///svpInProgressScreen
+    GetPage(
+      name: svpInProgressScreen,
+      page: () => SvpInProgressScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///svpSubmitWorkFormScreen
+    GetPage(
+      name: svpSubmitWorkFormScreen,
+      page: () => SvpSubmitWorkFormScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///svpWorkCompletedScreen
+    GetPage(
+      name: svpWorkCompletedScreen,
+      page: () => SvpWorkCompletedScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///svpWorkCompletedDetailsScreen
+    GetPage(
+      name: svpWorkCompletedDetailsScreen,
+      page: () => SvpWorkCompletedDetailsScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),

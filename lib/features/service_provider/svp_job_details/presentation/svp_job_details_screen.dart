@@ -1,8 +1,8 @@
-import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:kaz_bd/constants/appList.dart';
-import 'package:kaz_bd/custom_widgets/custom_card.dart';
+import 'package:kaz_bd/constants/app_enums.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
@@ -12,11 +12,25 @@ import '../../../../constants/text_font_style.dart';
 import '../../../../custom_widgets/custom_elevated_button.dart';
 import '../../../../custom_widgets/date_and_time_widget_tile.dart';
 import '../../../../custom_widgets/dotted_line_divider_widget.dart';
-import '../../more_information/widgets/more_info_widget_tile.dart';
 import '../widgets/user_info_tile_widget.dart';
 
-class SvpJobDetailsScreen extends StatelessWidget {
+class SvpJobDetailsScreen extends StatefulWidget {
   const SvpJobDetailsScreen({super.key});
+
+  @override
+  State<SvpJobDetailsScreen> createState() => _SvpJobDetailsScreenState();
+}
+
+class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
+  late JobRequestStatusEnum? status;
+
+  @override
+  void initState() {
+    super.initState();
+
+    ///setting the accepted arguments initial value
+    status = Get.arguments?["status"] as JobRequestStatusEnum?;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,32 +99,61 @@ class SvpJobDetailsScreen extends StatelessWidget {
                               ),
                               UIHelper.verticalSpace(16.h),
 
-                              ///Section : Button -> Cancel
-                              ///Section : Button -> Accept
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  ///Section : Button -> Cancel
-                                  CustomElevatedButton(
-                                    onTap: () {},
-                                    buttonWidth: 100.w,
-                                    buttonHeight: 38.h,
-                                    buttonColor: AppColors.cfce9e9,
-                                    buttonTitle: "Cancel",
-                                    textStyle: TextFontStyle
-                                        .headline14w500ce73d3dStyleSatoshi,
-                                  ),
-                                  UIHelper.horizontalSpace(12.w),
-
-                                  ///Section : Button -> Accept
-                                  CustomElevatedButton(
-                                    onTap: () {},
-                                    buttonWidth: 100.w,
-                                    buttonHeight: 38.h,
-                                    buttonTitle: "Accept",
-                                  ),
-                                ],
-                              ),
+                              /// ✅ FIXED BUTTON LOGIC
+                              if (status == JobRequestStatusEnum.pending) ...[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    CustomElevatedButton(
+                                      onTap: () {
+                                        print("Cancel tapped");
+                                      },
+                                      buttonWidth: 100.w,
+                                      buttonHeight: 38.h,
+                                      buttonColor: AppColors.cfce9e9,
+                                      buttonTitle: "Cancel",
+                                      textStyle: TextFontStyle
+                                          .headline14w500ce73d3dStyleSatoshi,
+                                    ),
+                                    UIHelper.horizontalSpace(12.w),
+                                    CustomElevatedButton(
+                                      onTap: () {
+                                        print("Accept tapped");
+                                      },
+                                      buttonWidth: 100.w,
+                                      buttonHeight: 38.h,
+                                      buttonTitle: "Accept",
+                                    ),
+                                  ],
+                                ),
+                              ] else if (status ==
+                                  JobRequestStatusEnum.accepted) ...[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    CustomElevatedButton(
+                                      onTap: () {
+                                        print("Start Work tapped");
+                                      },
+                                      buttonWidth: 100.w,
+                                      buttonHeight: 38.h,
+                                      buttonColor: AppColors.cfce9e9,
+                                      buttonTitle: "Start Work",
+                                      textStyle: TextFontStyle
+                                          .headline14w500ce73d3dStyleSatoshi,
+                                    ),
+                                    UIHelper.horizontalSpace(12.w),
+                                    CustomElevatedButton(
+                                      onTap: () {
+                                        print("Message tapped");
+                                      },
+                                      buttonWidth: 100.w,
+                                      buttonHeight: 38.h,
+                                      buttonTitle: "Message",
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ],
                           ),
                         ),

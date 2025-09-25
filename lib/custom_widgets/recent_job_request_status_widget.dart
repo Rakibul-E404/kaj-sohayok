@@ -1,28 +1,29 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:kaz_bd/gen/assets.gen.dart';
+import 'package:kaz_bd/custom_widgets/date_and_time_widget_tile.dart';
 
-import '../../../../constants/app_constant_text.dart';
-import '../../../../constants/text_font_style.dart';
-import '../../../../custom_widgets/custom_elevated_button.dart';
-import '../../../../gen/colors.gen.dart';
-import '../../../../helpers/ui_helpers.dart';
+import '../constants/text_font_style.dart';
+import 'custom_elevated_button.dart';
+import '../gen/colors.gen.dart';
+import '../helpers/ui_helpers.dart';
 
-class RecentJobRequestWidget extends StatelessWidget {
+class RecentJobRequestStatusWidget extends StatelessWidget {
   final String userImage;
   final String userName;
   final String location;
   final String dateTime;
   final bool isJobRequestAccpted;
+  final bool isJobInProgress;
+  final bool isJobStatusCompleted;
   final void Function()? onTap;
   final void Function()? cancelOnTap;
   final void Function()? acceptOnTap;
   final void Function()? startWorkOnTap;
   final void Function()? messageOnTap;
-  RecentJobRequestWidget({
+  final void Function()? submitWorkButtonOnTap;
+  final void Function()? messageButtonOnTap;
+  RecentJobRequestStatusWidget({
     super.key,
     this.onTap,
     required this.userImage,
@@ -34,6 +35,10 @@ class RecentJobRequestWidget extends StatelessWidget {
     this.isJobRequestAccpted = false,
     this.startWorkOnTap,
     this.messageOnTap,
+    this.isJobInProgress = false,
+    this.submitWorkButtonOnTap,
+    this.messageButtonOnTap,
+    this.isJobStatusCompleted = false,
   });
 
   @override
@@ -100,31 +105,13 @@ class RecentJobRequestWidget extends StatelessWidget {
             UIHelper.verticalSpace(12.h),
 
             ///Section : Location
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Icon(Icons.location_on, color: AppColors.c92a2ef, size: 24.sp),
-                UIHelper.horizontalSpace(4.w),
-                Text(
-                  location,
-                  style: TextFontStyle.headline12w500c4d4d4dStyleSatoshi,
-                ),
-              ],
-            ),
+            DateAndAddressWidgetTile(icon: Icons.location_on, title: location),
+
             UIHelper.verticalSpace(6.h),
 
             ///Section : Date And Time
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Icon(Icons.watch_later, color: AppColors.c92a2ef, size: 24.sp),
-                UIHelper.horizontalSpace(4.w),
-                Text(
-                  dateTime,
-                  style: TextFontStyle.headline12w500c4d4d4dStyleSatoshi,
-                ),
-              ],
-            ),
+            DateAndAddressWidgetTile(icon: Icons.watch_later, title: dateTime),
+
             UIHelper.verticalSpace(12.h),
 
             ///Section : Divider
@@ -164,6 +151,33 @@ class RecentJobRequestWidget extends StatelessWidget {
                       ),
                     ],
                   )
+                : isJobInProgress
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CustomElevatedButton(
+                        onTap: submitWorkButtonOnTap,
+                        buttonWidth: 108.w,
+                        buttonHeight: 38.h,
+                        buttonTitle: "Submit Work",
+                      ),
+                      UIHelper.horizontalSpace(12.w),
+                      CustomElevatedButton(
+                        onTap: messageButtonOnTap,
+                        buttonWidth: 108.w,
+                        buttonHeight: 38.h,
+                        isButtonBorderUsed: true,
+                        buttonBorderWidth: 1.5.sp,
+                        buttonBorderColor: AppColors.c778beb,
+                        buttonTitle: "Message",
+                        textStyle:
+                            TextFontStyle.headline14w500c111111StyleSatoshi,
+                        buttonColor: AppColors.cFFFFFF,
+                      ),
+                    ],
+                  )
+                : isJobStatusCompleted
+                ? SizedBox.shrink()
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [

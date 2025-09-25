@@ -11,7 +11,7 @@ import 'package:kaz_bd/gen/colors.gen.dart';
 import '../../../../custom_widgets/home_section_applogo_and_notification.dart';
 import '../../../../helpers/ui_helpers.dart';
 import '../../../../routes/routes.dart';
-import '../widgets/recent_job_request_widget.dart';
+import '../../../../custom_widgets/recent_job_request_status_widget.dart';
 import '../widgets/svp_job_card.dart';
 
 class SvpHomeScreen extends StatelessWidget {
@@ -63,9 +63,9 @@ class SvpHomeScreen extends StatelessWidget {
                                 : index == 1
                                 ? Get.toNamed(Routes.svpAcceptedBookingsScreen)
                                 : index == 2
-                                ? Get.toNamed(Routes.svpJobRequestScreen)
+                                ? Get.toNamed(Routes.svpWorkCompletedScreen)
                                 : index == 3
-                                ? Get.toNamed(Routes.svpJobRequestScreen)
+                                ? Get.toNamed(Routes.svpWorkCompletedScreen)
                                 : null;
                           },
                           title: data.title,
@@ -115,7 +115,7 @@ class SvpHomeScreen extends StatelessWidget {
                       separatorBuilder: (context, index) =>
                           UIHelper.verticalSpace(24.h),
                       itemBuilder: (contextk, index) {
-                        return RecentJobRequestWidget(
+                        return RecentJobRequestStatusWidget(
                           onTap: () {
                             log("Taped on -> Card");
                             Get.toNamed(Routes.svpJobDetailsScreen);

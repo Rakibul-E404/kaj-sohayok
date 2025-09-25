@@ -7,11 +7,11 @@ import 'package:kaz_bd/routes/routes.dart';
 
 import 'bindings/controllers_binding.dart';
 
-List<CameraDescription>? cameras;
+// List<CameraDescription>? cameras;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await diSetup();
-  cameras = await availableCameras();
+  // cameras = await availableCameras();
   runApp(MyApp());
 }
 
