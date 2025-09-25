@@ -49,7 +49,7 @@ class CustomElevatedButton extends StatelessWidget {
                   width: buttonBorderWidth ?? 1.sp,
                 )
               : null,
-          borderRadius: BorderRadius.circular(borderRadius ?? 10.r),
+          borderRadius: BorderRadius.circular(borderRadius ?? 6.r),
         ),
         child: Center(
           child:

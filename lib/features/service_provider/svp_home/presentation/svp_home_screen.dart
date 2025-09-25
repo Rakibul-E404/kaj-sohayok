@@ -8,6 +8,7 @@ import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 
+import '../../../../constants/app_enums.dart';
 import '../../../../custom_widgets/home_section_applogo_and_notification.dart';
 import '../../../../helpers/ui_helpers.dart';
 import '../../../../routes/routes.dart';
@@ -63,7 +64,7 @@ class SvpHomeScreen extends StatelessWidget {
                                 : index == 1
                                 ? Get.toNamed(Routes.svpAcceptedBookingsScreen)
                                 : index == 2
-                                ? Get.toNamed(Routes.svpWorkCompletedScreen)
+                                ? Get.toNamed(Routes.svpInProgressScreen)
                                 : index == 3
                                 ? Get.toNamed(Routes.svpWorkCompletedScreen)
                                 : null;
@@ -118,7 +119,12 @@ class SvpHomeScreen extends StatelessWidget {
                         return RecentJobRequestStatusWidget(
                           onTap: () {
                             log("Taped on -> Card");
-                            Get.toNamed(Routes.svpJobDetailsScreen);
+                            Get.toNamed(
+                              Routes.svpJobDetailsScreen,
+                              arguments: {
+                                "status": JobRequestStatusEnum.pending,
+                              },
+                            );
                           },
                           cancelOnTap: () {
                             log("Button Taped -> Cancel");

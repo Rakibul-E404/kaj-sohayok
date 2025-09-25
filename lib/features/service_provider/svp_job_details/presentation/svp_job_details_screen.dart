@@ -137,10 +137,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                                       },
                                       buttonWidth: 100.w,
                                       buttonHeight: 38.h,
-                                      buttonColor: AppColors.cfce9e9,
+
                                       buttonTitle: "Start Work",
-                                      textStyle: TextFontStyle
-                                          .headline14w500ce73d3dStyleSatoshi,
                                     ),
                                     UIHelper.horizontalSpace(12.w),
                                     CustomElevatedButton(
@@ -149,7 +147,13 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                                       },
                                       buttonWidth: 100.w,
                                       buttonHeight: 38.h,
+                                      buttonColor: Colors.transparent,
                                       buttonTitle: "Message",
+                                      textStyle: TextFontStyle
+                                          .headline14w500c000000StyleSatoshi,
+                                      isButtonBorderUsed: true,
+                                      buttonBorderColor: AppColors.c778beb,
+                                      buttonBorderWidth: 1.5.sp,
                                     ),
                                   ],
                                 ),

@@ -182,6 +182,7 @@ import 'package:kaz_bd/features/normal_user/bookings/presentation/bookings_scree
 import 'package:kaz_bd/features/normal_user/home/presentation/home_screen.dart';
 import 'package:kaz_bd/features/normal_user/chat_list/presentation/chat_list_screen.dart';
 import 'package:kaz_bd/features/normal_user/user_profile/presentation/user_profile_screen.dart';
+import 'package:kaz_bd/features/service_provider/svp_bookings/presentation/svp_bookings_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_home/presentation/svp_home_screen.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
@@ -202,9 +203,18 @@ class _NavigationScreenState extends State<NavigationScreen>
   late AnimationController _backgroundAnimationController;
   late Animation<double> _backgroundAnimation;
 
+  ///Section : Normal User
+  // final List<Widget> _pages = [
+  //   HomeScreen(),
+  //   BookingsScreen(),
+  //   MessageScreen(),
+  //   UserProfileScreen(),
+  // ];
+
+  ///Section : Service Provider
   final List<Widget> _pages = [
-    HomeScreen(),
-    BookingsScreen(),
+    SvpHomeScreen(),
+    SvpBookingsScreen(),
     MessageScreen(),
     UserProfileScreen(),
   ];
