@@ -6,10 +6,11 @@ import 'package:get/get.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 
+import '../../../../constants/app_enums.dart';
 import '../../../../constants/text_font_style.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../../routes/routes.dart';
-import '../../svp_home/widgets/recent_job_request_widget.dart';
+import '../../../../custom_widgets/recent_job_request_status_widget.dart';
 
 class SvpAcceptedBookingsScreen extends StatelessWidget {
   const SvpAcceptedBookingsScreen({super.key});
@@ -33,11 +34,15 @@ class SvpAcceptedBookingsScreen extends StatelessWidget {
           itemBuilder: (context, index) {
             return Padding(
               padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),
-              child: RecentJobRequestWidget(
+              child: RecentJobRequestStatusWidget(
                 onTap: () {
                   log("Taped on -> Card");
-                  Get.toNamed(Routes.svpJobDetailsScreen);
+                  Get.toNamed(
+                    Routes.svpJobDetailsScreen,
+                    arguments: {"status": JobRequestStatusEnum.accepted},
+                  );
                 },
+
                 startWorkOnTap: () {
                   log("Accept Bookings screen!");
                 },

@@ -5,19 +5,19 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../constants/text_font_style.dart';
-import '../../../../custom_widgets/custom_card.dart';
-import '../../../../custom_widgets/custom_elevated_button.dart';
-import '../../../../gen/assets.gen.dart';
-import '../../../../gen/colors.gen.dart';
-import '../../../../helpers/ui_helpers.dart';
+import '../constants/text_font_style.dart';
+import 'custom_card.dart';
+import 'custom_elevated_button.dart';
+import '../gen/assets.gen.dart';
+import '../gen/colors.gen.dart';
+import '../helpers/ui_helpers.dart';
 
-class MoreInfoScreenImageUploadWidget extends StatelessWidget {
+class ProofOfImageUploadWidget extends StatelessWidget {
   final String title;
   final String? imagePath;
   final void Function()? onTap;
   final void Function()? removeImageOnTap;
-  const MoreInfoScreenImageUploadWidget({
+  const ProofOfImageUploadWidget({
     super.key,
     required this.title,
     this.onTap,
@@ -29,6 +29,7 @@ class MoreInfoScreenImageUploadWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomCard(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ///Section : Text -> upload NID/driving license/passport(font side)*
           Text(title, style: TextFontStyle.headline14w700c000000StyleSatoshi),
