@@ -17,6 +17,7 @@ import '../../../normal_user/user_profile/sub_presentation/normal_user_settings/
 import '../../../normal_user/user_profile/widgets/profile_image_show_and_select_widget.dart';
 import '../sub_presentation/svp_documents/presentation/svp_documentation_tab.dart';
 import '../sub_presentation/svp_profile/svp_profile_tab.dart';
+import '../sub_presentation/svp_settings/presentation/svp_settings_tab.dart';
 import '../widgets/svp_profile_image_showing_widget.dart';
 
 class SvpProfileScreen extends StatelessWidget {
@@ -135,7 +136,7 @@ class SvpProfileScreen extends StatelessWidget {
                   tabViews: [
                     SvpProfileTab(),
                     SvpDocumentationTab(),
-                    PaymentBookingHistoryTab(),
+                    SvpSettingsTab(),
                     PaymentBookingHistoryTab(),
                   ],
                 ),
