@@ -89,95 +89,93 @@ class MessageTile extends StatelessWidget {
       onTap: () {
         Get.to(() => PersonalInbox(name: userName));
       },
-      child: Container(
-        child: Row(
-          children: [
-            ///Section : User Image
-            CircleAvatar(
-              radius: 30.r,
-              backgroundImage: AssetImage(Assets.images.userImage.path),
+      child: Row(
+        children: [
+          ///Section : User Image
+          CircleAvatar(
+            radius: 30.r,
+            backgroundImage: AssetImage(Assets.images.userImage.path),
+          ),
+          UIHelper.horizontalSpace(12.w),
+
+          ///Section : User Name
+          ///Section : Last Message
+          ///Section : Last Message Time
+          ///Section : Total Unread Message
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ///Section : Use Name
+                ///Section : Last Message Time
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 0.57.sw,
+                      child: Text(
+                        userName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextFontStyle.headline16w700c202020StyleSatoshi
+                            .copyWith(
+                              fontWeight: isUnread ? FontWeight.w700 : null,
+                            ),
+                      ),
+                    ),
+                    Spacer(),
+                    Text(
+                      time,
+                      style: TextFontStyle.headline10w400c797c7bStyleSatoshi,
+                    ),
+                  ],
+                ),
+                UIHelper.verticalSpace(2.h),
+
+                ///Section : Last Message
+                ///Section : Total Unreaded Message
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ///Section : Last Message
+                    SizedBox(
+                      width: 0.6.sw,
+                      child: Text(
+                        lastMessage,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style:
+                            TextFontStyle.headline12w400c616161StyleSatoshi,
+                      ),
+                    ),
+                    Spacer(),
+
+                    ///Section : Total Unreaded Message
+                    isUnread
+                        ? Container(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 4.h,
+                              horizontal: 7.w,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.cf04a4c,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Text(
+                              totalUnrededMessage != 0
+                                  ? totalUnrededMessage.toString()
+                                  : "",
+                              style: TextFontStyle
+                                  .headline12w400cFFFFFFStyleSatoshi,
+                            ),
+                          )
+                        : SizedBox.shrink(),
+                  ],
+                ),
+              ],
             ),
-            UIHelper.horizontalSpace(12.w),
-
-            ///Section : User Name
-            ///Section : Last Message
-            ///Section : Last Message Time
-            ///Section : Total Unread Message
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ///Section : Use Name
-                  ///Section : Last Message Time
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: 0.57.sw,
-                        child: Text(
-                          userName,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextFontStyle.headline16w700c202020StyleSatoshi
-                              .copyWith(
-                                fontWeight: isUnread ? FontWeight.w700 : null,
-                              ),
-                        ),
-                      ),
-                      Spacer(),
-                      Text(
-                        time,
-                        style: TextFontStyle.headline10w400c797c7bStyleSatoshi,
-                      ),
-                    ],
-                  ),
-                  UIHelper.verticalSpace(2.h),
-
-                  ///Section : Last Message
-                  ///Section : Total Unreaded Message
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ///Section : Last Message
-                      SizedBox(
-                        width: 0.6.sw,
-                        child: Text(
-                          lastMessage,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style:
-                              TextFontStyle.headline12w400c616161StyleSatoshi,
-                        ),
-                      ),
-                      Spacer(),
-
-                      ///Section : Total Unreaded Message
-                      isUnread
-                          ? Container(
-                              padding: EdgeInsets.symmetric(
-                                vertical: 4.h,
-                                horizontal: 7.w,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.cf04a4c,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Text(
-                                totalUnrededMessage != 0
-                                    ? totalUnrededMessage.toString()
-                                    : "",
-                                style: TextFontStyle
-                                    .headline12w400cFFFFFFStyleSatoshi,
-                              ),
-                            )
-                          : SizedBox.shrink(),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

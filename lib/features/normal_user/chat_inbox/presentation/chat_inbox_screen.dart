@@ -106,7 +106,9 @@ class _PersonalInboxState extends State<PersonalInbox> {
             },
             child: Icon(Icons.call, color: AppColors.c999999),
           ),
+
           UIHelper.horizontalSpace(10.w),
+
 
           // More options button
           InkWell(
