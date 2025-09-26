@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
-
 import '../../../../constants/text_font_style.dart';
 import '../../../../controllers/svp_profile_screen_controller.dart';
 import '../../../../custom_widgets/custom_profile_image_widget.dart';
@@ -11,14 +10,10 @@ import '../../../../custom_widgets/tab_showing_widget.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../../helpers/ui_helpers.dart';
 import '../../../normal_user/details/widget/sliver_tab_bar_delegate_helper_widget.dart';
-import '../../../normal_user/user_profile/sub_presentation/normal_user_payment_booking_history/presentation/payment_booking_history_tab.dart';
-import '../../../normal_user/user_profile/sub_presentation/normal_user_profile/presentation/profile_tab.dart';
-import '../../../normal_user/user_profile/sub_presentation/normal_user_settings/presentation/settings_tab.dart';
-import '../../../normal_user/user_profile/widgets/profile_image_show_and_select_widget.dart';
 import '../sub_presentation/svp_documents/presentation/svp_documentation_tab.dart';
 import '../sub_presentation/svp_profile/svp_profile_tab.dart';
 import '../sub_presentation/svp_settings/presentation/svp_settings_tab.dart';
-import '../widgets/svp_profile_image_showing_widget.dart';
+import '../sub_presentation/svp_wallet/SvpWalletTab.dart';
 
 class SvpProfileScreen extends StatelessWidget {
   SvpProfileScreen({super.key});
@@ -137,7 +132,7 @@ class SvpProfileScreen extends StatelessWidget {
                     SvpProfileTab(),
                     SvpDocumentationTab(),
                     SvpSettingsTab(),
-                    PaymentBookingHistoryTab(),
+                    SvpWalletTab(),
                   ],
                 ),
               ),
