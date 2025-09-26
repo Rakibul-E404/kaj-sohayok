@@ -1,27 +1,30 @@
 // import 'dart:io';
+
 // import 'package:flutter/material.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:flutter_svg/svg.dart';
 // import 'package:get/get.dart';
+// import 'package:kaz_bd/controllers/svp_profile_screen_controller.dart';
 
-// import '../../../../controllers/user_profile_screen_controller.dart';
 // import '../../../../gen/assets.gen.dart';
 // import '../../../../gen/colors.gen.dart';
 
-// class ProfileImageShowAndSelectWidget extends StatelessWidget {
-//   const ProfileImageShowAndSelectWidget({super.key});
+// class SvpProfileImageShowingWidget extends StatelessWidget {
+//   SvpProfileImageShowingWidget({super.key});
+
+//   final SvpProfileScreenController controller = Get.put(
+//     SvpProfileScreenController(),
+//   );
 
 //   @override
 //   Widget build(BuildContext context) {
-//     final controller = Get.put(UserProfileScreenController());
-
 //     return Stack(
 //       children: [
 //         // 👇 Wrap with InkWell so user can tap image itself
 //         Obx(() {
 //           return InkWell(
 //             onTap: () {
-//               if (controller.pickedImagePath.isNotEmpty) {
+//               if (controller.svpPickedImagePath.isNotEmpty) {
 //                 // Show full screen preview of picked image
 //                 Get.dialog(
 //                   Dialog(
@@ -30,7 +33,7 @@
 //                       borderRadius: BorderRadius.circular(12.r),
 //                       child: InteractiveViewer(
 //                         child: Image.file(
-//                           File(controller.pickedImagePath.value),
+//                           File(controller.svpPickedImagePath.value),
 //                           fit: BoxFit.contain,
 //                         ),
 //                       ),
@@ -63,8 +66,8 @@
 //               ),
 //               child: CircleAvatar(
 //                 radius: 60.r,
-//                 backgroundImage: controller.pickedImagePath.isNotEmpty
-//                     ? FileImage(File(controller.pickedImagePath.value))
+//                 backgroundImage: controller.svpPickedImagePath.isNotEmpty
+//                     ? FileImage(File(controller.svpPickedImagePath.value))
 //                     : AssetImage(Assets.images.errorImage.path)
 //                           as ImageProvider,
 //               ),

@@ -6,12 +6,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/routes/routes.dart';
 
-import '../../../../constants/appList.dart';
-import '../../../../constants/text_font_style.dart';
-import '../../../../custom_widgets/profile_tile_widget.dart';
-import '../../../../gen/assets.gen.dart';
-import '../../../../gen/colors.gen.dart';
-import '../../../../helpers/ui_helpers.dart';
+import '../../../../../../constants/appList.dart';
+import '../../../../../../constants/text_font_style.dart';
+import '../../../../../../custom_widgets/profile_tile_widget.dart';
+import '../../../../../../gen/assets.gen.dart';
+import '../../../../../../gen/colors.gen.dart';
+import '../../../../../../helpers/ui_helpers.dart';
 
 class ProfileTab extends StatelessWidget {
   const ProfileTab({super.key});

@@ -1,76 +1,28 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
-import 'package:kaz_bd/features/normal_user/payment_booking_history_tab/presentation/payment_booking_history_tab.dart';
-import 'package:kaz_bd/features/normal_user/profile_tab/presentation/profile_tab.dart';
-import 'package:kaz_bd/features/normal_user/settings_tab/presentation/settings_tab.dart';
-import 'package:kaz_bd/gen/assets.gen.dart';
+import 'package:kaz_bd/features/normal_user/user_profile/sub_presentation/normal_user_payment_booking_history/presentation/payment_booking_history_tab.dart';
+import 'package:kaz_bd/features/normal_user/user_profile/sub_presentation/normal_user_profile/presentation/profile_tab.dart';
+import 'package:kaz_bd/features/normal_user/user_profile/sub_presentation/normal_user_settings/presentation/settings_tab.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 
 import '../../../../controllers/user_profile_screen_controller.dart';
+import '../../../../custom_widgets/custom_profile_image_widget.dart';
 import '../../../../custom_widgets/select_language_widget.dart';
 import '../../../../custom_widgets/tab_showing_widget.dart';
+import '../../../../gen/assets.gen.dart';
 import '../../details/widget/sliver_tab_bar_delegate_helper_widget.dart';
 import '../widgets/profile_image_show_and_select_widget.dart';
 
-class UserProfileScreen extends StatefulWidget {
+class UserProfileScreen extends StatelessWidget {
   const UserProfileScreen({super.key});
 
   @override
-  State<UserProfileScreen> createState() => _UserProfileScreenState();
-}
-
-class _UserProfileScreenState extends State<UserProfileScreen>
-    with TickerProviderStateMixin {
-  late TabController _languageTabController;
-  late TabController _profileOptionsTabController;
-  final UserProfileScreenController controller = Get.put(
-    UserProfileScreenController(),
-  );
-
-  @override
-  void initState() {
-    super.initState();
-
-    ///Section : Language Selection
-    _languageTabController = TabController(
-      length: 2,
-      vsync: this,
-      initialIndex: controller.languageSelectionTabIndex.value,
-    );
-    _languageTabController.addListener(() {
-      controller.changeLanguageTab(_languageTabController.index);
-      log("Language Tab changed to index: ${_languageTabController.index}");
-    });
-
-    ///Section : Profile Options
-    _profileOptionsTabController = TabController(
-      length: 3,
-      vsync: this,
-      initialIndex: controller.profileSectionTabIndex.value,
-    );
-    _profileOptionsTabController.addListener(() {
-      controller.changeProfileOptionsTab(_profileOptionsTabController.index);
-      log(
-        "Profile Section Tab changed to index: ${_profileOptionsTabController.index}",
-      );
-    });
-  }
-
-  @override
-  void dispose() {
-    _languageTabController.dispose();
-    _profileOptionsTabController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final controller = Get.put(UserProfileScreenController());
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.scaffoldBackgroundColor,
@@ -91,20 +43,26 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ///Section : Profile Image
-                    ///Section : Language Selection
+                    /// Profile Image + Language Tabs
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ///Section : Profile Image
-                        ProfileImageShowAndSelectWidget(),
+                        ///Section : Svp Profile Iamge
+                        Obx(() {
+                          return CustomProfileImageWidget(
+                            imagePath: controller.pickedImagePath.value,
+                            defaultAsset: Assets.images.errorImage.path,
+                            editIconAsset: Assets.icons.editIcon,
+                            onEditTap: () {
+                              controller.showImageSourceDialog();
+                            },
+                          );
+                        }),
 
-                        ///Section : Select Language
-                        // TabBar with custom indicator and styling
-                        ///Section : Button -> English, Bangla
+                        /// Language Selection
                         SelectLanguage(
-                          tabController: _languageTabController,
+                          tabController: controller.languageTabController,
                           tabIndex: controller.languageSelectionTabIndex,
                           onTabChange: controller.changeLanguageTab,
                           leftTabTitle: "English",
@@ -123,6 +81,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
               ),
             ),
 
+            /// Profile Options Tabs
             SliverPersistentHeader(
               pinned: true,
               delegate: SliverTabBarDelegateHelper(
@@ -136,16 +95,12 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                   child: TabBar(
                     tabAlignment: TabAlignment.start,
                     isScrollable: true,
-                    controller: _profileOptionsTabController,
+                    controller: controller.profileOptionsTabController,
                     labelStyle: TextFontStyle.headline14w500c4d4d4dStyleSatoshi,
                     unselectedLabelColor: AppColors.c4d4d4d,
                     indicatorColor: AppColors.c778beb,
                     dividerColor: AppColors.c778beb,
                     indicatorSize: TabBarIndicatorSize.label,
-                    // labelPadding: EdgeInsets.symmetric(
-                    //   horizontal: 4.w,
-                    //   vertical: 8.h,
-                    // ),
                     indicatorWeight: 4.h,
                     tabs: const [
                       Tab(text: "Profile"),
@@ -158,6 +113,7 @@ class _UserProfileScreenState extends State<UserProfileScreen>
             ),
           ],
 
+          /// Tab Views
           body: Padding(
             padding: EdgeInsets.symmetric(
               horizontal: UIHelper.kDefaulutPadding(),
@@ -167,9 +123,9 @@ class _UserProfileScreenState extends State<UserProfileScreen>
                 UIHelper.verticalSpace(24.h),
                 Expanded(
                   child: TabShowingWidget(
-                    tabController: _profileOptionsTabController,
+                    tabController: controller.profileOptionsTabController,
                     controller: controller.profileSectionTabIndex,
-                    tabViews: [
+                    tabViews: const [
                       ProfileTab(),
                       SettingsTab(),
                       PaymentBookingHistoryTab(),

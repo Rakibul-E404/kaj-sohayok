@@ -7,7 +7,7 @@ import 'package:kaz_bd/features/auth/sign_in/presentation/sign_in_screen.dart';
 import 'package:kaz_bd/features/auth/sign_up/presentation/sign_up_screen.dart';
 import 'package:kaz_bd/features/common_screens/about_us/presentation/about_us_screen.dart';
 import 'package:kaz_bd/features/common_screens/contact_us/presentation/contact_us_screen.dart';
-import 'package:kaz_bd/features/common_screens/edit_profile/presentation/edit_profile_screen.dart';
+import 'package:kaz_bd/features/normal_user/edit_profile/presentation/edit_profile_screen.dart';
 import 'package:kaz_bd/features/common_screens/privacy_policy/presentation/privacy_policy_screen.dart';
 import 'package:kaz_bd/features/common_screens/terms_and_conditions/presentation/terms_and_conditions_screen.dart';
 import 'package:kaz_bd/features/normal_user/all_categories/presentation/all_categories_screen.dart';
@@ -24,6 +24,7 @@ import 'package:kaz_bd/features/normal_user/work_completed_details/presentation/
 import 'package:kaz_bd/features/service_provider/join_as_service_provider/presentation/join_as_service_provider_screen.dart';
 import 'package:kaz_bd/features/service_provider/more_information/presentation/more_information_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_accepted_bookings/presentation/svp_accepted_bookings_screen.dart';
+import 'package:kaz_bd/features/service_provider/svp_edit_profile/presentation/svp_edit_profile_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_home/presentation/svp_home_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_in_progress/presentation/svp_in_progress_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_job_details/presentation/svp_job_details_screen.dart';
@@ -93,6 +94,7 @@ class Routes {
       '/svp_WorkCompleted_Details_screen';
   static const String svpPendingPaymentRequestDetailsScreen =
       '/svp_PendingPayment_Details_screen';
+  static const String svpEditProfileScreen = '/svp_edit_profile_screen';
 
   static final appRoutes = [
     ///Section : Normal User Screens & Common Screens
@@ -435,6 +437,15 @@ class Routes {
     GetPage(
       name: svpPendingPaymentRequestDetailsScreen,
       page: () => SvpPendingPaymentRequestDetailsScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///svpEditProfileScreen
+    GetPage(
+      name: svpEditProfileScreen,
+      page: () => SvpEditProfileScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),

@@ -12,6 +12,8 @@ import '../controllers/otp_validation_controller.dart';
 import '../controllers/set_new_password_screen_controller.dart';
 import '../controllers/sign_in_screen_controller.dart';
 import '../controllers/sign_up_screen_controller.dart';
+import '../controllers/svp_edit_profile_screen_controller.dart';
+import '../controllers/svp_profile_screen_controller.dart';
 import '../controllers/user_profile_screen_controller.dart';
 import '../controllers/svp_submit_work_form_screen_controller.dart';
 
@@ -32,5 +34,7 @@ class ControllerBindings extends Bindings {
     Get.lazyPut(() => MoreInformationScreenController());
     Get.lazyPut(() => FaceVerificationController());
     Get.lazyPut(() => SvpSubmitWorkFormScreenController());
+    Get.lazyPut(() => SvpProfileScreenController());
+    Get.lazyPut(() => SvpEditProfileScreenController());
   }
 }
