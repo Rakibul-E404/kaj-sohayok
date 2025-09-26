@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:kaz_bd/features/normal_user/provider_profile_details/model/profile_tile_model.dart';
+import 'package:kaz_bd/features/service_provider/svp_job_details/model/user_info_model.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 
 import '../features/normal_user/chat_inbox/model/chat_message_model.dart';
 import '../features/normal_user/home/models/category_mode.dart';
 import '../features/normal_user/chat_list/model/message_model.dart';
 import '../features/normal_user/chat_list/presentation/chat_list_screen.dart';
-import '../features/normal_user/notification/model/notification_model.dart';
+import '../features/common_screens/notification/model/notification_model.dart';
 import '../features/normal_user/user_profile/models/settings_options_model.dart';
+import '../features/normal_user/work_completed_details/model/additional_cost_model.dart';
+import '../features/service_provider/svp_home/model/svp_card_model.dart';
 
 class AppList {
   static final List<String> genderList = ["Male", "Female", "Other"];
@@ -242,5 +245,32 @@ class AppList {
       isSentByMe: false,
       time: "3:02 pm",
     ),
+  ];
+
+  static List<SvpCardModel> svpJobsTypeList = [
+    SvpCardModel(title: "Job Request", totalJobs: 12),
+    SvpCardModel(title: "Accepted Booking", totalJobs: 01),
+    SvpCardModel(title: "In Progress", totalJobs: 12),
+    SvpCardModel(title: "Work completed", totalJobs: 16),
+  ];
+
+  static List<UserInfoModel> userInfoList = [
+    UserInfoModel(fieldName: "Name", data: "Swapon Mia"),
+    UserInfoModel(fieldName: "Location", data: "Rangpur Bangladesh"),
+    UserInfoModel(fieldName: "Date of Birth", data: "11-11-2025"),
+    UserInfoModel(fieldName: "Gender", data: "Male"),
+  ];
+
+  static final List<AdditionalCostModel> additionalCosts = [
+    AdditionalCostModel(title: "Delivery Charge", price: 50.0),
+    AdditionalCostModel(title: "Installation Fee", price: 120.0),
+    AdditionalCostModel(title: "Service Tax", price: 30.0),
+    AdditionalCostModel(title: "Maintenance Fee", price: 75.0),
+    AdditionalCostModel(title: "Warranty Extension", price: 200.0),
+    AdditionalCostModel(title: "Packaging Cost", price: 25.0),
+    AdditionalCostModel(title: "Express Shipping", price: 150.0),
+    AdditionalCostModel(title: "Extra Parts", price: 300.0),
+    AdditionalCostModel(title: "Cleaning Service", price: 80.0),
+    AdditionalCostModel(title: "Miscellaneous", price: 40.0),
   ];
 }

@@ -12,6 +12,7 @@ import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/routes/routes.dart';
 
+import '../../../../custom_widgets/home_section_applogo_and_notification.dart';
 import '../../../../gen/assets.gen.dart';
 import '../widgets/category_page_view_widget.dart' show CategoryPageViewWidget;
 import '../widgets/section_declaration_widget.dart';
@@ -28,59 +29,11 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           children: [
             ///Section : AppLogo & Notification Section
-            Container(
-              width: 1.sw,
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-              decoration: BoxDecoration(
-                color: AppColors.cf1f3fd,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(24.r),
-                  bottomRight: Radius.circular(24.r),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ///AppLogo
-                  Container(
-                    width: 64.w,
-                    height: 64.h,
-                    decoration: BoxDecoration(
-                      color: AppColors.cFFFFFF,
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage(Assets.images.appLogo.path),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.ca4b1f2.withAlpha(80),
-                          blurRadius: 12.r,
-                          offset: const Offset(0, 6),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  ///Section : Notification
-                  InkWell(
-                    onTap: () {
-                      log("Notification Icon taped!");
-                      Get.toNamed(Routes.notificationScreen);
-                    },
-                    child: Container(
-                      width: 48.w,
-                      height: 48.h,
-                      padding: EdgeInsets.all(12.sp),
-                      decoration: BoxDecoration(
-                        color: AppColors.c778beb,
-                        shape: BoxShape.circle,
-                      ),
-                      child: SvgPicture.asset(Assets.icons.bellIcon),
-                    ),
-                  ),
-                ],
-              ),
+            HomeSectionAppLogoAndNotification(
+              onTap: () {
+                log("Notification Icon taped!");
+                Get.toNamed(Routes.notificationScreen);
+              },
             ),
             UIHelper.verticalSpace(16.h),
 

@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../constants/text_font_style.dart';
-import '../../../../gen/colors.gen.dart';
+import '../constants/text_font_style.dart';
+import '../gen/colors.gen.dart';
 
 class MoreInfoWidgetTile extends StatelessWidget {
   final String title;
   final String hintText;
+  final bool isEnabled;
+  final TextInputType? keyboardType;
   final TextEditingController controller;
   const MoreInfoWidgetTile({
     super.key,
     required this.title,
     required this.hintText,
     required this.controller,
+    this.isEnabled = true,
+    this.keyboardType,
   });
 
   @override
@@ -39,8 +43,11 @@ class MoreInfoWidgetTile extends StatelessWidget {
           ///Section : Text Form Field
           TextFormField(
             controller: controller,
+            keyboardType: keyboardType ?? TextInputType.text,
             decoration: InputDecoration(
+              enabled: isEnabled,
               hintText: hintText,
+
               hintStyle: TextFontStyle.headline16w700cb4b4b4StyleSatoshi,
               border: OutlineInputBorder(borderSide: BorderSide.none),
             ),

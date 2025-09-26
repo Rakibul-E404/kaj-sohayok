@@ -49,7 +49,7 @@ class CustomElevatedButton extends StatelessWidget {
                   width: buttonBorderWidth ?? 1.sp,
                 )
               : null,
-          borderRadius: BorderRadius.circular(borderRadius ?? 10.r),
+          borderRadius: BorderRadius.circular(borderRadius ?? 6.r),
         ),
         child: Center(
           child:
@@ -57,9 +57,11 @@ class CustomElevatedButton extends StatelessWidget {
               Text(
                 buttonTitle ?? "",
                 textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style:
                     textStyle ??
-                    TextFontStyle.headline16w700cFFFFFFStyleSatoshi,
+                    TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
               ),
         ),
       ),

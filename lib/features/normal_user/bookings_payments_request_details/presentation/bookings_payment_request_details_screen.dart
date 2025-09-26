@@ -8,8 +8,10 @@ import 'package:get/get.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../../constants/appList.dart';
 import '../../../../constants/app_constant_text.dart';
 import '../../../../constants/text_font_style.dart';
+import '../../../../custom_widgets/payment_summery_widget.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../../gen/colors.gen.dart';
 import '../../../../helpers/ui_helpers.dart';
@@ -334,147 +336,17 @@ class _BookingsPaymentRequestDetailsScreenState
                 UIHelper.verticalSpace(24.h),
 
                 ///Section : Payment Summery
-                Container(
-                  width: 1.sw,
-                  padding: EdgeInsets.all(12.sp),
-                  decoration: BoxDecoration(
-                    color: AppColors.cFFFFFF,
-                    border: Border.all(color: AppColors.ce6e6e6),
-                    borderRadius: BorderRadius.circular(12.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.ca4b1f2.withAlpha(80),
-                        blurRadius: 12.r,
-                        offset: const Offset(0, 6),
+                PaymentSummeryWidget(
+                  initialCost: 30,
+                  additionalCostList: AppList.additionalCosts,
+                  totalPayment:
+                      30 +
+                      AppList.additionalCosts.fold(
+                        0,
+                        (sum, item) => sum + item.price,
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ///Section : Text -> Payment Summary
-                      Text(
-                        "Payment Summary",
-                        style: TextFontStyle.headline16w700c202020StyleSatoshi,
-                      ),
-                      UIHelper.verticalSpace(16.h),
-
-                      ///Section : Initial Payment
-                      Container(
-                        width: 1.sw,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 10.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.cf1f3fd,
-                          border: Border(
-                            top: BorderSide(color: AppColors.c778beb),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Initial Cost",
-                              style: TextFontStyle
-                                  .headline16w700c4d4d4dStyleSatoshi,
-                            ),
-                            Spacer(),
-                            Expanded(
-                              child: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: "Start from ${AppText.bdTkSign}",
-                                      style: TextFontStyle
-                                          .headline12w500c6a6a6aStyleSatoshi,
-                                    ),
-                                    TextSpan(
-                                      text: "${30.90}",
-                                      style: TextFontStyle
-                                          .headline18w700c778bebStyleSatoshi,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      UIHelper.verticalSpace(25.h),
-
-                      ///Section : Other Parts
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Other Parts",
-                            style:
-                                TextFontStyle.headline16w500c202020StyleSatoshi,
-                          ),
-
-                          Text(
-                            "${AppText.bdTkSign}${300.50}",
-                            style:
-                                TextFontStyle.headline16w500c202020StyleSatoshi,
-                          ),
-                        ],
-                      ),
-                      UIHelper.verticalSpace(25.h),
-
-                      ///Section : Divider
-                      DottedLine(
-                        direction: Axis.horizontal,
-                        lineLength: double.infinity,
-                        lineThickness: 1.sp,
-                        dashLength: 4.w,
-                        dashGapLength: 4.w,
-                        dashColor: AppColors.cb4b4b4,
-                      ),
-                      UIHelper.verticalSpace(12.h),
-
-                      ///Section : Total Payment
-                      Container(
-                        width: 1.sw,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 10.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.cf1f3fd,
-                          border: Border.all(color: AppColors.ce6e6e6),
-                          borderRadius: BorderRadius.circular(8.r),
-
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.ca4b1f2.withAlpha(80),
-                              blurRadius: 12.r,
-                              offset: const Offset(0, 6),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            ///Section : Text-> Total Payment
-                            Text(
-                              "Total Payment",
-                              style: TextFontStyle
-                                  .headline16w700c202020StyleSatoshi,
-                            ),
-                            Text(
-                              "${AppText.bdTkSign}330",
-                              style: TextFontStyle
-                                  .headline18w700c778bebStyleSatoshi,
-                            ),
-                          ],
-                        ),
-                      ),
-                      UIHelper.verticalSpace(10.h),
-                    ],
-                  ),
                 ),
+
                 UIHelper.verticalSpace(32.h),
 
                 ///Section : Make Payment Button

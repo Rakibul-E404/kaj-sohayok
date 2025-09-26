@@ -10,8 +10,8 @@ import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/routes/routes.dart';
 
 import '../../../../controllers/more_information_screen_controller.dart';
-import '../widgets/more_info_screen_image_uploading_widget.dart';
-import '../widgets/more_info_widget_tile.dart';
+import '../../../../custom_widgets/proof_of_image_uploading_widget.dart';
+import '../../../../custom_widgets/more_info_widget_tile.dart';
 
 class MoreInformationScreen extends StatelessWidget {
   MoreInformationScreen({super.key});
@@ -66,7 +66,7 @@ class MoreInformationScreen extends StatelessWidget {
 
                 ///Section : upload NID/driving license/passport(font side)*
                 Obx(() {
-                  return MoreInfoScreenImageUploadWidget(
+                  return ProofOfImageUploadWidget(
                     onTap: () {
                       log("Front Image : Browse Button Tapede");
                       controller.showImageSourceDialog(isFront: true);
@@ -82,7 +82,7 @@ class MoreInformationScreen extends StatelessWidget {
 
                 ///Section : upload NID/driving license/passport(Back side)*
                 Obx(() {
-                  return MoreInfoScreenImageUploadWidget(
+                  return ProofOfImageUploadWidget(
                     onTap: () {
                       log("Back Image : Browse Button Taped!");
                       controller.showImageSourceDialog(isFront: false);

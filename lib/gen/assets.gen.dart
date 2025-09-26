@@ -229,6 +229,10 @@ class $AssetsImagesGen {
   AssetGenImage get specificServiceImage =>
       const AssetGenImage('assets/images/specific_service_image.png');
 
+  /// File path: assets/images/svp_job_type_image.png
+  AssetGenImage get svpJobTypeImage =>
+      const AssetGenImage('assets/images/svp_job_type_image.png');
+
   /// File path: assets/images/upload_icon.png
   AssetGenImage get uploadIcon =>
       const AssetGenImage('assets/images/upload_icon.png');
@@ -263,6 +267,7 @@ class $AssetsImagesGen {
     serviceImage,
     serviceProviderImage,
     specificServiceImage,
+    svpJobTypeImage,
     uploadIcon,
     userImage,
     verifiedCheckIcon,

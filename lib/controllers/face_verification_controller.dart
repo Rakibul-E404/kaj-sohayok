@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kaz_bd/routes/routes.dart';
 
 import '../constants/app_enums.dart';
 
@@ -15,8 +16,9 @@ class FaceVerificationController extends GetxController {
 
   /// Initialize camera
   Future<void> initCamera() async {
-    if (cameraController != null && cameraController!.value.isInitialized)
+    if (cameraController != null && cameraController!.value.isInitialized) {
       return;
+    }
 
     try {
       final cameras = await availableCameras();
@@ -32,6 +34,12 @@ class FaceVerificationController extends GetxController {
       );
 
       await cameraController!.initialize();
+
+      // 🔑 Ensure image stream is not left running
+      if (cameraController!.value.isStreamingImages) {
+        await cameraController!.stopImageStream();
+      }
+
       status.value = FaceVerificationStatus.capture;
     } catch (e) {
       log('Camera initialization error: $e');
@@ -40,10 +48,16 @@ class FaceVerificationController extends GetxController {
 
   /// Capture image
   Future<void> captureImage() async {
-    if (cameraController == null || !cameraController!.value.isInitialized)
+    if (cameraController == null || !cameraController!.value.isInitialized) {
       return;
+    }
 
     try {
+      // 🔑 stop any image stream before capture
+      if (cameraController!.value.isStreamingImages) {
+        await cameraController!.stopImageStream();
+      }
+
       capturedImage = await cameraController!.takePicture();
       status.value = FaceVerificationStatus.verifying;
       await _simulateVerification();
@@ -75,7 +89,7 @@ class FaceVerificationController extends GetxController {
         // do nothing
         break;
       case FaceVerificationStatus.done:
-        Get.toNamed('/next_screen');
+        Get.offAllNamed(Routes.svpHomeScreen);
         break;
     }
   }
@@ -83,6 +97,9 @@ class FaceVerificationController extends GetxController {
   @override
   void onClose() {
     if (cameraController != null) {
+      if (cameraController!.value.isStreamingImages) {
+        cameraController!.stopImageStream();
+      }
       cameraController!.dispose();
       cameraController = null;
     }
