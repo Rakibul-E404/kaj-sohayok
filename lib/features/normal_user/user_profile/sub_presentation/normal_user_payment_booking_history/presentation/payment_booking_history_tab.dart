@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:kaz_bd/features/normal_user/payment_booking_history_tab/widget/payment_history_showing_card.dart';
+import 'package:kaz_bd/features/normal_user/user_profile/sub_presentation/normal_user_payment_booking_history/widget/payment_history_showing_card.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/routes/routes.dart';
