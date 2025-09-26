@@ -29,8 +29,8 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           // home: WorkCompletedDetailsScreen(),
           debugShowCheckedModeBanner: false,
-          // initialRoute: Routes.onboardingScreen,
-          initialRoute: Routes.joinAsServiceProviderScreen,
+          initialRoute: Routes.onboardingScreen,
+          // initialRoute: Routes.joinAsServiceProviderScreen,
           getPages: Routes.appRoutes,
           initialBinding: ControllerBindings(),
         );
