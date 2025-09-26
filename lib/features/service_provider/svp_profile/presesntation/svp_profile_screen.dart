@@ -132,7 +132,7 @@ class SvpProfileScreen extends StatelessWidget {
                 child: TabShowingWidget(
                   tabController: controller.svpProfileOptionsTabController,
                   controller: controller.svpProfileSectionTabIndex,
-                  tabViews: const [
+                  tabViews: [
                     SvpProfileTab(),
                     SvpDocumentationTab(),
                     PaymentBookingHistoryTab(),

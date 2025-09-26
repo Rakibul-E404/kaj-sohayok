@@ -30,7 +30,6 @@ class SvpProfileTab extends StatelessWidget {
             Card(
               child: Container(
                 width: 1.sw,
-
                 decoration: BoxDecoration(
                   color: AppColors.cFFFFFF,
                   borderRadius: BorderRadius.circular(16.r),
@@ -47,7 +46,6 @@ class SvpProfileTab extends StatelessWidget {
                   children: [
                     Container(
                       width: 1.sw,
-
                       padding: EdgeInsets.symmetric(
                         horizontal: 16.w,
                         vertical: 10.h,
