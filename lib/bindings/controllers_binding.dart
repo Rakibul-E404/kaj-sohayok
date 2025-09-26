@@ -16,6 +16,7 @@ import '../controllers/svp_edit_profile_screen_controller.dart';
 import '../controllers/svp_profile_screen_controller.dart';
 import '../controllers/user_profile_screen_controller.dart';
 import '../controllers/svp_submit_work_form_screen_controller.dart';
+import '../custom_widgets/svp_documents_tab_controller.dart';
 
 class ControllerBindings extends Bindings {
   @override
@@ -36,5 +37,6 @@ class ControllerBindings extends Bindings {
     Get.lazyPut(() => SvpSubmitWorkFormScreenController());
     Get.lazyPut(() => SvpProfileScreenController());
     Get.lazyPut(() => SvpEditProfileScreenController());
+    Get.lazyPut(() => SvpDocumentsTabController());
   }
 }

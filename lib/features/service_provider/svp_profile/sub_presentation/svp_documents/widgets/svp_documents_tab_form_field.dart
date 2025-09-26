@@ -5,7 +5,15 @@ import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 
 class SvpDocumentsTabFormField extends StatelessWidget {
-  const SvpDocumentsTabFormField({super.key});
+  final String fieldName;
+  final String hintText;
+  final TextEditingController controller;
+  const SvpDocumentsTabFormField({
+    super.key,
+    required this.fieldName,
+    required this.hintText,
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +27,18 @@ class SvpDocumentsTabFormField extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Name", style: TextFontStyle.headline14w700c989898StyleSatoshi),
+          Padding(
+            padding: EdgeInsets.only(left: 14.w),
+            child: Text(
+              fieldName,
+              style: TextFontStyle.headline14w700c989898StyleSatoshi,
+            ),
+          ),
           UIHelper.verticalSpace(5.h),
           TextFormField(
+            controller: controller,
             decoration: InputDecoration(
-              hintText: "Enter Your Work Type",
+              hintText: hintText,
               border: OutlineInputBorder(borderSide: BorderSide.none),
             ),
           ),
