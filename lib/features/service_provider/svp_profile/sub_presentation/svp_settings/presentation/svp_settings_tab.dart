@@ -9,7 +9,7 @@ import '../../../../../../gen/assets.gen.dart';
 import '../../../../../../gen/colors.gen.dart';
 import '../../../../../../helpers/ui_helpers.dart';
 import '../../../../../../routes/routes.dart';
-import '../../../../../normal_user/user_profile/sub_presentation/normal_user_settings/widgets/settings_option_tile_widget.dart';
+import '../../../../../../custom_widgets/settings_option_tile_widget.dart';
 
 class SvpSettingsTab extends StatelessWidget {
   const SvpSettingsTab({super.key});

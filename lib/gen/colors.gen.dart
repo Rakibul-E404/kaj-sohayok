@@ -32,6 +32,9 @@ class AppColors {
   /// Color: #FF202020
   static const Color c202020 = Color(0xFF202020);
 
+  /// Color: #FF27d127
+  static const Color c27d127 = Color(0xFF27D127);
+
   /// Color: #FF292E34
   static const Color c292E34 = Color(0xFF292E34);
 
@@ -175,6 +178,9 @@ class AppColors {
 
   /// Color: #FFfdf2ca
   static const Color cfdf2ca = Color(0xFFFDF2CA);
+
+  /// Color: #FFff6b6b
+  static const Color cff6b6b = Color(0xFFFF6B6B);
 
   /// Color: #FFffcd22
   static const Color cffcd22 = Color(0xFFFFCD22);

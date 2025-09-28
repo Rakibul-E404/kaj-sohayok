@@ -5,7 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:kaz_bd/constants/appList.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
-import 'package:kaz_bd/features/normal_user/user_profile/sub_presentation/normal_user_settings/widgets/settings_option_tile_widget.dart';
+import 'package:kaz_bd/custom_widgets/settings_option_tile_widget.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
