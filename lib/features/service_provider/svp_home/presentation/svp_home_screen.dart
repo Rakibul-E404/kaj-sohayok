@@ -14,6 +14,7 @@ import '../../../../helpers/ui_helpers.dart';
 import '../../../../routes/routes.dart';
 import '../../../../custom_widgets/recent_job_request_status_widget.dart';
 import '../widgets/svp_job_card.dart';
+import '../widgets/svp_show_chart_widget.dart';
 
 class SvpHomeScreen extends StatelessWidget {
   const SvpHomeScreen({super.key});
@@ -42,6 +43,8 @@ class SvpHomeScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     ///Section : Graph Chart
+                    IncomeChartCard(),
+                    UIHelper.verticalSpace(16.h),
 
                     ///Section : Job Status Card
                     GridView.builder(
