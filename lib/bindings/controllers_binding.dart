@@ -13,6 +13,7 @@ import '../controllers/set_new_password_screen_controller.dart';
 import '../controllers/sign_in_screen_controller.dart';
 import '../controllers/sign_up_screen_controller.dart';
 import '../controllers/svp_edit_profile_screen_controller.dart';
+import '../controllers/svp_home_screen_controller.dart';
 import '../controllers/svp_profile_screen_controller.dart';
 import '../controllers/svp_profile_screen_documents_tab_controller.dart';
 import '../controllers/user_profile_screen_controller.dart';
@@ -38,5 +39,6 @@ class ControllerBindings extends Bindings {
     Get.lazyPut(() => SvpProfileScreenController());
     Get.lazyPut(() => SvpEditProfileScreenController());
     Get.lazyPut(() => SvpProfileScreenDocumentsTabController());
+    Get.lazyPut(() => SvpHomeScreenController());
   }
 }

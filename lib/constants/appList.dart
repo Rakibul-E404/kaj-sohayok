@@ -292,7 +292,12 @@ class AppList {
       ChartDataModel('Apr', 38000),
       ChartDataModel('May', 50000),
       ChartDataModel('Jun', 42000),
-      ChartDataModel('Jul', 58000),
+      ChartDataModel('July', 45000),
+      ChartDataModel('Aug', 58000),
+      ChartDataModel('Sept', 38000),
+      ChartDataModel('Oct', 45000),
+      ChartDataModel('Nov', 2312131),
+      ChartDataModel('Dec', 8787888),
     ],
   };
 }
