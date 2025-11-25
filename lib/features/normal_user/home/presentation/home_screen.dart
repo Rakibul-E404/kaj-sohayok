@@ -141,6 +141,7 @@ class HomeScreen extends StatelessWidget {
                         return ServiceWidget(
                           onTap: () {
                             log("Taped Service Index : $index");
+                            Get.toNamed(Routes.serviceDetailsScreen);
                           },
                           imagePath: Assets.images.serviceImage.path,
                           serviceTitle: 'Ac Cleaning At Home',

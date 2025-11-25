@@ -7,17 +7,19 @@ class CustomBar extends StatelessWidget {
   final double value;
   final double maxValue;
   final String label;
+  final double barWidth;
 
   const CustomBar({
     super.key,
     required this.value,
     required this.maxValue,
     required this.label,
+    required this.barWidth,
   });
 
   @override
   Widget build(BuildContext context) {
-    double barWidth = 28.w;
+    // double localBarWidth = barWidth;
     double maxBarHeight = 100.h;
 
     double percentage = value / maxValue;
