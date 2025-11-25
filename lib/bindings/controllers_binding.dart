@@ -23,7 +23,7 @@ class ControllerBindings extends Bindings {
   void dependencies() {
     Get.lazyPut(() => OnboardingController());
     Get.lazyPut(() => SignInScreenController());
-    Get.lazyPut(() => SignUpScreenController());
+    Get.lazyPut(() => UserSignUpController());
     Get.lazyPut(() => OtpValidationController());
     Get.lazyPut(() => SetNewPasswordScreenController());
     Get.lazyPut(() => HomePageController());

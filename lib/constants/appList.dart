@@ -14,7 +14,7 @@ import '../features/service_provider/svp_home/model/chart_data_model.dart';
 import '../features/service_provider/svp_home/model/svp_card_model.dart';
 
 class AppList {
-  static final List<String> genderList = ["Male", "Female", "Other"];
+  static final List<String> genderList = ["Male", "Female"];
 
   static List<NotificationModel> notificationList = [
     NotificationModel(title: "Your Password Updated Successfully!", time: 10),

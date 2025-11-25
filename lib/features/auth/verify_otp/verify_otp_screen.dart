@@ -11,15 +11,20 @@ import '../../../constants/text_font_style.dart';
 import '../../../controllers/otp_validation_controller.dart';
 import '../../../gen/assets.gen.dart';
 import '../../../helpers/ui_helpers.dart';
+import '../../../helpers/waiting_widget.dart';
 import 'widgets/pinput_widget.dart';
 
 class VerifyOtpScreen extends StatelessWidget {
   VerifyOtpScreen({super.key});
 
-  OtpValidationController controller = Get.put(OtpValidationController());
+  OtpValidationController otpValidationController = Get.put(
+    OtpValidationController(),
+  );
 
   @override
   Widget build(BuildContext context) {
+    final String? email = Get.arguments['email'] ?? '';
+    final bool forForgetPassword = Get.arguments['forgetPassword'] ?? false;
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       body: SafeArea(
@@ -67,15 +72,39 @@ class VerifyOtpScreen extends StatelessWidget {
                 UIHelper.verticalSpace(32.h),
 
                 ///Section : OTP Form Field
-                CustomPinInput(),
+                CustomPinInput(
+                  resend: () {
+                    otpValidationController.handleSendOtpSignUp(
+                      email: email ?? '',
+                    );
+                  },
+                ),
                 UIHelper.verticalSpace(32.h),
 
-                CustomElevatedButton(
-                  onTap: () {
-                    log("Verify Email button taped!");
-                    Get.toNamed(Routes.setNewPasswordScreen);
-                  },
-                  buttonTitle: "Verify Email",
+                Obx(
+                  () => Visibility(
+                    visible: otpValidationController.loader.value == false,
+                    replacement: WaitingWidget(),
+                    child: CustomElevatedButton(
+                      onTap: () {
+                        Get.toNamed(Routes.setNewPasswordScreen);
+                        if (forForgetPassword == false) {
+                          otpValidationController.handleSendOtpSignUp(
+                            email: email ?? '',
+                          );
+                        } else {
+                          Get.toNamed(
+                            Routes.setNewPasswordScreen,
+                            arguments: {
+                              'email': email ?? '',
+                              'otpCode': otpValidationController.pin.value,
+                            },
+                          );
+                        }
+                      },
+                      buttonTitle: "Verify Email",
+                    ),
+                  ),
                 ),
               ],
             ),

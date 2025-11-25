@@ -9,7 +9,11 @@ import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/routes/routes.dart';
+import 'package:kaz_bd/service/get_storage.dart';
 
+import '../../../../service/secured_storage.dart';
+import '../../../../utilities/app_constants.dart';
+import '../../../../utilities/enum.dart';
 import '../widgets/role_selecting_card.dart';
 
 class ChooseRoleScreen extends StatelessWidget {
@@ -76,8 +80,11 @@ class ChooseRoleScreen extends StatelessWidget {
 
                 ///Section : Join As a User
                 RoleSelectingCard(
-                  onTap: () {
-                    log("Join As a user Taped! : ${appUserType.buyer}");
+                  onTap: () async {
+                    await GetStorageModel().saveString(
+                      AppConstants.currentRole,
+                      UserRole.user.name,
+                    );
                     Get.toNamed(Routes.signUpScreen);
                   },
                   showBorder: true,
@@ -89,9 +96,10 @@ class ChooseRoleScreen extends StatelessWidget {
 
                 ///Section : join as a services provider
                 RoleSelectingCard(
-                  onTap: () {
-                    log(
-                      "Join As Service Provider Taped! : ${appUserType.seller}",
+                  onTap: () async {
+                    await GetStorageModel().saveString(
+                      AppConstants.currentRole,
+                      UserRole.provider.name,
                     );
                     Get.toNamed(Routes.signUpScreen);
                   },

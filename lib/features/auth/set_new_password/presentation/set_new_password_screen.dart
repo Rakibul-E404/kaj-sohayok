@@ -17,12 +17,14 @@ import '../../../../custom_widgets/custom_text_form_field.dart';
 class SetNewPasswordScreen extends StatelessWidget {
   SetNewPasswordScreen({super.key});
 
-  SetNewPasswordScreenController controller = Get.put(
+  SetNewPasswordScreenController setNewPasswordScreenController = Get.put(
     SetNewPasswordScreenController(),
   );
 
   @override
   Widget build(BuildContext context) {
+    final String email = Get.arguments['email'] ?? '';
+    final String otpCode = Get.arguments['otpCode'] ?? '';
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       body: SafeArea(
@@ -76,7 +78,7 @@ class SetNewPasswordScreen extends StatelessWidget {
                   hintText: "Enter Password",
                   isPass: true,
 
-                  isObsecure: controller.isVisible.value,
+                  isObsecure: setNewPasswordScreenController.isVisible.value,
                   prefixIcon: SvgPicture.asset(
                     fit: BoxFit.contain,
                     Assets.icons.lockIcon,
@@ -84,12 +86,12 @@ class SetNewPasswordScreen extends StatelessWidget {
                   suffixIcon: InkWell(
                     onTap: () {
                       log(
-                        "Password visibility Icon taped! ${controller.isVisible.value}",
+                        "Password visibility Icon taped! ${setNewPasswordScreenController.isVisible.value}",
                       );
-                      controller.setPasswrdVisibility();
+                      setNewPasswordScreenController.setPasswrdVisibility();
                     },
                     child: Icon(
-                      controller.isVisible.value
+                      setNewPasswordScreenController.isVisible.value
                           ? Icons.visibility
                           : Icons.visibility_off,
                       color: AppColors.c6b6b6b,
@@ -106,7 +108,9 @@ class SetNewPasswordScreen extends StatelessWidget {
                   hintText: "Enter Confirm Password",
                   isPass: true,
 
-                  isObsecure: controller.isConfirmPasswordVisible.value,
+                  isObsecure: setNewPasswordScreenController
+                      .isConfirmPasswordVisible
+                      .value,
                   prefixIcon: SvgPicture.asset(
                     fit: BoxFit.contain,
                     Assets.icons.lockIcon,
@@ -114,12 +118,15 @@ class SetNewPasswordScreen extends StatelessWidget {
                   suffixIcon: InkWell(
                     onTap: () {
                       log(
-                        "Password visibility Icon taped! ${controller.isConfirmPasswordVisible.value}",
+                        "Password visibility Icon taped! ${setNewPasswordScreenController.isConfirmPasswordVisible.value}",
                       );
-                      controller.setConfirmPasswrdVisibility();
+                      setNewPasswordScreenController
+                          .setConfirmPasswrdVisibility();
                     },
                     child: Icon(
-                      controller.isConfirmPasswordVisible.value
+                      setNewPasswordScreenController
+                              .isConfirmPasswordVisible
+                              .value
                           ? Icons.visibility
                           : Icons.visibility_off,
                       color: AppColors.c6b6b6b,
@@ -130,77 +137,81 @@ class SetNewPasswordScreen extends StatelessWidget {
               Spacer(),
 
               CustomElevatedButton(
-                onTap: () {
+                onTap: () async {
                   log("Save Password button Taped!");
-                  showModalBottomSheet(
-                    context: context,
-                    builder: (context) {
-                      return Container(
-                        width: 1.sw,
-                        height: 0.48.sh,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 44.w,
-                          vertical: 30.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.cFFFFFF,
-                          borderRadius: BorderRadius.circular(50.r),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            ///Section : Mini Bar section
-                            Container(
-                              width: 50.w,
-                              height: 6.h,
-                              decoration: BoxDecoration(
-                                color: AppColors.cb5b5b5,
-                                borderRadius: BorderRadius.circular(10.r),
-                              ),
-                            ),
-                            UIHelper.verticalSpace(24.h),
-
-                            ///Section : Image -> Done
-                            Image.asset(
-                              height: 90.h,
-                              width: 90.w,
-                              fit: BoxFit.contain,
-                              Assets.images.resetDoneImage.path,
-                            ),
-                            UIHelper.verticalSpace(24.h),
-
-                            ///Section : Text -> Password Update Successfully
-                            Text(
-                              "Password Update\n Successfully",
-                              textAlign: TextAlign.center,
-                              style: TextFontStyle
-                                  .headline18w700c000000StyleSatoshi,
-                            ),
-                            UIHelper.verticalSpace(10.h),
-
-                            ///Section : Text -> Return to the lgoin....
-                            Text(
-                              "Return to the login page to enter your account with your new password.",
-                              textAlign: TextAlign.center,
-                              style: TextFontStyle
-                                  .headline12w400c494949StyleSatoshi,
-                            ),
-                            Spacer(),
-
-                            ///Section : Button -> back to sign in
-                            CustomElevatedButton(
-                              onTap: () {
-                                log("Back to Sign in button Taped");
-                                Get.toNamed(Routes.signInScreen);
-                              },
-                              buttonTitle: "Back To Sign In",
-                            ),
-                            UIHelper.verticalSpace(30.h),
-                          ],
-                        ),
-                      );
-                    },
+                  await setNewPasswordScreenController.handleResetPassword(
+                    email: email,
+                    otpCode: otpCode,
                   );
+                  // showModalBottomSheet(
+                  //   context: context,
+                  //   builder: (context) {
+                  //     return Container(
+                  //       width: 1.sw,
+                  //       height: 0.48.sh,
+                  //       padding: EdgeInsets.symmetric(
+                  //         horizontal: 44.w,
+                  //         vertical: 30.h,
+                  //       ),
+                  //       decoration: BoxDecoration(
+                  //         color: AppColors.cFFFFFF,
+                  //         borderRadius: BorderRadius.circular(50.r),
+                  //       ),
+                  //       child: Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.center,
+                  //         children: [
+                  //           ///Section : Mini Bar section
+                  //           Container(
+                  //             width: 50.w,
+                  //             height: 6.h,
+                  //             decoration: BoxDecoration(
+                  //               color: AppColors.cb5b5b5,
+                  //               borderRadius: BorderRadius.circular(10.r),
+                  //             ),
+                  //           ),
+                  //           UIHelper.verticalSpace(24.h),
+                  //
+                  //           ///Section : Image -> Done
+                  //           Image.asset(
+                  //             height: 90.h,
+                  //             width: 90.w,
+                  //             fit: BoxFit.contain,
+                  //             Assets.images.resetDoneImage.path,
+                  //           ),
+                  //           UIHelper.verticalSpace(24.h),
+                  //
+                  //           ///Section : Text -> Password Update Successfully
+                  //           Text(
+                  //             "Password Update\n Successfully",
+                  //             textAlign: TextAlign.center,
+                  //             style: TextFontStyle
+                  //                 .headline18w700c000000StyleSatoshi,
+                  //           ),
+                  //           UIHelper.verticalSpace(10.h),
+                  //
+                  //           ///Section : Text -> Return to the lgoin....
+                  //           Text(
+                  //             "Return to the login page to enter your account with your new password.",
+                  //             textAlign: TextAlign.center,
+                  //             style: TextFontStyle
+                  //                 .headline12w400c494949StyleSatoshi,
+                  //           ),
+                  //           Spacer(),
+                  //
+                  //           ///Section : Button -> back to sign in
+                  //           CustomElevatedButton(
+                  //             onTap: () {
+                  //               log("Back to Sign in button Taped");
+                  //               Get.toNamed(Routes.signInScreen);
+                  //             },
+                  //             buttonTitle: "Back To Sign In",
+                  //           ),
+                  //           UIHelper.verticalSpace(30.h),
+                  //         ],
+                  //       ),
+                  //     );
+                  //   },
+                  // );
                 },
                 buttonTitle: "Save Password",
               ),

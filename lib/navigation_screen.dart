@@ -187,6 +187,9 @@ import 'package:kaz_bd/features/service_provider/svp_home/presentation/svp_home_
 import 'package:kaz_bd/features/service_provider/svp_profile/presesntation/svp_profile_screen.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
+import 'package:kaz_bd/service/get_storage.dart';
+import 'package:kaz_bd/utilities/app_constants.dart';
+import 'package:kaz_bd/utilities/enum.dart';
 
 import '../../../gen/colors.gen.dart';
 
@@ -205,15 +208,15 @@ class _NavigationScreenState extends State<NavigationScreen>
   late Animation<double> _backgroundAnimation;
 
   ///Section : Normal User
-  // final List<Widget> _pages = [
-  //   HomeScreen(),
-  //   BookingsScreen(),
-  //   MessageScreen(),
-  //   UserProfileScreen(),
-  // ];
+  final List<Widget> userPages = [
+    HomeScreen(),
+    BookingsScreen(),
+    MessageScreen(),
+    UserProfileScreen(),
+  ];
 
   ///Section : Service Provider
-  final List<Widget> _pages = [
+  final List<Widget> providerPages = [
     SvpHomeScreen(),
     SvpBookingsScreen(),
     MessageScreen(),
@@ -270,13 +273,16 @@ class _NavigationScreenState extends State<NavigationScreen>
 
   @override
   Widget build(BuildContext context) {
+    final String currentRole = GetStorageModel().read(AppConstants.currentRole);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       body: SafeArea(
         child: PageView(
           controller: _pageController,
           onPageChanged: _onPageChanged,
-          children: _pages,
+          children: currentRole == UserRole.user.name
+              ? userPages
+              : providerPages,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
