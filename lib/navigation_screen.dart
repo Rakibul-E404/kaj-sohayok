@@ -216,8 +216,8 @@ class _NavigationScreenState extends State<NavigationScreen>
   final List<Widget> _pages = [
     SvpHomeScreen(),
     SvpBookingsScreen(),
-    UserProfileScreen(),
-    // MessageScreen(),
+    // UserProfileScreen(),
+    MessageScreen(),
     SvpProfileScreen(),
   ];
 
