@@ -68,6 +68,7 @@ class _MessageScreenState extends State<MessageScreen> {
                   );
                 },
               ),
+              UIHelper.verticalSpace(120.h),
             ],
           ),
         ),

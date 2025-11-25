@@ -182,6 +182,7 @@ import 'package:kaz_bd/features/normal_user/bookings/presentation/bookings_scree
 import 'package:kaz_bd/features/normal_user/home/presentation/home_screen.dart';
 import 'package:kaz_bd/features/normal_user/chat_list/presentation/chat_list_screen.dart';
 import 'package:kaz_bd/features/normal_user/user_profile/presentation/user_profile_screen.dart';
+import 'package:kaz_bd/features/service_provider/profile_under_review/presentation/profile_under_review_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_bookings/presentation/svp_bookings_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_home/presentation/svp_home_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_profile/presesntation/svp_profile_screen.dart';
@@ -205,20 +206,20 @@ class _NavigationScreenState extends State<NavigationScreen>
   late Animation<double> _backgroundAnimation;
 
   ///Section : Normal User
-  // final List<Widget> _pages = [
-  //   HomeScreen(),
-  //   BookingsScreen(),
-  //   MessageScreen(),
-  //   UserProfileScreen(),
-  // ];
+  final List<Widget> _pages = [
+    HomeScreen(),
+    BookingsScreen(),
+    MessageScreen(),
+    UserProfileScreen(),
+  ];
 
   ///Section : Service Provider
-  final List<Widget> _pages = [
-    SvpHomeScreen(),
-    SvpBookingsScreen(),
-    MessageScreen(),
-    SvpProfileScreen(),
-  ];
+  // final List<Widget> _pages = [
+  //   SvpHomeScreen(),
+  //   SvpBookingsScreen(),
+  //   MessageScreen(),
+  //   SvpProfileScreen(),
+  // ];
 
   @override
   void initState() {
