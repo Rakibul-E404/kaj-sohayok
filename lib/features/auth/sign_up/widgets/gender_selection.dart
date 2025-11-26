@@ -13,16 +13,12 @@ class GenderSelectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<SignUpScreenController>(
+    return GetBuilder<UserSignUpController>(
       builder: (controller) {
         return InputDecorator(
           decoration: InputDecoration(
             contentPadding: EdgeInsets.all(10.sp),
-            labelText:
-                controller.selectedGender == null ||
-                    controller.selectedGender == null
-                ? null
-                : "Gender",
+            labelText: "Gender",
             hintText: "Select gender",
             prefixIcon: Padding(
               padding: EdgeInsets.only(
@@ -58,7 +54,7 @@ class GenderSelectionWidget extends StatelessWidget {
             child: DropdownButton2<String>(
               isExpanded: true,
               hint: Text("Select gender"),
-              value: controller.selectedGender,
+              // value: controller.userSelectedGender.value,
               items: AppList.genderList
                   .map(
                     (gender) => DropdownMenuItem<String>(

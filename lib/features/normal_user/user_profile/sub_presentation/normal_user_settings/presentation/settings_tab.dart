@@ -11,11 +11,15 @@ import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/routes/routes.dart';
 
+import '../../../../../../controllers/user_profile_screen_controller.dart';
+
 class SettingsTab extends StatelessWidget {
   const SettingsTab({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final UserProfileScreenController userProfileController =
+        Get.find<UserProfileScreenController>();
     return ListView.separated(
       itemCount: AppList.settingsOptionsList.length,
       separatorBuilder: (context, index) => UIHelper.verticalSpace(10.h),
@@ -97,6 +101,8 @@ class SettingsTab extends StatelessWidget {
                               UIHelper.horizontalSpace(16.w),
                               CustomElevatedButton(
                                 onTap: () {
+                                  /// ==========> User Logout =====>
+                                  userProfileController.handleLogOut();
                                   Get.back();
                                 },
                                 buttonWidth: 136.w,

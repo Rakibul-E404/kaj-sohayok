@@ -26,4 +26,5 @@ class ChangePasswordScreenController extends GetxController {
   void setConfirmPasswrdVisibility() {
     isVisibleConfirmPassword.value = !isVisibleConfirmPassword.value;
   }
+
 }

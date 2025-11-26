@@ -9,8 +9,10 @@ import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/custom_widgets/custom_text_form_field.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
+import 'package:kaz_bd/helpers/waiting_widget.dart';
 import 'package:kaz_bd/routes/routes.dart';
 
+import '../../../../controllers/forget_password_controller.dart';
 import '../../../../gen/assets.gen.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
@@ -18,70 +20,90 @@ class ForgotPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ForgetPasswordController forgetPasswordController = Get.put(
+      ForgetPasswordController(),
+    );
+    forgetPasswordController.emailTEController.text =
+        Get.arguments['email'] ?? '';
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              UIHelper.verticalSpace(68.h),
+          child: Form(
+            key: forgetPasswordController.formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                UIHelper.verticalSpace(68.h),
 
-              ///AppLogo
-              Container(
-                width: 96.w,
-                height: 96.h,
-                decoration: BoxDecoration(
-                  color: AppColors.cFFFFFF,
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage(Assets.images.appLogo.path),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.ca4b1f2.withAlpha(80),
-                      blurRadius: 12.r,
-                      offset: const Offset(0, 6),
+                ///AppLogo
+                Container(
+                  width: 96.w,
+                  height: 96.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.cFFFFFF,
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: AssetImage(Assets.images.appLogo.path),
                     ),
-                  ],
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.ca4b1f2.withAlpha(80),
+                        blurRadius: 12.r,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              UIHelper.verticalSpace(32.h),
+                UIHelper.verticalSpace(32.h),
 
-              ///Section : text -> Forgot Password
-              Text(
-                "Forgot Password",
-                style: TextFontStyle.headline10w700c000000StyleSatoshi,
-              ),
-              UIHelper.verticalSpace(14.h),
+                ///Section : text -> Forgot Password
+                Text(
+                  "Forgot Password",
+                  style: TextFontStyle.headline10w700c000000StyleSatoshi,
+                ),
+                UIHelper.verticalSpace(14.h),
 
-              ///Section : Text -> Please Enter your phone...
-              Text(
-                "Please enter your phone email to reset password.",
-                style: TextFontStyle.headline12w400c000000StyleSatoshi,
-              ),
-              UIHelper.verticalSpace(32.h),
+                ///Section : Text -> Please Enter your phone...
+                Text(
+                  "Please enter your phone email to reset password.",
+                  style: TextFontStyle.headline12w400c000000StyleSatoshi,
+                ),
+                UIHelper.verticalSpace(32.h),
 
-              ///Section : Email Form field
-              CustomFormField(
-                labelText: "Your Email",
-                hintText: "Enter Your Email",
-                prefixIcon: Icon(Icons.mail, color: AppColors.c858c94),
-              ),
-              Spacer(),
+                ///Section : Email Form field
+                CustomFormField(
+                  labelText: "Your Email",
+                  hintText: "Enter Your Email",
+                  prefixIcon: Icon(Icons.mail, color: AppColors.c858c94),
+                  controller: forgetPasswordController.emailTEController,
+                  validator: (String? value) {
+                    if (value?.isEmpty ?? true) {
+                      return 'Please Enter Your Email';
+                    }
+                    return null;
+                  },
+                ),
+                Spacer(),
 
-              ///Section : Button -> Send OTP
-              CustomElevatedButton(
-                onTap: () {
-                  log("Send OTP Button Pressed!");
-                  Get.toNamed(Routes.verifyOtpScreen);
-                },
-                buttonTitle: "Send OTP",
-              ),
-              UIHelper.verticalSpace(32.h),
-            ],
+                ///Section : Button -> Send OTP
+                Obx(
+                  () => Visibility(
+                    visible: forgetPasswordController.loader.value == false,
+                    replacement: WaitingWidget(),
+                    child: CustomElevatedButton(
+                      onTap: () {
+                        forgetPasswordController.handleForgetPassword();
+                      },
+                      buttonTitle: "Send OTP",
+                    ),
+                  ),
+                ),
+                UIHelper.verticalSpace(32.h),
+              ],
+            ),
           ),
         ),
       ),
