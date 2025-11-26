@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kaz_bd/constants/appList.dart';
+import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/service/get_storage.dart';
 
 import '../routes/routes.dart';
@@ -12,6 +13,7 @@ import '../service/network_response.dart';
 import '../service/secured_storage.dart';
 import '../utilities/app_constants.dart';
 import '../utilities/app_url.dart';
+import '../utilities/enum.dart';
 import '../utilities/logger_util.dart';
 
 class UserSignUpController extends GetxController {
@@ -118,9 +120,23 @@ class UserSignUpController extends GetxController {
                   .jsonResponse?['data']['attributes']['verificationToken'] ??
               '',
         );
-        Get.toNamed(
-          Routes.verifyOtpScreen,
-          arguments: <String, String>{'email': emailTEController.text},
+        LoggerUtils.warning(registrationForm);
+
+        final String currentRole = await GetStorageModel().read(
+          AppConstants.currentRole,
+        );
+        if (currentRole == UserRole.user.name) {
+          Get.toNamed(
+            Routes.verifyOtpScreen,
+            arguments: <String, String>{'email': emailTEController.text},
+          );
+        } else if (currentRole == UserRole.provider.name) {
+          Get.offAllNamed(Routes.signInScreen);
+        }
+        Get.snackbar(
+          'Success',
+          postResponse.jsonResponse?['message'],
+          backgroundColor: AppColors.c778beb,
         );
       } else {
         // ToastManager.show(

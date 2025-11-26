@@ -129,18 +129,18 @@ class OtpValidationController extends GetxController {
       if (postResponse.isSuccess) {
         // LoggerUtils.debug(registrationOTPForm);
 
-        await SecureStorageService().write(
-          AppConstants.accessToken,
-          postResponse
-                  .jsonResponse?['data']['attributes']['result']['tokens']['accessToken'] ??
-              '',
-        );
-        await SecureStorageService().write(
-          AppConstants.refreshToken,
-          postResponse
-                  .jsonResponse?['data']['attributes']['result']['tokens']['refreshToken'] ??
-              '',
-        );
+        // await SecureStorageService().write(
+        //   AppConstants.accessToken,
+        //   postResponse
+        //           .jsonResponse?['data']['attributes']['result']['tokens']['accessToken'] ??
+        //       '',
+        // );
+        // await SecureStorageService().write(
+        //   AppConstants.refreshToken,
+        //   postResponse
+        //           .jsonResponse?['data']['attributes']['result']['tokens']['refreshToken'] ??
+        //       '',
+        // );
         Get.offAllNamed(Routes.signInScreen);
         // Get.toNamed(
         //   Routes.verifyOtpScreen,

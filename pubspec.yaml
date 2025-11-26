@@ -77,6 +77,8 @@ dependencies:
   #for taking the location for the post
   geolocator: ^14.0.0
   geocoding: ^3.0.0
+  #for caching image
+  cached_network_image: ^3.4.1
 
 
 dev_dependencies:
