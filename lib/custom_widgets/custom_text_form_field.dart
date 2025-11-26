@@ -93,6 +93,7 @@ final class CustomFormField extends StatelessWidget {
       height: fieldHeight,
       child: TextFormField(
         readOnly: isRead,
+
         cursorHeight: cursorHeight ?? 20.h,
         cursorColor: AppColors.c38686A,
         focusNode: focusNode,

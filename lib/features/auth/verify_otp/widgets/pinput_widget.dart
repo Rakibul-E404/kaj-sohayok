@@ -10,9 +10,10 @@ import '../../../../controllers/otp_validation_controller.dart';
 import '../../../../helpers/ui_helpers.dart';
 
 class CustomPinInput extends StatelessWidget {
+  final VoidCallback resend;
   final OtpValidationController controller = Get.put(OtpValidationController());
 
-  CustomPinInput({super.key});
+  CustomPinInput({super.key, required this.resend});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +46,6 @@ class CustomPinInput extends StatelessWidget {
           defaultPinTheme: defaultPinTheme,
           focusedPinTheme: focusedPinTheme,
           submittedPinTheme: submittedPinTheme,
-          validator: controller.validatePin,
           pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
           showCursor: true,
           cursor: Container(width: 20.w, height: 2.h, color: AppColors.c778beb),
@@ -67,7 +67,7 @@ class CustomPinInput extends StatelessWidget {
                         alignment: PlaceholderAlignment.middle,
                         child: InkWell(
                           onTap: () {
-                            log("Resend Code Taped!");
+                            resend();
                           },
                           child: Text(
                             "Resend Code",

@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.9.0
+  sdk: ">=3.8.0 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -66,6 +66,17 @@ dependencies:
   video_player: ^2.10.0
   camera: ^0.11.2
   local_auth: ^2.3.0
+  #========================> TOKY ===================>
+  logger:
+  http:
+  permission_handler:
+  #for custom loader
+  flutter_spinkit:
+  #for secured storage
+  flutter_secure_storage: ^9.2.4
+  #for taking the location for the post
+  geolocator: ^14.0.0
+  geocoding: ^3.0.0
 
 
 dev_dependencies:
@@ -79,7 +90,7 @@ flutter_gen:
   output: lib/gen/
   line_length: 80
 
-    # Optional
+  # Optional
   integrations:
     flutter_svg: false
     # flare_flutter: false

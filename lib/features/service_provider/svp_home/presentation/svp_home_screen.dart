@@ -9,14 +9,18 @@ import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 
 import '../../../../constants/app_enums.dart';
+import '../../../../controllers/svp_home_screen_controller.dart';
 import '../../../../custom_widgets/home_section_applogo_and_notification.dart';
 import '../../../../helpers/ui_helpers.dart';
 import '../../../../routes/routes.dart';
 import '../../../../custom_widgets/recent_job_request_status_widget.dart';
 import '../widgets/svp_job_card.dart';
+import '../widgets/svp_show_chart_widget.dart';
 
 class SvpHomeScreen extends StatelessWidget {
-  const SvpHomeScreen({super.key});
+  SvpHomeScreen({super.key});
+
+  SvpHomeScreenController controller = Get.put(SvpHomeScreenController());
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +46,8 @@ class SvpHomeScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     ///Section : Graph Chart
+                    IncomeChartCard(),
+                    UIHelper.verticalSpace(16.h),
 
                     ///Section : Job Status Card
                     GridView.builder(
@@ -139,6 +145,7 @@ class SvpHomeScreen extends StatelessWidget {
                         );
                       },
                     ),
+                    UIHelper.verticalSpace(150.h),
                   ],
                 ),
               ),

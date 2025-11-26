@@ -94,6 +94,13 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 
+import '../routes/routes.dart';
+import '../service/network_caller.dart';
+import '../service/secured_storage.dart';
+import '../utilities/app_constants.dart';
+import '../utilities/app_url.dart';
+import '../utilities/logger_util.dart';
+
 class UserProfileScreenController extends GetxController
     with GetTickerProviderStateMixin {
   /// Section : Profile Image Picker
@@ -199,6 +206,25 @@ class UserProfileScreenController extends GetxController
     profileOptionsTabController.addListener(() {
       changeProfileOptionsTab(profileOptionsTabController.index);
     });
+  }
+
+  /// ===================> Logout ==================>
+  final RxBool loader = false.obs;
+
+  Future<void> handleLogOut() async {
+    try {
+      loader.value = true;
+
+      await SecureStorageService().clear();
+      Get.offAllNamed(Routes.signInScreen);
+    } catch (e) {
+      // loader.value = false;
+
+      LoggerUtils.debug("Exception : ${e.toString()}");
+    } finally {
+      // clearTextFields();
+      // loader.value = false;
+    }
   }
 
   ///----------------------------- Dispost the controllers function --------------------------

@@ -10,10 +10,11 @@ import '../features/normal_user/chat_list/presentation/chat_list_screen.dart';
 import '../features/common_screens/notification/model/notification_model.dart';
 import '../features/normal_user/user_profile/models/settings_options_model.dart';
 import '../features/normal_user/work_completed_details/model/additional_cost_model.dart';
+import '../features/service_provider/svp_home/model/chart_data_model.dart';
 import '../features/service_provider/svp_home/model/svp_card_model.dart';
 
 class AppList {
-  static final List<String> genderList = ["Male", "Female", "Other"];
+  static final List<String> genderList = ["Male", "Female"];
 
   static List<NotificationModel> notificationList = [
     NotificationModel(title: "Your Password Updated Successfully!", time: 10),
@@ -273,4 +274,30 @@ class AppList {
     AdditionalCostModel(title: "Cleaning Service", price: 80.0),
     AdditionalCostModel(title: "Miscellaneous", price: 40.0),
   ];
+
+  static final Map<String, List<ChartDataModel>> chartData = {
+    'Weekly': [
+      ChartDataModel('Fri', 2500),
+      ChartDataModel('Sat', 18000),
+      ChartDataModel('Sun', 12500),
+      ChartDataModel('Mon', 6000),
+      ChartDataModel('Tue', 19000),
+      ChartDataModel('Wed', 13500),
+      ChartDataModel('Thu', 9050),
+    ],
+    'Monthly': [
+      ChartDataModel('Jan', 45000),
+      ChartDataModel('Feb', 52000),
+      ChartDataModel('Mar', 48000),
+      ChartDataModel('Apr', 38000),
+      ChartDataModel('May', 50000),
+      ChartDataModel('Jun', 42000),
+      ChartDataModel('July', 45000),
+      ChartDataModel('Aug', 58000),
+      ChartDataModel('Sept', 38000),
+      ChartDataModel('Oct', 45000),
+      ChartDataModel('Nov', 2312131),
+      ChartDataModel('Dec', 8787888),
+    ],
+  };
 }

@@ -25,7 +25,9 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final OnboardingController controller = Get.put(OnboardingController());
+  final OnboardingController onboardingController = Get.put(
+    OnboardingController(),
+  );
 
   @override
   void initState() {
@@ -33,10 +35,10 @@ class _OnboardingScreenState extends State<OnboardingScreen>
     _tabController = TabController(
       length: 2,
       vsync: this,
-      initialIndex: controller.tabIndex.value,
+      initialIndex: onboardingController.tabIndex.value,
     );
     _tabController.addListener(() {
-      controller.changeTab(_tabController.index);
+      onboardingController.changeTab(_tabController.index);
     });
   }
 
@@ -72,8 +74,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               ///Section : Button -> English, Bangla
               SelectLanguage(
                 tabController: _tabController,
-                tabIndex: controller.tabIndex,
-                onTabChange: controller.changeTab,
+                tabIndex: onboardingController.tabIndex,
+                onTabChange: onboardingController.changeTab,
                 leftTabTitle: "English",
                 rightTabTitle: "বাংলা",
               ),
@@ -106,7 +108,6 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     ),
                     UIHelper.verticalSpace(16.h),
 
-                    ///Text : Get all you home servicess.......
                     Text(
                       "Get all your home services in one place: AC repair, plumbing, cleaning, electrical, and painting — just a tap away.",
                       style: TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
@@ -116,8 +117,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     ///Section: Button -> GetStarted
                     GetStartedButton(
                       onTap: () {
-                        log("Get Started Button Taped!");
-                        Get.toNamed(Routes.chooseRoleScreen);
+                        onboardingController.checkAuthNavigate();
                       },
                       buttonTitle: "Get Started",
                     ),
