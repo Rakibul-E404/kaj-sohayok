@@ -3,17 +3,18 @@ import 'dart:developer';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/constants/appList.dart';
-import 'package:kaz_bd/constants/text_font_style.dart';
-import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
+import 'package:kaz_bd/features/normal_user/home/models/home_page_data_model.dart'
+    as Model;
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/routes/routes.dart';
 
+import '../../../../controllers/home_page_controller.dart';
 import '../../../../custom_widgets/home_section_applogo_and_notification.dart';
 import '../../../../gen/assets.gen.dart';
+import '../widgets/banner_carosle_slider.dart';
 import '../widgets/category_page_view_widget.dart' show CategoryPageViewWidget;
 import '../widgets/section_declaration_widget.dart';
 import '../widgets/service_showing_widget.dart';
@@ -23,6 +24,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final HomePageController controller = Get.put(HomePageController());
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       body: SingleChildScrollView(
@@ -44,64 +46,50 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 children: [
                   ///Section : Hero Booking
-                  Container(
-                    height: 175.h,
-                    width: 1.sw,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 12.w,
-                      vertical: 24.h,
-                    ),
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        fit: BoxFit.contain,
-                        image: AssetImage(Assets.images.heroBannerImage.path),
-                      ),
-                    ),
-
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ///Section : Discount section...
-                        RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            style:
-                                TextFontStyle.headline16w700c000000StyleSatoshi,
-                            children: [
-                              const TextSpan(text: 'Get Discount up to '),
-
-                              TextSpan(
-                                text: '${30}%',
-                                style: TextFontStyle
-                                    .headline16w700c778bebStyleSatoshi
-                                    .copyWith(fontSize: 22.sp),
+                  Obx(
+                    () => controller.isLoading.value
+                        ? Container(
+                            height: 175.h,
+                            width: 1.sw,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12.w,
+                              vertical: 24.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.cea464a,
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.cFFFFFF,
                               ),
-                            ],
+                            ),
+                          )
+                        : controller.banners.isNotEmpty
+                        ? BannerCarosleSlider(controller: controller)
+                        : Container(
+                            height: 175.h,
+                            width: 1.sw,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12.w,
+                              vertical: 24.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.cea464a,
+                              borderRadius: BorderRadius.circular(12.r),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'No banners available',
+                                style: TextStyle(
+                                  color: AppColors.cFFFFFF,
+                                  fontSize: 14.sp,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                        UIHelper.verticalSpace(8.h),
-
-                        ///Section : Text -> one first home services
-                        Text(
-                          "One First Home Services",
-                          style:
-                              TextFontStyle.headline12w400c4d4d4dStyleSatoshi,
-                        ),
-                        UIHelper.verticalSpace(12.h),
-
-                        ///Section : Button -> Book Now
-                        CustomElevatedButton(
-                          onTap: () {
-                            log("Book Now Button Taped!");
-                          },
-                          buttonTitle: "Book Now",
-                          textStyle:
-                              TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
-                          buttonWidth: 120.w,
-                        ),
-                      ],
-                    ),
                   ),
+
                   UIHelper.verticalSpace(24.h),
 
                   ///Section : Select Category
@@ -116,7 +104,7 @@ class HomeScreen extends StatelessWidget {
                   UIHelper.verticalSpace(16.h),
 
                   ///Section : Category Widget in pageView
-                  CategoryPageViewWidget(myList: AppList.categories),
+                  CategoryPageViewWidget(),
                   UIHelper.verticalSpace(24.h),
 
                   ///Section : Popular Provider
@@ -129,29 +117,86 @@ class HomeScreen extends StatelessWidget {
                   ),
                   UIHelper.verticalSpace(24.h),
 
-                  ///Section : Services
+                  ///Section : Providers
                   SizedBox(
                     height: 220.h,
-                    child: ListView.separated(
-                      itemCount: 10,
-                      scrollDirection: Axis.horizontal,
-                      separatorBuilder: (context, index) =>
-                          UIHelper.horizontalSpace(8.w),
-                      itemBuilder: (context, index) {
-                        return ServiceWidget(
-                          onTap: () {
-                            log("Taped Service Index : $index");
-                            Get.toNamed(Routes.serviceDetailsScreen);
-                          },
-                          imagePath: Assets.images.serviceImage.path,
-                          serviceTitle: 'Ac Cleaning At Home',
-                          initialPayablePrice: 30.5,
-                          userRating: 4.5,
+                    child: Obx(() {
+                      if (controller.isLoading.value &&
+                          controller.providers.isEmpty) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      if (controller.providers.isEmpty) {
+                        return const Center(
+                          child: Text('No providers available'),
                         );
-                      },
-                    ),
+                      }
+
+                      return ListView.separated(
+                        itemCount: controller.providers.length,
+                        scrollDirection: Axis.horizontal,
+                        separatorBuilder: (context, index) =>
+                            UIHelper.horizontalSpace(8.w),
+                        itemBuilder: (context, index) {
+                          final provider = controller.providers[index];
+                          final String providerName = _getProviderName(
+                            provider,
+                          );
+                          final String providerId = _getProviderId(provider);
+                          final double rating = _getProviderRating(provider);
+                          final int startPrice = _getProviderStartPrice(
+                            provider,
+                          );
+
+                          // Get the first gallery image if available, or try for cover photo
+                          String? imageUrl = _getProviderImageUrl(provider);
+
+                          return ServiceWidget(
+                            onTap: () {
+                              log("Provider tapped: $providerName");
+                              Get.toNamed(
+                                Routes.serviceDetailsScreen,
+                                arguments: {
+                                  'providerId': providerId,
+                                  'providerName': providerName,
+                                },
+                              );
+                            },
+                            imagePath:
+                                imageUrl ?? Assets.images.serviceImage.path,
+                            serviceTitle: providerName,
+                            initialPayablePrice: startPrice.toDouble(),
+                            userRating: rating,
+                          );
+                        },
+                      );
+                    }),
                   ),
+
                   UIHelper.verticalSpace(150.h),
+
+                  ///Section : Services
+                  // SizedBox(
+                  //   height: 220.h,
+                  //   child: ListView.separated(
+                  //     itemCount: 10,
+                  //     scrollDirection: Axis.horizontal,
+                  //     separatorBuilder: (context, index) =>
+                  //         UIHelper.horizontalSpace(8.w),
+                  //     itemBuilder: (context, index) {
+                  //       return ServiceWidget(
+                  //         onTap: () {
+                  //           log("Taped Service Index : $index");
+                  //           Get.toNamed(Routes.serviceDetailsScreen);
+                  //         },
+                  //         imagePath: Assets.images.serviceImage.path,
+                  //         serviceTitle: 'Ac Cleaning At Home',
+                  //         initialPayablePrice: 30.5,
+                  //         userRating: 4.5,
+                  //       );
+                  //     },
+                  //   ),
+                  // ),
+                  // UIHelper.verticalSpace(150.h),
                 ],
               ),
             ),
@@ -159,5 +204,45 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // Helper methods to handle Provider model format
+  String _getProviderName(Model.Provider provider) {
+    // Access name from the Provider model
+    if (provider.serviceName != null && provider.serviceName!.en != null) {
+      return provider.serviceName!.en.toString();
+    }
+    return 'Provider';
+  }
+
+  String _getProviderId(Model.Provider provider) {
+    return provider.providerId ?? '';
+  }
+
+  double _getProviderRating(Model.Provider provider) {
+    return (provider.rating ?? 0).toDouble();
+  }
+
+  int _getProviderStartPrice(Model.Provider provider) {
+    return provider.startPrice ?? 0;
+  }
+
+  String? _getProviderImageUrl(Model.Provider provider) {
+    // Try gallery images first, then cover photos
+    if (provider.attachmentsForGallery != null &&
+        provider.attachmentsForGallery!.isNotEmpty) {
+      return provider.attachmentsForGallery![0].attachment;
+    }
+    // If no gallery images, try cover photos
+    if (provider.attachmentsForCoverPhoto != null &&
+        provider.attachmentsForCoverPhoto!.isNotEmpty) {
+      // Assuming the API returns attachment data in a different format for cover photos
+      // Access the attachment URL from the first cover photo
+      dynamic firstCoverPhoto = provider.attachmentsForCoverPhoto![0];
+      if (firstCoverPhoto is Map<String, dynamic>) {
+        return firstCoverPhoto['attachment'];
+      }
+    }
+    return null;
   }
 }
