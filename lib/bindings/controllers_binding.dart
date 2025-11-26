@@ -7,6 +7,7 @@ import '../controllers/face_verification_controller.dart';
 import '../controllers/home_page_controller.dart';
 import '../controllers/message_screen_controller.dart';
 import '../controllers/more_information_screen_controller.dart';
+import '../controllers/all_categories_screen_controller.dart';
 import '../controllers/onboarding_controller.dart';
 import '../controllers/otp_validation_controller.dart';
 import '../controllers/set_new_password_screen_controller.dart';
@@ -40,5 +41,6 @@ class ControllerBindings extends Bindings {
     Get.lazyPut(() => SvpEditProfileScreenController());
     Get.lazyPut(() => SvpProfileScreenDocumentsTabController());
     Get.lazyPut(() => SvpHomeScreenController());
+    Get.lazyPut(() => NormalUserAllCategoryScreenController());
   }
 }
