@@ -42,7 +42,7 @@ class SignInScreenController extends GetxController {
         body: loginForm,
       );
       if (postResponse.isSuccess) {
-        // LoggerUtils.debug(postResponse.jsonResponse);
+        LoggerUtils.debug(postResponse.jsonResponse);
 
         await SecureStorageService().write(
           AppConstants.accessToken,
@@ -95,11 +95,13 @@ class SignInScreenController extends GetxController {
         Get.snackbar('Success', postResponse.jsonResponse?['message']);
       } else {
         LoggerUtils.debug(postResponse.jsonResponse?['message']);
-
+        // passwordTEController.clear();
+        await SecureStorageService().clear();
         Get.snackbar(
           'Failed',
           postResponse.jsonResponse?['message'],
           backgroundColor: Colors.red,
+          colorText: Colors.white,
         );
       }
     } catch (e) {

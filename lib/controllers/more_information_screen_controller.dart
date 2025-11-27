@@ -1,8 +1,13 @@
-// controllers/service_category_controller.dart
+// controllers/more_information_screen_controller.dart
+
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kaz_bd/routes/routes.dart';
+import 'package:kaz_bd/service/get_storage.dart';
 import 'package:kaz_bd/service/secured_storage.dart';
 import 'package:kaz_bd/utilities/app_constants.dart';
 import 'package:kaz_bd/utilities/logger_util.dart';
@@ -19,6 +24,7 @@ class MoreInformationScreenController extends GetxController {
       TextEditingController();
   final TextEditingController workPriceController = TextEditingController();
   final TextEditingController otherServiceController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   // State management
   final RxList<ServiceFormCategoryModel> categories =
@@ -31,6 +37,8 @@ class MoreInformationScreenController extends GetxController {
   // Image paths
   final RxString imageFrontSide = ''.obs;
   final RxString imageBackSide = ''.obs;
+  final RxString imageSelfie = ''.obs; // 👈 New
+  final RxString otherServiceText = ''.obs;
 
   final ImagePicker _picker = ImagePicker();
 
@@ -38,14 +46,15 @@ class MoreInformationScreenController extends GetxController {
   void onInit() {
     super.onInit();
     fetchServiceCategories();
+    otherServiceController.addListener(() {
+      otherServiceText.value = otherServiceController.text;
+    });
   }
 
-  /// Fetch service categories from API
   Future<void> fetchServiceCategories() async {
     try {
       isLoading.value = true;
 
-      // TODO: Replace with your actual API call
       final String token =
           await SecureStorageService().read(AppConstants.accessToken) ?? '';
       final response = await NetworkCaller().getRequest(
@@ -53,17 +62,15 @@ class MoreInformationScreenController extends GetxController {
         headers: {'Authorization': 'Bearer $token'},
       );
 
-      // Mock data for demonstration
       await Future.delayed(const Duration(seconds: 1));
 
-      // Parse response
       if (response.jsonResponse != null) {
         final ServiceCategoryResponse categoryResponse =
             ServiceCategoryResponse.fromJson(response.jsonResponse!);
         categories.value = categoryResponse.categories;
 
-        LoggerUtils.debug(categories[0].id);
-        LoggerUtils.debug(categories.length);
+        // LoggerUtils.debug(categories[0].id);
+        // LoggerUtils.debug(categories.length);
       } else {
         Get.snackbar(
           'Error',
@@ -71,7 +78,6 @@ class MoreInformationScreenController extends GetxController {
           snackPosition: SnackPosition.BOTTOM,
         );
       }
-      // Will be populated from API
     } catch (e) {
       Get.snackbar(
         'Error',
@@ -83,20 +89,18 @@ class MoreInformationScreenController extends GetxController {
     }
   }
 
-  /// Select a service category
   void selectCategory(ServiceFormCategoryModel category) {
     selectedCategory.value = category;
     isOtherSelected.value = false;
     otherServiceController.clear();
   }
 
-  /// Select "Other" option
   void selectOther() {
     selectedCategory.value = null;
     isOtherSelected.value = true;
   }
 
-  /// Pick image from camera or gallery
+  // For front/back ID images
   Future<void> pickImage({
     required ImageSource source,
     required bool isFront,
@@ -116,14 +120,32 @@ class MoreInformationScreenController extends GetxController {
           imageBackSide.value = image.path;
         }
       } else {
-        Get.snackbar('Cancelled', 'No image selected');
+        // Get.snackbar('Cancelled', 'No image selected');
       }
     } catch (e) {
       Get.snackbar('Error', 'Failed to pick image: $e');
     }
   }
 
-  /// Show image source dialog
+  // 👇 NEW: Selfie with front camera only
+  Future<void> captureSelfieWithFrontCamera() async {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 85,
+        preferredCameraDevice: CameraDevice.front,
+      );
+
+      if (image != null) {
+        imageSelfie.value = image.path;
+      } else {}
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to capture selfie: $e');
+    }
+  }
+
   void showImageSourceDialog({required bool isFront}) {
     Get.dialog(
       Dialog(
@@ -156,7 +178,6 @@ class MoreInformationScreenController extends GetxController {
     );
   }
 
-  /// Remove image
   void removeImage({required bool isFront}) {
     if (isFront) {
       imageFrontSide.value = '';
@@ -165,69 +186,121 @@ class MoreInformationScreenController extends GetxController {
     }
   }
 
-  /// Validate and proceed
-  bool validateForm() {
-    if (selectedCategory.value == null && !isOtherSelected.value) {
-      Get.snackbar('Error', 'Please select a work type');
-      return false;
-    }
-
-    if (isOtherSelected.value && otherServiceController.text.trim().isEmpty) {
-      Get.snackbar('Error', 'Please enter other service name');
-      return false;
-    }
-
-    if (businessNameController.text.trim().isEmpty) {
-      Get.snackbar('Error', 'Please enter business name');
-      return false;
-    }
-
-    if (yearsOfExperienceController.text.trim().isEmpty) {
-      Get.snackbar('Error', 'Please enter years of experience');
-      return false;
-    }
-
-    if (workPriceController.text.trim().isEmpty) {
-      Get.snackbar('Error', 'Please enter starting work price');
-      return false;
-    }
-
-    if (imageFrontSide.value.isEmpty || imageBackSide.value.isEmpty) {
-      Get.snackbar('Error', 'Please upload both front and back side documents');
-      return false;
-    }
-
-    return true;
+  void removeSelfie() {
+    imageSelfie.value = '';
   }
 
-  /// Submit form
   Future<void> submitForm() async {
-    if (!validateForm()) return;
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
+    if ((selectedCategory.value == null && !isOtherSelected.value)) {
+      Get.snackbar(
+        'Error',
+        'Please select a work type !!!',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    if (imageSelfie.value.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please take a selfie with your ID',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+    if (imageFrontSide.value.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please upload the image !!',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+    if (imageBackSide.value.isEmpty) {
+      Get.snackbar(
+        'Error',
+        'Please upload the image !!',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
 
     try {
       isLoading.value = true;
+      Map<String, String> fields;
+      if (selectedCategory.value != null) {
+        fields = {
+          'serviceCategoryId': selectedCategory.value!.id.toString(),
+          'serviceName': businessNameController.text.trim(),
+          'yearsOfExperience': yearsOfExperienceController.text.trim(),
+          'startPrice': workPriceController.text.trim(),
+        };
+      } else {
+        fields = {
+          'categoryCustomName': otherServiceController.text.trim(),
+          'serviceName': businessNameController.text.trim(),
+          'yearsOfExperience': yearsOfExperienceController.text.trim(),
+          'startPrice': workPriceController.text.trim(),
+        };
+      }
 
-      // TODO: Implement API submission
-      // final Map<String, dynamic> data = {
-      //   'workType': selectedCategory.value?.nameEn ?? otherServiceController.text,
-      //   'businessName': businessNameController.text,
-      //   'yearsOfExperience': yearsOfExperienceController.text,
-      //   'startingPrice': workPriceController.text,
-      // };
+      // ✅ Only include files that are actually selected
+      final Map<String, File> files = {};
 
-      // final response = await NetworkCaller().multipartRequest(
-      //   AppUrl.submitServiceInfo,
-      //   body: data,
-      //   files: {
-      //     'frontImage': File(imageFrontSide.value),
-      //     'backImage': File(imageBackSide.value),
-      //   },
-      // );
+      if (imageFrontSide.value.isNotEmpty) {
+        files['frontSideCertificateImage'] = File(imageFrontSide.value);
+      }
+      if (imageBackSide.value.isNotEmpty) {
+        files['backSideCertificateImage'] = File(imageBackSide.value);
+      }
+      if (imageSelfie.value.isNotEmpty) {
+        files['faceImageFromFrontCam'] = File(imageSelfie.value);
+      }
 
-      await Future.delayed(const Duration(seconds: 2));
+      // ✅ Add auth header
+      final String? token = await SecureStorageService().read(
+        AppConstants.accessToken,
+      );
+      final Map<String, String> headers = {};
+      if (token != null) {
+        headers['Authorization'] = 'Bearer $token';
+      }
+      // LoggerUtils.debug(fields);
+      // ✅ Call multipartRequest with 'fields' and 'files'
+      final response = await NetworkCaller().multipartRequest(
+        AppUrl.serviceProviderFormSubmit,
+        fields: fields,
+        files: files,
+        headers: headers,
+      );
 
-      Get.snackbar('Success', 'Information submitted successfully');
-      // Navigate to next screen
+      if (response.isSuccess) {
+        Get.snackbar('Success', 'Information submitted successfully');
+        // Optionally navigate to next screen:
+        GetStorageModel().saveBool(
+          AppConstants.providerProfileIsComplete,
+          true,
+        );
+        // Get.offNamed(Routes.navigationScreen);
+        await SecureStorageService().clear();
+        Get.offAllNamed(Routes.chooseRoleScreen);
+      } else {
+        Get.snackbar(
+          'Submission Failed',
+          response.jsonResponse?['message'] ??
+              response.errorMessage ??
+              'Unknown error',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
     } catch (e) {
       Get.snackbar('Error', 'Failed to submit: $e');
     } finally {

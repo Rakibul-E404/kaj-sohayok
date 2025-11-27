@@ -101,7 +101,8 @@ class ChooseRoleScreen extends StatelessWidget {
                       AppConstants.currentRole,
                       UserRole.provider.name,
                     );
-                    Get.toNamed(Routes.signUpScreen);
+                    // Get.toNamed(Routes.signUpScreen);
+                    Get.toNamed(Routes.joinAsServiceProviderScreen);
                   },
                   userTypeIcon: Assets.icons.serviceProviderLogo,
                   cardTitle: "Join As a Srvices Provider",

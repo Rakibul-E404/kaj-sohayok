@@ -15,7 +15,7 @@ class SignInProfileModel {
   final String? updatedAt;
   final int? v;
   final bool? isServiceProviderDetailsFound;
-  final bool? providerApprovalStatusFromUsersRoleData;
+  final String? providerApprovalStatusFromUsersRoleData;
 
   SignInProfileModel({
     this.id,
@@ -59,7 +59,7 @@ class SignInProfileModel {
       isServiceProviderDetailsFound:
       json['isServiceProviderDetailsFound'] as bool?,
       providerApprovalStatusFromUsersRoleData:
-      json['providerApprovalStatusFromUsersRoleData'] as bool?,
+      json['providerApprovalStatusFromUsersRoleData'] as String?,
 
     );
   }

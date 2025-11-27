@@ -216,7 +216,7 @@ class UserProfileScreenController extends GetxController
       loader.value = true;
 
       await SecureStorageService().clear();
-      Get.offAllNamed(Routes.signInScreen);
+      Get.offAllNamed(Routes.onboardingScreen);
     } catch (e) {
       // loader.value = false;
 

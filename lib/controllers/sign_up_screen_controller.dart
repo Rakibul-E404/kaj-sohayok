@@ -79,6 +79,7 @@ class UserSignUpController extends GetxController {
           'Error',
           'Please select the gender !!',
           backgroundColor: Colors.red,
+          colorText: Colors.white,
         );
         return;
       }
@@ -132,6 +133,10 @@ class UserSignUpController extends GetxController {
           );
         } else if (currentRole == UserRole.provider.name) {
           Get.offAllNamed(Routes.signInScreen);
+          // Get.toNamed(
+          //   Routes.verifyOtpScreen,
+          //   arguments: <String, String>{'email': emailTEController.text},
+          // );
         }
         Get.snackbar(
           'Success',

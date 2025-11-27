@@ -10,6 +10,8 @@ class AppUrl {
   static String resetPassword = '${baseUrl}v1/auth/reset-password';
   // ==========> Service Form ==========>
   static String serviceFormCategories = '${baseUrl}v1/service-categories/';
+  static String serviceProviderFormSubmit = '${baseUrl}v1/service-providers';
+
 
 
   static String deleteBabyProfile({required String babyId}) {

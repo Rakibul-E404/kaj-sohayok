@@ -3,6 +3,9 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../gen/colors.gen.dart';
+import '../routes/routes.dart';
+import '../service/secured_storage.dart';
+import '../utilities/logger_util.dart';
 
 class SvpProfileScreenController extends GetxController
     with GetTickerProviderStateMixin {
@@ -110,7 +113,20 @@ class SvpProfileScreenController extends GetxController
       changeProfileOptionsTab(svpProfileOptionsTabController.index);
     });
   }
+  Future<void> handleLogOut() async {
+    try {
 
+      await SecureStorageService().clear();
+      Get.offAllNamed(Routes.onboardingScreen);
+    } catch (e) {
+      // loader.value = false;
+
+      LoggerUtils.debug("Exception : ${e.toString()}");
+    } finally {
+      // clearTextFields();
+      // loader.value = false;
+    }
+  }
   ///----------------------------- Dispost the controllers function --------------------------
   @override
   void onClose() {
