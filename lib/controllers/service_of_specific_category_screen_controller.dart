@@ -15,6 +15,7 @@ class ServiceOfSpecificCategoryScreenController extends GetxController {
   var categoryId = ''.obs; // Add this to store categoryId
   var categoryName = ''.obs; // Add this to store categoryName
   var pageId = '1'.obs; // Add pagination
+  var searchQuery = ''.obs; // Add search query variable
 
   final PageController pageController = PageController();
 
@@ -33,7 +34,7 @@ class ServiceOfSpecificCategoryScreenController extends GetxController {
     handleServiceFromSpecificCategory();
   }
 
-  Future<void> handleServiceFromSpecificCategory() async {
+  Future<void> handleServiceFromSpecificCategory({String? searchQuery}) async {
     // Check if categoryId is available
     if (categoryId.value.isEmpty) {
       Get.snackbar(
@@ -45,6 +46,11 @@ class ServiceOfSpecificCategoryScreenController extends GetxController {
       return;
     }
 
+    // Update search query if provided
+    if (searchQuery != null) {
+      this.searchQuery.value = searchQuery;
+    }
+
     try {
       isLoading.value = true;
 
@@ -52,6 +58,7 @@ class ServiceOfSpecificCategoryScreenController extends GetxController {
         AppUrl.getSpecificServiceByCategory(
           categoryId: categoryId.value,
           pageId: pageId.value,
+          serviceName: this.searchQuery.value.isNotEmpty ? this.searchQuery.value : null,
         ),
       );
 
@@ -91,6 +98,13 @@ class ServiceOfSpecificCategoryScreenController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  // Method to perform search
+  Future<void> performSearch(String query) async {
+    searchQuery.value = query;
+    pageId.value = '1'; // Reset to first page when searching
+    await handleServiceFromSpecificCategory(searchQuery: query);
   }
 
   // Method to load more data for pagination

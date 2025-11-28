@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class AppUrl {
   AppUrl._();
 
@@ -17,8 +15,13 @@ class AppUrl {
   static String getSpecificServiceByCategory({
     required String categoryId,
     required String pageId,
+    String? serviceName,
   }) {
-    return '${baseUrl}v1/service-providers/paginate?page=$pageId&serviceCategoryId=$categoryId';
+    String url = '${baseUrl}v1/service-providers/paginate?page=$pageId&serviceCategoryId=$categoryId';
+    if (serviceName != null && serviceName.isNotEmpty) {
+      url += '&serviceName=$serviceName';
+    }
+    return url;
   }
 
   static String deleteBabyProfile({required String babyId}) {

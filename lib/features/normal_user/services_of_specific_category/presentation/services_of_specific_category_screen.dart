@@ -16,22 +16,41 @@ import '../../../../gen/assets.gen.dart';
 import '../../../../helpers/ui_helpers.dart';
 import '../widget/specific_service_showing_widget.dart';
 
-class ServicesOfSpecificCategoryScreen extends StatelessWidget {
+class ServicesOfSpecificCategoryScreen extends StatefulWidget {
   const ServicesOfSpecificCategoryScreen({super.key});
+
+  @override
+  State<ServicesOfSpecificCategoryScreen> createState() => _ServicesOfSpecificCategoryScreenState();
+}
+
+class _ServicesOfSpecificCategoryScreenState extends State<ServicesOfSpecificCategoryScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  ServiceOfSpecificCategoryScreenController? itemsOfCategory;
+
+  @override
+  void initState() {
+    super.initState();
+    itemsOfCategory = Get.find<ServiceOfSpecificCategoryScreenController>();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final arguments = Get.arguments as Map<String, dynamic>?;
-    ServiceOfSpecificCategoryScreenController itemsOfCategory =
-        Get.find<ServiceOfSpecificCategoryScreenController>();
 
     final categoryId = arguments?['categoryId'] ?? '';
     final categoryName =
         arguments?['categoryName'] ?? 'Failed to Get The Category Name';
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      itemsOfCategory.setCategoryData(id: categoryId, name: categoryName);
+      itemsOfCategory?.setCategoryData(id: categoryId, name: categoryName);
     });
+
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -39,8 +58,8 @@ class ServicesOfSpecificCategoryScreen extends StatelessWidget {
         backgroundColor: AppColors.scaffoldBackgroundColor,
         title: Obx(() {
           return Text(
-            itemsOfCategory.categoryName.value.isNotEmpty
-                ? itemsOfCategory.categoryName.value
+            itemsOfCategory?.categoryName.value.isNotEmpty == true
+                ? itemsOfCategory!.categoryName.value
                 : categoryName,
             style: TextFontStyle.headline18w700c000000StyleSatoshi,
           );
@@ -55,16 +74,23 @@ class ServicesOfSpecificCategoryScreen extends StatelessWidget {
                 ///Section : Search Bar
                 CustomFormField(
                   showVerticalDivider: false,
-
+                  controller: _searchController,
                   prefixIcon: SvgPicture.asset(Assets.icons.searchIcon),
                   hintText: "Search $categoryName Services",
+                  onFieldSubmitted: (value) {
+                    itemsOfCategory?.performSearch(value);
+                  },
+                  onChanged: (value) {
+                    // Optional: Add debounce if you want real-time search
+                    // For now, we'll search on submit only to reduce API calls
+                  },
                 ),
                 UIHelper.verticalSpace(16.h),
 
                 ///Section : Available Services
                 Obx(() {
                   ///When Loading state is true
-                  if (itemsOfCategory.isLoading.value == true) {
+                  if (itemsOfCategory?.isLoading.value == true) {
                     return Column(
                       children: List.generate(
                         6,
@@ -80,7 +106,7 @@ class ServicesOfSpecificCategoryScreen extends StatelessWidget {
                   }
 
                   ///When There is no Data to Show
-                  if (itemsOfCategory.specificCategoryList.isEmpty) {
+                  if (itemsOfCategory?.specificCategoryList.isEmpty == true) {
                     return Center(
                       child: Lottie.asset(
                         Assets.lottie.emptyScreen,
@@ -90,14 +116,14 @@ class ServicesOfSpecificCategoryScreen extends StatelessWidget {
                   }
 
                   return ListView.separated(
-                    itemCount: itemsOfCategory.specificCategoryList.length,
+                    itemCount: itemsOfCategory?.specificCategoryList.length ?? 0,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     separatorBuilder: (context, index) =>
                         UIHelper.verticalSpace(16.h),
                     itemBuilder: (contexxt, index) {
                       final service =
-                          itemsOfCategory.specificCategoryList[index];
+                          itemsOfCategory!.specificCategoryList[index];
 
                       // Extract service data from the model
                       final String serviceName =
