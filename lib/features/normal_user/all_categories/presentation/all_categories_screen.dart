@@ -1,76 +1,69 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:kaz_bd/constants/appList.dart';
-import 'package:kaz_bd/constants/text_font_style.dart';
-import 'package:kaz_bd/gen/assets.gen.dart';
-import 'package:kaz_bd/gen/colors.gen.dart';
-import 'package:kaz_bd/custom_widgets/custom_text_form_field.dart';
-import 'package:kaz_bd/helpers/ui_helpers.dart';
+import 'package:kaz_bd/controllers/all_categories_screen_controller.dart';
+import 'package:kaz_bd/features/normal_user/home/widgets/category_showing_widget.dart';
 import 'package:kaz_bd/routes/routes.dart';
 
-import '../../home/widgets/category_showing_widget.dart';
+import '../../../../custom_widgets/reusable_appbar.dart';
 
 class AllCategoriesScreen extends StatelessWidget {
   const AllCategoriesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    NormalUserAllCategoryScreenController controller =
+        Get.find<NormalUserAllCategoryScreenController>();
+
     return Scaffold(
-      backgroundColor: AppColors.scaffoldBackgroundColor,
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: AppColors.scaffoldBackgroundColor,
-        title: Text(
-          "All Category",
-          style: TextFontStyle.headline18w700c000000StyleSatoshi,
-        ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),
-            child: Column(
-              children: [
-                ///Section : Search Bar
-                CustomFormField(
-                  showVerticalDivider: false,
+      appBar: const ReusableAppBar(title: 'All Categories'),
+      body: GetBuilder<NormalUserAllCategoryScreenController>(
+        builder: (controller) {
+          return Obx(() {
+            if (controller.isLoading.value) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-                  prefixIcon: SvgPicture.asset(Assets.icons.searchIcon),
-                  hintText: "Search services",
-                ),
-                UIHelper.verticalSpace(16.h),
+            if (controller.categories.isEmpty) {
+              return const Center(child: Text('No categories found.'));
+            }
 
-                ///Section : All Categories
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 6,
-                    mainAxisSpacing: 6,
-                    childAspectRatio: 1,
-                  ),
-                  itemCount: AppList.allCategoryList.length,
-                  itemBuilder: (context, index) {
-                    final category = AppList.allCategoryList[index];
-                    return CategoryShowingWidget(
-                      onTap: () {
-                        log("Taped Category Name : ${category.categoryName}");
-                        Get.toNamed(Routes.servicesOfSpecificCategoryScreen);
+            return GridView.builder(
+              padding: EdgeInsets.all(16.w),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 8.w,
+                mainAxisSpacing: 8.h,
+                childAspectRatio: 1,
+              ),
+              itemCount: controller.categories.length,
+              itemBuilder: (context, index) {
+                final category = controller.categories[index];
+                final String categoryName = category.name?.en ?? 'Category';
+                final String? imageUrl =
+                    (category.attachments != null &&
+                        category.attachments!.isNotEmpty)
+                    ? category.attachments![0].attachment
+                    : null;
+                final String categoryId = category.serviceCategoryId ?? '';
+
+                return CategoryShowingWidget(
+                  onTap: () {
+                    Get.toNamed(
+                      Routes.servicesOfSpecificCategoryScreen,
+                      arguments: {
+                        'categoryId': categoryId,
+                        'categoryName': categoryName,
                       },
-                      categoryIcon: category.categoryIcon,
-                      categoryName: category.categoryName,
                     );
                   },
-                ),
-              ],
-            ),
-          ),
-        ),
+                  categoryName: categoryName,
+                  imageUrl: imageUrl,
+                );
+              },
+            );
+          });
+        },
       ),
     );
   }

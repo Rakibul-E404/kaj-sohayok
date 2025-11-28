@@ -1,116 +1,96 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kaz_bd/constants/text_font_style.dart';
+import 'package:get/get.dart';
 import 'package:kaz_bd/controllers/home_page_controller.dart';
+import 'package:kaz_bd/features/normal_user/home/models/home_page_data_model.dart'
+    as Model;
 import 'package:kaz_bd/features/normal_user/home/widgets/category_showing_widget.dart';
-import 'package:kaz_bd/gen/colors.gen.dart';
-import 'package:kaz_bd/helpers/ui_helpers.dart';
 
 import '../../../../routes/routes.dart';
 
 class CategoryPageViewWidget extends StatelessWidget {
-  final List myList;
-
-  const CategoryPageViewWidget({super.key, required this.myList});
+  const CategoryPageViewWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(HomePageController());
+    final HomePageController controller = Get.find<HomePageController>();
 
     // Layout constants (scaled with ScreenUtil)
     const int crossAxisCount = 3;
     final double crossAxisSpacing = 6.w;
     final double mainAxisSpacing = 6.h;
-    final double paddingLeft = 16.w;
-    final double paddingRight = 16.w;
-    final double paddingTop = 16.h;
-    final double paddingBottom = 10.h;
+    final double paddingValue = 16.w;
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final availableWidth =
-            constraints.maxWidth -
-            paddingLeft -
-            paddingRight -
-            (crossAxisSpacing * (crossAxisCount - 1));
-        final cellWidth = availableWidth / crossAxisCount;
+    return Obx(() {
+      // Check if data is loaded and has categories
+      if (controller.isLoading.value || controller.categories.isEmpty) {
+        return const Center(child: CircularProgressIndicator());
+      }
 
-        final maxRows = myList
-            .map((page) => (page.length / crossAxisCount).ceil())
-            .reduce((a, b) => a > b ? a : b);
+      // Get only the first 6 categories
+      final categoriesToShow = controller.categories.length > 6
+          ? controller.categories.take(6).toList()
+          : controller.categories;
 
-        final gridHeight =
-            paddingTop +
-            paddingBottom +
-            (cellWidth * maxRows) +
-            (mainAxisSpacing * (maxRows - 1));
+      return GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.all(paddingValue),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: crossAxisCount,
+          crossAxisSpacing: crossAxisSpacing,
+          mainAxisSpacing: mainAxisSpacing,
+          childAspectRatio: 1,
+        ),
+        itemCount: categoriesToShow.length,
+        itemBuilder: (context, index) {
+          final category = categoriesToShow[index];
 
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              height: gridHeight,
-              child: PageView.builder(
-                controller: controller.pageController,
-                itemCount: myList.length,
-                onPageChanged: controller.onPageChanged,
-                itemBuilder: (context, pageIndex) {
-                  final pageCategories = myList[pageIndex];
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossAxisCount,
-                      crossAxisSpacing: crossAxisSpacing,
-                      mainAxisSpacing: mainAxisSpacing,
-                      childAspectRatio: 1,
-                    ),
-                    itemCount: pageCategories.length,
-                    itemBuilder: (context, index) {
-                      final category = pageCategories[index];
-                      return CategoryShowingWidget(
-                        onTap: () {
-                          Get.toNamed(Routes.servicesOfSpecificCategoryScreen);
-                        },
-                        categoryIcon: category.categoryIcon,
-                        categoryName: category.categoryName,
-                      );
-                    },
-                  );
+          // Handle Category model format
+          final String categoryName = _getCategoryName(category);
+          final String? imageUrl = _getCategoryImageUrl(category);
+          final String categoryId = _getCategoryId(category);
+
+          return CategoryShowingWidget(
+            onTap: () {
+              log("Category tapped: $categoryName");
+              Get.toNamed(
+                Routes.servicesOfSpecificCategoryScreen,
+                arguments: {
+                  'categoryId': categoryId,
+                  'categoryName': categoryName,
                 },
-              ),
-            ),
+              );
+            },
+            categoryIcon: Icons.category, // Default icon for API data
+            categoryName: categoryName,
+            imageUrl: imageUrl,
+          );
+        },
+      );
+    });
+  }
 
-            // Page Indicator
-            Obx(
-              () => Padding(
-                padding: EdgeInsets.only(top: 8.h, bottom: 8.h),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    myList.length,
-                    (index) => AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      margin: EdgeInsets.symmetric(horizontal: 4.w),
-                      height: 6.h,
-                      width: controller.currentPage.value == index ? 12.w : 6.w,
-                      decoration: BoxDecoration(
-                        color: controller.currentPage.value == index
-                            ? Colors.blue
-                            : Colors.grey,
-                        borderRadius: BorderRadius.circular(3.r),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
+  // Helper methods to handle Category model format
+  String _getCategoryName(Model.Category category) {
+    // Access name from the Category model
+    if (category.name != null && category.name!.en != null) {
+      return category.name!.en.toString();
+    }
+    return 'Category';
+  }
+
+  String? _getCategoryImageUrl(Model.Category category) {
+    // Access image from attachments in the Category model
+    if (category.attachments != null && category.attachments!.isNotEmpty) {
+      return category.attachments![0].attachment;
+    }
+    return null;
+  }
+
+  String _getCategoryId(Model.Category category) {
+    return category.serviceCategoryId ?? '';
   }
 }

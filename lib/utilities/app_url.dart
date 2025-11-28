@@ -13,6 +13,9 @@ class AppUrl {
   static String serviceProviderFormSubmit = '${baseUrl}v1/service-providers';
 
 
+  static String getNormalUserHomeData = '${baseUrl}v1/users/home-page';
+  static String getNormalUserAllCategory =
+      '${baseUrl}v1/service-categories/paginate?page=1&limit=2000';
 
   static String deleteBabyProfile({required String babyId}) {
     return '$baseUrl/api/v1/babies/delete/$babyId';
