@@ -202,8 +202,8 @@ class AttachmentsForGalleryElement {
 }
 
 class Name {
-  En? en;
-  Bn? bn;
+  String? en;
+  String? bn;
 
   Name({this.en, this.bn});
 
@@ -212,21 +212,10 @@ class Name {
   String toRawJson() => json.encode(toJson());
 
   factory Name.fromJson(Map<String, dynamic> json) =>
-      Name(en: enValues.map[json["en"]]!, bn: bnValues.map[json["bn"]]!);
+      Name(en: json["en"], bn: json["bn"]);
 
-  Map<String, dynamic> toJson() => {
-    "en": enValues.reverse[en],
-    "bn": bnValues.reverse[bn],
-  };
+  Map<String, dynamic> toJson() => {"en": en, "bn": bn};
 }
-
-enum Bn { EMPTY, TEST_BN }
-
-final bnValues = EnumValues({"": Bn.EMPTY, "TEST_BN": Bn.TEST_BN});
-
-enum En { EMPTY, TEST_EN }
-
-final enValues = EnumValues({"": En.EMPTY, "TEST_EN": En.TEST_EN});
 
 class Provider {
   Name? serviceName;
@@ -309,16 +298,4 @@ class Provider {
     "yearsOfExperience": yearsOfExperience,
     "_ServiceProviderId": serviceProviderId,
   };
-}
-
-class EnumValues<T> {
-  Map<String, T> map;
-  late Map<T, String> reverseMap;
-
-  EnumValues(this.map);
-
-  Map<T, String> get reverse {
-    reverseMap = map.map((k, v) => MapEntry(v, k));
-    return reverseMap;
-  }
 }

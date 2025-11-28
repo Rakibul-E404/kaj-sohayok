@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/constants/appList.dart';
+import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/features/normal_user/home/models/home_page_data_model.dart'
     as Model;
 import 'package:kaz_bd/gen/colors.gen.dart';
@@ -15,6 +16,7 @@ import '../../../../controllers/home_page_controller.dart';
 import '../../../../custom_widgets/home_section_applogo_and_notification.dart';
 import '../../../../gen/assets.gen.dart';
 import '../widgets/banner_carosle_slider.dart';
+import '../widgets/banner_shimmer_effect.dart';
 import '../widgets/category_page_view_widget.dart' show CategoryPageViewWidget;
 import '../widgets/section_declaration_widget.dart';
 import '../widgets/service_showing_widget.dart';
@@ -48,44 +50,16 @@ class HomeScreen extends StatelessWidget {
                   ///Section : Hero Booking
                   Obx(
                     () => controller.isLoading.value
-                        ? Container(
-                            height: 175.h,
-                            width: 1.sw,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12.w,
-                              vertical: 24.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.cea464a,
-                              borderRadius: BorderRadius.circular(12.r),
-                            ),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                color: AppColors.cFFFFFF,
-                              ),
-                            ),
-                          )
+                        ? BannerShimmerEffectWidget(height: 175, width: 1)
                         : controller.banners.isNotEmpty
                         ? BannerCarosleSlider(controller: controller)
-                        : Container(
-                            height: 175.h,
-                            width: 1.sw,
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 12.w,
-                              vertical: 24.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.cea464a,
-                              borderRadius: BorderRadius.circular(12.r),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'No banners available',
-                                style: TextStyle(
-                                  color: AppColors.cFFFFFF,
-                                  fontSize: 14.sp,
-                                ),
-                              ),
+                        : BannerShimmerEffectWidget(
+                            height: 175,
+                            width: 1,
+                            child: Text(
+                              'No banners available',
+                              style: TextFontStyle
+                                  .headline14w500cFFFFFFStyleSatoshi,
                             ),
                           ),
                   ),
@@ -117,7 +91,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   UIHelper.verticalSpace(24.h),
 
-                  ///Section : Providers
+                  ///Section : Popular Providers
                   SizedBox(
                     height: 220.h,
                     child: Obx(() {
@@ -173,30 +147,6 @@ class HomeScreen extends StatelessWidget {
                   ),
 
                   UIHelper.verticalSpace(150.h),
-
-                  ///Section : Services
-                  // SizedBox(
-                  //   height: 220.h,
-                  //   child: ListView.separated(
-                  //     itemCount: 10,
-                  //     scrollDirection: Axis.horizontal,
-                  //     separatorBuilder: (context, index) =>
-                  //         UIHelper.horizontalSpace(8.w),
-                  //     itemBuilder: (context, index) {
-                  //       return ServiceWidget(
-                  //         onTap: () {
-                  //           log("Taped Service Index : $index");
-                  //           Get.toNamed(Routes.serviceDetailsScreen);
-                  //         },
-                  //         imagePath: Assets.images.serviceImage.path,
-                  //         serviceTitle: 'Ac Cleaning At Home',
-                  //         initialPayablePrice: 30.5,
-                  //         userRating: 4.5,
-                  //       );
-                  //     },
-                  //   ),
-                  // ),
-                  // UIHelper.verticalSpace(150.h),
                 ],
               ),
             ),
