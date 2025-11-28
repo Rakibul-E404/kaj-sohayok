@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../gen/colors.gen.dart';
+import '../gen/assets.gen.dart';
 
 class CustomProfileImageWidget extends StatelessWidget {
   final String? imagePath; // picked image path (can be null/empty)
@@ -34,29 +36,27 @@ class CustomProfileImageWidget extends StatelessWidget {
                 insetPadding: EdgeInsets.all(16.w),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12.r),
-                  child: InteractiveViewer(
-                    child: imagePath != null && imagePath!.isNotEmpty
-                        ? Image.file(File(imagePath!), fit: BoxFit.contain)
-                        : Image.asset(
-                            defaultAsset,
-                            width: 1.sw,
-                            fit: BoxFit.contain,
-                          ),
-                  ),
+                  child: imagePath != null && imagePath!.isEmpty
+                      ? Icon(Icons.person)
+                      : CachedNetworkImage(
+                          imageUrl: imagePath ?? '',
+                          errorWidget: (context, url, error) =>
+                              SvgPicture.asset(
+                                Assets.icons.serviceProviderLogo,
+                              ),
+                        ),
                 ),
               ),
             );
           },
           child: Container(
+            height: 100,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(color: AppColors.cd5dbf9, width: 2.sp),
             ),
-            child: CircleAvatar(
-              radius: radius.r,
-              backgroundImage: imagePath != null && imagePath!.isNotEmpty
-                  ? FileImage(File(imagePath!))
-                  : AssetImage(defaultAsset) as ImageProvider,
+            child: ClipOval(
+              child: CachedNetworkImage(imageUrl: imagePath ?? ''),
             ),
           ),
         ),

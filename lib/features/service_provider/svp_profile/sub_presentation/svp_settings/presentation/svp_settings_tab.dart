@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../../../../../constants/appList.dart';
 import '../../../../../../constants/text_font_style.dart';
+import '../../../../../../controllers/privacy_terms_controller.dart';
 import '../../../../../../controllers/svp_profile_screen_controller.dart';
 import '../../../../../../custom_widgets/custom_elevated_button.dart';
 import '../../../../../../gen/assets.gen.dart';
@@ -19,6 +20,9 @@ class SvpSettingsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final SvpProfileScreenController svpProfileScreenController =
         Get.find<SvpProfileScreenController>();
+    final PrivacyTermsController privacyTermsController = Get.put(
+      PrivacyTermsController(),
+    );
     return ListView.separated(
       itemCount: AppList.settingsOptionsList.length,
       separatorBuilder: (context, index) => UIHelper.verticalSpace(10.h),
@@ -29,13 +33,29 @@ class SvpSettingsTab extends StatelessWidget {
             index == 0
                 ? Get.toNamed(Routes.changePasswordScreen)
                 : index == 1
-                ? Get.toNamed(Routes.privacyPolicyScreen)
+                ? Get.toNamed(
+                    Routes.privacyPolicyScreen,
+                    arguments: {
+                      'data': privacyTermsController.privacyPolicy.value,
+                    },
+                  )
                 : index == 2
-                ? Get.toNamed(Routes.termsAndConditionsScreen)
+                ? Get.toNamed(
+                    Routes.termsAndConditionsScreen,
+                    arguments: {
+                      'data': privacyTermsController.termsCondition.value,
+                    },
+                  )
                 : index == 3
-                ? Get.toNamed(Routes.aboutUsScreen)
+                ? Get.toNamed(
+                    Routes.aboutUsScreen,
+                    arguments: {'data': privacyTermsController.aboutUs.value},
+                  )
                 : index == 4
-                ? Get.toNamed(Routes.contactUsScreen)
+                ? Get.toNamed(
+                    Routes.contactUsScreen,
+                    arguments: {'data': privacyTermsController.contactUs.value},
+                  )
                 : index == 5
                 ? Get.bottomSheet(
                     backgroundColor: AppColors.cFFFFFF,

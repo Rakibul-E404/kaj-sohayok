@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../constants/text_font_style.dart';
+import '../../../../custom_widgets/html_wrapper.dart';
 import '../../../../gen/colors.gen.dart';
 import '../widgets/contact_tile_widget.dart';
 
@@ -28,6 +31,8 @@ class ContactUsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String bodyText = Get.arguments['data'] ?? '';
+
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -42,29 +47,30 @@ class ContactUsScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),
-            child: Column(
-              children: [
-                /// Email Section
-                ContactTileWidget(
-                  onTap: () => _launchEmail("support.info@gmail.com"),
-                  icon: Icons.email,
-                  data: "support.info@gmail.com",
-                ),
-                UIHelper.verticalSpace(32.h),
-
-                /// Divider
-                const Divider(),
-                UIHelper.verticalSpace(32.h),
-
-                /// Phone Section
-                ContactTileWidget(
-                  onTap: () => _launchPhone("+8801996655"),
-                  icon: Icons.phone,
-                  data: "+8801996655",
-                ),
-                UIHelper.verticalSpace(32.h),
-              ],
-            ),
+            child: HtmlWrapper(htmlContent: bodyText),
+            // child: Column(
+            //   children: [
+            //     /// Email Section
+            //     ContactTileWidget(
+            //       onTap: () => _launchEmail("support.info@gmail.com"),
+            //       icon: Icons.email,
+            //       data: "support.info@gmail.com",
+            //     ),
+            //     UIHelper.verticalSpace(32.h),
+            //
+            //     /// Divider
+            //     const Divider(),
+            //     UIHelper.verticalSpace(32.h),
+            //
+            //     /// Phone Section
+            //     ContactTileWidget(
+            //       onTap: () => _launchPhone("+8801996655"),
+            //       icon: Icons.phone,
+            //       data: "+8801996655",
+            //     ),
+            //     UIHelper.verticalSpace(32.h),
+            //   ],
+            // ),
           ),
         ),
       ),

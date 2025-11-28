@@ -93,9 +93,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
+import 'package:kaz_bd/models/user_profile_model.dart';
 
 import '../routes/routes.dart';
 import '../service/network_caller.dart';
+import '../service/network_response.dart';
 import '../service/secured_storage.dart';
 import '../utilities/app_constants.dart';
 import '../utilities/app_url.dart';
@@ -107,25 +109,26 @@ class UserProfileScreenController extends GetxController
   final ImagePicker _picker = ImagePicker();
 
   /// Instead of File, store path for efficiency
-  RxString pickedImagePath = ''.obs;
+  final RxString profileImage = ''.obs;
+  final RxBool loader = false.obs;
 
   /// Pick image from given source (camera/gallery)
-  Future<void> pickImage({required ImageSource imagePickerSourceType}) async {
+  Future<void> pickImage({required ImageSource source}) async {
     try {
       final XFile? image = await _picker.pickImage(
-        source: imagePickerSourceType,
+        source: source,
         maxWidth: 1024,
         maxHeight: 1024,
         imageQuality: 85,
       );
 
       if (image != null) {
-        pickedImagePath.value = image.path;
+        profileImage.value = image.path;
       } else {
-        Get.snackbar("Cancelled", "No image selected");
+        // Get.snackbar('Cancelled', 'No image selected');
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to pick image: $e");
+      Get.snackbar('Error', 'Failed to pick image: $e');
     }
   }
 
@@ -148,7 +151,7 @@ class UserProfileScreenController extends GetxController
                 title: const Text("Camera"),
                 onTap: () {
                   Get.back();
-                  pickImage(imagePickerSourceType: ImageSource.camera);
+                  pickImage(source: ImageSource.camera);
                 },
               ),
               ListTile(
@@ -156,7 +159,7 @@ class UserProfileScreenController extends GetxController
                 title: const Text("Gallery"),
                 onTap: () {
                   Get.back();
-                  pickImage(imagePickerSourceType: ImageSource.gallery);
+                  pickImage(source: ImageSource.gallery);
                 },
               ),
             ],
@@ -206,10 +209,12 @@ class UserProfileScreenController extends GetxController
     profileOptionsTabController.addListener(() {
       changeProfileOptionsTab(profileOptionsTabController.index);
     });
+
+    /// ==================> Fetch the Profile =================>
+    fetchUserProfile();
   }
 
   /// ===================> Logout ==================>
-  final RxBool loader = false.obs;
 
   Future<void> handleLogOut() async {
     try {
@@ -224,6 +229,48 @@ class UserProfileScreenController extends GetxController
     } finally {
       // clearTextFields();
       // loader.value = false;
+    }
+  }
+
+  /// ===================> USER profile fetch ===================>
+  final Rxn<UserProfileModel> userProfileModel = Rxn<UserProfileModel>();
+
+  Future<void> fetchUserProfile() async {
+    try {
+      final String token =
+          await SecureStorageService().read(AppConstants.accessToken) ?? '';
+      loader.value = true;
+      final NetworkResponse getResponse = await NetworkCaller().getRequest(
+        AppUrl.fetchProfile,
+        headers: <String, String>{'Authorization': 'Bearer $token'},
+      );
+      if (getResponse.isSuccess) {
+        userProfileModel.value = UserProfileModel.fromJson(
+          getResponse.jsonResponse?['data']['attributes'],
+        );
+
+        if (userProfileModel.value != null &&
+            userProfileModel.value!.profileImage.imageUrl.contains(
+              'amazonaws',
+            )) {
+          profileImage.value = userProfileModel.value!.profileImage.imageUrl;
+        } else {
+          profileImage.value =
+              "${AppUrl.imageBaseUrl}${userProfileModel.value!.profileImage.imageUrl}";
+        }
+        // LoggerUtils.debug(uerProfileModel.value?.email);
+      } else {
+        Get.snackbar(
+          'Failed',
+          getResponse.jsonResponse?['message'],
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      LoggerUtils.debug("Exception : ${e.toString()}");
+    } finally {
+      loader.value = false;
     }
   }
 

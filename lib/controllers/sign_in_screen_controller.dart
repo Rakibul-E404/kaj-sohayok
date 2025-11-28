@@ -77,8 +77,11 @@ class SignInScreenController extends GetxController {
             UserRole.provider.name,
           );
           if (signedProfile.value!.isServiceProviderDetailsFound == true) {
-            /// Profile completed ===========>
-
+            /// Profile  completed ===========>
+            GetStorageModel().saveBool(
+              AppConstants.providerProfileIsComplete,
+              true,
+            );
             Get.offAllNamed(Routes.navigationScreen);
             return;
           } else {

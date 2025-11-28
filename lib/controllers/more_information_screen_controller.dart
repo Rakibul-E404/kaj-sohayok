@@ -308,6 +308,7 @@ class MoreInformationScreenController extends GetxController {
     }
   }
 
+
   @override
   void onClose() {
     workTypeController.dispose();

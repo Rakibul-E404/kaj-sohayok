@@ -11,6 +11,7 @@ import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/routes/routes.dart';
 
+import '../../../../../../controllers/privacy_terms_controller.dart';
 import '../../../../../../controllers/user_profile_screen_controller.dart';
 
 class SettingsTab extends StatelessWidget {
@@ -20,6 +21,10 @@ class SettingsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final UserProfileScreenController userProfileController =
         Get.find<UserProfileScreenController>();
+
+    final PrivacyTermsController privacyTermsController = Get.put(
+      PrivacyTermsController(),
+    );
     return ListView.separated(
       itemCount: AppList.settingsOptionsList.length,
       separatorBuilder: (context, index) => UIHelper.verticalSpace(10.h),
@@ -30,13 +35,31 @@ class SettingsTab extends StatelessWidget {
             index == 0
                 ? Get.toNamed(Routes.changePasswordScreen)
                 : index == 1
-                ? Get.toNamed(Routes.privacyPolicyScreen)
+                ? Get.toNamed(
+                    Routes.privacyPolicyScreen,
+                    arguments: {
+                      'data': privacyTermsController.privacyPolicy.value,
+                    },
+                  )
                 : index == 2
-                ? Get.toNamed(Routes.termsAndConditionsScreen)
+                ? Get.toNamed(
+                    Routes.termsAndConditionsScreen,
+                    arguments: {
+                      'data': privacyTermsController.termsCondition.value,
+                    },
+                  )
                 : index == 3
-                ? Get.toNamed(Routes.aboutUsScreen)
+                ? Get.toNamed(
+                    Routes.aboutUsScreen,
+                    arguments: {'data': privacyTermsController.aboutUs.value},
+                  )
                 : index == 4
-                ? Get.toNamed(Routes.contactUsScreen)
+                ? Get.toNamed(
+                    Routes.contactUsScreen,
+                    arguments: {
+                      'data': privacyTermsController.contactUs.value,
+                    },
+                  )
                 : index == 5
                 ? Get.bottomSheet(
                     backgroundColor: AppColors.cFFFFFF,
