@@ -12,6 +12,18 @@ class AppUrl {
   static String getNormalUserAllCategory =
       '${baseUrl}v1/service-categories/paginate?page=1&limit=2000';
 
+  static String getSpecificServiceByCategory({
+    required String categoryId,
+    required String pageId,
+    String? serviceName,
+  }) {
+    String url = '${baseUrl}v1/service-providers/paginate?page=$pageId&serviceCategoryId=$categoryId';
+    if (serviceName != null && serviceName.isNotEmpty) {
+      url += '&serviceName=$serviceName';
+    }
+    return url;
+  }
+
   static String deleteBabyProfile({required String babyId}) {
     return '$baseUrl/api/v1/babies/delete/$babyId';
   }
