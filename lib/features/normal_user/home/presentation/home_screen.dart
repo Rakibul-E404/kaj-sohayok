@@ -16,8 +16,8 @@ import '../../../../controllers/home_page_controller.dart';
 import '../../../../custom_widgets/home_section_applogo_and_notification.dart';
 import '../../../../gen/assets.gen.dart';
 import '../widgets/banner_carosle_slider.dart';
-import '../widgets/banner_shimmer_effect.dart';
-import '../widgets/category_page_view_widget.dart' show CategoryPageViewWidget;
+import '../../../../custom_widgets/custom_shimmer_effect.dart';
+import '../widgets/category_page_view_widget.dart' show CategoryViewWidget;
 import '../widgets/section_declaration_widget.dart';
 import '../widgets/service_showing_widget.dart';
 
@@ -50,10 +50,10 @@ class HomeScreen extends StatelessWidget {
                   ///Section : Hero Booking
                   Obx(
                     () => controller.isLoading.value
-                        ? BannerShimmerEffectWidget(height: 175, width: 1)
+                        ? CustomShimmerEffect(height: 175, width: 1)
                         : controller.banners.isNotEmpty
                         ? BannerCarosleSlider(controller: controller)
-                        : BannerShimmerEffectWidget(
+                        : CustomShimmerEffect(
                             height: 175,
                             width: 1,
                             child: Text(
@@ -78,7 +78,7 @@ class HomeScreen extends StatelessWidget {
                   UIHelper.verticalSpace(16.h),
 
                   ///Section : Category Widget in pageView
-                  CategoryPageViewWidget(),
+                  CategoryViewWidget(),
                   UIHelper.verticalSpace(24.h),
 
                   ///Section : Popular Provider
@@ -95,13 +95,30 @@ class HomeScreen extends StatelessWidget {
                   SizedBox(
                     height: 220.h,
                     child: Obx(() {
-                      if (controller.isLoading.value &&
-                          controller.providers.isEmpty) {
-                        return const Center(child: CircularProgressIndicator());
+                      if (controller.isLoading.value) {
+                        return ListView.separated(
+                          itemCount: 10,
+                          separatorBuilder: (context, index) =>
+                              UIHelper.horizontalSpace(8.w),
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return CustomShimmerEffect(
+                              height: 180.h,
+                              width: 174.w,
+                            );
+                          },
+                        );
                       }
+
                       if (controller.providers.isEmpty) {
-                        return const Center(
-                          child: Text('No providers available'),
+                        return CustomShimmerEffect(
+                          height: 100.h,
+                          width: 1.sw,
+                          child: Text(
+                            "No providers available",
+                            style:
+                                TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
+                          ),
                         );
                       }
 

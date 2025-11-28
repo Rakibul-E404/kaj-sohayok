@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/controllers/home_page_controller.dart';
-import 'package:kaz_bd/features/normal_user/home/widgets/banner_shimmer_effect.dart';
+import 'package:kaz_bd/custom_widgets/custom_shimmer_effect.dart';
 
 import '../../../../constants/text_font_style.dart';
 import '../../../../gen/assets.gen.dart';
@@ -48,7 +48,7 @@ class BannerCarosleSlider extends StatelessWidget {
 
                 // Show shimmer while image is loading, otherwise show the actual image
                 return imageUrl.isEmpty
-                    ? BannerShimmerEffectWidget(
+                    ? CustomShimmerEffect(
                         height: 175,
                         width: 1,
                         child: Center(
@@ -77,7 +77,7 @@ class BannerCarosleSlider extends StatelessWidget {
                       );
               },
             )
-          : BannerShimmerEffectWidget(
+          : CustomShimmerEffect(
               height: 175,
               width: 1,
               child: Center(

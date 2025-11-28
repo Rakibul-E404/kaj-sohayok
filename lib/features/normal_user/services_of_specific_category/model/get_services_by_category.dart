@@ -1,20 +1,25 @@
 import 'dart:convert';
 
-class GetServicesByCategories {
+class GetServicesByCategoriesModel {
   int? code;
   String? message;
   Data? data;
   bool? success;
 
-  GetServicesByCategories({this.code, this.message, this.data, this.success});
+  GetServicesByCategoriesModel({
+    this.code,
+    this.message,
+    this.data,
+    this.success,
+  });
 
-  factory GetServicesByCategories.fromRawJson(String str) =>
-      GetServicesByCategories.fromJson(json.decode(str));
+  factory GetServicesByCategoriesModel.fromRawJson(String str) =>
+      GetServicesByCategoriesModel.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory GetServicesByCategories.fromJson(Map<String, dynamic> json) =>
-      GetServicesByCategories(
+  factory GetServicesByCategoriesModel.fromJson(Map<String, dynamic> json) =>
+      GetServicesByCategoriesModel(
         code: json["code"],
         message: json["message"],
         data: json["data"] == null ? null : Data.fromJson(json["data"]),

@@ -5,6 +5,7 @@ import 'package:kaz_bd/constants/app_constant_text.dart';
 
 import '../../../../constants/text_font_style.dart';
 import '../../../../custom_widgets/custom_elevated_button.dart';
+import '../../../../gen/assets.gen.dart';
 import '../../../../gen/colors.gen.dart';
 import '../../../../helpers/ui_helpers.dart';
 
@@ -16,6 +17,7 @@ class SpecificServiceShowingWidget extends StatelessWidget {
   final String serviceProviderName;
   final double serviceProviderRating;
   final void Function()? onTap;
+
   const SpecificServiceShowingWidget({
     super.key,
     required this.serviceImagePath,
@@ -29,6 +31,9 @@ class SpecificServiceShowingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Check if service image is a network URL or asset path
+    final bool isServiceNetworkImage = serviceImagePath.startsWith('http');
+
     return Container(
       width: 1.sw,
       padding: EdgeInsets.all(10.sp),
@@ -42,17 +47,27 @@ class SpecificServiceShowingWidget extends StatelessWidget {
           ///Section: Service Image
           ClipRRect(
             borderRadius: BorderRadius.circular(14.r),
-            child: Image.asset(
-              serviceImagePath,
-              height: 112.h,
-              width: 1.sw,
-              fit: BoxFit.cover,
-            ),
+            child: isServiceNetworkImage
+                ? Image.network(
+                    serviceImagePath,
+                    height: 112.h,
+                    width: 1.sw,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        _buildFallbackServiceImage(),
+                  )
+                : Image.asset(
+                    serviceImagePath,
+                    height: 112.h,
+                    width: 1.sw,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        _buildFallbackServiceImage(),
+                  ),
           ),
           UIHelper.verticalSpace(14.h),
 
-          ///Section : Service Name
-          ///Section : Service Pricec
+          ///Section : Service Name & Price
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -62,8 +77,7 @@ class SpecificServiceShowingWidget extends StatelessWidget {
               ),
               RichText(
                 text: TextSpan(
-                  style: TextFontStyle
-                      .headline12w500c6a6a6aStyleSatoshi, // base style
+                  style: TextFontStyle.headline12w500c6a6a6aStyleSatoshi,
                   children: [
                     const TextSpan(text: "Start from "),
                     TextSpan(
@@ -88,21 +102,14 @@ class SpecificServiceShowingWidget extends StatelessWidget {
           ),
           UIHelper.verticalSpace(8.h),
 
-          ///Section : User Image
-          ///Section : User Name
-          ///Section : User Rating
-          ///Section : Button -> Book Now
+          ///Section : User Image, Name, Rating & Book Now Button
           Row(
             children: [
               ///Section : User Image
-              CircleAvatar(
-                radius: 20.r,
-                backgroundImage: AssetImage(serviceProviderImage),
-              ),
+              _buildProviderImage(),
               UIHelper.horizontalSpace(6.w),
 
-              ///Section : User Name
-              ///Section : User Rating
+              ///Section : User Name & Rating
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -124,7 +131,7 @@ class SpecificServiceShowingWidget extends StatelessWidget {
                       Icon(Icons.star_rate_rounded, color: AppColors.cffcd22),
                       UIHelper.horizontalSpace(2.w),
                       Text(
-                        serviceProviderRating.toString(),
+                        serviceProviderRating.toStringAsFixed(1),
                         style: TextFontStyle.headline10w500c000000StyleSatoshi,
                       ),
                     ],
@@ -145,6 +152,78 @@ class SpecificServiceShowingWidget extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildProviderImage() {
+    // Check if service provider image is a network URL or needs base URL
+    final bool isNetworkImage = serviceProviderImage.startsWith('http');
+    final bool needsBaseUrl = serviceProviderImage.startsWith('/uploads/') ||
+                              serviceProviderImage.startsWith('/images/');
+
+    if (isNetworkImage || needsBaseUrl) {
+      String imageUrl = serviceProviderImage;
+
+      // Add base URL if it's a relative path that needs it
+      if (needsBaseUrl) {
+        imageUrl = 'https://newsheakh6737.sobhoy.com$serviceProviderImage';
+      }
+
+      // Load network image with proper fallback handling
+      return CircleAvatar(
+        radius: 20.r,
+        child: ClipOval(
+          child: Image.network(
+            imageUrl,
+            width: 40.r,
+            height: 40.r,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                width: 40.r,
+                height: 40.r,
+                color: AppColors.cf1f3fd,
+                child: const Icon(Icons.person, size: 20),
+              );
+            },
+          ),
+        ),
+      );
+    } else {
+      // It's an asset image or empty, so use asset
+      String assetPath = serviceProviderImage.isEmpty ? Assets.images.userImageBlank.path : serviceProviderImage;
+      return CircleAvatar(
+        radius: 20.r,
+        child: ClipOval(
+          child: Image.asset(
+            assetPath,
+            width: 40.r,
+            height: 40.r,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                width: 40.r,
+                height: 40.r,
+                color: AppColors.cf1f3fd,
+                child: const Icon(Icons.person, size: 20),
+              );
+            },
+          ),
+        ),
+      );
+    }
+  }
+
+  Widget _buildFallbackServiceImage() {
+    return Container(
+      height: 112.h,
+      width: double.infinity,
+      color: AppColors.cf1f3fd,
+      child: Icon(
+        Icons.image_not_supported_outlined,
+        size: 40.r,
+        color: AppColors.cb4b4b4,
       ),
     );
   }

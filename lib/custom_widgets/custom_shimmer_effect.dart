@@ -3,13 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:shimmer/shimmer.dart';
 
-class BannerShimmerEffectWidget extends StatelessWidget {
+class CustomShimmerEffect extends StatelessWidget {
   final double height;
   final double width;
   final Widget? child;
   final bool isEnabled;
 
-  const BannerShimmerEffectWidget({
+  const CustomShimmerEffect({
     super.key,
     required this.height,
     required this.width,
@@ -26,8 +26,8 @@ class BannerShimmerEffectWidget extends StatelessWidget {
       direction: ShimmerDirection.ltr,
       period: const Duration(milliseconds: 1500),
       child: Container(
-        width: width.sw,
-        height: height.h,
+        width: width,
+        height: height,
         decoration: BoxDecoration(
           color: AppColors.c000000.withValues(
             alpha: 0.2,

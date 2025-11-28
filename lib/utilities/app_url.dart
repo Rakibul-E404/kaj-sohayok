@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class AppUrl {
   AppUrl._();
 
@@ -11,6 +13,13 @@ class AppUrl {
   static String getNormalUserHomeData = '${baseUrl}v1/users/home-page';
   static String getNormalUserAllCategory =
       '${baseUrl}v1/service-categories/paginate?page=1&limit=2000';
+
+  static String getSpecificServiceByCategory({
+    required String categoryId,
+    required String pageId,
+  }) {
+    return '${baseUrl}v1/service-providers/paginate?page=$pageId&serviceCategoryId=$categoryId';
+  }
 
   static String deleteBabyProfile({required String babyId}) {
     return '$baseUrl/api/v1/babies/delete/$babyId';

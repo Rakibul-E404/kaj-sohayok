@@ -4,14 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/controllers/home_page_controller.dart';
+import 'package:kaz_bd/custom_widgets/custom_shimmer_effect.dart';
 import 'package:kaz_bd/features/normal_user/home/models/home_page_data_model.dart'
     as Model;
 import 'package:kaz_bd/features/normal_user/home/widgets/category_showing_widget.dart';
 
 import '../../../../routes/routes.dart';
 
-class CategoryPageViewWidget extends StatelessWidget {
-  const CategoryPageViewWidget({super.key});
+class CategoryViewWidget extends StatelessWidget {
+  const CategoryViewWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +25,23 @@ class CategoryPageViewWidget extends StatelessWidget {
     final double paddingValue = 16.w;
 
     return Obx(() {
-      // Check if data is loaded and has categories
-      if (controller.isLoading.value || controller.categories.isEmpty) {
-        return const Center(child: CircularProgressIndicator());
+      // Show shimmer for entire grid when loading
+      if (controller.isLoading.value) {
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          padding: EdgeInsets.all(paddingValue),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: crossAxisSpacing,
+            mainAxisSpacing: mainAxisSpacing,
+            childAspectRatio: 1,
+          ),
+          itemCount: 6, // Show 6 shimmer items
+          itemBuilder: (context, index) {
+            return CustomShimmerEffect(width: 80.w, height: 80.h);
+          },
+        );
       }
 
       // Get only the first 6 categories
@@ -47,8 +62,6 @@ class CategoryPageViewWidget extends StatelessWidget {
         itemCount: categoriesToShow.length,
         itemBuilder: (context, index) {
           final category = categoriesToShow[index];
-
-          // Handle Category model format
           final String categoryName = _getCategoryName(category);
           final String? imageUrl = _getCategoryImageUrl(category);
           final String categoryId = _getCategoryId(category);
@@ -64,7 +77,7 @@ class CategoryPageViewWidget extends StatelessWidget {
                 },
               );
             },
-            categoryIcon: Icons.category, // Default icon for API data
+            categoryIcon: Icons.category,
             categoryName: categoryName,
             imageUrl: imageUrl,
           );
