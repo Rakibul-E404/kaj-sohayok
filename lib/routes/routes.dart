@@ -272,7 +272,7 @@ class Routes {
     ///editProfileScreen
     GetPage(
       name: editProfileScreen,
-      page: () => EditProfileScreen(),
+      page: () => UserEditProfileScreen(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),

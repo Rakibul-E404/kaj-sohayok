@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kaz_bd/controllers/svp_profile_screen_controller.dart';
 import 'package:kaz_bd/controllers/user_profile_screen_controller.dart';
 import 'package:kaz_bd/models/user_profile_model.dart';
 
@@ -12,7 +11,7 @@ import '../utilities/app_constants.dart';
 import '../utilities/app_url.dart';
 import '../utilities/logger_util.dart';
 
-class SvpEditProfileScreenController extends GetxController {
+class UserEditProfileScreenController extends GetxController {
   // Form controllers
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -24,8 +23,8 @@ class SvpEditProfileScreenController extends GetxController {
   final RxBool isLoading = false.obs;
 
   // Get the user profile controller
-  final SvpProfileScreenController svpProfileScreenController =
-  Get.find<SvpProfileScreenController>();
+  final UserProfileScreenController userProfileController =
+      Get.find<UserProfileScreenController>();
 
   // Track initial image path to detect changes
   String _initialImagePath = '';
@@ -36,25 +35,25 @@ class SvpEditProfileScreenController extends GetxController {
     // Pre-fill the form with existing data
     _prefillFormData();
     // Store initial image path
-    _initialImagePath = svpProfileScreenController.profileImage.value;
+    _initialImagePath = userProfileController.profileImage.value;
   }
 
   /// Pre-fill form with existing user data
   void _prefillFormData() {
-    final userProfile = svpProfileScreenController.providerProfileModel.value;
+    final userProfile = userProfileController.userProfileModel.value;
     if (userProfile != null) {
-      emailController.text = userProfile.email;
-      nameController.text = userProfile.name;
-      phoneNumberController.text = userProfile.phoneNumber;
-      locationController.text = userProfile.location.en;
-      dateOfBirthController.text = formatDateTime(userProfile.dob);
-      genderController.text = userProfile.gender.toUpperCase();
+      emailController.text = userProfile.email ?? '';
+      nameController.text = userProfile.name ?? '';
+      phoneNumberController.text = userProfile.phoneNumber ?? '';
+      locationController.text = userProfile.location.en ?? '';
+      dateOfBirthController.text = formatDateTime(userProfile.dob) ?? '';
+      genderController.text = userProfile.gender.toUpperCase() ?? '';
     }
   }
 
   /// Check if user picked a new image
   bool _hasNewImage() {
-    final currentPath = svpProfileScreenController.profileImage.value;
+    final currentPath = userProfileController.profileImage.value;
 
     // Check if:
     // 1. Path has changed from initial
@@ -73,7 +72,7 @@ class SvpEditProfileScreenController extends GetxController {
       final String token =
           await SecureStorageService().read(AppConstants.accessToken) ?? '';
 
-      final String imagePath = svpProfileScreenController.profileImage.value;
+      final String imagePath = userProfileController.profileImage.value;
 
       // Use multipart request for image upload
       final Map<String, File> files = {'profileImage': File(imagePath)};
@@ -200,7 +199,7 @@ class SvpEditProfileScreenController extends GetxController {
       // Check overall success
       if (profileInfoSuccess && profilePictureSuccess) {
         // Refresh user profile data
-        await svpProfileScreenController.fetchProviderProfile();
+        await userProfileController.fetchUserProfile();
         Get.back();
 
         Get.snackbar(
@@ -215,7 +214,7 @@ class SvpEditProfileScreenController extends GetxController {
         // Go back to profile screen
       } else if (profileInfoSuccess && !profilePictureSuccess) {
         // Profile updated but image failed
-        await svpProfileScreenController.fetchProviderProfile();
+        await userProfileController.fetchUserProfile();
         Get.back();
       }
       // If profileInfoSuccess is false, error already shown
