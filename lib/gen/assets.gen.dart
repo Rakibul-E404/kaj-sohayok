@@ -241,6 +241,10 @@ class $AssetsImagesGen {
   AssetGenImage get userImage =>
       const AssetGenImage('assets/images/user_image.jpg');
 
+  /// File path: assets/images/user_image_blank.png
+  AssetGenImage get userImageBlank =>
+      const AssetGenImage('assets/images/user_image_blank.png');
+
   /// File path: assets/images/verified_check_icon.png
   AssetGenImage get verifiedCheckIcon =>
       const AssetGenImage('assets/images/verified_check_icon.png');
@@ -270,6 +274,7 @@ class $AssetsImagesGen {
     svpJobTypeImage,
     uploadIcon,
     userImage,
+    userImageBlank,
     verifiedCheckIcon,
     walletImage,
   ];
