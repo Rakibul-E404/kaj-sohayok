@@ -62,7 +62,7 @@ class ProofOfImageUploadWidget extends StatelessWidget {
                               TextFontStyle.headline16w500c202020StyleSatoshi,
                         ),
                         Text(
-                          "Format: .jpeg, .png & Max file size: 25 MB",
+                          "Format: .jpeg, .png, .mp4 & Max file size: 25 MB",
                           style:
                               TextFontStyle.headline10w400c6c606cStyleSatoshi,
                         ),
