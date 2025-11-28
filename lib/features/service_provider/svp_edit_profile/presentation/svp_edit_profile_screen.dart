@@ -1,20 +1,26 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:kaz_bd/controllers/svp_edit_profile_screen_controller.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../constants/text_font_style.dart';
-import '../../../../controllers/svp_edit_profile_screen_controller.dart';
+import '../../../../controllers/svp_profile_screen_controller.dart';
+import '../../../../controllers/user_edit_profile_controller.dart';
+import '../../../../controllers/user_profile_screen_controller.dart';
 import '../../../../custom_widgets/custom_elevated_button.dart';
 import '../../../../gen/colors.gen.dart';
-import '../widgets/edit_profile_formfield_widget.dart';
+import '../../../normal_user/edit_profile/widgets/edit_profile_formfield_widget.dart';
 
 class SvpEditProfileScreen extends StatelessWidget {
   SvpEditProfileScreen({super.key});
 
-  final SvpEditProfileScreenController controlelr = Get.put(
+  final SvpEditProfileScreenController controller = Get.put(
     SvpEditProfileScreenController(),
   );
+  final SvpProfileScreenController svpProfileScreenController =
+      Get.find<SvpProfileScreenController>();
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +34,108 @@ class SvpEditProfileScreen extends StatelessWidget {
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
       ),
-
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),
             child: Column(
               children: [
+                // Profile Image Section
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Obx(() {
+                      final imagePath =
+                          svpProfileScreenController.profileImage.value;
+                      final bool isNetworkImage = imagePath.startsWith('http');
+                      final bool hasImage = imagePath.isNotEmpty;
+
+                      return Container(
+                        width: 120.w,
+                        height: 120.w,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.c778beb,
+                            width: 3,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.ca4b1f2.withAlpha(80),
+                              blurRadius: 12.r,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: ClipOval(
+                          child: hasImage
+                              ? (isNetworkImage
+                                    ? CachedNetworkImage(
+                                        imageUrl: imagePath,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) => Center(
+                                          child: CircularProgressIndicator(
+                                            color: AppColors.c778beb,
+                                          ),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(
+                                              Icons.person,
+                                              size: 60.sp,
+                                              color: Colors.grey[400],
+                                            ),
+                                      )
+                                    : Image.file(
+                                        File(imagePath),
+                                        fit: BoxFit.cover,
+                                      ))
+                              : Container(
+                                  color: Colors.grey[200],
+                                  child: Icon(
+                                    Icons.person,
+                                    size: 60.sp,
+                                    color: Colors.grey[400],
+                                  ),
+                                ),
+                        ),
+                      );
+                    }),
+                    // Edit Icon
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: GestureDetector(
+                        onTap: () {
+                          svpProfileScreenController.showImageSourceDialog();
+                        },
+                        child: Container(
+                          width: 36.w,
+                          height: 36.w,
+                          decoration: BoxDecoration(
+                            color: AppColors.c778beb,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            Icons.camera_alt,
+                            color: Colors.white,
+                            size: 18.sp,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                UIHelper.verticalSpace(24.h),
+
+                // Form Fields Container
                 Container(
                   width: 1.sw,
                   padding: EdgeInsets.symmetric(
@@ -52,65 +153,106 @@ class SvpEditProfileScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-
                   child: Column(
                     children: [
-                      ///Section : Name Form Field
+                      /// Name Form Field
                       EditProfileFormFieldWidget(
                         lableText: "Name",
                         hintText: "Enter Your Name",
-                        controller: controlelr.nameController,
+                        controller: controller.nameController,
                       ),
                       UIHelper.verticalSpace(16.h),
 
-                      ///Section : Email Form Field
-                      EditProfileFormFieldWidget(
-                        lableText: "Email",
-                        hintText: "Enter Your Email",
-                        controller: controlelr.emailController,
-                      ),
-                      UIHelper.verticalSpace(16.h),
-
-                      ///Section : Phone Number Form Field
+                      /// Phone Number Form Field
                       EditProfileFormFieldWidget(
                         lableText: "Phone Number",
                         hintText: "Enter Your Phone Number",
-                        controller: controlelr.phoneNumberController,
+                        controller: controller.phoneNumberController,
+                        keyboardType: TextInputType.phone,
                       ),
                       UIHelper.verticalSpace(16.h),
 
-                      ///Section : Location Form Field
+                      /// Location Form Field
                       EditProfileFormFieldWidget(
                         lableText: "Location",
                         hintText: "Enter Your Location",
-                        controller: controlelr.locationController,
+                        controller: controller.locationController,
                       ),
                       UIHelper.verticalSpace(16.h),
 
-                      ///Section : Date of Birth Form Field
-                      EditProfileFormFieldWidget(
-                        lableText: "Date of Birth",
-                        hintText: "Enter Your Location",
-                        controller: controlelr.dateOfBirthController,
+                      /// Date of Birth Form Field
+                      GestureDetector(
+                        /// In EditProfileScreen — Date of Birth GestureDetector
+                        onTap: () async {
+                          final DateTime? picked = await showDatePicker(
+                            context: context,
+                            initialDate:
+                                controller.dateOfBirthController.text.isEmpty
+                                ? DateTime.now()
+                                : _parseDate(
+                                        controller.dateOfBirthController.text,
+                                      ) ??
+                                      DateTime.now(),
+                            firstDate: DateTime(1900),
+                            lastDate: DateTime.now(),
+                            builder: (context, child) {
+                              return Theme(
+                                data: Theme.of(context).copyWith(
+                                  colorScheme: ColorScheme.light(
+                                    primary: AppColors.c778beb,
+                                    onPrimary: Colors.white,
+                                    onSurface: Colors.black,
+                                  ),
+                                ),
+                                child: child!,
+                              );
+                            },
+                          );
+
+                          if (picked != null) {
+                            // ✅ Format as YYYY-MM-DD (standard, unambiguous, backend-friendly)
+                            controller.dateOfBirthController.text =
+                                "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+                          }
+                        },
+                        child: AbsorbPointer(
+                          child: EditProfileFormFieldWidget(
+                            lableText: "Date of Birth",
+                            hintText: "Select Date of Birth",
+                            controller: controller.dateOfBirthController,
+                            suffixIcon: Icon(
+                              Icons.calendar_today,
+                              color: AppColors.c778beb,
+                              size: 20.sp,
+                            ),
+                          ),
+                        ),
                       ),
                       UIHelper.verticalSpace(16.h),
 
-                      ///Section : Gender Form Field
+                      /// Gender Form Field
                       EditProfileFormFieldWidget(
                         lableText: "Gender",
                         hintText: "Enter Your Gender",
-                        controller: controlelr.genderController,
+                        controller: controller.genderController,
                       ),
                     ],
                   ),
                 ),
-                UIHelper.verticalSpace(110.h),
+                UIHelper.verticalSpace(30.h),
 
-                CustomElevatedButton(
-                  onTap: () {
-                    Get.back();
-                  },
-                  buttonTitle: "Update Profile",
+                // Update Button
+                Obx(
+                  () => CustomElevatedButton(
+                    onTap: controller.isLoading.value
+                        ? null
+                        : () {
+                            controller.updateProfile();
+                          },
+                    buttonTitle: controller.isLoading.value
+                        ? "Updating..."
+                        : "Update Profile",
+                  ),
                 ),
               ],
             ),
@@ -118,5 +260,23 @@ class SvpEditProfileScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  DateTime? _parseDate(String? dateString) {
+    if (dateString == null || dateString.isEmpty) return null;
+
+    // Only accept YYYY-MM-DD
+    final parts = dateString.split('-');
+    if (parts.length == 3) {
+      final year = int.tryParse(parts[0]) ?? 0;
+      final month = int.tryParse(parts[1]) ?? 0;
+      final day = int.tryParse(parts[2]) ?? 0;
+
+      if (year > 0 && month > 0 && month <= 12 && day > 0 && day <= 31) {
+        // ✅ Create LOCAL DateTime (no timezone)
+        return DateTime(year, month, day);
+      }
+    }
+    return null;
   }
 }

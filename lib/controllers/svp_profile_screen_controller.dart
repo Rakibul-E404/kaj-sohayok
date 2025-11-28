@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../gen/colors.gen.dart';
+import '../models/provider_profile_model.dart';
+import '../routes/routes.dart';
+import '../service/network_caller.dart';
+import '../service/network_response.dart';
+import '../service/secured_storage.dart';
+import '../utilities/app_constants.dart';
+import '../utilities/app_url.dart';
+import '../utilities/logger_util.dart';
 
 class SvpProfileScreenController extends GetxController
     with GetTickerProviderStateMixin {
@@ -10,25 +19,26 @@ class SvpProfileScreenController extends GetxController
   final ImagePicker _picker = ImagePicker();
 
   /// Instead of File, store path for efficiency
-  RxString svpPickedImagePath = ''.obs;
+  final RxString profileImage = ''.obs;
+  final RxBool loader = false.obs;
 
   /// Pick image from given source (camera/gallery)
-  Future<void> pickImage({required ImageSource imagePickerSourceType}) async {
+  Future<void> pickImage({required ImageSource source}) async {
     try {
       final XFile? image = await _picker.pickImage(
-        source: imagePickerSourceType,
+        source: source,
         maxWidth: 1024,
         maxHeight: 1024,
         imageQuality: 85,
       );
 
       if (image != null) {
-        svpPickedImagePath.value = image.path;
+        profileImage.value = image.path;
       } else {
-        Get.snackbar("Cancelled", "No image selected");
+        // Get.snackbar('Cancelled', 'No image selected');
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to pick image: $e");
+      Get.snackbar('Error', 'Failed to pick image: $e');
     }
   }
 
@@ -51,7 +61,7 @@ class SvpProfileScreenController extends GetxController
                 title: const Text("Camera"),
                 onTap: () {
                   Get.back();
-                  pickImage(imagePickerSourceType: ImageSource.camera);
+                  pickImage(source: ImageSource.camera);
                 },
               ),
               ListTile(
@@ -59,7 +69,7 @@ class SvpProfileScreenController extends GetxController
                 title: const Text("Gallery"),
                 onTap: () {
                   Get.back();
-                  pickImage(imagePickerSourceType: ImageSource.gallery);
+                  pickImage(source: ImageSource.gallery);
                 },
               ),
             ],
@@ -109,8 +119,65 @@ class SvpProfileScreenController extends GetxController
     svpProfileOptionsTabController.addListener(() {
       changeProfileOptionsTab(svpProfileOptionsTabController.index);
     });
+    /// ==================> Fetch the Profile =================>
+    fetchProviderProfile();
+  }
+  Future<void> handleLogOut() async {
+    try {
+
+      await SecureStorageService().clear();
+      Get.offAllNamed(Routes.onboardingScreen);
+    } catch (e) {
+      // loader.value = false;
+
+      LoggerUtils.debug("Exception : ${e.toString()}");
+    } finally {
+      // clearTextFields();
+      // loader.value = false;
+    }
   }
 
+  /// ===================> Provider profile fetch ===================>
+  final Rxn<ProviderProfileModel> providerProfileModel = Rxn<ProviderProfileModel>();
+
+  Future<void> fetchProviderProfile() async {
+    try {
+      final String token =
+          await SecureStorageService().read(AppConstants.accessToken) ?? '';
+      loader.value = true;
+      final NetworkResponse getResponse = await NetworkCaller().getRequest(
+        AppUrl.fetchProfile,
+        headers: <String, String>{'Authorization': 'Bearer $token'},
+      );
+      if (getResponse.isSuccess) {
+        providerProfileModel.value = ProviderProfileModel.fromJson(
+          getResponse.jsonResponse?['data']['attributes'],
+        );
+
+        if (providerProfileModel.value != null &&
+            providerProfileModel.value!.profileImage.imageUrl.contains(
+              'amazonaws',
+            )) {
+          profileImage.value = providerProfileModel.value!.profileImage.imageUrl;
+        } else {
+          profileImage.value =
+          "${AppUrl.imageBaseUrl}${providerProfileModel.value!.profileImage.imageUrl}";
+        }
+        // LoggerUtils.debug(uerProfileModel.value?.email);
+      } else {
+        Get.snackbar(
+          'Failed',
+          getResponse.jsonResponse?['message'],
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      LoggerUtils.debug("Exception : ${e.toString()}");
+    } finally {
+      loader.value = false;
+    }
+  }
   ///----------------------------- Dispost the controllers function --------------------------
   @override
   void onClose() {

@@ -2,12 +2,10 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:kaz_bd/custom_widgets/profile_tile_widget.dart';
-import 'package:kaz_bd/custom_widgets/custom_text_form_field.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 
 import '../../../../constants/text_font_style.dart';
-import '../../../../controllers/edit_profile_screen_controller.dart';
+ import '../../../../controllers/user_edit_profile_controller.dart';
 import '../../../../custom_widgets/custom_elevated_button.dart';
 import '../../../../gen/colors.gen.dart';
 import '../../../normal_user/edit_profile/widgets/edit_profile_formfield_widget.dart';
@@ -15,8 +13,8 @@ import '../../../normal_user/edit_profile/widgets/edit_profile_formfield_widget.
 class EditProfileScreen extends StatelessWidget {
   EditProfileScreen({super.key});
 
-  EditProfileScreenController controlelr = Get.put(
-    EditProfileScreenController(),
+  UserEditProfileScreenController controlelr = Get.put(
+    UserEditProfileScreenController(),
   );
 
   @override

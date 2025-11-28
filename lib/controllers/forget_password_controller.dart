@@ -35,7 +35,6 @@ class ForgetPasswordController extends GetxController {
       if (postResponse.isSuccess) {
         LoggerUtils.debug(postResponse.jsonResponse);
 
-
         Get.snackbar(
           'Success',
           postResponse.jsonResponse?['message'],
@@ -49,7 +48,7 @@ class ForgetPasswordController extends GetxController {
         LoggerUtils.debug(postResponse.jsonResponse?['message']);
 
         Get.snackbar(
-          'title',
+          'Error',
           postResponse.jsonResponse?['message'],
           backgroundColor: Colors.red,
         );

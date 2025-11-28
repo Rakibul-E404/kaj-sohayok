@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:kaz_bd/constants/app_constant_text.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
+
+import '../../../../custom_widgets/html_wrapper.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final String bodyText = Get.arguments['data'] ?? '';
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -28,10 +33,6 @@ class PrivacyPolicyScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ///Section : Last Privacy Policy updated date
-                Text(
-                  "Last Update Feb 2025",
-                  style: TextFontStyle.headline12w500c778bebStyleSatoshi,
-                ),
                 UIHelper.verticalSpace(6.h),
 
                 ///Section : Text -> Privacy policy
@@ -42,10 +43,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 UIHelper.verticalSpace(24.h),
 
                 ///Section : Privacy Policy text
-                Text(
-                  AppText.longDemoText,
-                  style: TextFontStyle.headline14w400c111111StyleSatoshi,
-                ),
+                HtmlWrapper(htmlContent: bodyText)
               ],
             ),
           ),

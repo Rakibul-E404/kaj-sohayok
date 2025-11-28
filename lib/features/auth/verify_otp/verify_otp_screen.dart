@@ -87,8 +87,7 @@ class VerifyOtpScreen extends StatelessWidget {
                     replacement: WaitingWidget(),
                     child: CustomElevatedButton(
                       onTap: () {
-                        Get.toNamed(Routes.setNewPasswordScreen);
-                        if (forForgetPassword == false) {
+                         if (forForgetPassword == false) {
                           otpValidationController.handleSendOtpSignUp(
                             email: email ?? '',
                           );

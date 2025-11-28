@@ -11,6 +11,7 @@ import 'package:kaz_bd/features/auth/sign_up/widgets/gender_selection.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/loading_helper.dart';
 import 'package:kaz_bd/service/location/location_controller.dart';
+import 'package:kaz_bd/utilities/enum.dart';
 
 import '../../../../constants/text_font_style.dart';
 import '../../../../gen/assets.gen.dart';
@@ -18,6 +19,8 @@ import '../../../../custom_widgets/custom_text_form_field.dart';
 import '../../../../helpers/ui_helpers.dart';
 import '../../../../helpers/waiting_widget.dart';
 import '../../../../routes/routes.dart';
+import '../../../../service/get_storage.dart';
+import '../../../../utilities/app_constants.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
@@ -292,7 +295,6 @@ class SignUpScreen extends StatelessWidget {
                             : AppColors.c778beb.withValues(alpha: 0.4),
                         onTap: () async {
                           // Get.toNamed(Routes.signInScreen);
-
                           await userSignUpController.handleSignUp();
                         },
                         buttonTitle: "Sign Up",
