@@ -44,10 +44,7 @@ class AboutTab extends StatelessWidget {
               return CustomShimmerEffect(height: 60.h, width: 1.sw);
             } else {
               return CustomTextWidgetWithReadMoreButton(
-                text:
-                    "Home Cleaning – Professional and eco-friendly cleaning for "
-                    "every corner of your home. From regular upkeep to deep cleaning,"
-                    "we make your space fresh, spotless, and ready to enjoy.",
+                text: detailsScreenController.serviceDescription,
                 trimLines: 3,
               );
             }
@@ -138,7 +135,7 @@ class AboutTab extends StatelessWidget {
                           );
                         } else {
                           return Text(
-                            "Ripon Mia",
+                            detailsScreenController.providerName ?? "",
                             style:
                                 TextFontStyle.headline16w500c202020StyleSatoshi,
                           );

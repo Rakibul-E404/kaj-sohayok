@@ -52,14 +52,48 @@ class _ImagePreviewDialogState extends State<ImagePreviewDialog> {
                 });
               },
               itemBuilder: (context, index) {
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(8.r),
-                  child: Image.asset(
-                    widget.images[index],
+                String imageUrl = widget.images[index].toString();
+
+                // Check if the image is a network URL or a local asset
+                Widget imageWidget;
+                if (imageUrl.startsWith('http') || imageUrl.startsWith('https')) {
+                  // It's a network image
+                  imageWidget = Image.network(
+                    imageUrl,
                     height: 350.h,
                     width: 1.sw,
                     fit: BoxFit.cover,
-                  ),
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        height: 350.h,
+                        width: 1.sw,
+                        color: Colors.grey[300],
+                        child: const Icon(Icons.broken_image, color: Colors.grey),
+                      );
+                    },
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        height: 350.h,
+                        width: 1.sw,
+                        color: Colors.grey[300],
+                        child: const Center(child: CircularProgressIndicator()),
+                      );
+                    },
+                  );
+                } else {
+                  // It's a local asset
+                  imageWidget = Image.asset(
+                    imageUrl,
+                    height: 350.h,
+                    width: 1.sw,
+                    fit: BoxFit.cover,
+                  );
+                }
+
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(8.r),
+                  child: imageWidget,
                 );
               },
             ),

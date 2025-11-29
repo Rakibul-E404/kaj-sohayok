@@ -93,7 +93,7 @@ class HomeScreen extends StatelessWidget {
 
                   ///Section : Popular Providers
                   SizedBox(
-                    height: 220.h,
+                    height: 230.h,
                     child: Obx(() {
                       if (controller.isLoading.value) {
                         return ListView.separated(

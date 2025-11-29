@@ -6,6 +6,7 @@ import 'package:kaz_bd/service/network_response.dart';
 import 'package:kaz_bd/utilities/app_url.dart';
 import 'package:kaz_bd/utilities/app_constants.dart';
 import 'package:kaz_bd/service/secured_storage.dart';
+import 'package:kaz_bd/gen/assets.gen.dart';
 
 import '../features/normal_user/details/model/get_specific_service_model.dart';
 import '../gen/colors.gen.dart';
@@ -17,6 +18,9 @@ class DetailsScreenController extends GetxController {
   Rx<Result?> serviceDetails = Rx<Result?>(null);
   RxList<Review> serviceReviews = <Review>[].obs;
   RxList<FullResult> ratingSummary = <FullResult>[].obs;
+
+  // Store raw review data to access full user information
+  List<Map<String, dynamic>> _rawReviewsData = [];
 
   ////Service Provider ID
   var serviceProviderId = ''.obs;
@@ -34,9 +38,6 @@ class DetailsScreenController extends GetxController {
   }
 
   Future<void> showSpecificServiceDetails() async {
-    log('Service Provider ID value: "${serviceProviderId.value}"');
-    log('Service Provider ID is empty check: ${serviceProviderId.isEmpty}');
-
     if (serviceProviderId.isEmpty) {
       log('Service provider id is empty');
       Get.snackbar(
@@ -50,7 +51,6 @@ class DetailsScreenController extends GetxController {
 
     try {
       isLoading.value = true;
-      log('Making API request to: ${AppUrl.getSpecificServiceDetails(svpId: serviceProviderId.value)}');
 
       // Get the authorization token
       final String token = await SecureStorageService().read(AppConstants.accessToken) ?? '';
@@ -60,41 +60,75 @@ class DetailsScreenController extends GetxController {
         headers: token.isNotEmpty ? {'Authorization': 'Bearer $token'} : null,
       );
 
-      log('API response isSuccess: ${response.isSuccess}');
-      log('API response error message: ${response.errorMessage}');
-      log('API response json: ${response.jsonResponse}');
-
       if (response.isSuccess) {
-        GetSpecificServiceDetailsModel responseModel =
-            GetSpecificServiceDetailsModel.fromJson(response.jsonResponse!);
+        if (response.jsonResponse != null) {
+          // Verify that the response structure is correct before parsing
+          if (response.jsonResponse!['data'] != null &&
+              response.jsonResponse!['data']['attributes'] != null &&
+              response.jsonResponse!['data']['attributes']['result'] != null) {
 
-        if (responseModel.data?.attributes != null) {
-          // Store the main service details
-          serviceDetails.value = responseModel.data!.attributes!.result;
+            // Manually parse the response to avoid the auto-generated model issue
+            // Start by extracting the data from the response
+            final dataMap = response.jsonResponse!['data'] as Map<String, dynamic>;
+            final attributesMap = dataMap['attributes'] as Map<String, dynamic>;
+            final resultData = attributesMap['result'] as Map<String, dynamic>?;
 
-          // Store reviews list
-          if (responseModel.data!.attributes!.reviews != null) {
-            serviceReviews.assignAll(responseModel.data!.attributes!.reviews!);
-          }
+            if (resultData != null) {
+              // Create Result object manually
+              final result = _parseResult(resultData);
+              serviceDetails.value = result;
 
-          // Store rating summary
-          if (responseModel.data!.attributes!.fullResult != null) {
-            ratingSummary.assignAll(
-              responseModel.data!.attributes!.fullResult!,
+              // Parse reviews
+              final reviewsList = attributesMap['reviews'] as List<dynamic>?;
+              if (reviewsList != null) {
+                final parsedReviews = <Review>[];
+                _rawReviewsData = []; // Clear previous data
+                for (final reviewItem in reviewsList) {
+                  if (reviewItem is Map<String, dynamic>) {
+                    parsedReviews.add(_parseReview(reviewItem));
+                    _rawReviewsData.add(reviewItem); // Store raw data to access user info
+                  }
+                }
+                serviceReviews.assignAll(parsedReviews);
+              } else {
+                serviceReviews.clear();
+                _rawReviewsData = [];
+              }
+
+              // Parse rating summary (fullResult)
+              final fullResultList = attributesMap['fullResult'] as List<dynamic>?;
+              if (fullResultList != null) {
+                final parsedFullResults = <FullResult>[];
+                for (final item in fullResultList) {
+                  if (item is Map<String, dynamic>) {
+                    parsedFullResults.add(_parseFullResult(item));
+                  }
+                }
+                ratingSummary.assignAll(parsedFullResults);
+              } else {
+                ratingSummary.clear();
+              }
+            } else {
+              Get.snackbar(
+                'Info',
+                'No service details found in response',
+                backgroundColor: AppColors.cffb701,
+                colorText: AppColors.cFFFFFF,
+              );
+            }
+          } else {
+            Get.snackbar(
+              'Error',
+              'Incomplete response structure',
+              backgroundColor: AppColors.cee3333,
+              colorText: AppColors.cFFFFFF,
             );
           }
-
-          // Print for debugging
-          log(
-            'Service Details Loaded: ${serviceDetails.value?.serviceName?.en}',
-          );
-          log('Reviews Count: ${serviceReviews.length}');
-          log('Rating Summary Count: ${ratingSummary.length}');
         } else {
           Get.snackbar(
-            'Info',
-            'No service details found',
-            backgroundColor: AppColors.cffb701,
+            'Error',
+            'Invalid response from server',
+            backgroundColor: AppColors.cee3333,
             colorText: AppColors.cFFFFFF,
           );
         }
@@ -146,5 +180,137 @@ class DetailsScreenController extends GetxController {
     serviceDetails.value = null;
     serviceReviews.clear();
     ratingSummary.clear();
+    _rawReviewsData.clear();
+  }
+
+  // Helper method to get user profile image from raw review data
+  String getUserProfileImage(int index) {
+    if (index >= 0 && index < _rawReviewsData.length) {
+      final reviewData = _rawReviewsData[index];
+      final userIdData = reviewData['userId'] as Map<String, dynamic>?;
+      if (userIdData != null) {
+        final profileImageData = userIdData['profileImage'] as Map<String, dynamic>?;
+        if (profileImageData != null) {
+          String? imageUrl = profileImageData['imageUrl'] as String?;
+          if (imageUrl != null && imageUrl.isNotEmpty) {
+            if (!imageUrl.startsWith('http')) {
+              imageUrl = 'https://newsheakh6737.sobhoy.com$imageUrl';
+            }
+            return imageUrl;
+          }
+        }
+      }
+    }
+    return Assets.images.userImage.path; // Fallback to default image
+  }
+
+  // Helper method to get user name from raw review data
+  String getUserName(int index) {
+    if (index >= 0 && index < _rawReviewsData.length) {
+      final reviewData = _rawReviewsData[index];
+      final userIdData = reviewData['userId'] as Map<String, dynamic>?;
+      if (userIdData != null) {
+        String? name = userIdData['name'] as String?;
+        if (name != null && name.isNotEmpty) {
+          return name;
+        }
+      }
+    }
+    return 'User ${index + 1}'; // Fallback to default name
+  }
+
+  // Helper methods for manual parsing to avoid type conversion issues
+  Result _parseResult(Map<String, dynamic> data) {
+    return Result(
+      serviceName: _parseDescription(data['serviceName']),
+      introOrBio: _parseDescription(data['introOrBio']),
+      description: _parseDescription(data['description']),
+      providerId: _parseProviderId(data['providerId']),
+      serviceCategoryId: data['serviceCategoryId'] as String?,
+      providerApprovalStatus: data['providerApprovalStatus'] as String?,
+      startPrice: data['startPrice'] as int?,
+      rating: data['rating'] as int?,
+      attachmentsForGallery: _parseAttachmentsForGallery(data['attachmentsForGallery']),
+      attachmentsForCoverPhoto: data['attachmentsForCoverPhoto'] as List<dynamic>?,
+      yearsOfExperience: data['yearsOfExperience'] as int?,
+      serviceProviderId: data['_ServiceProviderId'] as String?,
+    );
+  }
+
+  Description? _parseDescription(dynamic data) {
+    if (data == null) return null;
+    if (data is Map<String, dynamic>) {
+      return Description(
+        en: data['en'] as String?,
+        bn: data['bn'] as String?,
+      );
+    }
+    return null;
+  }
+
+  ProviderId? _parseProviderId(dynamic data) {
+    if (data == null) return null;
+    if (data is Map<String, dynamic>) {
+      return ProviderId(
+        name: data['name'] as String?,
+        profileImage: _parseProfileImage(data['profileImage']),
+        userId: data['_userId'] as String?,
+      );
+    }
+    return null;
+  }
+
+  ProfileImage? _parseProfileImage(dynamic data) {
+    if (data == null) return null;
+    if (data is Map<String, dynamic>) {
+      return ProfileImage(
+        imageUrl: data['imageUrl'] as String?,
+        id: data['_id'] as String?,
+      );
+    }
+    return null;
+  }
+
+  List<AttachmentsForGallery>? _parseAttachmentsForGallery(dynamic data) {
+    if (data == null) return null;
+    if (data is List) {
+      final result = <AttachmentsForGallery>[];
+      for (final item in data) {
+        if (item is Map<String, dynamic>) {
+          result.add(AttachmentsForGallery(
+            attachment: item['attachment'] as String?,
+            attachmentId: item['_attachmentId'] as String?,
+          ));
+        }
+      }
+      return result;
+    }
+    return null;
+  }
+
+  Review _parseReview(Map<String, dynamic> data) {
+    // Get the full userId object
+    final userIdData = data['userId'] as Map<String, dynamic>?;
+
+    return Review(
+      review: _parseDescription(data['review']),
+      originalLanguage: data['originalLanguage'] as String?,
+      rating: data['rating'] as int?,
+      userId: userIdData?['_userId'] as String?, // Extract _userId from the nested object for the ID field
+      serviceProviderDetailsId: data['serviceProviderDetailsId'] as String?,
+      serviceBookingId: data['serviceBookingId'] as String?,
+      isDeleted: data['isDeleted'] as bool?,
+      createdAt: data['createdAt'] != null ? DateTime.tryParse(data['createdAt'] as String) : null,
+      updatedAt: data['updatedAt'] != null ? DateTime.tryParse(data['updatedAt'] as String) : null,
+      v: data['__v'] as int?,
+      reviewId: data['_ReviewId'] as String?,
+    );
+  }
+
+  FullResult _parseFullResult(Map<String, dynamic> data) {
+    return FullResult(
+      rating: data['rating'] as int?,
+      count: data['count'] as int?,
+    );
   }
 }
