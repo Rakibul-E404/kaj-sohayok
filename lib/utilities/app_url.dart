@@ -17,7 +17,8 @@ class AppUrl {
     required String pageId,
     String? serviceName,
   }) {
-    String url = '${baseUrl}v1/service-providers/paginate?page=$pageId&serviceCategoryId=$categoryId';
+    String url =
+        '${baseUrl}v1/service-providers/paginate?page=$pageId&serviceCategoryId=$categoryId';
     if (serviceName != null && serviceName.isNotEmpty) {
       url += '&serviceName=$serviceName';
     }
@@ -26,5 +27,9 @@ class AppUrl {
 
   static String deleteBabyProfile({required String babyId}) {
     return '$baseUrl/api/v1/babies/delete/$babyId';
+  }
+
+  static String getSpecificServiceDetails({required String svpId}) {
+    return '${baseUrl}v1/service-providers/$svpId';
   }
 }

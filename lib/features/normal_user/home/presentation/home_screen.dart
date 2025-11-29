@@ -129,7 +129,7 @@ class HomeScreen extends StatelessWidget {
                             UIHelper.horizontalSpace(8.w),
                         itemBuilder: (context, index) {
                           final provider = controller.providers[index];
-                          final String providerName = _getProviderName(
+                          final String serviceTitle = _getProviderName(
                             provider,
                           );
                           final String providerId = _getProviderId(provider);
@@ -143,18 +143,15 @@ class HomeScreen extends StatelessWidget {
 
                           return ServiceWidget(
                             onTap: () {
-                              log("Provider tapped: $providerName");
+                              log("Provider tapped: $serviceTitle");
                               Get.toNamed(
                                 Routes.serviceDetailsScreen,
-                                arguments: {
-                                  'providerId': providerId,
-                                  'providerName': providerName,
-                                },
+                                arguments: {'providerId': providerId},
                               );
                             },
                             imagePath:
                                 imageUrl ?? Assets.images.serviceImage.path,
-                            serviceTitle: providerName,
+                            serviceTitle: serviceTitle,
                             initialPayablePrice: startPrice.toDouble(),
                             userRating: rating,
                           );

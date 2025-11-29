@@ -38,6 +38,8 @@ import 'package:kaz_bd/features/welcome/onboarding/presentation/onboarding_scree
 import 'package:kaz_bd/features/welcome/splash/presentation/splash_screen.dart';
 import 'package:kaz_bd/navigation_screen.dart';
 
+import '../bindings/route_bindings/normal_user_all_category_binding.dart';
+import '../bindings/route_bindings/normal_user_service_details_screen_binding.dart';
 import '../bindings/route_bindings/service_of_specific_category_screen_binding.dart';
 import '../controllers/service_of_specific_category_screen_controller.dart';
 import '../features/auth/verify_otp/verify_otp_screen.dart';
@@ -194,6 +196,7 @@ class Routes {
     GetPage(
       name: allCategoriesScreen,
       page: () => AllCategoriesScreen(),
+      binding: NormalUserAllCategoryBinding(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),
@@ -213,6 +216,7 @@ class Routes {
     GetPage(
       name: serviceDetailsScreen,
       page: () => DetailsScreen(),
+      binding: NormalUserServiceDetailsScreenBinding(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),

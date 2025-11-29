@@ -27,9 +27,11 @@ class DetailsScreen extends StatefulWidget {
 
 class _DetailsScreenState extends State<DetailsScreen>
     with SingleTickerProviderStateMixin {
-  final DetailsScreenController detailsController = Get.put(
-    DetailsScreenController(),
-  );
+  // final DetailsScreenController detailsController = Get.put(
+  //   DetailsScreenController(),
+  // );
+
+  DetailsScreenController? detailsController;
 
   late TabController tabController;
   late BookingStatusEnum? status;
@@ -39,6 +41,7 @@ class _DetailsScreenState extends State<DetailsScreen>
   @override
   void initState() {
     super.initState();
+    detailsController = Get.find<DetailsScreenController>();
     tabController = TabController(length: 3, vsync: this);
 
     ///setting the accepted arguments initial value
@@ -73,9 +76,18 @@ class _DetailsScreenState extends State<DetailsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final arguments = Get.arguments as Map<String, dynamic>?;
+    final providerId = arguments?['providerId'] ?? '';
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      detailsController?.setServiceProviderId(svpId: providerId);
+      detailsController?.showSpecificServiceDetails();
+    });
+
     log(
       "hideBookServiceNowButton Value --------------/////----- : $hideBookServiceNowButton",
     );
+
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
 
@@ -111,10 +123,20 @@ class _DetailsScreenState extends State<DetailsScreen>
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "Home Cleaning",
-                        style: TextFontStyle.headline18w700c000000StyleSatoshi,
-                      ),
+                      Obx(() {
+                        if (detailsController?.isLoading.value == true) {
+                          return Text(
+                            'Loading...',
+                            style: TextFontStyle.headline18w700c000000StyleSatoshi,
+                          );
+                        } else {
+                          return Text(
+                            detailsController?.serviceName ?? 'Service Name',
+                            style:
+                                TextFontStyle.headline18w700c000000StyleSatoshi,
+                          );
+                        }
+                      }),
                       Container(
                         alignment: Alignment.center,
                         padding: EdgeInsets.symmetric(
@@ -125,47 +147,53 @@ class _DetailsScreenState extends State<DetailsScreen>
                           color: AppColors.c778beb,
                           borderRadius: BorderRadius.circular(16.r),
                         ),
-                        child: Row(
-                          children: [
-                            Text(
-                              "4.5",
-                              style: TextFontStyle
-                                  .headline12w400cFFFFFFStyleSatoshi,
-                            ),
-                            UIHelper.horizontalSpace(4.w),
-                            Icon(
-                              Icons.star_rate_rounded,
-                              size: 18.sp,
-                              color: AppColors.cFFFFFF,
-                            ),
-                          ],
-                        ),
+                        child: Obx(() {
+                          return Row(
+                            children: [
+                              Text(
+                                detailsController?.serviceRating.toString() ?? "4.5",
+                                style: TextFontStyle
+                                    .headline12w400cFFFFFFStyleSatoshi,
+                              ),
+                              UIHelper.horizontalSpace(4.w),
+                              Icon(
+                                Icons.star_rate_rounded,
+                                size: 18.sp,
+                                color: AppColors.cFFFFFF,
+                              ),
+                            ],
+                          );
+                        }),
                       ),
                     ],
                   ),
                   UIHelper.verticalSpace(8.h),
 
                   /// --- Price ---
-                  RichText(
-                    text: TextSpan(
-                      style: TextFontStyle.headline12w500c6a6a6aStyleSatoshi,
-                      children: [
-                        const TextSpan(text: "Start from "),
-                        TextSpan(
-                          text: "${AppText.bdTkSign}30.56",
-                          style:
-                              TextFontStyle.headline18w700c778bebStyleSatoshi,
-                        ),
-                      ],
-                    ),
-                  ),
+                  Obx(() {
+                    return RichText(
+                      text: TextSpan(
+                        style: TextFontStyle.headline12w500c6a6a6aStyleSatoshi,
+                        children: [
+                          const TextSpan(text: "Start from "),
+                          TextSpan(
+                            text: "${AppText.bdTkSign}${detailsController?.startPrice ?? 0}",
+                            style:
+                                TextFontStyle.headline18w700c778bebStyleSatoshi,
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
                   UIHelper.verticalSpace(8.h),
 
                   /// --- Bio ---
-                  Text(
-                    "Expert home cleaning for a tidy, fresh and comfortable space.",
-                    style: TextFontStyle.headline14w500c4d4d4dStyleSatoshi,
-                  ),
+                  Obx(() {
+                    return Text(
+                      detailsController?.serviceBio ?? 'Loading bio...',
+                      style: TextFontStyle.headline14w500c4d4d4dStyleSatoshi,
+                    );
+                  }),
                   UIHelper.verticalSpace(24.h),
                 ],
               ),
@@ -203,7 +231,7 @@ class _DetailsScreenState extends State<DetailsScreen>
         ],
         body: TabShowingWidget(
           tabController: tabController,
-          controller: detailsController.tabIndex,
+          controller: detailsController?.tabIndex,
           tabViews: [
             AboutTab(isRoutedFromBookingTab: isRoutedFromBookingTab),
             GalleryTab(),
