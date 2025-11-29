@@ -14,3 +14,8 @@ class NetworkResponse {
     this.errorMessage = 'Something went wrong',
   });
 }
+
+
+
+
+
