@@ -4,7 +4,6 @@ class AppUrl {
   static const String baseUrl = 'https://newsheakh6737.sobhoy.com/api/';
   static const String imageBaseUrl = 'https://newsheakh6737.sobhoy.com';
 
-  static const String imageBaseUrl = 'https://newsheakh6737.sobhoy.com';
   static String registerUser = '${baseUrl}v1/auth/register';
   static String registerUserEmailVerify = '${baseUrl}v1/auth/verify-email';
   static String userLogin = '${baseUrl}v1/auth/login';
