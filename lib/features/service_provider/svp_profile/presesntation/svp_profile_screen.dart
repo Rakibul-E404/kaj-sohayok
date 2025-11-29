@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -51,17 +54,118 @@ class SvpProfileScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ///Section : Svp Profile Iamge
+                      // Obx(() {
+                      //   return CustomProfileImageWidget(
+                      //     imagePath: controller.svpPickedImagePath.value,
+                      //     defaultAsset: Assets.images.errorImage.path,
+                      //     editIconAsset: Assets.icons.editIcon,
+                      //     onEditTap: () {
+                      //       controller.showImageSourceDialog();
+                      //     },
+                      //   );
+                      // }),
                       Obx(() {
-                        return CustomProfileImageWidget(
-                          imagePath: controller.svpPickedImagePath.value,
-                          defaultAsset: Assets.images.errorImage.path,
-                          editIconAsset: Assets.icons.editIcon,
-                          onEditTap: () {
-                            controller.showImageSourceDialog();
-                          },
+                        final imagePath = controller.profileImage.value;
+                        final bool isNetworkImage =
+                            imagePath.isNotEmpty &&
+                                imagePath.startsWith('http');
+                        final bool isLocalImage =
+                            imagePath.isNotEmpty &&
+                                !imagePath.startsWith('http');
+                        final bool hasImage = imagePath.isNotEmpty;
+
+                        return GestureDetector(
+                          onTap: hasImage
+                              ? () {
+                            showDialog(
+                              context: Get.context!,
+                              builder: (_) => Dialog(
+                                  backgroundColor: Colors.transparent,
+                                  insetPadding: EdgeInsets.all(16.w),
+                                  child: ClipRRect(
+                                    borderRadius:
+                                    BorderRadius.circular(16.r),
+                                    child: Container(
+                                      constraints: BoxConstraints(
+                                        maxHeight: 500.h,
+                                        maxWidth: 1.sw - 32.w,
+                                      ),
+                                      child: isNetworkImage
+                                          ? CachedNetworkImage(
+                                        imageUrl: imagePath,
+                                        fit: BoxFit.contain,
+                                        placeholder:
+                                            (
+                                            context,
+                                            url,
+                                            ) => Center(
+                                          child: CircularProgressIndicator(
+                                            color: Colors
+                                                .white,
+                                          ),
+                                        ),
+                                        errorWidget:
+                                            (
+                                            context,
+                                            url,
+                                            error,
+                                            ) => Icon(
+                                          Icons.error,
+                                          color: Colors
+                                              .white,
+                                          size: 48.sp,
+                                        ),
+                                      )
+                                          : Image.file(
+                                        File(imagePath),
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  )
+                              ),
+                            );
+                          }
+                              : null,
+                          child: Container(
+                            width: 100.w,
+                            height: 100.w,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50.r),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(50.r),
+                              child: hasImage
+                                  ? (isNetworkImage
+                                  ? CachedNetworkImage(
+                                imageUrl: imagePath,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) =>
+                                    Center(
+                                      child:
+                                      CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    ),
+                                errorWidget:
+                                    (context, url, error) => Icon(
+                                  Icons.person,
+                                  size: 48.sp,
+                                  color: Colors.grey[400],
+                                ),
+                              )
+                                  : Image.file(
+                                File(imagePath),
+                                fit: BoxFit.cover,
+                              ))
+                                  : Icon(
+                                Icons.person,
+                                size: 48.sp,
+                                color: Colors.grey[400],
+                              ),
+                            ),
+                          ),
                         );
                       }),
-
                       /// Language Selection
                       SelectLanguage(
                         tabController: controller.languageTabController,
@@ -74,9 +178,11 @@ class SvpProfileScreen extends StatelessWidget {
                   ),
                   UIHelper.verticalSpace(8.h),
 
-                  Text(
-                    "Bashar Islam",
-                    style: TextFontStyle.headline18w700c000000StyleSatoshi,
+                  Obx(
+                        () => Text(
+                      "  ${controller.providerProfileModel.value?.name ?? ''} ",
+                      style: TextFontStyle.headline18w700c000000StyleSatoshi,
+                    ),
                   ),
                 ],
               ),

@@ -1,6 +1,9 @@
 import 'package:get/get.dart';
+import 'package:kaz_bd/service/get_storage.dart';
 import 'package:kaz_bd/service/secured_storage.dart';
 import 'package:kaz_bd/utilities/app_constants.dart';
+import 'package:kaz_bd/utilities/enum.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 
 import '../routes/routes.dart';
 
@@ -18,9 +21,22 @@ class OnboardingController extends GetxController {
       AppConstants.accessToken,
     );
     if (hasToken) {
-      Get.toNamed(Routes.navigationScreen);
+      final String currentRole = GetStorageModel().read(
+        AppConstants.currentRole,
+      );
+      final bool isProviderProfileComplete =
+          GetStorageModel().read(AppConstants.providerProfileIsComplete) ??
+          false;
+      LoggerUtils.warning(GetStorageModel().exists(AppConstants.providerProfileIsComplete));
+      LoggerUtils.warning(isProviderProfileComplete);
+       if (currentRole == UserRole.provider.name &&
+          isProviderProfileComplete == false) {
+        Get.offAllNamed(Routes.moreInformationScreen);
+        return;
+      }
+      Get.offNamed(Routes.navigationScreen);
     } else {
-      Get.toNamed(Routes.chooseRoleScreen);
+      Get.offNamed(Routes.chooseRoleScreen);
     }
   }
 }

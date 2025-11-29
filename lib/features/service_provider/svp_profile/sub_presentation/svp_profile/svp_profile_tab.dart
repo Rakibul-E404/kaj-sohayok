@@ -4,20 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:kaz_bd/models/provider_profile_model.dart';
 
 import '../../../../../constants/appList.dart';
 import '../../../../../constants/text_font_style.dart';
+import '../../../../../controllers/svp_profile_screen_controller.dart';
 import '../../../../../custom_widgets/profile_tile_widget.dart';
 import '../../../../../gen/assets.gen.dart';
 import '../../../../../gen/colors.gen.dart';
 import '../../../../../helpers/ui_helpers.dart';
+import '../../../../../models/user_profile_model.dart';
 import '../../../../../routes/routes.dart';
+import '../../../../normal_user/provider_profile_details/model/profile_tile_model.dart';
 
 class SvpProfileTab extends StatelessWidget {
   const SvpProfileTab({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final SvpProfileScreenController svpProfileScreenController =
+        Get.find<SvpProfileScreenController>();
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
@@ -80,21 +86,55 @@ class SvpProfileTab extends StatelessWidget {
 
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10.w),
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: AppList.userProfileList.length,
-                        separatorBuilder: (context, index) =>
-                            UIHelper.verticalSpace(10.h),
-                        itemBuilder: (context, index) {
-                          var data = AppList.userProfileList[index];
-                          return ProfileTileWidget(
-                            onTap: null,
-                            title: data.title,
-                            data: data.data,
-                          );
-                        },
-                      ),
+                      child: Obx(() {
+                        List<ProfileTileModel> userProfileList = [
+                          ProfileTileModel(
+                            title: "Name",
+                            data:
+                                "${svpProfileScreenController.providerProfileModel.value?.name ?? ''} ",
+                          ),
+                          ProfileTileModel(
+                            title: "Email",
+                            data:
+                                "${svpProfileScreenController.providerProfileModel.value?.email ?? ''} ",
+                          ),
+                          ProfileTileModel(
+                            title: "Phone number",
+                            data:
+                                "${svpProfileScreenController.providerProfileModel.value?.phoneNumber ?? ''} ",
+                          ),
+                          ProfileTileModel(
+                            title: "Address",
+                            data:
+                                "${svpProfileScreenController.providerProfileModel.value?.location.en ?? ''} ",
+                          ),
+                          ProfileTileModel(
+                            title: "Date of Birth",
+                            data:
+                                "${formatDateTime(svpProfileScreenController.providerProfileModel.value?.dob)} ",
+                          ),
+                          ProfileTileModel(
+                            title: "Gender",
+                            data:
+                                "${svpProfileScreenController.providerProfileModel.value?.gender.toUpperCase() ?? ''} ",
+                          ),
+                        ];
+                        return ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: userProfileList.length,
+                          separatorBuilder: (context, index) =>
+                              UIHelper.verticalSpace(10.h),
+                          itemBuilder: (context, index) {
+                            var data = userProfileList[index];
+                            return ProfileTileWidget(
+                              onTap: null,
+                              title: data.title,
+                              data: data.data,
+                            );
+                          },
+                        );
+                      }),
                     ),
                     UIHelper.verticalSpace(10.h),
                   ],

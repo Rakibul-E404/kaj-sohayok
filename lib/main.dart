@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:kaz_bd/helpers/di.dart';
 import 'package:kaz_bd/routes/routes.dart';
 
@@ -12,6 +13,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await diSetup();
   // cameras = await availableCameras();
+  await GetStorage.init();
   runApp(MyApp());
 }
 

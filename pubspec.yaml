@@ -66,7 +66,7 @@ dependencies:
   video_player: ^2.10.0
   camera: ^0.11.2
   local_auth: ^2.3.0
-  cached_network_image: ^3.4.1
+
   #========================> TOKY ===================>
   logger:
   http:
@@ -78,6 +78,10 @@ dependencies:
   #for taking the location for the post
   geolocator: ^14.0.0
   geocoding: ^3.0.0
+  #for caching image
+  cached_network_image: ^3.4.1
+  #for HTML :
+  flutter_html: ^3.0.0
 
 
 dev_dependencies:

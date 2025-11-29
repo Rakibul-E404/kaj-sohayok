@@ -46,7 +46,7 @@ class SetNewPasswordScreenController extends GetxController {
         "otp": otpCode,
         "password": newPaswordController.text,
       };
-
+      LoggerUtils.warning(loginForm);
       final NetworkResponse postResponse = await NetworkCaller().postRequest(
         AppUrl.resetPassword,
         body: loginForm,

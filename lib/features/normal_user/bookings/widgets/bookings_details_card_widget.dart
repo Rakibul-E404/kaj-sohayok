@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +46,9 @@ class BookingDetailsCardWidget extends StatelessWidget {
   final void Function()? isWorkCompletedTabGiveReviewOnTap;
   final bool isReviewGiven;
 
+  // NEW: Add this parameter to handle network images
+  final bool isNetworkImage;
+
   const BookingDetailsCardWidget({
     Key? key,
     required this.title,
@@ -72,7 +75,31 @@ class BookingDetailsCardWidget extends StatelessWidget {
     this.isCanceledTabCancelOnTap,
     this.isWorkCompletedTabGiveReviewOnTap,
     this.isReviewGiven = false,
+    this.isNetworkImage = false, // NEW: Default to false (asset image)
   }) : super(key: key);
+
+  // NEW: Method to build the profile image widget
+  Widget _buildProfileImage() {
+    if (isNetworkImage) {
+      // Handle network image with error fallback
+      return Image.network(
+        serviceProviderProfileImage,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset(
+            Assets.images.userImage.path,
+            fit: BoxFit.cover,
+          );
+        },
+      );
+    } else {
+      // Handle asset image
+      return Image.asset(
+        serviceProviderProfileImage,
+        fit: BoxFit.cover,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -191,9 +218,10 @@ class BookingDetailsCardWidget extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 24.r,
-                        backgroundImage: AssetImage(
-                          serviceProviderProfileImage,
-                        ),
+                        // UPDATED: Use the new image builder method
+                        backgroundImage: isNetworkImage
+                            ? NetworkImage(serviceProviderProfileImage)
+                            : AssetImage(serviceProviderProfileImage) as ImageProvider,
                       ),
                       Positioned(
                         top: 0.h,
@@ -213,7 +241,7 @@ class BookingDetailsCardWidget extends StatelessWidget {
                         Text(
                           serviceProviderName,
                           style:
-                              TextFontStyle.headline14w500c000000StyleSatoshi,
+                          TextFontStyle.headline14w500c000000StyleSatoshi,
                         ),
                         UIHelper.verticalSpace(2.h),
 
@@ -221,7 +249,7 @@ class BookingDetailsCardWidget extends StatelessWidget {
                         Text(
                           serviceProviderDesignation,
                           style:
-                              TextFontStyle.headline10w500c4d4d4dStyleSatoshi,
+                          TextFontStyle.headline10w500c4d4d4dStyleSatoshi,
                         ),
                       ],
                     ),
@@ -234,121 +262,121 @@ class BookingDetailsCardWidget extends StatelessWidget {
             ///Section : PendingTab -> Button -> Cancel
             isPendingTab
                 ? Align(
-                    alignment: Alignment.centerRight,
-                    child: CustomElevatedButton(
-                      onTap: isPendingTabCancelOnTap,
-                      buttonTitle: "Cancel",
-                      textStyle:
-                          TextFontStyle.headline14w500ce73d3dStyleSatoshi,
-                      buttonWidth: 108.w,
-                      buttonColor: AppColors.cfce9e9,
-                    ),
-                  )
+              alignment: Alignment.centerRight,
+              child: CustomElevatedButton(
+                onTap: isPendingTabCancelOnTap,
+                buttonTitle: "Cancel",
+                textStyle:
+                TextFontStyle.headline14w500ce73d3dStyleSatoshi,
+                buttonWidth: 108.w,
+                buttonColor: AppColors.cfce9e9,
+              ),
+            )
                 :
-                  ///Section : Accepted Booking Tab -> Button -> View/Message
-                  isAcceptedBookingTab
+            ///Section : Accepted Booking Tab -> Button -> View/Message
+            isAcceptedBookingTab
                 ? Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      CustomElevatedButton(
-                        onTap: isAcceptedBookingTabViewOnTap,
-                        buttonTitle: "View",
-                        buttonWidth: 108.w,
-                      ),
-                      UIHelper.horizontalSpace(12.w),
-                      CustomElevatedButton(
-                        onTap: isAcceptedBookingTabMessageOnTap,
-                        buttonTitle: "Message",
-                        textStyle:
-                            TextFontStyle.headline14w500c111111StyleSatoshi,
-                        buttonWidth: 108.w,
-                        isButtonBorderUsed: true,
-                        buttonBorderWidth: 1.5,
-                        buttonBorderColor: AppColors.c778beb,
-                        buttonColor: Colors.transparent,
-                      ),
-                    ],
-                  )
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                CustomElevatedButton(
+                  onTap: isAcceptedBookingTabViewOnTap,
+                  buttonTitle: "View",
+                  buttonWidth: 108.w,
+                ),
+                UIHelper.horizontalSpace(12.w),
+                CustomElevatedButton(
+                  onTap: isAcceptedBookingTabMessageOnTap,
+                  buttonTitle: "Message",
+                  textStyle:
+                  TextFontStyle.headline14w500c111111StyleSatoshi,
+                  buttonWidth: 108.w,
+                  isButtonBorderUsed: true,
+                  buttonBorderWidth: 1.5,
+                  buttonBorderColor: AppColors.c778beb,
+                  buttonColor: Colors.transparent,
+                ),
+              ],
+            )
                 :
-                  ///Section : In Progress Tab -> Button -> View/Message
-                  isInProgressTab
+            ///Section : In Progress Tab -> Button -> View/Message
+            isInProgressTab
                 ? Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      CustomElevatedButton(
-                        onTap: isInProgressTabViewOnTap,
-                        buttonTitle: "View",
-                        buttonWidth: 108.w,
-                      ),
-                      UIHelper.horizontalSpace(12.w),
-                      CustomElevatedButton(
-                        onTap: isInProgressTabMessageOnTap,
-                        buttonTitle: "Message",
-                        textStyle:
-                            TextFontStyle.headline14w500c111111StyleSatoshi,
-                        buttonWidth: 108.w,
-                        isButtonBorderUsed: true,
-                        buttonBorderWidth: 1.5,
-                        buttonBorderColor: AppColors.c778beb,
-                        buttonColor: Colors.transparent,
-                      ),
-                    ],
-                  )
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                CustomElevatedButton(
+                  onTap: isInProgressTabViewOnTap,
+                  buttonTitle: "View",
+                  buttonWidth: 108.w,
+                ),
+                UIHelper.horizontalSpace(12.w),
+                CustomElevatedButton(
+                  onTap: isInProgressTabMessageOnTap,
+                  buttonTitle: "Message",
+                  textStyle:
+                  TextFontStyle.headline14w500c111111StyleSatoshi,
+                  buttonWidth: 108.w,
+                  isButtonBorderUsed: true,
+                  buttonBorderWidth: 1.5,
+                  buttonBorderColor: AppColors.c778beb,
+                  buttonColor: Colors.transparent,
+                ),
+              ],
+            )
                 :
-                  ///Section : Payment Request Tab -> Button -> View/Pay
-                  isPaymentRequestTab
+            ///Section : Payment Request Tab -> Button -> View/Pay
+            isPaymentRequestTab
                 ? Align(
-                    alignment: Alignment.centerRight,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        CustomElevatedButton(
-                          onTap: isPaymentRequestTabViewOnTap,
-                          buttonTitle: "View",
-                          buttonWidth: 108.w,
-                        ),
-                        UIHelper.horizontalSpace(12.w),
-                        CustomElevatedButton(
-                          onTap: isPaymentRequestTabPayOnTap,
-                          buttonTitle: "Pay",
-                          textStyle:
-                              TextFontStyle.headline14w500c111111StyleSatoshi,
-                          buttonWidth: 108.w,
-                          isButtonBorderUsed: true,
-                          buttonBorderWidth: 1.5,
-                          buttonBorderColor: AppColors.c778beb,
-                          buttonColor: Colors.transparent,
-                        ),
-                      ],
-                    ),
-                  )
+              alignment: Alignment.centerRight,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  CustomElevatedButton(
+                    onTap: isPaymentRequestTabViewOnTap,
+                    buttonTitle: "View",
+                    buttonWidth: 108.w,
+                  ),
+                  UIHelper.horizontalSpace(12.w),
+                  CustomElevatedButton(
+                    onTap: isPaymentRequestTabPayOnTap,
+                    buttonTitle: "Pay",
+                    textStyle:
+                    TextFontStyle.headline14w500c111111StyleSatoshi,
+                    buttonWidth: 108.w,
+                    isButtonBorderUsed: true,
+                    buttonBorderWidth: 1.5,
+                    buttonBorderColor: AppColors.c778beb,
+                    buttonColor: Colors.transparent,
+                  ),
+                ],
+              ),
+            )
                 :
-                  ///Section : Canceled Tab -> Button -> Cancel
-                  isCanceledTab
+            ///Section : Canceled Tab -> Button -> Cancel
+            isCanceledTab
                 ? Align(
-                    alignment: Alignment.centerRight,
-                    child: CustomElevatedButton(
-                      onTap: isCanceledTabCancelOnTap,
-                      buttonTitle: "Cancel",
-                      textStyle:
-                          TextFontStyle.headline14w500ce73d3dStyleSatoshi,
-                      buttonWidth: 108.w,
-                      buttonColor: AppColors.cfce9e9,
-                    ),
-                  )
+              alignment: Alignment.centerRight,
+              child: CustomElevatedButton(
+                onTap: isCanceledTabCancelOnTap,
+                buttonTitle: "Cancel",
+                textStyle:
+                TextFontStyle.headline14w500ce73d3dStyleSatoshi,
+                buttonWidth: 108.w,
+                buttonColor: AppColors.cfce9e9,
+              ),
+            )
                 :
-                  ///Section : Work Completed Tab -> Button -> Give a Review
-                  isWorkCompletedTab && isReviewGiven
+            ///Section : Work Completed Tab -> Button -> Give a Review
+            isWorkCompletedTab && isReviewGiven
                 ? Align(
-                    alignment: Alignment.centerRight,
-                    child: CustomElevatedButton(
-                      onTap: isWorkCompletedTabGiveReviewOnTap,
-                      buttonTitle: "Give a Review",
-                      textStyle:
-                          TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
-                      buttonWidth: 110.w,
-                    ),
-                  )
+              alignment: Alignment.centerRight,
+              child: CustomElevatedButton(
+                onTap: isWorkCompletedTabGiveReviewOnTap,
+                buttonTitle: "Give a Review",
+                textStyle:
+                TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
+                buttonWidth: 110.w,
+              ),
+            )
                 : SizedBox.shrink(),
           ],
         ),
@@ -356,3 +384,4 @@ class BookingDetailsCardWidget extends StatelessWidget {
     );
   }
 }
+

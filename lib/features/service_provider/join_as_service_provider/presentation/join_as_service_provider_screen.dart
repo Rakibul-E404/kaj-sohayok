@@ -89,8 +89,7 @@ class JoinAsServiceProviderScreen extends StatelessWidget {
               alignment: Alignment.center,
               child: GetStartedButton(
                 onTap: () {
-                  log("Continue Button Taped!");
-                  Get.toNamed(Routes.moreInformationScreen);
+                   Get.offNamed(Routes.signUpScreen);
                 },
                 buttonTitle: "Continue",
               ),

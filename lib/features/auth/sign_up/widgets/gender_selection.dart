@@ -50,22 +50,35 @@ class GenderSelectionWidget extends StatelessWidget {
               borderSide: BorderSide(color: AppColors.cb4b4b4),
             ),
           ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton2<String>(
-              isExpanded: true,
-              hint: Text("Select gender"),
-              // value: controller.userSelectedGender.value,
-              items: AppList.genderList
-                  .map(
-                    (gender) => DropdownMenuItem<String>(
-                      value: gender,
-                      child: Text(gender),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (value) {
-                controller.setGender(value);
-              },
+          child: Obx(
+            () => DropdownButtonHideUnderline(
+              child: DropdownButton2<String>(
+                isExpanded: true,
+                hint: Text("Select gender"),
+                value: controller.userSelectedGender.value.isEmpty
+                    ? null
+                    : controller.userSelectedGender.value,
+                items: AppList.genderList
+                    .where(
+                      (gender) => gender.isNotEmpty,
+                    ) // ✅ Filter out empty strings
+                    .map(
+                      (gender) => DropdownMenuItem<String>(
+                        value: gender,
+                        child: Text(
+                          gender,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (value) {
+                  controller.setGender(value);
+                },
+              ),
             ),
           ),
         );
