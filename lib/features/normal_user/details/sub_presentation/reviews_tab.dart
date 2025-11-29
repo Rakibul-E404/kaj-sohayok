@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:kaz_bd/controllers/details_screen_controller.dart';
 import 'package:kaz_bd/features/normal_user/details/widget/rating_card_widget.dart';
 import 'package:kaz_bd/custom_widgets/ratings_showing_widget.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
@@ -11,6 +13,8 @@ class ReviewsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    DetailsScreenController detailsScreenController =
+        Get.find<DetailsScreenController>();
     return SingleChildScrollView(
       key: const PageStorageKey('reviews'),
       padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),

@@ -160,6 +160,7 @@ class ServicesCanceledTab extends StatelessWidget {
                   arguments: {
                     "status": BookingStatusEnum.canceled,
                     "bookingId": bookingId,
+                    "providerId": booking['serviceProviderDetailsId'] ?? booking['providerId']?['_userId'],
                   },
                 );
               },

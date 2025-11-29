@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:kaz_bd/service/network_caller.dart';
 import 'package:kaz_bd/service/network_response.dart';
 import 'package:kaz_bd/utilities/app_url.dart';
+import 'package:kaz_bd/utilities/app_constants.dart';
+import 'package:kaz_bd/service/secured_storage.dart';
 
 import '../features/normal_user/details/model/get_specific_service_model.dart';
 import '../gen/colors.gen.dart';
@@ -32,11 +34,14 @@ class DetailsScreenController extends GetxController {
   }
 
   Future<void> showSpecificServiceDetails() async {
-    if (serviceProviderId.isNotEmpty) {
-      log('Service provider id $serviceProviderId');
+    log('Service Provider ID value: "${serviceProviderId.value}"');
+    log('Service Provider ID is empty check: ${serviceProviderId.isEmpty}');
+
+    if (serviceProviderId.isEmpty) {
+      log('Service provider id is empty');
       Get.snackbar(
         'Error',
-        'Failed to get details of the service',
+        'Failed to get details of the service: Provider ID is missing',
         backgroundColor: AppColors.cee3333,
         colorText: AppColors.cFFFFFF,
       );
@@ -45,9 +50,19 @@ class DetailsScreenController extends GetxController {
 
     try {
       isLoading.value = true;
+      log('Making API request to: ${AppUrl.getSpecificServiceDetails(svpId: serviceProviderId.value)}');
+
+      // Get the authorization token
+      final String token = await SecureStorageService().read(AppConstants.accessToken) ?? '';
+
       final NetworkResponse response = await NetworkCaller().getRequest(
         AppUrl.getSpecificServiceDetails(svpId: serviceProviderId.value),
+        headers: token.isNotEmpty ? {'Authorization': 'Bearer $token'} : null,
       );
+
+      log('API response isSuccess: ${response.isSuccess}');
+      log('API response error message: ${response.errorMessage}');
+      log('API response json: ${response.jsonResponse}');
 
       if (response.isSuccess) {
         GetSpecificServiceDetailsModel responseModel =
@@ -92,6 +107,7 @@ class DetailsScreenController extends GetxController {
         );
       }
     } catch (e) {
+      log('Exception in showSpecificServiceDetails: $e');
       Get.snackbar(
         'Error',
         'Something went wrong: $e',

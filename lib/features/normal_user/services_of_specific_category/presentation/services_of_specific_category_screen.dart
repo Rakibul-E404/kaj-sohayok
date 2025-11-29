@@ -150,7 +150,7 @@ class _ServicesOfSpecificCategoryScreenState
                           Get.toNamed(
                             Routes.serviceDetailsScreen,
                             arguments: {
-                              'serviceId': service.serviceProviderId,
+                              'providerId': service.serviceProviderId,
                               'serviceName': serviceName,
                               'providerName': providerName,
                             },

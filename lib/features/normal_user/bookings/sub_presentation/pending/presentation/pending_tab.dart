@@ -150,6 +150,7 @@ class PendingTab extends StatelessWidget {
                   arguments: {
                     "status": BookingStatusEnum.pending,
                     "bookingId": bookingId,
+                    "providerId": provider?['_userId'], // Using _userId from the provider object
                   },
                 );
               },
