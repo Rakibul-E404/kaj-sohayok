@@ -103,6 +103,7 @@ class HomeScreen extends StatelessWidget {
                     textButtonName: "See all",
                     onTap: () {
                       log("See all button taped at Popular Provider section!");
+                      Get.toNamed(Routes.normalUserSeePopularProviderScreen);
                     },
                   ),
                   UIHelper.verticalSpace(24.h),

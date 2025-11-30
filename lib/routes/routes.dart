@@ -18,6 +18,7 @@ import 'package:kaz_bd/features/normal_user/details/presentation/details_screen.
 import 'package:kaz_bd/features/common_screens/notification/presentation/notification_screen.dart';
 import 'package:kaz_bd/features/normal_user/provider_profile_details/presentation/provider_profile_details_screen.dart';
 import 'package:kaz_bd/features/normal_user/search_location/presentation/search_location_screen.dart';
+import 'package:kaz_bd/features/normal_user/see_all_popular_provider/presentation/see_all_popular_providers_screen.dart';
 import 'package:kaz_bd/features/normal_user/service_preview/presentation/service_preview_screen.dart';
 import 'package:kaz_bd/features/normal_user/services_of_specific_category/presentation/services_of_specific_category_screen.dart';
 import 'package:kaz_bd/features/normal_user/work_completed_details/presentation/work_completed_details_screen.dart';
@@ -39,6 +40,7 @@ import 'package:kaz_bd/features/welcome/splash/presentation/splash_screen.dart';
 import 'package:kaz_bd/navigation_screen.dart';
 
 import '../bindings/route_bindings/normal_user_all_category_binding.dart';
+import '../bindings/route_bindings/normal_user_see_all_popular_provider_screen_binding.dart';
 import '../bindings/route_bindings/normal_user_service_details_screen_binding.dart';
 import '../bindings/route_bindings/service_of_specific_category_screen_binding.dart';
 import '../controllers/service_of_specific_category_screen_controller.dart';
@@ -99,6 +101,8 @@ class Routes {
   static const String svpPendingPaymentRequestDetailsScreen =
       '/svp_PendingPayment_Details_screen';
   static const String svpEditProfileScreen = '/svp_edit_profile_screen';
+  static const String normalUserSeePopularProviderScreen =
+      '/normal_user_see_popular_provider_screen';
 
   static final appRoutes = [
     ///Section : Normal User Screens & Common Screens
@@ -453,6 +457,16 @@ class Routes {
     GetPage(
       name: svpEditProfileScreen,
       page: () => SvpEditProfileScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+
+    ///normalUserSeeAllProviderScreen
+    GetPage(
+      name: normalUserSeePopularProviderScreen,
+      page: () => SeeAllPopularProvidersScreen(),
+      binding: NormalUserSeeAllPopularProviderScreenBinding(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),
