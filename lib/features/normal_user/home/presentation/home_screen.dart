@@ -143,9 +143,12 @@ class HomeScreen extends StatelessWidget {
 
                           return ServiceWidget(
                             onTap: () {
-                              log("Provider tapped: $serviceTitle");
+                              log("-------Provider tapped: $serviceTitle");
+                              log("-------------Provider ID : $providerId");
                               Get.toNamed(
                                 Routes.serviceDetailsScreen,
+
+                                // arguments: {'providerId': providerId},
                                 arguments: {'providerId': providerId},
                               );
                             },
@@ -180,7 +183,8 @@ class HomeScreen extends StatelessWidget {
   }
 
   String _getProviderId(Model.Provider provider) {
-    return provider.providerId ?? '';
+    log("😊😊😊Provider ID  : ${provider.serviceProviderId}");
+    return provider.serviceProviderId ?? '';
   }
 
   double _getProviderRating(Model.Provider provider) {

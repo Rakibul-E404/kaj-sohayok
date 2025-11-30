@@ -53,7 +53,8 @@ class DetailsScreenController extends GetxController {
       isLoading.value = true;
 
       // Get the authorization token
-      final String token = await SecureStorageService().read(AppConstants.accessToken) ?? '';
+      final String token =
+          await SecureStorageService().read(AppConstants.accessToken) ?? '';
 
       final NetworkResponse response = await NetworkCaller().getRequest(
         AppUrl.getSpecificServiceDetails(svpId: serviceProviderId.value),
@@ -66,10 +67,10 @@ class DetailsScreenController extends GetxController {
           if (response.jsonResponse!['data'] != null &&
               response.jsonResponse!['data']['attributes'] != null &&
               response.jsonResponse!['data']['attributes']['result'] != null) {
-
             // Manually parse the response to avoid the auto-generated model issue
             // Start by extracting the data from the response
-            final dataMap = response.jsonResponse!['data'] as Map<String, dynamic>;
+            final dataMap =
+                response.jsonResponse!['data'] as Map<String, dynamic>;
             final attributesMap = dataMap['attributes'] as Map<String, dynamic>;
             final resultData = attributesMap['result'] as Map<String, dynamic>?;
 
@@ -86,7 +87,9 @@ class DetailsScreenController extends GetxController {
                 for (final reviewItem in reviewsList) {
                   if (reviewItem is Map<String, dynamic>) {
                     parsedReviews.add(_parseReview(reviewItem));
-                    _rawReviewsData.add(reviewItem); // Store raw data to access user info
+                    _rawReviewsData.add(
+                      reviewItem,
+                    ); // Store raw data to access user info
                   }
                 }
                 serviceReviews.assignAll(parsedReviews);
@@ -96,7 +99,8 @@ class DetailsScreenController extends GetxController {
               }
 
               // Parse rating summary (fullResult)
-              final fullResultList = attributesMap['fullResult'] as List<dynamic>?;
+              final fullResultList =
+                  attributesMap['fullResult'] as List<dynamic>?;
               if (fullResultList != null) {
                 final parsedFullResults = <FullResult>[];
                 for (final item in fullResultList) {
@@ -189,12 +193,13 @@ class DetailsScreenController extends GetxController {
       final reviewData = _rawReviewsData[index];
       final userIdData = reviewData['userId'] as Map<String, dynamic>?;
       if (userIdData != null) {
-        final profileImageData = userIdData['profileImage'] as Map<String, dynamic>?;
+        final profileImageData =
+            userIdData['profileImage'] as Map<String, dynamic>?;
         if (profileImageData != null) {
           String? imageUrl = profileImageData['imageUrl'] as String?;
           if (imageUrl != null && imageUrl.isNotEmpty) {
             if (!imageUrl.startsWith('http')) {
-              imageUrl = 'https://newsheakh6737.sobhoy.com$imageUrl';
+              imageUrl = '${AppUrl.imageBaseUrl}$imageUrl';
             }
             return imageUrl;
           }
@@ -230,8 +235,11 @@ class DetailsScreenController extends GetxController {
       providerApprovalStatus: data['providerApprovalStatus'] as String?,
       startPrice: data['startPrice'] as int?,
       rating: data['rating'] as int?,
-      attachmentsForGallery: _parseAttachmentsForGallery(data['attachmentsForGallery']),
-      attachmentsForCoverPhoto: data['attachmentsForCoverPhoto'] as List<dynamic>?,
+      attachmentsForGallery: _parseAttachmentsForGallery(
+        data['attachmentsForGallery'],
+      ),
+      attachmentsForCoverPhoto:
+          data['attachmentsForCoverPhoto'] as List<dynamic>?,
       yearsOfExperience: data['yearsOfExperience'] as int?,
       serviceProviderId: data['_ServiceProviderId'] as String?,
     );
@@ -240,10 +248,7 @@ class DetailsScreenController extends GetxController {
   Description? _parseDescription(dynamic data) {
     if (data == null) return null;
     if (data is Map<String, dynamic>) {
-      return Description(
-        en: data['en'] as String?,
-        bn: data['bn'] as String?,
-      );
+      return Description(en: data['en'] as String?, bn: data['bn'] as String?);
     }
     return null;
   }
@@ -277,10 +282,12 @@ class DetailsScreenController extends GetxController {
       final result = <AttachmentsForGallery>[];
       for (final item in data) {
         if (item is Map<String, dynamic>) {
-          result.add(AttachmentsForGallery(
-            attachment: item['attachment'] as String?,
-            attachmentId: item['_attachmentId'] as String?,
-          ));
+          result.add(
+            AttachmentsForGallery(
+              attachment: item['attachment'] as String?,
+              attachmentId: item['_attachmentId'] as String?,
+            ),
+          );
         }
       }
       return result;
@@ -296,12 +303,18 @@ class DetailsScreenController extends GetxController {
       review: _parseDescription(data['review']),
       originalLanguage: data['originalLanguage'] as String?,
       rating: data['rating'] as int?,
-      userId: userIdData?['_userId'] as String?, // Extract _userId from the nested object for the ID field
+      userId:
+          userIdData?['_userId']
+              as String?, // Extract _userId from the nested object for the ID field
       serviceProviderDetailsId: data['serviceProviderDetailsId'] as String?,
       serviceBookingId: data['serviceBookingId'] as String?,
       isDeleted: data['isDeleted'] as bool?,
-      createdAt: data['createdAt'] != null ? DateTime.tryParse(data['createdAt'] as String) : null,
-      updatedAt: data['updatedAt'] != null ? DateTime.tryParse(data['updatedAt'] as String) : null,
+      createdAt: data['createdAt'] != null
+          ? DateTime.tryParse(data['createdAt'] as String)
+          : null,
+      updatedAt: data['updatedAt'] != null
+          ? DateTime.tryParse(data['updatedAt'] as String)
+          : null,
       v: data['__v'] as int?,
       reviewId: data['_ReviewId'] as String?,
     );

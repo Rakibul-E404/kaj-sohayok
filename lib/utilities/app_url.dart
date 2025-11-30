@@ -54,6 +54,7 @@ class AppUrl {
   }
 
   static String getSpecificServiceDetails({required String svpId}) {
+    
     return '${baseUrl}v1/service-providers/$svpId';
   }
 }
