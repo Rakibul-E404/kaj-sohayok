@@ -70,4 +70,6 @@ class AppUrl {
   }) {
     return '${baseUrl}v1/service-providers/profile/$svpId';
   }
+
+  static String getAllPopularProviders = '${baseUrl}v1/users/home-page/popular';
 }
