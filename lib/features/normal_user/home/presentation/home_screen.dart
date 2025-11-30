@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/constants/appList.dart';
@@ -27,6 +28,22 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HomePageController controller = Get.put(HomePageController());
+
+    // Set system UI overlay style immediately when the widget builds
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        // Status bar color (Android)
+        statusBarColor: AppColors.cf1f3fd, // Specific status bar color
+        statusBarIconBrightness:
+            Brightness.light, // Light icons for dark background
+        statusBarBrightness: Brightness.dark, // Brightness for iOS status bar
+        systemNavigationBarColor:
+            AppColors.scaffoldBackgroundColor, // Keep navigation bar consistent
+        systemNavigationBarIconBrightness:
+            Brightness.dark, // Navigation bar icons
+      ),
+    );
+
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       body: SingleChildScrollView(
@@ -41,29 +58,28 @@ class HomeScreen extends StatelessWidget {
             ),
             UIHelper.verticalSpace(16.h),
 
+            ///Section : Hero Booking
+            Obx(
+              () => controller.isLoading.value
+                  ? CustomShimmerEffect(height: 175, width: 1)
+                  : controller.banners.isNotEmpty
+                  ? BannerCarosleSlider(controller: controller)
+                  : CustomShimmerEffect(
+                      height: 175,
+                      width: 1,
+                      child: Text(
+                        'No banners available',
+                        style: TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
+                      ),
+                    ),
+            ),
+
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: UIHelper.kDefaulutPadding(),
               ),
               child: Column(
                 children: [
-                  ///Section : Hero Booking
-                  Obx(
-                    () => controller.isLoading.value
-                        ? CustomShimmerEffect(height: 175, width: 1)
-                        : controller.banners.isNotEmpty
-                        ? BannerCarosleSlider(controller: controller)
-                        : CustomShimmerEffect(
-                            height: 175,
-                            width: 1,
-                            child: Text(
-                              'No banners available',
-                              style: TextFontStyle
-                                  .headline14w500cFFFFFFStyleSatoshi,
-                            ),
-                          ),
-                  ),
-
                   UIHelper.verticalSpace(24.h),
 
                   ///Section : Select Category
