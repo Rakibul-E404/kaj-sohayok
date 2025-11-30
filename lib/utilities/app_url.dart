@@ -16,7 +16,8 @@ class AppUrl {
   static String updateUserProfilePicture = '${baseUrl}v1/users/profile-picture';
   // ==========> User Settings ==========>
   static String userPrivacyPolicy = '${baseUrl}v1/settings?type=privacyPolicy';
-  static String userTermsAndConditions = '${baseUrl}v1/settings?type=termsAndConditions';
+  static String userTermsAndConditions =
+      '${baseUrl}v1/settings?type=termsAndConditions';
   static String userAboutUs = '${baseUrl}v1/settings?type=aboutUs';
   static String userContactUs = '${baseUrl}v1/settings?type=contactUs';
   // ==========> Service Form ==========>
@@ -24,12 +25,19 @@ class AppUrl {
   static String serviceProviderFormSubmit = '${baseUrl}v1/service-providers';
 
   ///===> rakiubl added api:
-  static String pendingBookings = '${baseUrl}v1/service-bookings/paginate?status=pending';
-  static String acceptedBookings = '${baseUrl}v1/service-bookings/paginate?status=accepted';
-  static String inProgressBookings = '${baseUrl}v1/service-bookings/paginate?status=inProgress';
-  static String cancelledBookings = '${baseUrl}v1/service-bookings/paginate?status=cancelled';
-  static String completedBookings = '${baseUrl}v1/service-bookings/paginate?status=completed';
-  static String paymentRequests = '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
+  static String pendingBookings =
+      '${baseUrl}v1/service-bookings/paginate?status=pending';
+  static String acceptedBookings =
+      '${baseUrl}v1/service-bookings/paginate?status=accepted';
+  static String inProgressBookings =
+      '${baseUrl}v1/service-bookings/paginate?status=inProgress';
+  static String cancelledBookings =
+      '${baseUrl}v1/service-bookings/paginate?status=cancelled';
+  static String completedBookings =
+      '${baseUrl}v1/service-bookings/paginate?status=completed';
+  static String paymentRequests =
+      '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
+
   ///===> rakibul api add close
 
   static String getNormalUserHomeData = '${baseUrl}v1/users/home-page';
@@ -54,7 +62,12 @@ class AppUrl {
   }
 
   static String getSpecificServiceDetails({required String svpId}) {
-    
     return '${baseUrl}v1/service-providers/$svpId';
+  }
+
+  static String getNrmUserServiceProviderProfileDetailsInfo({
+    required String svpId,
+  }) {
+    return '${baseUrl}v1/service-providers/profile/$svpId';
   }
 }
