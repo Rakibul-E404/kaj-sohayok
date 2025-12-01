@@ -351,20 +351,20 @@ class BookingDetailsCardWidget extends StatelessWidget {
               ),
             )
                 :
-            ///Section : Canceled Tab -> Button -> Cancel
-            isCanceledTab
-                ? Align(
-              alignment: Alignment.centerRight,
-              child: CustomElevatedButton(
-                onTap: isCanceledTabCancelOnTap,
-                buttonTitle: "Cancel",
-                textStyle:
-                TextFontStyle.headline14w500ce73d3dStyleSatoshi,
-                buttonWidth: 108.w,
-                buttonColor: AppColors.cfce9e9,
-              ),
-            )
-                :
+            // ///Section : Canceled Tab -> Button -> Cancel
+            // isCanceledTab
+            //     ? Align(
+            //   alignment: Alignment.centerRight,
+            //   child: CustomElevatedButton(
+            //     onTap: isCanceledTabCancelOnTap,
+            //     buttonTitle: "Cancel",
+            //     textStyle:
+            //     TextFontStyle.headline14w500ce73d3dStyleSatoshi,
+            //     buttonWidth: 108.w,
+            //     buttonColor: AppColors.cfce9e9,
+            //   ),
+            // )
+            //     :
             ///Section : Work Completed Tab -> Button -> Give a Review
             isWorkCompletedTab && isReviewGiven
                 ? Align(
