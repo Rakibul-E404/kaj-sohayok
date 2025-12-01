@@ -1,4 +1,14 @@
+
+
+
+
+
+
+
+
+
 import 'dart:developer';
+// import 'dart:log';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +20,10 @@ import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 
-void showCancelBookingBottomSheet() {
+void showCancelBookingBottomSheet({
+  required String bookingId,
+  required VoidCallback onCancelConfirmed,
+}) {
   Get.bottomSheet(
     Container(
       width: 1.sw,
@@ -22,7 +35,7 @@ void showCancelBookingBottomSheet() {
       ),
       child: Column(
         children: [
-          ///Section : bottom SHeet Top Bar
+          ///Section : bottom Sheet Top Bar
           Container(
             width: 50.w,
             height: 5.h,
@@ -52,7 +65,7 @@ void showCancelBookingBottomSheet() {
           ///Section : Text -> You can cancel the order within.......
           Text(
             "You can cancel the order within 12 hours before it is accepted, "
-            "but you cannot cancel it after the order has been accepted. Thank you.",
+                "but you cannot cancel it after the order has been accepted. Thank you.",
             textAlign: TextAlign.center,
             style: TextFontStyle.headline14w500cfb3f3fStyleSatoshi,
           ),
@@ -63,9 +76,11 @@ void showCancelBookingBottomSheet() {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // No Button - Keep Booking
               CustomElevatedButton(
                 onTap: () {
-                  log("No Button Taped!");
+                  log("No Button Tapped - Keeping booking: $bookingId");
+                  Get.back(); // Close the bottom sheet
                 },
                 buttonTitle: "No",
                 textStyle: TextFontStyle.headline14w500c111111StyleSatoshi,
@@ -77,17 +92,24 @@ void showCancelBookingBottomSheet() {
               ),
               UIHelper.horizontalSpace(10.w),
 
+              // Yes Button - Confirm Cancellation
               CustomElevatedButton(
                 onTap: () {
-                  log("Yes Button Taped!");
+                  log("Yes Button Tapped - Confirming cancellation for booking: $bookingId");
+                  Get.back(); // Close the bottom sheet first
+                  onCancelConfirmed(); // Then execute the cancellation callback
                 },
                 buttonTitle: "Yes",
                 buttonWidth: 136.w,
+                buttonColor: AppColors.ce73d3d, // Red color for destructive action
               ),
             ],
           ),
         ],
       ),
     ),
+    isScrollControlled: true,
+    enableDrag: true,
   );
 }
+

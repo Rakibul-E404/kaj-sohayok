@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:get/get.dart';
-// import 'dart:log';
 import 'package:http/http.dart' as http;
 import '../../../../../../service/network_caller.dart';
 import '../../../../../../service/network_response.dart';
