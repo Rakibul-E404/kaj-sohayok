@@ -13,8 +13,6 @@ import '../../../../../../helpers/ui_helpers.dart';
 import '../../../widgets/bookings_details_card_widget.dart';
 import '../controller/accepted_booking_controller.dart';
 
-// Import the controller
-// import '../controller/accepted_bookings_controller.dart';
 
 class AcceptedBookingTab extends StatelessWidget {
   AcceptedBookingTab({super.key});
