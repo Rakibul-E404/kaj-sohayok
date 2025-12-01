@@ -20,10 +20,12 @@ class ServicesOfSpecificCategoryScreen extends StatefulWidget {
   const ServicesOfSpecificCategoryScreen({super.key});
 
   @override
-  State<ServicesOfSpecificCategoryScreen> createState() => _ServicesOfSpecificCategoryScreenState();
+  State<ServicesOfSpecificCategoryScreen> createState() =>
+      _ServicesOfSpecificCategoryScreenState();
 }
 
-class _ServicesOfSpecificCategoryScreenState extends State<ServicesOfSpecificCategoryScreen> {
+class _ServicesOfSpecificCategoryScreenState
+    extends State<ServicesOfSpecificCategoryScreen> {
   final TextEditingController _searchController = TextEditingController();
   ServiceOfSpecificCategoryScreenController? itemsOfCategory;
 
@@ -116,7 +118,8 @@ class _ServicesOfSpecificCategoryScreenState extends State<ServicesOfSpecificCat
                   }
 
                   return ListView.separated(
-                    itemCount: itemsOfCategory?.specificCategoryList.length ?? 0,
+                    itemCount:
+                        itemsOfCategory?.specificCategoryList.length ?? 0,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     separatorBuilder: (context, index) =>
@@ -147,7 +150,7 @@ class _ServicesOfSpecificCategoryScreenState extends State<ServicesOfSpecificCat
                           Get.toNamed(
                             Routes.serviceDetailsScreen,
                             arguments: {
-                              'serviceId': service.serviceProviderId,
+                              'providerId': service.serviceProviderId,
                               'serviceName': serviceName,
                               'providerName': providerName,
                             },

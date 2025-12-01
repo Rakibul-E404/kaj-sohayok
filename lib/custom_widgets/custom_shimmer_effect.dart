@@ -8,6 +8,8 @@ class CustomShimmerEffect extends StatelessWidget {
   final double width;
   final Widget? child;
   final bool isEnabled;
+  final bool isShapUsed;
+  final BoxShape shapType;
 
   const CustomShimmerEffect({
     super.key,
@@ -15,6 +17,8 @@ class CustomShimmerEffect extends StatelessWidget {
     required this.width,
     this.child,
     this.isEnabled = true,
+    this.isShapUsed = false,
+    this.shapType = BoxShape.rectangle,
   });
 
   @override
@@ -32,7 +36,8 @@ class CustomShimmerEffect extends StatelessWidget {
           color: AppColors.c000000.withValues(
             alpha: 0.2,
           ), // Slightly darker base color
-          borderRadius: BorderRadius.circular(10.r),
+          borderRadius: isShapUsed ? null : BorderRadius.circular(10.r),
+          shape: isShapUsed ? shapType : BoxShape.rectangle,
         ),
         alignment: Alignment.center,
         child: child,

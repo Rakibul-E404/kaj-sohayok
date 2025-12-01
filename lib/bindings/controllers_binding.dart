@@ -41,6 +41,6 @@ class ControllerBindings extends Bindings {
     Get.lazyPut(() => SvpEditProfileScreenController());
     Get.lazyPut(() => SvpProfileScreenDocumentsTabController());
     Get.lazyPut(() => SvpHomeScreenController());
-    Get.lazyPut(() => NormalUserAllCategoryScreenController());
+    // Get.lazyPut(() => NormalUserAllCategoryScreenController());
   }
 }

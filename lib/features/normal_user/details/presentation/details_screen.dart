@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/constants/app_constant_text.dart';
 import 'package:kaz_bd/constants/app_enums.dart';
+import 'package:kaz_bd/custom_widgets/custom_shimmer_effect.dart';
 import 'package:kaz_bd/features/normal_user/details/sub_presentation/about_tab.dart';
 import 'package:kaz_bd/features/normal_user/details/sub_presentation/gallery_tab.dart';
 import 'package:kaz_bd/features/normal_user/details/sub_presentation/reviews_tab.dart';
@@ -14,8 +15,10 @@ import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import '../../../../constants/text_font_style.dart';
 import '../../../../controllers/details_screen_controller.dart';
+import '../../../../controllers/get_nrm_user_service_provider_profile_info.dart';
 import '../../../../custom_widgets/custom_elevated_button.dart';
 import '../../../../routes/routes.dart';
+import '../../../../utilities/app_url.dart';
 import '../widget/sliver_tab_bar_delegate_helper_widget.dart';
 
 class DetailsScreen extends StatefulWidget {
@@ -27,9 +30,12 @@ class DetailsScreen extends StatefulWidget {
 
 class _DetailsScreenState extends State<DetailsScreen>
     with SingleTickerProviderStateMixin {
-  final DetailsScreenController detailsController = Get.put(
-    DetailsScreenController(),
-  );
+  // final DetailsScreenController detailsController = Get.put(
+  //   DetailsScreenController(),
+  // );
+
+  DetailsScreenController? detailsController;
+  GetNrmUserServiceProviderProfileInfoController? svpProfileInfoController;
 
   late TabController tabController;
   late BookingStatusEnum? status;
@@ -39,6 +45,9 @@ class _DetailsScreenState extends State<DetailsScreen>
   @override
   void initState() {
     super.initState();
+    detailsController = Get.find<DetailsScreenController>();
+    svpProfileInfoController =
+        Get.find<GetNrmUserServiceProviderProfileInfoController>();
     tabController = TabController(length: 3, vsync: this);
 
     ///setting the accepted arguments initial value
@@ -73,9 +82,22 @@ class _DetailsScreenState extends State<DetailsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final arguments = Get.arguments as Map<String, dynamic>?;
+    final providerId = arguments?['providerId'] ?? '';
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      detailsController?.setServiceProviderId(svpId: providerId);
+      svpProfileInfoController?.setServiceProviderId(svpId: providerId);
+
+      // Call both APIs
+      await detailsController?.showSpecificServiceDetails();
+      await svpProfileInfoController?.getServiceProviderProfileInfoData();
+    });
+
     log(
       "hideBookServiceNowButton Value --------------/////----- : $hideBookServiceNowButton",
     );
+
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
 
@@ -96,76 +118,152 @@ class _DetailsScreenState extends State<DetailsScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   /// --- Service Image ---
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(24.r),
-                    child: Image.asset(
-                      height: 220.h,
-                      width: 1.sw,
-                      fit: BoxFit.cover,
-                      Assets.images.serviceImage.path,
-                    ),
-                  ),
+                  Obx(() {
+                    // Get the first gallery attachment from service details if available
+                    String? imageUrl;
+                    if (detailsController?.galleryImages.isNotEmpty == true) {
+                      imageUrl =
+                          detailsController?.galleryImages.first.attachment;
+                    }
+
+                    // Show network image if URL is available, otherwise show placeholder
+                    if (imageUrl != null && imageUrl.isNotEmpty) {
+                      // Make sure the URL is properly formatted
+                      String fullImageUrl = imageUrl;
+                      if (!imageUrl.startsWith('http')) {
+                        // If it's a relative path, prepend the base URL
+                        fullImageUrl = '${AppUrl.imageBaseUrl}$imageUrl';
+                      }
+
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(24.r),
+                        child: Image.network(
+                          fullImageUrl,
+                          height: 220.h,
+                          width: 1.sw,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            // If network image fails, show placeholder
+                            return CustomShimmerEffect(
+                              height: 220.h,
+                              width: 1.sw,
+                            );
+                          },
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return CustomShimmerEffect(
+                              height: 220.h,
+                              width: 1.sw,
+                            );
+                          },
+                        ),
+                      );
+                    } else {
+                      // Show placeholder if no image is available
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(24.r),
+                        child: CustomShimmerEffect(height: 220.h, width: 1.sw),
+                      );
+                    }
+                  }),
                   UIHelper.verticalSpace(24.h),
 
                   /// --- Service Name + Rating ---
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "Home Cleaning",
-                        style: TextFontStyle.headline18w700c000000StyleSatoshi,
-                      ),
-                      Container(
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 12.w,
-                          vertical: 2.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.c778beb,
-                          borderRadius: BorderRadius.circular(16.r),
-                        ),
-                        child: Row(
-                          children: [
-                            Text(
-                              "4.5",
-                              style: TextFontStyle
-                                  .headline12w400cFFFFFFStyleSatoshi,
+                      Obx(() {
+                        if (detailsController?.isLoading.value == true) {
+                          return CustomShimmerEffect(
+                            height: 10.h,
+                            width: 0.2.sw,
+                          );
+                        } else {
+                          return Text(
+                            detailsController?.serviceName ?? 'Service Name',
+                            style:
+                                TextFontStyle.headline18w700c000000StyleSatoshi,
+                          );
+                        }
+                      }),
+                      Obx(() {
+                        if (detailsController?.isLoading.value == true) {
+                          return CustomShimmerEffect(
+                            height: 20.h,
+                            width: 0.15.sw,
+                          );
+                        } else {
+                          return Container(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12.w,
+                              vertical: 2.h,
                             ),
-                            UIHelper.horizontalSpace(4.w),
-                            Icon(
-                              Icons.star_rate_rounded,
-                              size: 18.sp,
-                              color: AppColors.cFFFFFF,
+                            decoration: BoxDecoration(
+                              color: AppColors.c778beb,
+                              borderRadius: BorderRadius.circular(16.r),
                             ),
-                          ],
-                        ),
-                      ),
+                            child: Obx(() {
+                              return Row(
+                                children: [
+                                  Text(
+                                    detailsController?.serviceRating
+                                            .toString() ??
+                                        "0",
+                                    style: TextFontStyle
+                                        .headline12w400cFFFFFFStyleSatoshi,
+                                  ),
+                                  UIHelper.horizontalSpace(4.w),
+                                  Icon(
+                                    Icons.star_rate_rounded,
+                                    size: 18.sp,
+                                    color: AppColors.cFFFFFF,
+                                  ),
+                                ],
+                              );
+                            }),
+                          );
+                        }
+                      }),
                     ],
                   ),
                   UIHelper.verticalSpace(8.h),
 
                   /// --- Price ---
-                  RichText(
-                    text: TextSpan(
-                      style: TextFontStyle.headline12w500c6a6a6aStyleSatoshi,
-                      children: [
-                        const TextSpan(text: "Start from "),
-                        TextSpan(
-                          text: "${AppText.bdTkSign}30.56",
+                  Obx(() {
+                    if (detailsController?.isLoading.value == true) {
+                      return CustomShimmerEffect(height: 20.h, width: 0.2.sw);
+                    } else {
+                      return RichText(
+                        text: TextSpan(
                           style:
-                              TextFontStyle.headline18w700c778bebStyleSatoshi,
+                              TextFontStyle.headline12w500c6a6a6aStyleSatoshi,
+                          children: [
+                            const TextSpan(text: "Start from "),
+                            TextSpan(
+                              text:
+                                  "${AppText.bdTkSign}${detailsController?.startPrice ?? 0}",
+                              style: TextFontStyle
+                                  .headline18w700c778bebStyleSatoshi,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
+                      );
+                    }
+                  }),
                   UIHelper.verticalSpace(8.h),
 
                   /// --- Bio ---
-                  Text(
-                    "Expert home cleaning for a tidy, fresh and comfortable space.",
-                    style: TextFontStyle.headline14w500c4d4d4dStyleSatoshi,
-                  ),
+                  Obx(() {
+                    if (detailsController?.isLoading.value == true) {
+                      return CustomShimmerEffect(height: 60.h, width: 1.sw);
+                    } else {
+                      return Text(
+                        detailsController?.serviceBio ?? 'Loading bio...',
+                        style: TextFontStyle.headline14w500c4d4d4dStyleSatoshi,
+                      );
+                    }
+                  }),
                   UIHelper.verticalSpace(24.h),
                 ],
               ),
@@ -203,7 +301,7 @@ class _DetailsScreenState extends State<DetailsScreen>
         ],
         body: TabShowingWidget(
           tabController: tabController,
-          controller: detailsController.tabIndex,
+          controller: detailsController?.tabIndex,
           tabViews: [
             AboutTab(isRoutedFromBookingTab: isRoutedFromBookingTab),
             GalleryTab(),
@@ -213,20 +311,35 @@ class _DetailsScreenState extends State<DetailsScreen>
       ),
 
       /// --- Single Button (shared across all tabs) ---
-      bottomNavigationBar: hideBookServiceNowButton
-          ? null
-          : Container(
-              width: 1.sw,
-              padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),
-              color: Colors.transparent,
+      bottomNavigationBar: Obx(() {
+        // Handle loading state
+        if (detailsController?.isLoading.value == true) {
+          return Container(
+            width: 1.sw,
+            padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),
+            color: Colors.transparent,
+            child: CustomShimmerEffect(height: 60.h, width: 1.sw),
+          );
+        }
 
-              child: CustomElevatedButton(
-                onTap: () {
-                  Get.toNamed(Routes.bookingDateScreen);
-                },
-                buttonTitle: "Book Services Now",
-              ),
-            ),
+        // Handle booking tab routing
+        if (hideBookServiceNowButton) {
+          return SizedBox.shrink();
+        }
+
+        // Show book service button
+        return Container(
+          width: 1.sw,
+          padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),
+          color: Colors.transparent,
+          child: CustomElevatedButton(
+            onTap: () {
+              Get.toNamed(Routes.bookingDateScreen);
+            },
+            buttonTitle: "Book Services Now",
+          ),
+        );
+      }),
     );
   }
 }

@@ -153,6 +153,7 @@ class AcceptedBookingTab extends StatelessWidget {
                   arguments: {
                     "status": BookingStatusEnum.acceptedBooking,
                     "bookingId": bookingId,
+                    "providerId": booking['serviceProviderDetailsId'] ?? booking['providerId']?['_userId'],
                   },
                 );
               },
@@ -165,6 +166,7 @@ class AcceptedBookingTab extends StatelessWidget {
                   arguments: {
                     "status": BookingStatusEnum.acceptedBooking,
                     "bookingId": bookingId,
+                    "providerId": booking['serviceProviderDetailsId'] ?? booking['providerId']?['_userId'],
                   },
                 );
               },
