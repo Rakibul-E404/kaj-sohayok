@@ -23,6 +23,10 @@ class AppUrl {
   static String serviceFormCategories = '${baseUrl}v1/service-categories/';
   static String serviceProviderFormSubmit = '${baseUrl}v1/service-providers';
 
+  // ==========> Service Document Fetch ==========>
+
+  static String getProviderDocumentDetails =
+      '${baseUrl}v1/service-providers/details-with-nid?page=1&limit=2000';
 
   static String getNormalUserHomeData = '${baseUrl}v1/users/home-page';
   static String getNormalUserAllCategory =
