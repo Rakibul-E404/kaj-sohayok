@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/controllers/home_page_controller.dart';
+import 'package:kaz_bd/custom_widgets/custom_shimmer_effect.dart';
 
+import '../../../../constants/text_font_style.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../../gen/colors.gen.dart';
 
@@ -35,8 +37,7 @@ class BannerCarosleSlider extends StatelessWidget {
                 final banner = controller.banners[index];
                 String imageUrl = '';
 
-                // According to the Banner model, banners have attachments array
-                // and the first attachment has the attachment URL
+                // Extract image URL from banner attachments
                 if (banner.attachments != null &&
                     banner.attachments!.isNotEmpty) {
                   final attachment = banner.attachments![0];
@@ -45,43 +46,44 @@ class BannerCarosleSlider extends StatelessWidget {
                   }
                 }
 
-                return Container(
-                  height: 175.h,
-                  width: 1.sw,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 12.w,
-                    vertical: 24.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.cea464a,
-                    image: imageUrl.isNotEmpty
-                        ? DecorationImage(
+                // Show shimmer while image is loading, otherwise show the actual image
+                return imageUrl.isEmpty
+                    ? CustomShimmerEffect(
+                        height: 175,
+                        width: 1,
+                        child: Center(
+                          child: Text(
+                            'Loading Image...',
+                            style:
+                                TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
+                          ),
+                        ),
+                      )
+                    : Container(
+                        height: 175.h,
+                        width: 1.sw,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 24.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.c000000.withValues(alpha: 0.5),
+                          image: DecorationImage(
                             fit: BoxFit.cover,
                             image: NetworkImage(imageUrl),
-                          )
-                        : DecorationImage(
-                            fit: BoxFit.contain,
-                            image: AssetImage(
-                              Assets.images.heroBannerImage.path,
-                            ),
                           ),
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                );
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                      );
               },
             )
-          : Container(
-              height: 175.h,
-              width: 1.sw,
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 24.h),
-              decoration: BoxDecoration(
-                color: AppColors.cea464a,
-                borderRadius: BorderRadius.circular(12.r),
-              ),
+          : CustomShimmerEffect(
+              height: 175,
+              width: 1,
               child: Center(
                 child: Text(
                   'No banners available',
-                  style: TextStyle(color: AppColors.cFFFFFF, fontSize: 14.sp),
+                  style: TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
                 ),
               ),
             ),

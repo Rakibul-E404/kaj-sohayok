@@ -66,6 +66,10 @@ dependencies:
   video_player: ^2.10.0
   camera: ^0.11.2
   local_auth: ^2.3.0
+<<<<<<< HEAD
+=======
+
+>>>>>>> c6e475534a98b790bbdfcb6991192fe23bfaa5e8
   #========================> TOKY ===================>
   logger:
   http:
