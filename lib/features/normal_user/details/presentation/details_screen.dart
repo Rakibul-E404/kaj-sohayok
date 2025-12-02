@@ -16,6 +16,7 @@ import 'package:kaz_bd/helpers/ui_helpers.dart';
 import '../../../../constants/text_font_style.dart';
 import '../../../../controllers/details_screen_controller.dart';
 import '../../../../controllers/get_nrm_user_service_provider_profile_info.dart';
+import '../../../../controllers/normal_user_booking_service_provider_controller.dart';
 import '../../../../custom_widgets/custom_elevated_button.dart';
 import '../../../../routes/routes.dart';
 import '../../../../utilities/app_url.dart';
@@ -36,6 +37,8 @@ class _DetailsScreenState extends State<DetailsScreen>
 
   DetailsScreenController? detailsController;
   GetNrmUserServiceProviderProfileInfoController? svpProfileInfoController;
+  NormalUserBookingServiceProviderController?
+  normalUserBookingServiceProviderController;
 
   late TabController tabController;
   late BookingStatusEnum? status;
@@ -48,6 +51,8 @@ class _DetailsScreenState extends State<DetailsScreen>
     detailsController = Get.find<DetailsScreenController>();
     svpProfileInfoController =
         Get.find<GetNrmUserServiceProviderProfileInfoController>();
+    normalUserBookingServiceProviderController =
+        Get.find<NormalUserBookingServiceProviderController>();
     tabController = TabController(length: 3, vsync: this);
 
     ///setting the accepted arguments initial value
@@ -88,10 +93,15 @@ class _DetailsScreenState extends State<DetailsScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       detailsController?.setServiceProviderId(svpId: providerId);
       svpProfileInfoController?.setServiceProviderId(svpId: providerId);
+      normalUserBookingServiceProviderController?.setServiceProviderId(
+        svpId: providerId,
+      );
 
       // Call both APIs
       await detailsController?.showSpecificServiceDetails();
       await svpProfileInfoController?.getServiceProviderProfileInfoData();
+      // await normalUserBookingServiceProviderController
+      //     ?.getProviderBookingSlotAvailability();
     });
 
     log(
@@ -334,9 +344,15 @@ class _DetailsScreenState extends State<DetailsScreen>
           color: Colors.transparent,
           child: CustomElevatedButton(
             onTap: () {
+              log(
+                "------Provider ID At Details Screen : $providerId----------------",
+              );
+              log(
+                '-----------DetailsScreen - Navigating to booking date screen with providerId: $providerId',
+              );
               Get.toNamed(
                 Routes.bookingDateScreen,
-                arguments: {'providerId': providerId},
+                arguments: {'userId': detailsController?.userId},
               );
             },
             buttonTitle: "Book Services Now",

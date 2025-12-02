@@ -22,6 +22,9 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final arguments = Get.arguments as Map<String, dynamic>?;
+    final bookingDateTime = arguments?['bookingDateTime'] ?? '';
+    final userId = arguments?['providerId'] ?? '';
     return Scaffold(
       backgroundColor: Colors.green,
       body: Stack(
@@ -110,7 +113,16 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
                     height: 48,
                     child: ElevatedButton(
                       onPressed: () {
-                        Get.toNamed(Routes.servicePreviewScreen);
+                        Get.toNamed(
+                          Routes.servicePreviewScreen,
+                          arguments: {
+                            'userId': userId,
+                            'bookingDateTime': bookingDateTime,
+                            'lat': 23.78070895187634,
+                            'long': 90.40762509309513,
+                            'address': "address address V2",
+                          },
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF6B73FF),

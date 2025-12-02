@@ -171,6 +171,8 @@ class DetailsScreenController extends GetxController {
   String? get providerProfileImage =>
       serviceDetails.value?.providerId?.profileImage?.imageUrl;
 
+  String? get userId => serviceDetails.value?.providerId?.userId;
+
   // Get gallery images
   List<AttachmentsForGallery> get galleryImages =>
       serviceDetails.value?.attachmentsForGallery ?? [];

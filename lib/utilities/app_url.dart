@@ -24,7 +24,6 @@ class AppUrl {
   static String serviceFormCategories = '${baseUrl}v1/service-categories/';
   static String serviceProviderFormSubmit = '${baseUrl}v1/service-providers';
 
-
   static String getProviderDocumentDetails =
       '${baseUrl}v1/service-providers/details-with-nid?page=1&limit=2000';
 
@@ -43,8 +42,11 @@ class AppUrl {
       '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
 
   ///===> rakibul api add close
-
-
+  ///
+  ///
+  ///
+  ///
+  ///-------------///Imtiaz Chowdhury Start///------------------
   static String getNormalUserHomeData = '${baseUrl}v1/users/home-page';
   static String getNormalUserAllCategory =
       '${baseUrl}v1/service-categories/paginate?page=1&limit=2000';
@@ -77,4 +79,8 @@ class AppUrl {
   }
 
   static String getAllPopularProviders = '${baseUrl}v1/users/home-page/popular';
+  static String checkProbiderScheduleAvailability =
+      '${baseUrl}v1/service-bookings/schedule-check';
+
+  ///-------------///Imtiaz Chowdhury End///------------------
 }
