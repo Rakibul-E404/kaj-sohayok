@@ -36,7 +36,7 @@ class CalenderContainerWidget extends StatelessWidget {
             UIHelper.verticalSpace(10.h),
 
             ///Section : Display Calender Dates at Days Widget
-            Card(child: DisplayCalendarDays()),
+            DisplayCalendarDays(),
           ],
         ),
       ),

@@ -334,7 +334,10 @@ class _DetailsScreenState extends State<DetailsScreen>
           color: Colors.transparent,
           child: CustomElevatedButton(
             onTap: () {
-              Get.toNamed(Routes.bookingDateScreen);
+              Get.toNamed(
+                Routes.bookingDateScreen,
+                arguments: {'providerId': providerId},
+              );
             },
             buttonTitle: "Book Services Now",
           ),
