@@ -11,10 +11,13 @@ import 'package:kaz_bd/helpers/ui_helpers.dart';
 class SvpDocumentsTabFormField extends StatelessWidget {
   final String fieldName;
   final String hintText;
+  final bool showEdit;
   bool isFormFieldEnabled;
+
   final void Function()? onTap;
   final bool isDescriptionField;
   final TextEditingController controller;
+
   SvpDocumentsTabFormField({
     super.key,
     this.onTap,
@@ -23,6 +26,7 @@ class SvpDocumentsTabFormField extends StatelessWidget {
     required this.controller,
     required this.isFormFieldEnabled,
     this.isDescriptionField = false,
+    this.showEdit = true,
   });
 
   @override
@@ -49,9 +53,13 @@ class SvpDocumentsTabFormField extends StatelessWidget {
                 ),
 
                 ///Section : Button -> Pen Icon
-                InkWell(
-                  onTap: onTap,
-                  child: SvgPicture.asset(Assets.icons.pencilEditIcon),
+                Visibility(
+                  visible: showEdit == true,
+                  replacement: SizedBox.shrink(),
+                  child: InkWell(
+                    onTap: onTap,
+                    child: SvgPicture.asset(Assets.icons.pencilEditIcon),
+                  ),
                 ),
               ],
             ),
