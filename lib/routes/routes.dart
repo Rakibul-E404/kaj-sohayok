@@ -42,6 +42,7 @@ import 'package:kaz_bd/navigation_screen.dart';
 import '../bindings/route_bindings/normal_user_all_category_binding.dart';
 import '../bindings/route_bindings/normal_user_see_all_popular_provider_screen_binding.dart';
 import '../bindings/route_bindings/normal_user_service_details_screen_binding.dart';
+import '../bindings/route_bindings/normal_user_service_preview_screen_binding.dart';
 import '../bindings/route_bindings/service_of_specific_category_screen_binding.dart';
 import '../controllers/service_of_specific_category_screen_controller.dart';
 import '../features/auth/verify_otp/verify_otp_screen.dart';
@@ -302,6 +303,7 @@ class Routes {
     GetPage(
       name: servicePreviewScreen,
       page: () => ServicesPreviewScreen(),
+      binding: NormalUserServicePreviewScreenBinding(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),

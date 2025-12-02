@@ -82,5 +82,7 @@ class AppUrl {
   static String checkProbiderScheduleAvailability =
       '${baseUrl}v1/service-bookings/schedule-check';
 
+  static String bookAService = '${baseUrl}v1/service-bookings';
+
   ///-------------///Imtiaz Chowdhury End///------------------
 }

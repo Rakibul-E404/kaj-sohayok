@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:kaz_bd/routes/routes.dart';
 import 'dart:developer';
 
 import '../../../../custom_widgets/custom_elevated_button.dart';
@@ -76,7 +78,7 @@ class BookingPlacedBottomSheet extends StatelessWidget {
           CustomElevatedButton(
             onTap: () {
               log("Go back to home page! button tapped...");
-              Navigator.pop(context); // 👈 Close bottom sheet
+              Get.toNamed(Routes.navigationScreen); // 👈 Close bottom sheet
             },
             buttonTitle: "Go To Home Page",
           ),
