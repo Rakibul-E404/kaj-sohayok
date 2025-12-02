@@ -24,12 +24,10 @@ class AppUrl {
   static String serviceFormCategories = '${baseUrl}v1/service-categories/';
   static String serviceProviderFormSubmit = '${baseUrl}v1/service-providers';
 
-<<<<<<< HEAD
-  // ==========> Service Document Fetch ==========>
 
   static String getProviderDocumentDetails =
       '${baseUrl}v1/service-providers/details-with-nid?page=1&limit=2000';
-=======
+
   ///===> rakiubl added api:
   static String pendingBookings =
       '${baseUrl}v1/service-bookings/paginate?status=pending';
@@ -45,7 +43,7 @@ class AppUrl {
       '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
 
   ///===> rakibul api add close
->>>>>>> c6e475534a98b790bbdfcb6991192fe23bfaa5e8
+
 
   static String getNormalUserHomeData = '${baseUrl}v1/users/home-page';
   static String getNormalUserAllCategory =
