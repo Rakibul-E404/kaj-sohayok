@@ -570,4 +570,6 @@ class TextFontStyle {
     fontSize: 12.sp,
     fontWeight: FontWeight.w700,
   );
+
+  static TextStyle? get headline14w600cffffffStyleSatoshi => null;
 }

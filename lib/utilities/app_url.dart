@@ -39,8 +39,11 @@ class AppUrl {
       '${baseUrl}v1/service-bookings/paginate?status=cancelled';
   static String completedBookings =
       '${baseUrl}v1/service-bookings/paginate?status=completed';
-  static String paymentRequests =
-      '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
+  static String paymentRequests = '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
+
+
+  static String jobRequests = '${baseUrl}v1/service-bookings/paginate/for-provider?status=pending';
+
 
   ///===> rakibul api add close
 
