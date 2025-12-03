@@ -13,6 +13,8 @@ import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 
 import '../../../../controllers/normal_user_service_preview_screen_controller.dart';
+import '../../../../custom_widgets/custom_shimmer_effect.dart';
+import '../../../../utilities/app_url.dart';
 import '../widgets/details_card_widget.dart';
 
 class ServicesPreviewScreen extends StatelessWidget {
@@ -32,7 +34,7 @@ class ServicesPreviewScreen extends StatelessWidget {
     final longDynamic = arguments?['long'];
 
     // In your ServicesPreviewScreen:
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       controller.setProviderId(pid: providerId);
       controller.setBookingDateTime(bDateTime: bookingDateTime);
       controller.setAddress(addr: address);
@@ -61,12 +63,20 @@ class ServicesPreviewScreen extends StatelessWidget {
         }
 
         // Set values with appropriate validity status
-        controller.setLatValue(latValue: latDouble ?? 0.0, isValid: latDouble != null);
-        controller.setLongValue(longValue: longDouble ?? 0.0, isValid: longDouble != null);
+        controller.setLatValue(
+          latValue: latDouble ?? 0.0,
+          isValid: latDouble != null,
+        );
+        controller.setLongValue(
+          longValue: longDouble ?? 0.0,
+          isValid: longDouble != null,
+        );
 
         // If parsing failed, make sure validity flags are set appropriately
         if (latDouble == null || longDouble == null) {
-          log('Warning: One or both coordinates could not be parsed - lat: ${latDouble ?? "null"}, long: ${longDouble ?? "null"}');
+          log(
+            'Warning: One or both coordinates could not be parsed - lat: ${latDouble ?? "null"}, long: ${longDouble ?? "null"}',
+          );
         } else {
           log('Successfully parsed lat: $latDouble, long: $longDouble');
         }
@@ -76,6 +86,9 @@ class ServicesPreviewScreen extends StatelessWidget {
         controller.setLatValue(latValue: 0.0, isValid: false);
         controller.setLongValue(longValue: 0.0, isValid: false);
       }
+
+      // Load service data preview after setting up the provider ID
+      await controller.getServiceDataPreview();
     });
 
     return Scaffold(
@@ -104,15 +117,67 @@ class ServicesPreviewScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Image container with rounded corners and fit image
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(24.r),
-                      child: Image.network(
-                        'https://deax38zvkau9d.cloudfront.net/prod/assets/images/uploads/services/1708074899how-to-start-cleaning-house.webp',
-                        height: 170,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    // ClipRRect(
+                    //   borderRadius: BorderRadius.circular(24.r),
+                    //   child: Image.network(
+                    //     'https://deax38zvkau9d.cloudfront.net/prod/assets/images/uploads/services/1708074899how-to-start-cleaning-house.webp',
+                    //     height: 170,
+                    //     width: double.infinity,
+                    //     fit: BoxFit.cover,
+                    //   ),
+                    // ),
+
+                    /// --- Service Image ---
+                    Obx(() {
+                      // Get the first gallery attachment from service details if available
+                      String? imageUrl;
+                      if (controller.serviceImage != null) {
+                        imageUrl = controller.serviceImage;
+                      }
+
+                      // Show network image if URL is available, otherwise show placeholder
+                      if (imageUrl != null && imageUrl.isNotEmpty) {
+                        // Make sure the URL is properly formatted
+                        String fullImageUrl = imageUrl;
+                        if (!imageUrl.startsWith('http')) {
+                          // If it's a relative path, prepend the base URL
+                          fullImageUrl = '${AppUrl.imageBaseUrl}$imageUrl';
+                        }
+
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(24.r),
+                          child: Image.network(
+                            fullImageUrl,
+                            height: 170.h,
+                            width: 1.sw,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              // If network image fails, show placeholder
+                              return CustomShimmerEffect(
+                                height: 170.h,
+                                width: 1.sw,
+                              );
+                            },
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return CustomShimmerEffect(
+                                height: 170.h,
+                                width: 1.sw,
+                              );
+                            },
+                          ),
+                        );
+                      } else {
+                        // Show placeholder if no image is available
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(24.r),
+                          child: CustomShimmerEffect(
+                            height: 170.h,
+                            width: 1.sw,
+                          ),
+                        );
+                      }
+                    }),
                     const SizedBox(height: 12),
 
                     // Section : Service title
@@ -120,25 +185,44 @@ class ServicesPreviewScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'Home Cleaning',
-                          style:
-                              TextFontStyle.headline16w700c000000StyleSatoshi,
-                        ),
-                        RichText(
-                          text: TextSpan(
-                            text: 'Start From ',
+                        Obx(() {
+                          if (controller.isServicePreViewDataLoading.value ==
+                              true) {
+                            return CustomShimmerEffect(
+                              height: 10.h,
+                              width: 0.5.sw,
+                            );
+                          }
+
+                          return Text(
+                            controller.serviceName.toString(),
                             style:
-                                TextFontStyle.headline12w500c6a6a6aStyleSatoshi,
-                            children: [
-                              TextSpan(
-                                text: '\$30.90',
-                                style: TextFontStyle
-                                    .headline16w700c778bebStyleSatoshi,
-                              ),
-                            ],
-                          ),
-                        ),
+                                TextFontStyle.headline16w700c000000StyleSatoshi,
+                          );
+                        }),
+                        Obx(() {
+                          if (controller.isServicePreViewDataLoading.value ==
+                              true) {
+                            return CustomShimmerEffect(
+                              height: 10.h,
+                              width: 0.3.sw,
+                            );
+                          }
+                          return RichText(
+                            text: TextSpan(
+                              text: 'Start From ',
+                              style: TextFontStyle
+                                  .headline12w500c6a6a6aStyleSatoshi,
+                              children: [
+                                TextSpan(
+                                  text: '\$${controller.serviceStartPrice}',
+                                  style: TextFontStyle
+                                      .headline16w700c778bebStyleSatoshi,
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
                       ],
                     ),
 

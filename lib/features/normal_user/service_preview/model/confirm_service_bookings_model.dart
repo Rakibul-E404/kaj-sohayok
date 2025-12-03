@@ -59,7 +59,7 @@ class Attributes {
   String? long;
   List<dynamic>? attachments;
   int? startPrice;
-  int? adminPercentageOfStartPrice;
+  double? adminPercentageOfStartPrice;
   dynamic paymentTransactionId;
   dynamic paymentMethod;
   String? paymentStatus;
@@ -114,8 +114,10 @@ class Attributes {
     attachments: json["attachments"] == null
         ? []
         : List<dynamic>.from(json["attachments"]!.map((x) => x)),
-    startPrice: json["startPrice"],
-    adminPercentageOfStartPrice: json["adminPercentageOfStartPrice"],
+    startPrice: json["startPrice"] is int ? json["startPrice"] : (json["startPrice"] is double ? json["startPrice"].round() : null),
+    adminPercentageOfStartPrice: json["adminPercentageOfStartPrice"] is double
+        ? json["adminPercentageOfStartPrice"]
+        : (json["adminPercentageOfStartPrice"] is int ? json["adminPercentageOfStartPrice"].toDouble() : null),
     paymentTransactionId: json["paymentTransactionId"],
     paymentMethod: json["paymentMethod"],
     paymentStatus: json["paymentStatus"],

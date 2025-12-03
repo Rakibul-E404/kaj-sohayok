@@ -7,11 +7,140 @@ import 'package:kaz_bd/service/network_response.dart';
 import 'package:kaz_bd/utilities/app_url.dart';
 
 import '../features/normal_user/service_preview/model/confirm_service_bookings_model.dart';
+import '../features/normal_user/service_preview/model/service_data_preview_model.dart';
 import '../gen/colors.gen.dart';
 import '../service/secured_storage.dart';
 import '../utilities/app_constants.dart';
 
 class NormalUserServicePreviewScreenController extends GetxController {
+  ///-------------------------> Section : Common Api Segment <-----------------------///
+  /// Section: Set Provider ID
+  var providerId = ''.obs;
+  void setProviderId({required String pid}) {
+    providerId.value = pid;
+  }
+
+  ///-------------------------> Section : Service Data Preview Api Segment <-----------------------///
+
+  RxBool isServicePreViewDataLoading = false.obs;
+  Rxn<ServiceDataPreviewModel> serviceDataPreview =
+      Rxn<ServiceDataPreviewModel>();
+
+  Future<void> getServiceDataPreview() async {
+    // Check if ProviderID is available
+    if (providerId.value.isEmpty) {
+      log('Service provider id is empty');
+      Get.snackbar(
+        'Error',
+        'Service Provider ID is missing',
+        backgroundColor: AppColors.cee3333,
+        colorText: AppColors.cFFFFFF,
+      );
+      return;
+    }
+
+    try {
+      isServicePreViewDataLoading.value = true;
+      // Get authorization token
+      final String token =
+          await SecureStorageService().read(AppConstants.accessToken) ?? '';
+
+      final NetworkResponse response = await NetworkCaller().getRequest(
+        AppUrl.getServiceDataPreview(userId: providerId.value),
+        headers: token.isNotEmpty ? {'Authorization': 'Bearer $token'} : null,
+      );
+
+      if (response.isSuccess && response.jsonResponse != null) {
+        final responseData = ServiceDataPreviewModel.fromJson(
+          response.jsonResponse!,
+        );
+
+        if (responseData.code == 200 &&
+            responseData.data?.attributes?.result?.isNotEmpty == true) {
+          serviceDataPreview.value = responseData;
+          log('😃😃Service data loaded successfully');
+          log('😃😃Json Response Below');
+          log('${serviceDataPreview.value = responseData}');
+        } else {
+          Get.snackbar(
+            'Information',
+            responseData.message ?? 'No Service Details Available!',
+            backgroundColor: AppColors.cee3333,
+            colorText: AppColors.cFFFFFF,
+          );
+        }
+      } else {
+        Get.snackbar(
+          'Connection Error',
+          response.errorMessage ?? 'Failed to connect to the server!',
+          backgroundColor: AppColors.cee3333,
+          colorText: AppColors.cFFFFFF,
+        );
+      }
+    } catch (e) {
+      // JSON parsing error
+      log('🥸🥸JSON parsing error: $e');
+      Get.snackbar(
+        'Data Error',
+        'Failed to process service information',
+        backgroundColor: AppColors.cee3333,
+        colorText: AppColors.cFFFFFF,
+      );
+    } finally {
+      isServicePreViewDataLoading.value = false;
+    }
+  }
+
+  ///-------------------------> Section : Service Data Getters <-----------------------///
+
+  /// Get the first service image URL from attachmentsForGallery
+  String? get serviceImage {
+    final result = serviceDataPreview.value?.data?.attributes?.result;
+    if (result != null && result.isNotEmpty) {
+      final attachments = result.first.attachmentsForGallery;
+      if (attachments != null && attachments.isNotEmpty) {
+        return attachments.first.attachment;
+      }
+    }
+    return null;
+  }
+
+  /// Get the English service name
+  String? get serviceName {
+    final result = serviceDataPreview.value?.data?.attributes?.result;
+    if (result != null && result.isNotEmpty) {
+      return result.first.serviceName?.en;
+    }
+    return null;
+  }
+
+  /// Get the Bengali service name
+  String? get serviceNameBn {
+    final result = serviceDataPreview.value?.data?.attributes?.result;
+    if (result != null && result.isNotEmpty) {
+      return result.first.serviceName?.bn;
+    }
+    return null;
+  }
+
+  /// Get the service starting price
+  double? get serviceStartPrice {
+    final result = serviceDataPreview.value?.data?.attributes?.result;
+    if (result != null && result.isNotEmpty) {
+      return result.first.startPrice;
+    }
+    return null;
+  }
+
+  List<Attachment>? get galleryAttachments {
+    final result = serviceDataPreview.value?.data?.attributes?.result;
+    if (result != null && result.isNotEmpty) {
+      return result.first.attachmentsForGallery;
+    }
+    return null;
+  }
+
+  /////-------------------------> Section : Service Booking Api Code Segment <-----------------------///
   final Rxn<ServiceBookingsModel> serviceBookingModel =
       Rxn<ServiceBookingsModel>();
   RxBool isCSBLoading = false.obs;
@@ -21,14 +150,9 @@ class NormalUserServicePreviewScreenController extends GetxController {
   var address = ''.obs;
   var lat = 0.0.obs; // Changed to double
   var long = 0.0.obs; // Changed to double
-  var providerId = ''.obs;
+
   var hasValidLat = false.obs; // Track if latitude is valid
   var hasValidLong = false.obs; // Track if longitude is valid
-
-  /// Section: Set Provider ID
-  void setProviderId({required String pid}) {
-    providerId.value = pid;
-  }
 
   /// Section: Set Value Of Booking Date And Time
   void setBookingDateTime({required String bDateTime}) {
@@ -196,8 +320,14 @@ class NormalUserServicePreviewScreenController extends GetxController {
   void reset() {
     bookingDateTime.value = '';
     address.value = '';
-    setLatValue(latValue: 0.0, isValid: false); // Reset to 0.0 and mark as invalid
-    setLongValue(longValue: 0.0, isValid: false); // Reset to 0.0 and mark as invalid
+    setLatValue(
+      latValue: 0.0,
+      isValid: false,
+    ); // Reset to 0.0 and mark as invalid
+    setLongValue(
+      longValue: 0.0,
+      isValid: false,
+    ); // Reset to 0.0 and mark as invalid
     providerId.value = '';
     serviceBookingModel.value = null;
   }

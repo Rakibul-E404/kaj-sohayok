@@ -83,6 +83,9 @@ class AppUrl {
       '${baseUrl}v1/service-bookings/schedule-check';
 
   static String bookAService = '${baseUrl}v1/service-bookings';
+  static String getServiceDataPreview({required String userId}) {
+    return '${baseUrl}v1/service-providers/limited-info/$userId';
+  }
 
   ///-------------///Imtiaz Chowdhury End///------------------
 }
