@@ -17,7 +17,7 @@ import 'package:kaz_bd/features/normal_user/bookings_payments_request_details/pr
 import 'package:kaz_bd/features/normal_user/details/presentation/details_screen.dart';
 import 'package:kaz_bd/features/common_screens/notification/presentation/notification_screen.dart';
 import 'package:kaz_bd/features/normal_user/provider_profile_details/presentation/provider_profile_details_screen.dart';
-import 'package:kaz_bd/features/normal_user/search_location/presentation/search_location_screen.dart';
+import 'package:kaz_bd/features/normal_user/search_location/presentation/search_location_scrn.dart';
 import 'package:kaz_bd/features/normal_user/see_all_popular_provider/presentation/see_all_popular_providers_screen.dart';
 import 'package:kaz_bd/features/normal_user/service_preview/presentation/service_preview_screen.dart';
 import 'package:kaz_bd/features/normal_user/services_of_specific_category/presentation/services_of_specific_category_screen.dart';
@@ -46,6 +46,7 @@ import '../bindings/route_bindings/normal_user_service_preview_screen_binding.da
 import '../bindings/route_bindings/service_of_specific_category_screen_binding.dart';
 import '../controllers/service_of_specific_category_screen_controller.dart';
 import '../features/auth/verify_otp/verify_otp_screen.dart';
+import '../features/normal_user/search_location/presentation/search_location_screen.dart';
 import '../features/service_provider/profile_under_review/presentation/profile_under_review_screen.dart';
 import '../features/service_provider/face_verification/presentation/face_verification_screen.dart';
 
