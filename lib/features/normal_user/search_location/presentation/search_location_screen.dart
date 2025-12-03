@@ -32,8 +32,8 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
   Set<Marker> _markers = <Marker>{};
   String _selectedAddress = "Getting your current location...";
   bool _isLoadingLocation = true;
-  LatLng? _currentUserLocation;
-  LatLng? _selectedLocation;
+  LatLng? _currentUserLocation; // Just for showing where user is
+  LatLng? _selectedLocation; // For the actual booking selection
   bool _hasInitialLocation = false;
 
   @override
@@ -84,14 +84,13 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
         ),
       );
 
-      // Store the current location
+      // Store the current location (just for display)
       _currentUserLocation = LatLng(position.latitude, position.longitude);
-      _selectedLocation = _currentUserLocation; // Set as initial selection
 
       // Get address from coordinates
       await _getAddressFromLatLng(_currentUserLocation!);
 
-      // Add marker for current location
+      // Add BLUE marker for current location (information only)
       setState(() {
         _markers.add(
           Marker(
@@ -100,7 +99,10 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
             icon: BitmapDescriptor.defaultMarkerWithHue(
               BitmapDescriptor.hueBlue,
             ),
-            infoWindow: const InfoWindow(title: 'Your Current Location'),
+            infoWindow: InfoWindow(
+              title: 'Your Current Location',
+              snippet: _selectedAddress,
+            ),
           ),
         );
         _isLoadingLocation = false;
@@ -192,20 +194,51 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
       _markers.clear();
     });
 
-    // Add new marker for selected location
+    // Get address for the selected location
+    String addressText =
+        "Lat: ${position.latitude.toStringAsFixed(6)}, Lng: ${position.longitude.toStringAsFixed(6)}";
+
+    try {
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks[0];
+        String fullAddress =
+            "${place.street ?? ''}, ${place.subLocality ?? ''}, ${place.locality ?? ''}, ${place.country ?? ''}"
+                .replaceAll(", ,", ", ")
+                .replaceAll(RegExp(r', $'), '');
+
+        addressText = fullAddress.isNotEmpty ? fullAddress : addressText;
+      }
+    } catch (e) {
+      debugPrint("Geocoding error: $e");
+    }
+
+    // Update the address display
+    setState(() {
+      _selectedAddress = addressText;
+    });
+
+    // Add RED marker for selected location (for booking) with address in InfoWindow
     setState(() {
       _markers.add(
         Marker(
           markerId: const MarkerId('selected_location'),
           position: position,
-          infoWindow: const InfoWindow(title: 'Selected Location'),
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueRed, // RED for selected location
+          ),
+          infoWindow: InfoWindow(
+            title: 'Selected Location',
+            snippet: addressText, // Address shows here in InfoWindow
+          ),
         ),
       );
-      _selectedLocation = position;
+      _selectedLocation = position; // User explicitly selected this
     });
-
-    // Get address for the selected location
-    await _getAddressFromLatLng(position);
   }
 
   void _goToCurrentLocation() async {
@@ -217,8 +250,14 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
         ),
       );
 
-      // Also update the selection to current location
-      _onMapTapped(_currentUserLocation!);
+      // Show a message that they need to tap to select
+      Get.snackbar(
+        'Tap to Select',
+        'Long press on the map to select this location',
+        backgroundColor: Colors.blue,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 2),
+      );
     } else {
       await _getCurrentLocation();
     }
@@ -290,38 +329,47 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
       body: Column(
         children: [
           // Selected address display
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            color: AppColors.cFFFFFF,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Selected Location:",
-                  style: TextFontStyle.headline14w500c000000StyleSatoshi,
-                ),
-                const SizedBox(height: 8),
-                _isLoadingLocation
-                    ? Row(
-                        children: [
-                          const CircularProgressIndicator(),
-                          const SizedBox(width: 10),
-                          Text(
-                            "Getting your location...",
-                            style:
-                                TextFontStyle.headline14w500c6a6a6aStyleSatoshi,
-                          ),
-                        ],
-                      )
-                    : Text(
-                        _selectedAddress,
-                        style: TextFontStyle.headline14w500c6a6a6aStyleSatoshi,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-              ],
-            ),
-          ),
+          // Container(
+          //   padding: const EdgeInsets.all(16.0),
+          //   color: AppColors.cFFFFFF,
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       Text(
+          //         _selectedLocation == null
+          //             ? "Your Current Location:"
+          //             : "Selected Location:",
+          //         style: TextFontStyle.headline14w500c000000StyleSatoshi,
+          //       ),
+          //       const SizedBox(height: 8),
+          //       _isLoadingLocation
+          //           ? Row(
+          //               children: [
+          //                 const CircularProgressIndicator(),
+          //                 const SizedBox(width: 10),
+          //                 Text(
+          //                   "Getting your location...",
+          //                   style:
+          //                       TextFontStyle.headline14w500c6a6a6aStyleSatoshi,
+          //                 ),
+          //               ],
+          //             )
+          //           : Text(
+          //               _selectedAddress,
+          //               style: TextFontStyle.headline14w500c6a6a6aStyleSatoshi,
+          //               maxLines: 2,
+          //               overflow: TextOverflow.ellipsis,
+          //             ),
+          //       if (_selectedLocation == null) ...[
+          //         const SizedBox(height: 8),
+          //         Text(
+          //           "Long press on the map to select a location",
+          //           style: TextFontStyle.headline12w500c000000StyleSatoshi,
+          //         ),
+          //       ],
+          //     ],
+          //   ),
+          // ),
 
           // Map container
           Expanded(
@@ -340,7 +388,7 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
                       });
                     }
                   },
-                  onLongPress: _onMapTapped,
+                  onLongPress: _onMapTapped, // User MUST long press to select
                   markers: _markers,
                   myLocationButtonEnabled: false, // Using custom button
                   zoomControlsEnabled: true,
@@ -352,7 +400,7 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
                   tiltGesturesEnabled: false,
                 ),
 
-                // Current location button overlay - KEEPING THIS ONE
+                // Current location button overlay
                 Positioned(
                   bottom: 120.h,
                   right: 10.w,
@@ -363,121 +411,66 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
                   ),
                 ),
 
-                Positioned(
-                  bottom: 20.h,
-                  right: 50.w,
-                  left: 50.w,
-                  child: Container(
-                    decoration: BoxDecoration(color: Colors.transparent),
-                    padding: EdgeInsets.only(
-                      left: UIHelper.kDefaulutPadding(),
-                      right: UIHelper.kDefaulutPadding(),
-                    ),
-                    child: ElevatedButton(
-                      onPressed: _selectedLocation == null
-                          ? null
-                          : () {
-                              // Navigate to service preview with selected location data
-                              Get.toNamed(
-                                Routes.servicePreviewScreen,
-                                arguments: {
-                                  'userId': providerId,
-                                  'bookingDateTime': bookingDateTime,
-                                  'lat': _selectedLocation!.latitude,
-                                  'long': _selectedLocation!.longitude,
-                                  'address': _selectedAddress,
-                                },
-                              );
-
-                              log('User ID : $providerId');
-                              log('Booking Date Time : $bookingDateTime');
-                              log('Latitude : ${_selectedLocation!.latitude}');
-                              log(
-                                'Longitude : ${_selectedLocation!.longitude}',
-                              );
-                              log('Address : $_selectedAddress');
-                            },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: _selectedLocation == null
-                            ? Colors.grey
-                            : AppColors.c5c5c5c,
-                        minimumSize: const Size(double.infinity, 50),
+                // Conditionally show the Confirm Location button
+                if (_selectedLocation != null)
+                  Positioned(
+                    bottom: 20.h,
+                    right: 50.w,
+                    left: 50.w,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.transparent,
                       ),
-                      child: Text(
-                        _selectedLocation == null
-                            ? "Select a Location First"
-                            : "Confirm Location",
-                        style: TextStyle(
-                          color: _selectedLocation == null
-                              ? Colors.grey[600]
-                              : Colors.white,
-                          fontWeight: FontWeight.bold,
+                      padding: EdgeInsets.only(
+                        left: UIHelper.kDefaulutPadding(),
+                        right: UIHelper.kDefaulutPadding(),
+                      ),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Navigate to service preview with selected location data
+                          Get.toNamed(
+                            Routes.servicePreviewScreen,
+                            arguments: {
+                              'userId': providerId,
+                              'bookingDateTime': bookingDateTime,
+                              'lat': _selectedLocation!.latitude,
+                              'long': _selectedLocation!.longitude,
+                              'address': _selectedAddress,
+                            },
+                          );
+
+                          log('User ID : $providerId');
+                          log('Booking Date Time : $bookingDateTime');
+                          log('Latitude : ${_selectedLocation!.latitude}');
+                          log('Longitude : ${_selectedLocation!.longitude}');
+                          log('Address : $_selectedAddress');
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.c5c5c5c,
+                          minimumSize: const Size(double.infinity, 50),
+                        ),
+                        child: Text(
+                          "Confirm Location",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
               ],
             ),
           ),
         ],
       ),
 
+      // Optional: Show a hint when no location is selected
       bottomNavigationBar: Container(
-        width: 1.sw,
         height: 50.h,
-        color: AppColors.c000000,
+        width: 1.sw,
+        color: Colors.transparent,
       ),
-      // REMOVED: floatingActionButton - No longer needed
-      // bottomNavigationBar: Container(
-      //   decoration: BoxDecoration(color: Colors.transparent),
-      //   padding: EdgeInsets.only(
-      //     left: UIHelper.kDefaulutPadding(),
-      //     right: UIHelper.kDefaulutPadding(),
-      //     top: UIHelper.kDefaulutPadding(),
-      //     bottom: 80.h,
-      //   ),
-      //   child: ElevatedButton(
-      //     onPressed: _selectedLocation == null
-      //         ? null
-      //         : () {
-      //             // Navigate to service preview with selected location data
-      //             Get.toNamed(
-      //               Routes.servicePreviewScreen,
-      //               arguments: {
-      //                 'userId': providerId,
-      //                 'bookingDateTime': bookingDateTime,
-      //                 'lat': _selectedLocation!.latitude,
-      //                 'long': _selectedLocation!.longitude,
-      //                 'address': _selectedAddress,
-      //               },
-      //             );
-
-      //             log('User ID : $providerId');
-      //             log('Booking Date Time : $bookingDateTime');
-      //             log('Latitude : ${_selectedLocation!.latitude}');
-      //             log('Longitude : ${_selectedLocation!.longitude}');
-      //             log('Address : $_selectedAddress');
-      //           },
-      //     style: ElevatedButton.styleFrom(
-      //       backgroundColor: _selectedLocation == null
-      //           ? Colors.grey
-      //           : AppColors.c5c5c5c,
-      //       minimumSize: const Size(double.infinity, 50),
-      //     ),
-      //     child: Text(
-      //       _selectedLocation == null
-      //           ? "Select a Location First"
-      //           : "Confirm Location",
-      //       style: TextStyle(
-      //         color: _selectedLocation == null
-      //             ? Colors.grey[600]
-      //             : Colors.white,
-      //         fontWeight: FontWeight.bold,
-      //       ),
-      //     ),
-      //   ),
-      // ),
     );
   }
 }
