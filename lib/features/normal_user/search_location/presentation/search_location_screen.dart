@@ -1,294 +1,14 @@
-// import 'dart:async';
-// import 'dart:developer';
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:google_maps_flutter/google_maps_flutter.dart';
-// import 'package:geolocator/geolocator.dart';
-// import 'package:geocoding/geocoding.dart';
-// import 'package:kaz_bd/constants/text_font_style.dart';
-// import 'package:kaz_bd/gen/colors.gen.dart';
-
-// import '../../../../routes/routes.dart';
-
-// ///Arguments needs to be send to Service Preview Screen
-// // arguments: {
-// //                             'userId': userId,
-// //                             'bookingDateTime': bookingDateTime,
-// //                             'lat': 23.78070895187634,
-// //                             'long': 90.40762509309513,
-// //                             'address': "address address V2",
-// //                           },
-
-// class SearchLocationScreen extends StatefulWidget {
-//   const SearchLocationScreen({super.key});
-
-//   @override
-//   State<SearchLocationScreen> createState() => _SearchLocationScreenState();
-// }
-
-// class _SearchLocationScreenState extends State<SearchLocationScreen> {
-//   final Completer<GoogleMapController> _controller =
-//       Completer<GoogleMapController>();
-
-//   // Default to Bangladesh coordinates
-//   static const CameraPosition _kBangladesh = CameraPosition(
-//     target: LatLng(23.6850, 90.3563), // Center of Bangladesh
-//     zoom: 12.0,
-//   );
-
-//   Set<Marker> _markers = <Marker>{};
-//   String _selectedAddress = "Select a location on the map";
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _initCurrentLocation();
-//   }
-
-//   Future<void> _initCurrentLocation() async {
-//     try {
-//       // Check permissions
-//       LocationPermission permission = await Geolocator.checkPermission();
-//       if (permission == LocationPermission.denied) {
-//         permission = await Geolocator.requestPermission();
-//       }
-
-//       if (permission == LocationPermission.denied ||
-//           permission == LocationPermission.deniedForever) {
-//         // Use default Bangladesh location if permission denied
-//         debugPrint("Location permissions denied");
-//         return;
-//       }
-
-//       // Get current position
-//       Position position = await Geolocator.getCurrentPosition(
-//         locationSettings: const LocationSettings(
-//           accuracy: LocationAccuracy.high,
-//         ),
-//       );
-
-//       // Wait for the map controller to be ready and then move to current location
-//       _controller.future.then((GoogleMapController controller) async {
-//         await controller.animateCamera(
-//           CameraUpdate.newCameraPosition(
-//             CameraPosition(
-//               target: LatLng(position.latitude, position.longitude),
-//               zoom: 15.0,
-//             ),
-//           ),
-//         );
-//       });
-//     } catch (e) {
-//       // If location access fails, stick with default Bangladesh location
-//       debugPrint("Location access failed: $e");
-//     }
-//   }
-
-//   Future<void> _goToDhaka() async {
-//     final GoogleMapController controller = await _controller.future;
-//     await controller.animateCamera(
-//       CameraUpdate.newCameraPosition(
-//         const CameraPosition(
-//           target: LatLng(23.8103, 90.4125), // Dhaka coordinates
-//           zoom: 14.0,
-//         ),
-//       ),
-//     );
-//   }
-
-//   void _onMapTapped(LatLng position) async {
-//     // Remove existing markers
-//     setState(() {
-//       _markers.clear();
-//     });
-
-//     // Add a marker at the tapped location
-//     setState(() {
-//       _markers.add(
-//         Marker(
-//           markerId: const MarkerId('selected_location'),
-//           position: position,
-//           infoWindow: const InfoWindow(title: 'Selected Location'),
-//         ),
-//       );
-//     });
-
-//     // Get address from coordinates using geocoding
-//     try {
-//       List<Placemark> placemarks = await placemarkFromCoordinates(
-//         position.latitude,
-//         position.longitude,
-//       );
-
-//       if (placemarks.isNotEmpty) {
-//         Placemark place = placemarks[0];
-//         String fullAddress =
-//             "${place.street ?? ''}, ${place.subLocality ?? ''}, ${place.locality ?? ''}, ${place.country ?? ''}"
-//                 .replaceAll(", ,", ", ")
-//                 .replaceAll(RegExp(r', $'), '');
-//         setState(() {
-//           _selectedAddress = fullAddress.isNotEmpty
-//               ? fullAddress
-//               : "Lat: ${position.latitude.toStringAsFixed(6)}, Lng: ${position.longitude.toStringAsFixed(6)}";
-//         });
-//       } else {
-//         setState(() {
-//           _selectedAddress =
-//               "Lat: ${position.latitude.toStringAsFixed(6)}, Lng: ${position.longitude.toStringAsFixed(6)}";
-//         });
-//       }
-//     } catch (e) {
-//       setState(() {
-//         _selectedAddress =
-//             "Lat: ${position.latitude.toStringAsFixed(6)}, Lng: ${position.longitude.toStringAsFixed(6)}";
-//       });
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final arguments = Get.arguments as Map<String, dynamic>?;
-//     final bookingDateTime = arguments?['bookingDateTime'] ?? '';
-//     final providerId = arguments?['providerId'] ?? '';
-//     final latDynamic = arguments?['lat'];
-//     final longDynamic = arguments?['long'];
-
-//     // Parse initial coordinates from arguments
-//     double? initialLat;
-//     double? initialLng;
-
-//     if (latDynamic != null) {
-//       if (latDynamic is String) {
-//         initialLat = double.tryParse(latDynamic);
-//       } else if (latDynamic is num) {
-//         initialLat = latDynamic.toDouble();
-//       }
-//     }
-
-//     if (longDynamic != null) {
-//       if (longDynamic is String) {
-//         initialLng = double.tryParse(longDynamic);
-//       } else if (longDynamic is num) {
-//         initialLng = longDynamic.toDouble();
-//       }
-//     }
-
-//     // Default to Bangladesh center, but this will be updated when current location is fetched
-//     CameraPosition initialPosition = _kBangladesh;
-//     if (initialLat != null && initialLng != null) {
-//       // Use coordinates passed from previous screen if available
-//       initialPosition = CameraPosition(
-//         target: LatLng(initialLat, initialLng),
-//         zoom: 15.0,
-//       );
-//     }
-
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(
-//           "Select Location",
-//           style: TextFontStyle.headline18w700c000000StyleSatoshi,
-//         ),
-//         centerTitle: true,
-//         backgroundColor: AppColors.scaffoldBackgroundColor,
-//       ),
-//       body: Column(
-//         children: [
-//           // Selected address display
-//           Container(
-//             padding: const EdgeInsets.all(16.0),
-//             color: AppColors.cFFFFFF,
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Text(
-//                   "Selected Location:",
-//                   style: TextFontStyle.headline14w500c000000StyleSatoshi,
-//                 ),
-//                 const SizedBox(height: 8),
-//                 Text(
-//                   _selectedAddress,
-//                   style: TextFontStyle.headline14w500c6a6a6aStyleSatoshi,
-//                   maxLines: 2,
-//                   overflow: TextOverflow.ellipsis,
-//                 ),
-//               ],
-//             ),
-//           ),
-
-//           // Map container
-//           Expanded(
-//             child: GoogleMap(
-//               mapType: MapType.normal,
-//               initialCameraPosition: initialPosition,
-//               onMapCreated: (GoogleMapController controller) {
-//                 _controller.complete(controller);
-//               },
-//               onLongPress:
-//                   _onMapTapped, // Allow user to select location by long pressing
-//               markers: _markers,
-//               myLocationButtonEnabled: true,
-//               zoomControlsEnabled: true,
-//               // Enable the myLocation functionality (this may help with platform view registration)
-//               myLocationEnabled: true,
-//             ),
-//           ),
-//         ],
-//       ),
-//       floatingActionButton: FloatingActionButton.extended(
-//         onPressed: _goToDhaka,
-//         label: const Text('Go to Dhaka'),
-//         icon: const Icon(Icons.location_city),
-//       ),
-//       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-//       bottomNavigationBar: Container(
-//         padding: const EdgeInsets.all(16.0),
-//         child: ElevatedButton(
-//           onPressed: () {
-//             // Navigate to service preview with selected location data
-//             if (_markers.isNotEmpty) {
-//               final selectedMarker = _markers.first;
-//               Get.toNamed(
-//                 Routes.servicePreviewScreen,
-//                 arguments: {
-//                   'userId': providerId,
-//                   'bookingDateTime': bookingDateTime,
-//                   'lat': selectedMarker.position.latitude,
-//                   'long': selectedMarker.position.longitude,
-//                   'address': _selectedAddress,
-//                 },
-//               );
-
-//               log('User ID : $providerId');
-//               log('Booking Date Time : $bookingDateTime');
-//               log('Latitude : ${selectedMarker.position.latitude}');
-//               log('Longitude : ${selectedMarker.position.longitude}');
-//               log('Address : $_selectedAddress');
-//             } else {
-//               Get.snackbar(
-//                 'Location Required',
-//                 'Please select a location on the map',
-//                 backgroundColor: AppColors.cee3333,
-//                 colorText: AppColors.cFFFFFF,
-//               );
-//             }
-//           },
-//           child: const Text('Confirm Location'),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
+import 'package:kaz_bd/helpers/ui_helpers.dart';
 
 import '../../../../routes/routes.dart';
 
@@ -622,7 +342,7 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
                   },
                   onLongPress: _onMapTapped,
                   markers: _markers,
-                  myLocationButtonEnabled: false, // We'll use our own button
+                  myLocationButtonEnabled: false, // Using custom button
                   zoomControlsEnabled: true,
                   myLocationEnabled: true,
                   compassEnabled: true,
@@ -632,14 +352,69 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
                   tiltGesturesEnabled: false,
                 ),
 
-                // Current location button overlay
+                // Current location button overlay - KEEPING THIS ONE
                 Positioned(
-                  bottom: 20,
-                  right: 10,
+                  bottom: 120.h,
+                  right: 10.w,
                   child: FloatingActionButton.small(
                     onPressed: _goToCurrentLocation,
                     backgroundColor: Colors.white,
                     child: const Icon(Icons.my_location, color: Colors.blue),
+                  ),
+                ),
+
+                Positioned(
+                  bottom: 20.h,
+                  right: 50.w,
+                  left: 50.w,
+                  child: Container(
+                    decoration: BoxDecoration(color: Colors.transparent),
+                    padding: EdgeInsets.only(
+                      left: UIHelper.kDefaulutPadding(),
+                      right: UIHelper.kDefaulutPadding(),
+                    ),
+                    child: ElevatedButton(
+                      onPressed: _selectedLocation == null
+                          ? null
+                          : () {
+                              // Navigate to service preview with selected location data
+                              Get.toNamed(
+                                Routes.servicePreviewScreen,
+                                arguments: {
+                                  'userId': providerId,
+                                  'bookingDateTime': bookingDateTime,
+                                  'lat': _selectedLocation!.latitude,
+                                  'long': _selectedLocation!.longitude,
+                                  'address': _selectedAddress,
+                                },
+                              );
+
+                              log('User ID : $providerId');
+                              log('Booking Date Time : $bookingDateTime');
+                              log('Latitude : ${_selectedLocation!.latitude}');
+                              log(
+                                'Longitude : ${_selectedLocation!.longitude}',
+                              );
+                              log('Address : $_selectedAddress');
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: _selectedLocation == null
+                            ? Colors.grey
+                            : AppColors.c5c5c5c,
+                        minimumSize: const Size(double.infinity, 50),
+                      ),
+                      child: Text(
+                        _selectedLocation == null
+                            ? "Select a Location First"
+                            : "Confirm Location",
+                        style: TextStyle(
+                          color: _selectedLocation == null
+                              ? Colors.grey[600]
+                              : Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -647,55 +422,62 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToCurrentLocation,
-        label: const Text('My Location'),
-        icon: const Icon(Icons.location_searching),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16.0),
-        child: ElevatedButton(
-          onPressed: _selectedLocation == null
-              ? null
-              : () {
-                  // Navigate to service preview with selected location data
-                  Get.toNamed(
-                    Routes.servicePreviewScreen,
-                    arguments: {
-                      'userId': providerId,
-                      'bookingDateTime': bookingDateTime,
-                      'lat': _selectedLocation!.latitude,
-                      'long': _selectedLocation!.longitude,
-                      'address': _selectedAddress,
-                    },
-                  );
 
-                  log('User ID : $providerId');
-                  log('Booking Date Time : $bookingDateTime');
-                  log('Latitude : ${_selectedLocation!.latitude}');
-                  log('Longitude : ${_selectedLocation!.longitude}');
-                  log('Address : $_selectedAddress');
-                },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: _selectedLocation == null
-                ? Colors.grey
-                : AppColors.c5c5c5c,
-            minimumSize: const Size(double.infinity, 50),
-          ),
-          child: Text(
-            _selectedLocation == null
-                ? "Select a Location First"
-                : "Confirm Location",
-            style: TextStyle(
-              color: _selectedLocation == null
-                  ? Colors.grey[600]
-                  : Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
+      bottomNavigationBar: Container(
+        width: 1.sw,
+        height: 50.h,
+        color: AppColors.c000000,
       ),
+      // REMOVED: floatingActionButton - No longer needed
+      // bottomNavigationBar: Container(
+      //   decoration: BoxDecoration(color: Colors.transparent),
+      //   padding: EdgeInsets.only(
+      //     left: UIHelper.kDefaulutPadding(),
+      //     right: UIHelper.kDefaulutPadding(),
+      //     top: UIHelper.kDefaulutPadding(),
+      //     bottom: 80.h,
+      //   ),
+      //   child: ElevatedButton(
+      //     onPressed: _selectedLocation == null
+      //         ? null
+      //         : () {
+      //             // Navigate to service preview with selected location data
+      //             Get.toNamed(
+      //               Routes.servicePreviewScreen,
+      //               arguments: {
+      //                 'userId': providerId,
+      //                 'bookingDateTime': bookingDateTime,
+      //                 'lat': _selectedLocation!.latitude,
+      //                 'long': _selectedLocation!.longitude,
+      //                 'address': _selectedAddress,
+      //               },
+      //             );
+
+      //             log('User ID : $providerId');
+      //             log('Booking Date Time : $bookingDateTime');
+      //             log('Latitude : ${_selectedLocation!.latitude}');
+      //             log('Longitude : ${_selectedLocation!.longitude}');
+      //             log('Address : $_selectedAddress');
+      //           },
+      //     style: ElevatedButton.styleFrom(
+      //       backgroundColor: _selectedLocation == null
+      //           ? Colors.grey
+      //           : AppColors.c5c5c5c,
+      //       minimumSize: const Size(double.infinity, 50),
+      //     ),
+      //     child: Text(
+      //       _selectedLocation == null
+      //           ? "Select a Location First"
+      //           : "Confirm Location",
+      //       style: TextStyle(
+      //         color: _selectedLocation == null
+      //             ? Colors.grey[600]
+      //             : Colors.white,
+      //         fontWeight: FontWeight.bold,
+      //       ),
+      //     ),
+      //   ),
+      // ),
     );
   }
 }
