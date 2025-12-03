@@ -328,49 +328,6 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
       ),
       body: Column(
         children: [
-          // Selected address display
-          // Container(
-          //   padding: const EdgeInsets.all(16.0),
-          //   color: AppColors.cFFFFFF,
-          //   child: Column(
-          //     crossAxisAlignment: CrossAxisAlignment.start,
-          //     children: [
-          //       Text(
-          //         _selectedLocation == null
-          //             ? "Your Current Location:"
-          //             : "Selected Location:",
-          //         style: TextFontStyle.headline14w500c000000StyleSatoshi,
-          //       ),
-          //       const SizedBox(height: 8),
-          //       _isLoadingLocation
-          //           ? Row(
-          //               children: [
-          //                 const CircularProgressIndicator(),
-          //                 const SizedBox(width: 10),
-          //                 Text(
-          //                   "Getting your location...",
-          //                   style:
-          //                       TextFontStyle.headline14w500c6a6a6aStyleSatoshi,
-          //                 ),
-          //               ],
-          //             )
-          //           : Text(
-          //               _selectedAddress,
-          //               style: TextFontStyle.headline14w500c6a6a6aStyleSatoshi,
-          //               maxLines: 2,
-          //               overflow: TextOverflow.ellipsis,
-          //             ),
-          //       if (_selectedLocation == null) ...[
-          //         const SizedBox(height: 8),
-          //         Text(
-          //           "Long press on the map to select a location",
-          //           style: TextFontStyle.headline12w500c000000StyleSatoshi,
-          //         ),
-          //       ],
-          //     ],
-          //   ),
-          // ),
-
           // Map container
           Expanded(
             child: Stack(

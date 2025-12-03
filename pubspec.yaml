@@ -61,6 +61,7 @@ dependencies:
   table_calendar: ^3.2.0
   omni_datetime_picker: ^2.3.1
   google_maps_flutter: ^2.14.0
+  
   latlong2: ^0.9.1
   dotted_border: ^3.1.0
   video_player: ^2.10.0
@@ -69,7 +70,6 @@ dependencies:
 
   #========================> TOKY ===================>
   logger:
-  http:
   permission_handler:
   #for custom loader
   flutter_spinkit:

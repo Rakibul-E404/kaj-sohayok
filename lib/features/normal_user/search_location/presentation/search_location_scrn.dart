@@ -87,9 +87,6 @@
 //       // Store the current location (just for display)
 //       _currentUserLocation = LatLng(position.latitude, position.longitude);
 
-//       // DON'T set _selectedLocation here - let user choose explicitly
-//       // _selectedLocation = _currentUserLocation; // REMOVE THIS LINE
-
 //       // Get address from coordinates
 //       await _getAddressFromLatLng(_currentUserLocation!);
 
@@ -102,7 +99,10 @@
 //             icon: BitmapDescriptor.defaultMarkerWithHue(
 //               BitmapDescriptor.hueBlue,
 //             ),
-//             infoWindow: const InfoWindow(title: 'Your Current Location'),
+//             infoWindow: InfoWindow(
+//               title: 'Your Current Location',
+//               snippet: _selectedAddress,
+//             ),
 //           ),
 //         );
 //         _isLoadingLocation = false;
@@ -194,7 +194,35 @@
 //       _markers.clear();
 //     });
 
-//     // Add RED marker for selected location (for booking)
+//     // Get address for the selected location
+//     String addressText =
+//         "Lat: ${position.latitude.toStringAsFixed(6)}, Lng: ${position.longitude.toStringAsFixed(6)}";
+
+//     try {
+//       List<Placemark> placemarks = await placemarkFromCoordinates(
+//         position.latitude,
+//         position.longitude,
+//       );
+
+//       if (placemarks.isNotEmpty) {
+//         Placemark place = placemarks[0];
+//         String fullAddress =
+//             "${place.street ?? ''}, ${place.subLocality ?? ''}, ${place.locality ?? ''}, ${place.country ?? ''}"
+//                 .replaceAll(", ,", ", ")
+//                 .replaceAll(RegExp(r', $'), '');
+
+//         addressText = fullAddress.isNotEmpty ? fullAddress : addressText;
+//       }
+//     } catch (e) {
+//       debugPrint("Geocoding error: $e");
+//     }
+
+//     // Update the address display
+//     setState(() {
+//       _selectedAddress = addressText;
+//     });
+
+//     // Add RED marker for selected location (for booking) with address in InfoWindow
 //     setState(() {
 //       _markers.add(
 //         Marker(
@@ -203,14 +231,14 @@
 //           icon: BitmapDescriptor.defaultMarkerWithHue(
 //             BitmapDescriptor.hueRed, // RED for selected location
 //           ),
-//           infoWindow: const InfoWindow(title: 'Selected Location'),
+//           infoWindow: InfoWindow(
+//             title: 'Selected Location',
+//             snippet: addressText, // Address shows here in InfoWindow
+//           ),
 //         ),
 //       );
 //       _selectedLocation = position; // User explicitly selected this
 //     });
-
-//     // Get address for the selected location
-//     await _getAddressFromLatLng(position);
 //   }
 
 //   void _goToCurrentLocation() async {
@@ -222,17 +250,13 @@
 //         ),
 //       );
 
-//       // DO NOT automatically select current location
-//       // Let user tap to select if they want it
-//       // _onMapTapped(_currentUserLocation!); // REMOVE THIS LINE
-
-//       // Instead, just show a message that they need to tap to select
+//       // Show a message that they need to tap to select
 //       Get.snackbar(
 //         'Tap to Select',
 //         'Long press on the map to select this location',
 //         backgroundColor: Colors.blue,
 //         colorText: Colors.white,
-//         duration: Duration(seconds: 2),
+//         duration: const Duration(seconds: 2),
 //       );
 //     } else {
 //       await _getCurrentLocation();
@@ -304,48 +328,6 @@
 //       ),
 //       body: Column(
 //         children: [
-//           // Selected address display
-//           Container(
-//             padding: const EdgeInsets.all(16.0),
-//             color: AppColors.cFFFFFF,
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Text(
-//                   _selectedLocation == null
-//                       ? "Your Current Location:"
-//                       : "Selected Location:",
-//                   style: TextFontStyle.headline14w500c000000StyleSatoshi,
-//                 ),
-//                 const SizedBox(height: 8),
-//                 _isLoadingLocation
-//                     ? Row(
-//                         children: [
-//                           const CircularProgressIndicator(),
-//                           const SizedBox(width: 10),
-//                           Text(
-//                             "Getting your location...",
-//                             style:
-//                                 TextFontStyle.headline14w500c6a6a6aStyleSatoshi,
-//                           ),
-//                         ],
-//                       )
-//                     : Text(
-//                         _selectedAddress,
-//                         style: TextFontStyle.headline14w500c6a6a6aStyleSatoshi,
-//                         maxLines: 2,
-//                         overflow: TextOverflow.ellipsis,
-//                       ),
-//                 if (_selectedLocation == null) ...[
-//                   const SizedBox(height: 8),
-//                   Text(
-//                     "Long press on the map to select a location",
-//                     style: TextFontStyle.headline12w500c000000StyleSatoshi,
-//                   ),
-//                 ],
-//               ],
-//             ),
-//           ),
 
 //           // Map container
 //           Expanded(
@@ -394,7 +376,9 @@
 //                     right: 50.w,
 //                     left: 50.w,
 //                     child: Container(
-//                       decoration: BoxDecoration(color: Colors.transparent),
+//                       decoration: const BoxDecoration(
+//                         color: Colors.transparent,
+//                       ),
 //                       padding: EdgeInsets.only(
 //                         left: UIHelper.kDefaulutPadding(),
 //                         right: UIHelper.kDefaulutPadding(),
