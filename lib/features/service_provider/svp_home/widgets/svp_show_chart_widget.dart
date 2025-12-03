@@ -6,7 +6,6 @@ import 'package:kaz_bd/features/service_provider/svp_home/widgets/custom_chart_b
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 
-import '../../../../constants/appList.dart';
 import '../../../../controllers/svp_home_screen_controller.dart';
 
 class IncomeChartCard extends StatelessWidget {
@@ -64,14 +63,18 @@ class IncomeChartCard extends StatelessWidget {
                         color: AppColors.c000000,
                       ),
                       style: TextFontStyle.headline12w500c000000StyleSatoshi,
-                      items: ['Weekly', 'Monthly'].map((String value) {
+                      items: ['weekly', 'monthly'].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value),
+                          child: Text(value[0].toUpperCase() + value.substring(1)), // Capitalize first letter
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
-                        controller.selectedPeriod.value = newValue!;
+                        if (newValue != null) {
+                          controller.selectedPeriod.value = newValue;
+                          // Trigger refresh of data based on new period
+                          controller.getServiceProviderHomeData();
+                        }
                       },
                     ),
                   ),
@@ -92,59 +95,49 @@ class IncomeChartCard extends StatelessWidget {
 
           // Chart
           Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                // Y-axis labels
-                Obx(
-                  () => SizedBox(
+            child: Obx(() {
+              final chartData = controller.chartData;
+              if (chartData.isEmpty) {
+                return const Center(child: Text('No chart data available'));
+              }
+
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  // Y-axis labels
+                  SizedBox(
                     height: 120.h,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          controller.selectedPeriod.value == 'Weekly'
-                              ? '20 K'
-                              : '60 K',
-                          style:
-                              TextFontStyle.headline12w500c4d4d4dStyleSatoshi,
+                          '${(controller.maxValue / 5 * 5).toInt()} K',
+                          style: TextFontStyle.headline12w500c4d4d4dStyleSatoshi,
                         ),
                         Text(
-                          controller.selectedPeriod.value == 'Weekly'
-                              ? '15 K'
-                              : '45 K',
-                          style:
-                              TextFontStyle.headline12w500c4d4d4dStyleSatoshi,
+                          '${(controller.maxValue / 5 * 4).toInt()} K',
+                          style: TextFontStyle.headline12w500c4d4d4dStyleSatoshi,
                         ),
                         Text(
-                          controller.selectedPeriod.value == 'Weekly'
-                              ? '10 K'
-                              : '30 K',
-                          style:
-                              TextFontStyle.headline12w500c4d4d4dStyleSatoshi,
+                          '${(controller.maxValue / 5 * 3).toInt()} K',
+                          style: TextFontStyle.headline12w500c4d4d4dStyleSatoshi,
                         ),
                         Text(
-                          controller.selectedPeriod.value == 'Weekly'
-                              ? '5 K'
-                              : '15 K',
-                          style:
-                              TextFontStyle.headline12w500c4d4d4dStyleSatoshi,
+                          '${(controller.maxValue / 5 * 2).toInt()} K',
+                          style: TextFontStyle.headline12w500c4d4d4dStyleSatoshi,
                         ),
                         Text(
                           '0 K',
-                          style:
-                              TextFontStyle.headline12w500c4d4d4dStyleSatoshi,
+                          style: TextFontStyle.headline12w500c4d4d4dStyleSatoshi,
                         ),
                       ],
                     ),
                   ),
-                ),
-                UIHelper.horizontalSpace(8.w),
+                  UIHelper.horizontalSpace(8.w),
 
-                // Custom Chart
-                Expanded(
-                  child: Obx(
-                    () => SizedBox(
+                  // Custom Chart
+                  Expanded(
+                    child: SizedBox(
                       height: 120.h,
                       child: Column(
                         children: [
@@ -153,21 +146,16 @@ class IncomeChartCard extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.end,
-                              children: AppList
-                                  .chartData[controller.selectedPeriod.value]!
-                                  .map(
-                                    (data) => CustomBar(
-                                      value: data.value,
-                                      maxValue: controller.maxValue,
-                                      label: data.day,
-                                      barWidth:
-                                          controller.selectedPeriod.value ==
-                                              "Monthly"
-                                          ? 14.w
-                                          : 28.w,
-                                    ),
-                                  )
-                                  .toList(),
+                              children: chartData.asMap().entries.map((entry) {
+                                var data = entry.value;
+
+                                return CustomBar(
+                                  value: (data.income ?? 0).toDouble(),
+                                  maxValue: controller.maxValue,
+                                  label: data.label ?? '',
+                                  barWidth: 14.w, // Fixed bar width for better spacing
+                                );
+                              }).toList(),
                             ),
                           ),
                           UIHelper.verticalSpace(8.h),
@@ -175,31 +163,24 @@ class IncomeChartCard extends StatelessWidget {
                           // X-axis labels
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: AppList
-                                .chartData[controller.selectedPeriod.value]!
-                                .map(
-                                  (data) => Text(
-                                    data.day,
-                                    style: TextFontStyle
-                                        .headline12w500c4d4d4dStyleSatoshi
-                                        .copyWith(
-                                          fontSize:
-                                              controller.selectedPeriod.value ==
-                                                  "Monthly"
-                                              ? 8.sp
-                                              : 12.sp,
-                                        ),
-                                  ),
-                                )
-                                .toList(),
+                            children: chartData.map((data) {
+                              return Text(
+                                data.label ?? '',
+                                style: TextFontStyle
+                                    .headline12w500c4d4d4dStyleSatoshi
+                                    .copyWith(
+                                      fontSize: 10.sp,
+                                    ),
+                              );
+                            }).toList(),
                           ),
                         ],
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              );
+            }),
           ),
         ],
       ),

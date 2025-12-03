@@ -87,5 +87,8 @@ class AppUrl {
     return '${baseUrl}v1/service-providers/limited-info/$userId';
   }
 
+  static String getServiceProviderHomeData =
+      '${baseUrl}v1/users/home-page/for-provider?type=weekly';
+
   ///-------------///Imtiaz Chowdhury End///------------------
 }
