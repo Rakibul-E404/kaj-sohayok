@@ -9,7 +9,7 @@ import '../../../../../../helpers/ui_helpers.dart';
 
 class WalletCardTileWidget extends StatelessWidget {
   final String title;
-  final double amount;
+  final String amount;
   final bool isWithdrawlCard;
   const WalletCardTileWidget({
     super.key,
@@ -48,7 +48,7 @@ class WalletCardTileWidget extends StatelessWidget {
 
           ///Section : Total Available Amount
           Text(
-            "\$${amount.toStringAsFixed(2)}",
+            "\$$amount",
             style: isWithdrawlCard
                 ? TextFontStyle.headline24w700cff6b6bStyleSatoshi
                 : TextFontStyle.headline24w700c778bebStyleSatoshi,

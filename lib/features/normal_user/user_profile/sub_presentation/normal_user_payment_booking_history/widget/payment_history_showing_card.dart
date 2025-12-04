@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,6 +19,7 @@ class PaymentHistoryShowingCard extends StatelessWidget {
   final String serviceProviderName;
   final String serviceProviderDesignation;
   final void Function()? onTap;
+
   const PaymentHistoryShowingCard({
     super.key,
     required this.serviceName,
@@ -151,9 +153,12 @@ class PaymentHistoryShowingCard extends StatelessWidget {
                   Stack(
                     children: [
                       CircleAvatar(
-                        radius: 24.r,
-                        backgroundImage: AssetImage(
-                          serviceProviderProfileImage,
+                        radius: 30,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(30),
+                          child: CachedNetworkImage(
+                            imageUrl: serviceProviderProfileImage,
+                          ),
                         ),
                       ),
                       Positioned(

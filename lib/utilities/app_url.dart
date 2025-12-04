@@ -10,34 +10,65 @@ class AppUrl {
   static String forgetPassword = '${baseUrl}v1/auth/forgot-password';
   static String resetPassword = '${baseUrl}v1/auth/reset-password';
   static String changePassword = '${baseUrl}v1/auth/change-password';
+
   // ==========> User Profile ==========>
   static String fetchProfile = '${baseUrl}v1/users/profile-info';
   static String updateUserProfileInfo = '${baseUrl}v1/users/profile-info';
   static String updateUserProfilePicture = '${baseUrl}v1/users/profile-picture';
+
+  // ==========> User Payment History ==========>
+  static String userPaymentHistory =
+      '${baseUrl}v1/service-bookings/paginate?status=completed';
+
+  static String userPaymentHistoryDetails({required String id}) {
+    return '${baseUrl}v1/service-bookings/with-costs-summary/$id';
+  }
+
   // ==========> User Settings ==========>
   static String userPrivacyPolicy = '${baseUrl}v1/settings?type=privacyPolicy';
-  static String userTermsAndConditions = '${baseUrl}v1/settings?type=termsAndConditions';
+  static String userTermsAndConditions =
+      '${baseUrl}v1/settings?type=termsAndConditions';
   static String userAboutUs = '${baseUrl}v1/settings?type=aboutUs';
   static String userContactUs = '${baseUrl}v1/settings?type=contactUs';
+
   // ==========> Service Form ==========>
   static String serviceFormCategories = '${baseUrl}v1/service-categories/';
   static String serviceProviderFormSubmit = '${baseUrl}v1/service-providers';
 
-<<<<<<< HEAD
+  // ==========> Service Wallet ==========>
+  static String serviceProviderWithdrawalRequest =
+      '${baseUrl}v1/withdrawal-requst/';
+
   // ==========> Service Document Fetch ==========>
 
   static String getProviderDocumentDetails =
       '${baseUrl}v1/service-providers/details-with-nid?page=1&limit=2000';
-=======
+  static String getProviderTransactionDetails =
+      '${baseUrl}v1/wallet-transactions/paginate-with-wallet?page=1&limit=2000';
+
+  static String updateProviderDocuments({required String serviceProviderDetailsId}) {
+    return '${baseUrl}v1/service-providers/upload-attachments-v2?serviceProviderDetailsId=$serviceProviderDetailsId';
+  }
+
+  static String userDocumentDelete({required String id}) {
+    return '${baseUrl}v1/attachments/$id';
+  }
+  // =======
   ///===> rakiubl added api:
-  static String pendingBookings = '${baseUrl}v1/service-bookings/paginate?status=pending';
-  static String acceptedBookings = '${baseUrl}v1/service-bookings/paginate?status=accepted';
-  static String inProgressBookings = '${baseUrl}v1/service-bookings/paginate?status=inProgress';
-  static String cancelledBookings = '${baseUrl}v1/service-bookings/paginate?status=cancelled';
-  static String completedBookings = '${baseUrl}v1/service-bookings/paginate?status=completed';
-  static String paymentRequests = '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
+  static String pendingBookings =
+      '${baseUrl}v1/service-bookings/paginate?status=pending';
+  static String acceptedBookings =
+      '${baseUrl}v1/service-bookings/paginate?status=accepted';
+  static String inProgressBookings =
+      '${baseUrl}v1/service-bookings/paginate?status=inProgress';
+  static String cancelledBookings =
+      '${baseUrl}v1/service-bookings/paginate?status=cancelled';
+  static String completedBookings =
+      '${baseUrl}v1/service-bookings/paginate?status=completed';
+  static String paymentRequests =
+      '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
+
   ///===> rakibul api add close
->>>>>>> c6e475534a98b790bbdfcb6991192fe23bfaa5e8
 
   static String getNormalUserHomeData = '${baseUrl}v1/users/home-page';
   static String getNormalUserAllCategory =
@@ -48,7 +79,8 @@ class AppUrl {
     required String pageId,
     String? serviceName,
   }) {
-    String url = '${baseUrl}v1/service-providers/paginate?page=$pageId&serviceCategoryId=$categoryId';
+    String url =
+        '${baseUrl}v1/service-providers/paginate?page=$pageId&serviceCategoryId=$categoryId';
     if (serviceName != null && serviceName.isNotEmpty) {
       url += '&serviceName=$serviceName';
     }

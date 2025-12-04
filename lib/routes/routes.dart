@@ -43,6 +43,7 @@ import '../controllers/service_of_specific_category_screen_controller.dart';
 import '../features/auth/verify_otp/verify_otp_screen.dart';
 import '../features/service_provider/profile_under_review/presentation/profile_under_review_screen.dart';
 import '../features/service_provider/face_verification/presentation/face_verification_screen.dart';
+import '../features/service_provider/svp_profile/sub_presentation/svp_documents/presentation/svp_document_edit_screen.dart';
 
 class Routes {
   ///Section : Common Screens Routing
@@ -97,6 +98,7 @@ class Routes {
   static const String svpPendingPaymentRequestDetailsScreen =
       '/svp_PendingPayment_Details_screen';
   static const String svpEditProfileScreen = '/svp_edit_profile_screen';
+  static const String svpEditDocumentScreen = '/svp_edit_document_screen';
 
   static final appRoutes = [
     ///Section : Normal User Screens & Common Screens
@@ -449,6 +451,20 @@ class Routes {
     GetPage(
       name: svpEditProfileScreen,
       page: () => SvpEditProfileScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+    GetPage(
+      name: svpEditProfileScreen,
+      page: () => SvpEditProfileScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+    GetPage(
+      name: svpEditDocumentScreen,
+      page: () => SvpDocumentEditPage(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),

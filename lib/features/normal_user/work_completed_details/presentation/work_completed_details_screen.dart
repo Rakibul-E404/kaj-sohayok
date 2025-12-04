@@ -1,10 +1,11 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:kaz_bd/constants/appList.dart';
+import 'package:intl/intl.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/features/normal_user/work_completed_details/widgets/additional_cost_popup.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
@@ -16,7 +17,10 @@ import '../../../../custom_widgets/payment_summery_widget.dart';
 import '../../../../custom_widgets/proof_of_work_showing_widget.dart';
 import '../../../../custom_widgets/workCompleteDateAndTimeWidget.dart';
 import '../../../../gen/colors.gen.dart';
+import '../../../../models/user_payment_history_details_model.dart'; // Adjust path if needed
 import '../../../../routes/routes.dart';
+import '../../../../utilities/app_url.dart';
+import '../model/additional_cost_model.dart';
 
 class WorkCompletedDetailsScreen extends StatefulWidget {
   const WorkCompletedDetailsScreen({super.key});
@@ -28,65 +32,96 @@ class WorkCompletedDetailsScreen extends StatefulWidget {
 
 class _WorkCompletedDetailsScreenState
     extends State<WorkCompletedDetailsScreen> {
-  late VideoPlayerController _videoController;
-  bool _isVideoInitialized = false;
+  late UserPaymentHistoryDetailsModel _paymentDetails;
+  final Map<String, VideoPlayerController> _videoControllers = {};
+  final Set<String> _initializedVideos = {};
 
   @override
   void initState() {
     super.initState();
-    _initializeVideoPlayer();
+    _paymentDetails = Get.arguments as UserPaymentHistoryDetailsModel;
+    _initializeVideoPlayers();
   }
 
-  void _initializeVideoPlayer() {
-    // Try multiple video sources - replace with your actual video URL
-    _videoController = VideoPlayerController.networkUrl(
-      Uri.parse(
-        'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-      ),
-    );
+  void _initializeVideoPlayers() {
+    final videoAttachments =
+        _paymentDetails.serviceBooking?.attachments
+            ?.where(
+              (a) =>
+                  (a.attachmentType?.toLowerCase() == 'video') &&
+                  (a.attachment?.isNotEmpty == true),
+            )
+            .toList() ??
+        [];
 
-    // Alternative working URLs you can try:
-    // Uri.parse('https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4')
-    // Uri.parse('https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4')
+    for (var att in videoAttachments) {
+      final url = att.attachment!;
+      final key = url; // Use URL as unique key
 
-    // For local asset video, use:
-    // _videoController = VideoPlayerController.asset('assets/videos/sample_video.mp4');
+      _videoControllers[key] = VideoPlayerController.networkUrl(
+        Uri.parse(url.trim()),
+      );
 
-    _videoController
-        .initialize()
-        .then((_) {
-          if (mounted) {
-            setState(() {
-              _isVideoInitialized = true;
-            });
-            log('Video initialized successfully');
-          }
-        })
-        .catchError((error) {
-          log('Video initialization error: $error');
-          if (mounted) {
-            setState(() {
-              _isVideoInitialized = false;
-            });
-          }
-        });
+      _videoControllers[key]!
+          .initialize()
+          .then((_) {
+            if (mounted) {
+              setState(() {
+                _initializedVideos.add(key);
+              });
+              log('Video initialized: $url');
+            }
+          })
+          .catchError((error) {
+            log('Failed to load video: $url | Error: $error');
+          });
 
-    // Add listener for video state changes
-    _videoController.addListener(() {
-      if (mounted) {
-        setState(() {});
-      }
-    });
+      _videoControllers[key]!.addListener(() {
+        if (mounted) setState(() {});
+      });
+    }
   }
 
   @override
   void dispose() {
-    _videoController.dispose();
+    for (var controller in _videoControllers.values) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
-  Widget _buildVideoPlayer() {
-    if (!_isVideoInitialized) {
+  String _formatDate(String? dateStr) {
+    if (dateStr == null) return "N/A";
+    try {
+      return DateFormat('dd-MM-yy').format(DateTime.parse(dateStr));
+    } catch (e) {
+      return dateStr;
+    }
+  }
+
+  String _formatDateTime(String? dateTimeStr) {
+    if (dateTimeStr == null) return "N/A";
+    try {
+      return DateFormat(
+        'MMM dd, yyyy  hh:mm a',
+      ).format(DateTime.parse(dateTimeStr));
+    } catch (e) {
+      return dateTimeStr;
+    }
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final minutes = twoDigits(duration.inMinutes.remainder(60));
+    final seconds = twoDigits(duration.inSeconds.remainder(60));
+    return '$minutes:$seconds';
+  }
+
+  Widget _buildVideoPlayer(String videoUrl) {
+    final controller = _videoControllers[videoUrl];
+    final isInitialized = _initializedVideos.contains(videoUrl);
+
+    if (controller == null || !isInitialized) {
       return Container(
         width: 1.sw,
         height: 200.h,
@@ -122,30 +157,25 @@ class _WorkCompletedDetailsScreenState
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // Video Player
             SizedBox(
               width: double.infinity,
               height: double.infinity,
               child: FittedBox(
                 fit: BoxFit.cover,
                 child: SizedBox(
-                  width: _videoController.value.size.width,
-                  height: _videoController.value.size.height,
-                  child: VideoPlayer(_videoController),
+                  width: controller.value.size.width,
+                  height: controller.value.size.height,
+                  child: VideoPlayer(controller),
                 ),
               ),
             ),
-
-            // Play/Pause Button Overlay
             GestureDetector(
               onTap: () {
-                setState(() {
-                  if (_videoController.value.isPlaying) {
-                    _videoController.pause();
-                  } else {
-                    _videoController.play();
-                  }
-                });
+                if (controller.value.isPlaying) {
+                  controller.pause();
+                } else {
+                  controller.play();
+                }
               },
               child: Container(
                 width: double.infinity,
@@ -153,7 +183,7 @@ class _WorkCompletedDetailsScreenState
                 color: Colors.transparent,
                 child: Center(
                   child: AnimatedOpacity(
-                    opacity: _videoController.value.isPlaying ? 0.0 : 0.8,
+                    opacity: controller.value.isPlaying ? 0.0 : 0.8,
                     duration: const Duration(milliseconds: 300),
                     child: Container(
                       width: 60.w,
@@ -163,7 +193,7 @@ class _WorkCompletedDetailsScreenState
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
-                        _videoController.value.isPlaying
+                        controller.value.isPlaying
                             ? Icons.pause
                             : Icons.play_arrow,
                         color: Colors.white,
@@ -174,19 +204,17 @@ class _WorkCompletedDetailsScreenState
                 ),
               ),
             ),
-
-            // Video Progress Indicator
             Positioned(
               bottom: 8.h,
               left: 8.w,
               right: 8.w,
               child: AnimatedOpacity(
-                opacity: _videoController.value.isPlaying ? 0.3 : 0.8,
+                opacity: controller.value.isPlaying ? 0.3 : 0.8,
                 duration: const Duration(milliseconds: 300),
                 child: Container(
                   height: 4.h,
                   child: VideoProgressIndicator(
-                    _videoController,
+                    controller,
                     allowScrubbing: true,
                     padding: EdgeInsets.zero,
                     colors: VideoProgressColors(
@@ -198,9 +226,7 @@ class _WorkCompletedDetailsScreenState
                 ),
               ),
             ),
-
-            // Video Duration Display
-            if (!_videoController.value.isPlaying)
+            if (!controller.value.isPlaying)
               Positioned(
                 bottom: 20.h,
                 right: 12.w,
@@ -211,7 +237,7 @@ class _WorkCompletedDetailsScreenState
                     borderRadius: BorderRadius.circular(4.r),
                   ),
                   child: Text(
-                    _formatDuration(_videoController.value.duration),
+                    _formatDuration(controller.value.duration),
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 10.sp,
@@ -226,15 +252,93 @@ class _WorkCompletedDetailsScreenState
     );
   }
 
-  String _formatDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final minutes = twoDigits(duration.inMinutes.remainder(60));
-    final seconds = twoDigits(duration.inSeconds.remainder(60));
-    return '$minutes:$seconds';
+  List<Widget> _buildProofOfWorkWidgets() {
+    final attachments = _paymentDetails.serviceBooking?.attachments ?? [];
+    if (attachments.isEmpty) {
+      return [
+        ProofOfWorkShowingWidget(
+          title: "Proof of Work",
+          child: Center(
+            child: Text(
+              "No proof provided",
+              style: TextFontStyle.headline12w400c727272StyleSatoshi,
+            ),
+          ),
+        ),
+        UIHelper.verticalSpace(24.h),
+      ];
+    }
+
+    final List<Widget> widgets = [];
+
+    final imageAttachments = attachments.where(
+      (a) =>
+          a.attachmentType?.toLowerCase() == 'image' &&
+          a.attachment?.isNotEmpty == true,
+    );
+
+    for (var att in imageAttachments) {
+      widgets.add(
+        ProofOfWorkShowingWidget(
+          title: "Proof of Image",
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(4.r),
+            child: Image.network(
+              att.attachment!,
+              width: 1.sw,
+              height: 200.h,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                color: AppColors.c778beb,
+                child: Icon(Icons.broken_image, color: Colors.grey),
+              ),
+            ),
+          ),
+        ),
+      );
+      widgets.add(UIHelper.verticalSpace(24.h));
+    }
+
+    final videoAttachments = attachments.where(
+      (a) =>
+          a.attachmentType?.toLowerCase() == 'video' &&
+          a.attachment?.isNotEmpty == true,
+    );
+
+    for (var att in videoAttachments) {
+      widgets.add(
+        ProofOfWorkShowingWidget(
+          title: "Proof of Video",
+          child: _buildVideoPlayer(att.attachment!),
+        ),
+      );
+      widgets.add(UIHelper.verticalSpace(24.h));
+    }
+
+    return widgets;
   }
 
   @override
   Widget build(BuildContext context) {
+    final serviceBooking = _paymentDetails.serviceBooking;
+    final provider = serviceBooking?.providerId;
+    final apiAdditionalCosts = _paymentDetails.additionalCosts ?? [];
+    final initialCost = serviceBooking?.startPrice ?? 0.0;
+
+    // Convert to UI model
+    final List<AdditionalCostModel> additionalCosts = apiAdditionalCosts
+        .map(
+          (cost) => AdditionalCostModel(
+            title: cost.costName ?? "Additional Cost",
+            price: cost.price ?? 0.0,
+          ),
+        )
+        .toList();
+
+    final totalPayment =
+        initialCost +
+        additionalCosts.fold(0.0, (sum, cost) => sum + cost.price);
+
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -245,7 +349,6 @@ class _WorkCompletedDetailsScreenState
         centerTitle: true,
         backgroundColor: AppColors.scaffoldBackgroundColor,
       ),
-
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -254,28 +357,27 @@ class _WorkCompletedDetailsScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Work Complete Information ",
+                  "Work Complete Information",
                   style: TextFontStyle.headline16w700c000000StyleSatoshi,
                 ),
                 UIHelper.verticalSpace(16.h),
 
-                ///Section : Work Completation Date
+                /// Completion Date
                 WorkCompleteDateAndTimeWidget(
                   title: "Completion Date",
-                  data: "11-08-25",
+                  data: _formatDate(serviceBooking?.completionDate),
                 ),
                 UIHelper.verticalSpace(16.h),
 
-                ///Section : Work Duration
+                /// Duration
                 WorkCompleteDateAndTimeWidget(
                   title: "Duration Time",
-                  data: "1 Day",
+                  data: serviceBooking?.duration ?? "N/A",
                   isIconVisible: false,
                 ),
                 UIHelper.verticalSpace(24.h),
 
-                ///Section : Working Address
-                ///Section : Booking Order Date
+                /// Address & Booking Date
                 Container(
                   width: 1.sw,
                   padding: EdgeInsets.symmetric(
@@ -288,159 +390,118 @@ class _WorkCompletedDetailsScreenState
                   ),
                   child: Column(
                     children: [
-                      ///Section : Working Address
                       AddressAndOrderDateTile(
                         title: "Working Address",
                         icon: Icons.location_on,
-                        data: "Rampura Dhaka, Bangladesh",
+                        data: serviceBooking?.address?.en ?? "N/A",
                       ),
                       UIHelper.verticalSpace(14.h),
-
-                      ///Section : Booking Order Date
                       AddressAndOrderDateTile(
                         title: "Booking Order Date",
                         icon: Icons.watch_later_rounded,
-                        data: "Jun 17, 2025  09:31AM",
+                        data: _formatDateTime(serviceBooking?.bookingDateTime),
                       ),
                     ],
                   ),
                 ),
                 UIHelper.verticalSpace(24.h),
 
-                ///Section : Proof Of Work
-                ///Section : Text -> Proof of image
-                ///Section : Work Image
-                ProofOfWorkShowingWidget(
-                  title: "Proof of Image",
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4.r),
-                    child: Image.asset(
-                      Assets.images.userImage.path,
+                /// Proof of Work (Images + Videos)
+                ..._buildProofOfWorkWidgets(),
+
+                /// Service Provider
+                if (provider != null)
+                  InkWell(
+                    onTap: () {
+                      // Get.toNamed(
+                      //   Routes.serviceProviderProfileDetailsScreen,
+                      //   arguments: provider,
+                      // );
+                    },
+                    child: Container(
                       width: 1.sw,
-                      height: 200.h,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-                UIHelper.verticalSpace(24.h),
-
-                ///Section : Proof Of Work
-                ///Section : Text -> Proof of Video
-                ///Section : Work Video Player
-                ProofOfWorkShowingWidget(
-                  title: "Proof of Video",
-                  child: _buildVideoPlayer(),
-                ),
-                UIHelper.verticalSpace(24.h),
-
-                ///Section : Service Provider Image
-                ///Section : Service Provider Name
-                ///Section : Service Provider
-                ///Section : Message
-                ///Section : Call
-                InkWell(
-                  onTap: () {
-                    Get.toNamed(Routes.serviceProviderProfileDetailsScreen);
-                  },
-                  child: Container(
-                    width: 1.sw,
-                    padding: EdgeInsets.all(12.sp),
-                    decoration: BoxDecoration(
-                      color: AppColors.cf7f8fd,
-                      border: Border.all(color: AppColors.cb4b4b4),
-                      borderRadius: BorderRadius.circular(8.r),
-
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.ca4b1f2.withAlpha(80),
-                          blurRadius: 12.r,
-                          offset: const Offset(0, 6),
-                        ),
-                      ],
-                    ),
-
-                    child: Row(
-                      children: [
-                        ///Section : Service Provider Image
-                        CircleAvatar(
-                          radius: 20.r,
-                          backgroundImage: AssetImage(
-                            Assets.images.userImage.path,
+                      padding: EdgeInsets.all(12.sp),
+                      decoration: BoxDecoration(
+                        color: AppColors.cf7f8fd,
+                        border: Border.all(color: AppColors.cb4b4b4),
+                        borderRadius: BorderRadius.circular(8.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.ca4b1f2.withAlpha(80),
+                            blurRadius: 12.r,
+                            offset: const Offset(0, 6),
                           ),
-                        ),
-                        UIHelper.horizontalSpace(6.w),
-
-                        ///Section : Service Provider Name
-                        ///Section : Service Provider
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ///Section : Service Provider Name
-                            Text(
-                              "Ripon Mia",
-                              style: TextFontStyle
-                                  .headline16w500c202020StyleSatoshi,
-                            ),
-                            UIHelper.verticalSpace(2.h),
-
-                            ///Section : Service Provider
-                            Text(
-                              "Services Provider",
-                              style: TextFontStyle
-                                  .headline10w500c4d4d4dStyleSatoshi,
-                            ),
-                          ],
-                        ),
-                        Spacer(),
-
-                        ///Section : Message
-                        ///Section : Call
-                        Row(
-                          children: [
-                            ///Section : Message
-                            InkWell(
-                              onTap: () {
-                                log("Message Button Taped!");
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(6.sp),
-                                decoration: BoxDecoration(
-                                  color: AppColors.c778beb,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: SvgPicture.asset(
-                                  Assets.icons.messageIcon,
-                                ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 20.r,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(24),
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    '${AppUrl.imageBaseUrl}${provider.profileImage?.imageUrl}',
                               ),
                             ),
-                            UIHelper.horizontalSpace(8.w),
-
-                            ///Section : Call
-                            InkWell(
-                              onTap: () {
-                                log("Call Button Taped!");
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(6.sp),
-                                decoration: BoxDecoration(
-                                  color: AppColors.c778beb,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.call,
-                                  color: AppColors.cFFFFFF,
+                          ),
+                          UIHelper.horizontalSpace(6.w),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                provider.name ?? "Unknown Provider",
+                                style: TextFontStyle
+                                    .headline16w500c202020StyleSatoshi,
+                              ),
+                              UIHelper.verticalSpace(2.h),
+                              Text(
+                                "Services Provider",
+                                style: TextFontStyle
+                                    .headline10w500c4d4d4dStyleSatoshi,
+                              ),
+                            ],
+                          ),
+                          Spacer(),
+                          Row(
+                            children: [
+                              InkWell(
+                                onTap: () => log("Message tapped"),
+                                child: Container(
+                                  padding: EdgeInsets.all(6.sp),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.c778beb,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: SvgPicture.asset(
+                                    Assets.icons.messageIcon,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              UIHelper.horizontalSpace(8.w),
+                              InkWell(
+                                onTap: () => log("Call tapped"),
+                                child: Container(
+                                  padding: EdgeInsets.all(6.sp),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.c778beb,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.call,
+                                    color: AppColors.cFFFFFF,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                UIHelper.verticalSpace(24.h),
+                if (provider != null) UIHelper.verticalSpace(24.h),
 
-                ///Section : Payment Summery
+                /// Payment Summary
                 PaymentSummeryWidget(
                   onTap: () {
                     showAdditionalCostDialog(
@@ -450,19 +511,13 @@ class _WorkCompletedDetailsScreenState
                       },
                     );
                   },
-
-                  initialCost: 30,
-                  additionalCostList: AppList.additionalCosts,
-                  totalPayment:
-                      30 +
-                      AppList.additionalCosts.fold(
-                        0,
-                        (sum, item) => sum + item.price,
-                      ),
-                  isTransactionIdCardVisible: true,
-                  transactionID: "1234 5678 2345",
+                  initialCost: initialCost,
+                  additionalCostList: additionalCosts,
+                  totalPayment: totalPayment,
+                  isTransactionIdCardVisible:
+                      serviceBooking?.paymentTransactionId != null,
+                  transactionID: serviceBooking?.paymentTransactionId ?? "N/A",
                 ),
-
                 UIHelper.verticalSpace(55.h),
               ],
             ),

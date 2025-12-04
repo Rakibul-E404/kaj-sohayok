@@ -11,15 +11,14 @@ import '../../../../custom_widgets/custom_elevated_button.dart';
 import '../../../../gen/colors.gen.dart';
 import '../widgets/edit_profile_formfield_widget.dart';
 
-
-
 class UserEditProfileScreen extends StatelessWidget {
   UserEditProfileScreen({super.key});
 
   final UserEditProfileScreenController controller = Get.put(
     UserEditProfileScreenController(),
   );
-  final UserProfileScreenController userProfileController = Get.find<UserProfileScreenController>();
+  final UserProfileScreenController userProfileController =
+      Get.find<UserProfileScreenController>();
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +43,8 @@ class UserEditProfileScreen extends StatelessWidget {
                   alignment: Alignment.center,
                   children: [
                     Obx(() {
-                      final imagePath = userProfileController.profileImage.value;
+                      final imagePath =
+                          userProfileController.profileImage.value;
                       final bool isNetworkImage = imagePath.startsWith('http');
                       final bool hasImage = imagePath.isNotEmpty;
 
@@ -68,33 +68,33 @@ class UserEditProfileScreen extends StatelessWidget {
                         child: ClipOval(
                           child: hasImage
                               ? (isNetworkImage
-                              ? CachedNetworkImage(
-                            imageUrl: imagePath,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Center(
-                              child: CircularProgressIndicator(
-                                color: AppColors.c778beb,
-                              ),
-                            ),
-                            errorWidget: (context, url, error) =>
-                                Icon(
-                                  Icons.person,
-                                  size: 60.sp,
-                                  color: Colors.grey[400],
-                                ),
-                          )
-                              : Image.file(
-                            File(imagePath),
-                            fit: BoxFit.cover,
-                          ))
+                                    ? CachedNetworkImage(
+                                        imageUrl: imagePath,
+                                        fit: BoxFit.cover,
+                                        placeholder: (context, url) => Center(
+                                          child: CircularProgressIndicator(
+                                            color: AppColors.c778beb,
+                                          ),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(
+                                              Icons.person,
+                                              size: 60.sp,
+                                              color: Colors.grey[400],
+                                            ),
+                                      )
+                                    : Image.file(
+                                        File(imagePath),
+                                        fit: BoxFit.cover,
+                                      ))
                               : Container(
-                            color: Colors.grey[200],
-                            child: Icon(
-                              Icons.person,
-                              size: 60.sp,
-                              color: Colors.grey[400],
-                            ),
-                          ),
+                                  color: Colors.grey[200],
+                                  child: Icon(
+                                    Icons.person,
+                                    size: 60.sp,
+                                    color: Colors.grey[400],
+                                  ),
+                                ),
                         ),
                       );
                     }),
@@ -112,10 +112,7 @@ class UserEditProfileScreen extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: AppColors.c778beb,
                             shape: BoxShape.circle,
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 2,
-                            ),
+                            border: Border.all(color: Colors.white, width: 2),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.2),
@@ -187,9 +184,13 @@ class UserEditProfileScreen extends StatelessWidget {
                         onTap: () async {
                           final DateTime? picked = await showDatePicker(
                             context: context,
-                            initialDate: controller.dateOfBirthController.text.isEmpty
+                            initialDate:
+                                controller.dateOfBirthController.text.isEmpty
                                 ? DateTime.now()
-                                : _parseDate(controller.dateOfBirthController.text) ?? DateTime.now(),
+                                : _parseDate(
+                                        controller.dateOfBirthController.text,
+                                      ) ??
+                                      DateTime.now(),
                             firstDate: DateTime(1900),
                             lastDate: DateTime.now(),
                             builder: (context, child) {
@@ -209,7 +210,7 @@ class UserEditProfileScreen extends StatelessWidget {
                           if (picked != null) {
                             // ✅ Format as YYYY-MM-DD (standard, unambiguous, backend-friendly)
                             controller.dateOfBirthController.text =
-                            "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+                                "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
                           }
                         },
                         child: AbsorbPointer(
@@ -228,10 +229,66 @@ class UserEditProfileScreen extends StatelessWidget {
                       UIHelper.verticalSpace(16.h),
 
                       /// Gender Form Field
-                      EditProfileFormFieldWidget(
-                        lableText: "Gender",
-                        hintText: "Enter Your Gender",
-                        controller: controller.genderController,
+                      // Text('Gender'),
+                      Text(
+                        'Gender',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      DropdownButtonFormField<String>(
+                        value: controller.genderController.text.isEmpty
+                            ? null
+                            : controller.genderController.text.toLowerCase(),
+                        // Convert to lowercase to match
+                        items: [
+                          DropdownMenuItem(value: 'male', child: Text('Male')),
+                          DropdownMenuItem(
+                            value: 'female',
+                            child: Text('Female'),
+                          ),
+                        ],
+                        onChanged: (String? newValue) {
+                          // Ensure value is converted to lowercase when setting
+                          controller.genderController.text =
+                              newValue?.toLowerCase() ?? '';
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select gender type';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          hintStyle: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 14.sp,
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey[50],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                            borderSide: BorderSide(color: AppColors.ce6e6e6),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                            borderSide: BorderSide(color: AppColors.ce6e6e6),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                            borderSide: BorderSide(
+                              color: AppColors.c778beb,
+                              width: 2,
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 14.h,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -240,12 +297,12 @@ class UserEditProfileScreen extends StatelessWidget {
 
                 // Update Button
                 Obx(
-                      () => CustomElevatedButton(
+                  () => CustomElevatedButton(
                     onTap: controller.isLoading.value
                         ? null
                         : () {
-                      controller.updateProfile();
-                    },
+                            controller.updateProfile();
+                          },
                     buttonTitle: controller.isLoading.value
                         ? "Updating..."
                         : "Update Profile",
@@ -258,6 +315,7 @@ class UserEditProfileScreen extends StatelessWidget {
       ),
     );
   }
+
   DateTime? _parseDate(String? dateString) {
     if (dateString == null || dateString.isEmpty) return null;
 

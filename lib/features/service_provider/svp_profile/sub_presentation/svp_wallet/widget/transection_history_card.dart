@@ -9,7 +9,21 @@ import 'package:kaz_bd/helpers/ui_helpers.dart';
 import '../../../../../../gen/colors.gen.dart';
 
 class TransectionHistoryCard extends StatelessWidget {
-  const TransectionHistoryCard({super.key});
+  final String transactionType;
+  final String transactionStatus;
+
+  final String totalAmount;
+
+  final String paymentDate;
+  final String currency;
+
+  const TransectionHistoryCard({
+    super.key,
+    required this.transactionType,
+    required this.totalAmount,
+    required this.paymentDate,
+    required this.currency, required this.transactionStatus,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +47,7 @@ class TransectionHistoryCard extends StatelessWidget {
         children: [
           ///Section : Text -> Withdrawal
           Text(
-            "Withdrawal",
+            transactionType,
             style: TextFontStyle.headline16w700c4d4d4dStyleSatoshi,
           ),
           UIHelper.verticalSpace(8.h),
@@ -58,11 +72,11 @@ class TransectionHistoryCard extends StatelessWidget {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: "Completed :",
+                      text: "${transactionStatus} :",
                       style: TextFontStyle.headline14w500c27d127StyleSatoshi,
                     ),
                     TextSpan(
-                      text: " \$1000",
+                      text: " \$$totalAmount${currency}",
                       style: TextFontStyle.headline14w500c27d127StyleSatoshi,
                     ),
                   ],
@@ -89,7 +103,7 @@ class TransectionHistoryCard extends StatelessWidget {
 
               ///Section : Payment Date & Time
               Text(
-                "12 Jan 25 8.00AM",
+                "$paymentDate",
                 style: TextFontStyle.headline14w500c4d4d4dStyleSatoshi,
               ),
             ],
