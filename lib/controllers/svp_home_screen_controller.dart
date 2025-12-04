@@ -200,8 +200,7 @@ class SvpHomeScreenController extends GetxController {
           await SecureStorageService().read(AppConstants.accessToken) ?? '';
 
       final NetworkResponse response = await NetworkCaller().getRequest(
-        AppUrl
-            .getServiceProviderHomeData, // Added to AppUrl in previous implementation
+        AppUrl.getServiceProviderHomeData(dataType: selectedPeriod.value), // Use dynamic data type
         headers: token.isNotEmpty ? {'Authorization': 'Bearer $token'} : null,
       );
 

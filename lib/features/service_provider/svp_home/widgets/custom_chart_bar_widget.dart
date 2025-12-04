@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import '../../../../gen/colors.gen.dart';
 
@@ -74,19 +75,6 @@ class CustomBar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(6.r),
               ),
             ),
-            // Label at the bottom
-            // Positioned(
-            //   bottom: 0,
-            //   child: Container(
-            //     padding: EdgeInsets.symmetric(horizontal: 2.w),
-            //     child: Text(
-            //       label,
-            //       style: TextStyle(fontSize: 10.sp, color: Colors.black),
-            //       maxLines: 1,
-            //       overflow: TextOverflow.ellipsis,
-            //     ),
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -111,17 +99,17 @@ class CustomBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Label: $label',
+                'Day: $label',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
               SizedBox(height: 8),
               Text(
-                'Value: \$${value.toStringAsFixed(2)}',
+                'Earned: \$${value.toStringAsFixed(2)}',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
               SizedBox(height: 8),
               Text(
-                'This represents the income for this period.',
+                'This represents the income for $label day.',
                 style: TextStyle(fontSize: 14, color: Colors.grey[600]),
               ),
             ],
@@ -129,7 +117,7 @@ class CustomBar extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Get.back();
               },
               child: Text('OK', style: TextStyle(color: AppColors.c778beb)),
             ),
