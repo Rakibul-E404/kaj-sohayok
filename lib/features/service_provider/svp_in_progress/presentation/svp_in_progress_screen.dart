@@ -46,7 +46,7 @@ class SvpInProgressScreen extends StatelessWidget {
                 messageButtonOnTap: () {
                   log("Message button taped!");
                 },
-                userImage: Assets.images.userImage.path,
+                userImageUrl: Assets.images.userImage.path,
                 userName: "Swapon Mia",
                 location: "Rampura Dhaka, Bangladesh",
                 dateTime: "Jun 17, 2025  09:31AM",

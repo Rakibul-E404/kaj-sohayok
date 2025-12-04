@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
-import 'package:kaz_bd/gen/assets.gen.dart';
+import 'package:kaz_bd/custom_widgets/custom_shimmer_effect.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:intl/intl.dart';
 
@@ -13,6 +13,9 @@ import '../../../../custom_widgets/home_section_applogo_and_notification.dart';
 import '../../../../helpers/ui_helpers.dart';
 import '../../../../routes/routes.dart';
 import '../../../../custom_widgets/recent_job_request_status_widget.dart';
+import '../widgets/income_card_loader.dart';
+import '../widgets/job_status_loader.dart';
+import '../widgets/recent_job_request_loader.dart';
 import '../widgets/svp_job_card.dart';
 import '../widgets/svp_show_chart_widget.dart';
 
@@ -41,155 +44,224 @@ class SvpHomeScreen extends StatelessWidget {
           child: Column(
             children: [
               ///Section : AppLogo & Notification Section
-              HomeSectionAppLogoAndNotification(
-                onTap: () {
-                  log("Notification Icon taped!");
-                  Get.toNamed(Routes.notificationScreen);
-                },
-              ),
-              UIHelper.verticalSpace(16.h),
-
               Obx(() {
-                if (controller.isHomeDataLoading.value && controller.homeData.isEmpty) {
-                  return const Center(child: CircularProgressIndicator());
+                if (controller.isHomeDataLoading.value &&
+                    controller.homeData.isEmpty) {
+                  return CustomShimmerEffect(height: 40.h, width: 1.sw);
                 }
 
-                return Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: UIHelper.kDefaulutPadding(),
-                  ),
-                  child: Column(
-                    children: [
-                      ///Section : Graph Chart
-                      IncomeChartCard(),
-                      UIHelper.verticalSpace(16.h),
+                return HomeSectionAppLogoAndNotification(
+                  onTap: () {
+                    log("Notification Icon tapped!");
+                    Get.toNamed(Routes.notificationScreen);
+                  },
+                );
+              }),
+              UIHelper.verticalSpace(16.h),
 
-                      ///Section : Job Status Card
-                      Obx(() {
-                        final stats = controller.stats;
-                        if (stats == null) return const SizedBox.shrink();
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: UIHelper.kDefaulutPadding(),
+                ),
+                child: Column(
+                  children: [
+                    ///Section : Graph Chart
+                    Obx(() {
+                      if (controller.isHomeDataLoading.value &&
+                          controller.homeData.isEmpty) {
+                        return const Center(child: IncomeCardLoader());
+                      }
 
-                        final jobTypes = [
-                          {'title': 'Pending', 'totalJobs': stats.totalRequests ?? 0},
-                          {'title': 'Accepted', 'totalJobs': stats.accepted ?? 0},
-                          {'title': 'In Progress', 'totalJobs': stats.inProgress ?? 0},
-                          {'title': 'Completed', 'totalJobs': stats.completed ?? 0},
-                        ];
+                      return IncomeChartCard();
+                    }),
+                    UIHelper.verticalSpace(16.h),
 
+                    ///Section : Job Status Card
+                    Obx(() {
+                      if (controller.isHomeDataLoading.value &&
+                          controller.homeData.isEmpty) {
                         return GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: jobTypes.length,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 16.w,
-                            mainAxisSpacing: 16.h,
-                            childAspectRatio: 0.86,
-                          ),
-                          itemBuilder: (context, index) {
-                            var data = jobTypes[index];
-                            return SvpJobCard(
-                              onTap: () {
-                                log("${data['title']} Card Taped!");
-                                index == 0
-                                    ? Get.toNamed(Routes.svpJobRequestScreen)
-                                    : index == 1
-                                    ? Get.toNamed(Routes.svpAcceptedBookingsScreen)
-                                    : index == 2
-                                    ? Get.toNamed(Routes.svpInProgressScreen)
-                                    : index == 3
-                                    ? Get.toNamed(Routes.svpWorkCompletedScreen)
-                                    : null;
-                              },
-                              title: data['title'] as String,
-                              totalJobs: data['totalJobs'] as int,
-                            );
-                          },
-                        );
-                      }),
-                      UIHelper.verticalSpace(24.h),
-
-                      ///Section : Recent Job Request Section
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Recent Job Request",
-                            style:
-                                TextFontStyle.headline18w700c202020StyleSatoshi,
-                          ),
-
-                          ///Section : Total Available count
-                          Obx(() {
-                            final count = controller.recentJobRequests.length;
-                            return RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: "Total ",
-                                    style: TextFontStyle
-                                        .headline14w500c4d4d4dStyleSatoshi,
-                                  ),
-                                  TextSpan(
-                                    text: "($count)",
-                                    style: TextFontStyle
-                                        .headline16w700c778bebStyleSatoshi,
-                                  ),
-                                ],
+                          itemCount: 4,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 16.w,
+                                mainAxisSpacing: 16.h,
+                                childAspectRatio: 0.86,
                               ),
-                            );
-                          }),
-                        ],
-                      ),
-                      UIHelper.verticalSpace(16.h),
-
-                      ///Section : Recent Job Requests
-                      Obx(() {
-                        final recentRequests = controller.recentJobRequests;
-                        if (recentRequests.isEmpty) {
-                          return const Center(child: Text('No recent job requests'));
-                        }
-
-                        return ListView.separated(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: recentRequests.length,
-                          separatorBuilder: (context, index) =>
-                              UIHelper.verticalSpace(24.h),
                           itemBuilder: (context, index) {
-                            final request = recentRequests[index];
-                            final userId = request.userId;
-                            final address = request.address;
-
-                            return RecentJobRequestStatusWidget(
-                              onTap: () {
-                                log("Taped on -> Card ${request.id}");
-                                Get.toNamed(
-                                  Routes.svpJobDetailsScreen,
-                                  arguments: {
-                                    "jobRequestId": request.id,
-                                  },
-                                );
-                              },
-                              cancelOnTap: () {
-                                log("Button Taped -> Cancel for ${request.id}");
-                              },
-                              acceptOnTap: () {
-                                log("Button Taped -> Accept for ${request.id}");
-                              },
-                              userImage: Assets.images.userImage.path,
-                              userName: userId?.name ?? 'Unknown User',
-                              location: address?.en ?? 'Unknown Location',
-                              dateTime: _formatDateTime(request.bookingDateTime),
-                            );
+                            return JobStatusLoader();
                           },
                         );
-                      }),
-                      UIHelper.verticalSpace(150.h),
-                    ],
-                  ),
-                );
-              }),
+                      }
+
+                      final stats = controller.stats;
+                      if (stats == null) {
+                        return CustomShimmerEffect(height: 10.h, width: 15.w);
+                      }
+
+                      final jobTypes = [
+                        {
+                          'title': 'Pending',
+                          'totalJobs': stats.totalRequests ?? 0,
+                        },
+                        {'title': 'Accepted', 'totalJobs': stats.accepted ?? 0},
+                        {
+                          'title': 'In Progress',
+                          'totalJobs': stats.inProgress ?? 0,
+                        },
+                        {
+                          'title': 'Completed',
+                          'totalJobs': stats.completed ?? 0,
+                        },
+                      ];
+
+                      return GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: jobTypes.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16.w,
+                          mainAxisSpacing: 16.h,
+                          childAspectRatio: 0.86,
+                        ),
+                        itemBuilder: (context, index) {
+                          var data = jobTypes[index];
+                          return SvpJobCard(
+                            onTap: () {
+                              log("${data['title']} Card Tapped!");
+                              switch (index) {
+                                case 0:
+                                  Get.toNamed(Routes.svpJobRequestScreen);
+                                  break;
+                                case 1:
+                                  Get.toNamed(Routes.svpAcceptedBookingsScreen);
+                                  break;
+                                case 2:
+                                  Get.toNamed(Routes.svpInProgressScreen);
+                                  break;
+                                case 3:
+                                  Get.toNamed(Routes.svpWorkCompletedScreen);
+                                  break;
+                              }
+                            },
+                            title: data['title'] as String,
+                            totalJobs: data['totalJobs'] as int,
+                          );
+                        },
+                      );
+                    }),
+                    UIHelper.verticalSpace(24.h),
+
+                    ///Section : Recent Job Request Section
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Recent Job Request",
+                          style:
+                              TextFontStyle.headline18w700c202020StyleSatoshi,
+                        ),
+
+                        ///Section : Total Available count
+                        Obx(() {
+                          if (controller.isHomeDataLoading.value ||
+                              controller.homeData.isEmpty) {
+                            return CustomShimmerEffect(
+                              height: 10.h,
+                              width: 0.2.sw,
+                            );
+                          }
+
+                          final count = controller.recentJobRequests.length;
+                          return RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "Total ",
+                                  style: TextFontStyle
+                                      .headline14w500c4d4d4dStyleSatoshi,
+                                ),
+                                TextSpan(
+                                  text: "($count)",
+                                  style: TextFontStyle
+                                      .headline16w700c778bebStyleSatoshi,
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                      ],
+                    ),
+                    UIHelper.verticalSpace(16.h),
+
+                    ///Section : Recent Job Requests
+                    Obx(() {
+                      final recentRequests = controller.recentJobRequests;
+                      if (recentRequests.isEmpty) {
+                        return CustomShimmerEffect(
+                          height: 80.h,
+                          width: 1.sw,
+                          child: Text(
+                            'Looking for recent job requests',
+                            style:
+                                TextFontStyle.headline14w500c4d4d4dStyleSatoshi,
+                          ),
+                        );
+                      }
+
+                      if (controller.isHomeDataLoading.value ||
+                          controller.homeData.isEmpty) {
+                        return RecentJobRequestLoader();
+                      }
+
+                      return ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: recentRequests.length,
+                        separatorBuilder: (context, index) =>
+                            UIHelper.verticalSpace(24.h),
+                        itemBuilder: (context, index) {
+                          final request = recentRequests[index];
+                          final userId = request.userId;
+                          final address = request.address;
+
+                          // Get the profile image URL from profileImage.imageUrl
+                          String? profileImageUrl;
+                          if (userId?.profileImage?.imageUrl != null &&
+                              userId!.profileImage!.imageUrl!.isNotEmpty) {
+                            profileImageUrl = userId.profileImage!.imageUrl;
+                          }
+
+                          return RecentJobRequestStatusWidget(
+                            onTap: () {
+                              log("Tapped on -> Card ${request.id}");
+                              Get.toNamed(
+                                Routes.svpJobDetailsScreen,
+                                arguments: {"jobRequestId": request.id},
+                              );
+                            },
+                            cancelOnTap: () {
+                              log("Button Tapped -> Cancel for ${request.id}");
+                            },
+                            acceptOnTap: () {
+                              log("Button Tapped -> Accept for ${request.id}");
+                            },
+                            userImageUrl: profileImageUrl,
+                            userName: userId?.name ?? 'Unknown User',
+                            location: address?.en ?? 'Unknown Location',
+                            dateTime: _formatDateTime(request.bookingDateTime),
+                          );
+                        },
+                      );
+                    }),
+                    UIHelper.verticalSpace(150.h),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

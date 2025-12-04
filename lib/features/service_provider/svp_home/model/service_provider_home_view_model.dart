@@ -252,17 +252,44 @@ class Address {
 class UserId {
   String? id;
   String? name;
+  ProfileImage? profileImage;
 
-  UserId({this.id, this.name});
+  UserId({this.id, this.name, this.profileImage});
 
   factory UserId.fromRawJson(String str) => UserId.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory UserId.fromJson(Map<String, dynamic> json) =>
-      UserId(id: json["_id"], name: json["name"]);
+  factory UserId.fromJson(Map<String, dynamic> json) => UserId(
+    id: json["_id"],
+    name: json["name"],
+    profileImage: json["profileImage"] == null
+        ? null
+        : ProfileImage.fromJson(json["profileImage"]),
+  );
 
-  Map<String, dynamic> toJson() => {"_id": id, "name": name};
+  Map<String, dynamic> toJson() => {
+    "_id": id,
+    "name": name,
+    "profileImage": profileImage?.toJson(),
+  };
+}
+
+class ProfileImage {
+  String? imageUrl;
+  String? id;
+
+  ProfileImage({this.imageUrl, this.id});
+
+  factory ProfileImage.fromRawJson(String str) =>
+      ProfileImage.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory ProfileImage.fromJson(Map<String, dynamic> json) =>
+      ProfileImage(imageUrl: json["imageUrl"], id: json["_id"]);
+
+  Map<String, dynamic> toJson() => {"imageUrl": imageUrl, "_id": id};
 }
 
 class Stats {
