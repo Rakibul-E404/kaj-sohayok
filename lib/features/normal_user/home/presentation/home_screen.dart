@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/constants/appList.dart';
@@ -27,6 +28,22 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HomePageController controller = Get.put(HomePageController());
+
+    // Set system UI overlay style immediately when the widget builds
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        // Status bar color (Android)
+        statusBarColor: AppColors.cf1f3fd, // Specific status bar color
+        statusBarIconBrightness:
+            Brightness.light, // Light icons for dark background
+        statusBarBrightness: Brightness.dark, // Brightness for iOS status bar
+        systemNavigationBarColor:
+            AppColors.scaffoldBackgroundColor, // Keep navigation bar consistent
+        systemNavigationBarIconBrightness:
+            Brightness.dark, // Navigation bar icons
+      ),
+    );
+
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       body: SingleChildScrollView(
@@ -41,29 +58,28 @@ class HomeScreen extends StatelessWidget {
             ),
             UIHelper.verticalSpace(16.h),
 
+            ///Section : Hero Booking
+            Obx(
+              () => controller.isLoading.value
+                  ? CustomShimmerEffect(height: 175, width: 1)
+                  : controller.banners.isNotEmpty
+                  ? BannerCarosleSlider(controller: controller)
+                  : CustomShimmerEffect(
+                      height: 175,
+                      width: 1,
+                      child: Text(
+                        'No banners available',
+                        style: TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
+                      ),
+                    ),
+            ),
+
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: UIHelper.kDefaulutPadding(),
               ),
               child: Column(
                 children: [
-                  ///Section : Hero Booking
-                  Obx(
-                    () => controller.isLoading.value
-                        ? CustomShimmerEffect(height: 175, width: 1)
-                        : controller.banners.isNotEmpty
-                        ? BannerCarosleSlider(controller: controller)
-                        : CustomShimmerEffect(
-                            height: 175,
-                            width: 1,
-                            child: Text(
-                              'No banners available',
-                              style: TextFontStyle
-                                  .headline14w500cFFFFFFStyleSatoshi,
-                            ),
-                          ),
-                  ),
-
                   UIHelper.verticalSpace(24.h),
 
                   ///Section : Select Category
@@ -87,13 +103,14 @@ class HomeScreen extends StatelessWidget {
                     textButtonName: "See all",
                     onTap: () {
                       log("See all button taped at Popular Provider section!");
+                      Get.toNamed(Routes.normalUserSeePopularProviderScreen);
                     },
                   ),
                   UIHelper.verticalSpace(24.h),
 
                   ///Section : Popular Providers
                   SizedBox(
-                    height: 220.h,
+                    height: 230.h,
                     child: Obx(() {
                       if (controller.isLoading.value) {
                         return ListView.separated(
@@ -129,7 +146,7 @@ class HomeScreen extends StatelessWidget {
                             UIHelper.horizontalSpace(8.w),
                         itemBuilder: (context, index) {
                           final provider = controller.providers[index];
-                          final String providerName = _getProviderName(
+                          final String serviceTitle = _getProviderName(
                             provider,
                           );
                           final String providerId = _getProviderId(provider);
@@ -143,18 +160,18 @@ class HomeScreen extends StatelessWidget {
 
                           return ServiceWidget(
                             onTap: () {
-                              log("Provider tapped: $providerName");
+                              log("-------Provider tapped: $serviceTitle");
+                              log("-------------Provider ID : $providerId");
                               Get.toNamed(
                                 Routes.serviceDetailsScreen,
-                                arguments: {
-                                  'providerId': providerId,
-                                  'providerName': providerName,
-                                },
+
+                                // arguments: {'providerId': providerId},
+                                arguments: {'providerId': providerId},
                               );
                             },
                             imagePath:
                                 imageUrl ?? Assets.images.serviceImage.path,
-                            serviceTitle: providerName,
+                            serviceTitle: serviceTitle,
                             initialPayablePrice: startPrice.toDouble(),
                             userRating: rating,
                           );
@@ -183,7 +200,8 @@ class HomeScreen extends StatelessWidget {
   }
 
   String _getProviderId(Model.Provider provider) {
-    return provider.providerId ?? '';
+    log("😊😊😊Provider ID  : ${provider.serviceProviderId}");
+    return provider.serviceProviderId ?? '';
   }
 
   double _getProviderRating(Model.Provider provider) {

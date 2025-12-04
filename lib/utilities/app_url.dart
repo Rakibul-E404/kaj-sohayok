@@ -54,6 +54,8 @@ class AppUrl {
     return '${baseUrl}v1/attachments/$id';
   }
   // =======
+
+
   ///===> rakiubl added api:
   static String pendingBookings =
       '${baseUrl}v1/service-bookings/paginate?status=pending';
@@ -69,6 +71,7 @@ class AppUrl {
       '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
 
   ///===> rakibul api add close
+
 
   static String getNormalUserHomeData = '${baseUrl}v1/users/home-page';
   static String getNormalUserAllCategory =
@@ -90,4 +93,16 @@ class AppUrl {
   static String deleteBabyProfile({required String babyId}) {
     return '$baseUrl/api/v1/babies/delete/$babyId';
   }
+
+  static String getSpecificServiceDetails({required String svpId}) {
+    return '${baseUrl}v1/service-providers/$svpId';
+  }
+
+  static String getNrmUserServiceProviderProfileDetailsInfo({
+    required String svpId,
+  }) {
+    return '${baseUrl}v1/service-providers/profile/$svpId';
+  }
+
+  static String getAllPopularProviders = '${baseUrl}v1/users/home-page/popular';
 }

@@ -167,6 +167,7 @@ class InProgressTab extends StatelessWidget {
                   arguments: {
                     "status": BookingStatusEnum.inProgress,
                     "bookingId": bookingId,
+                    "providerId": booking['serviceProviderDetailsId'] ?? booking['providerId']?['_userId'],
                   },
                 );
               },
@@ -185,6 +186,7 @@ class InProgressTab extends StatelessWidget {
                   arguments: {
                     "status": BookingStatusEnum.inProgress,
                     "bookingId": bookingId,
+                    "providerId": booking['serviceProviderDetailsId'] ?? booking['providerId']?['_userId'],
                   },
                 );
               },

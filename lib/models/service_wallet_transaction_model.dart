@@ -2,13 +2,11 @@ class ServiceWalletTransactionModel {
   final String walletId;
   final String userId;
   final String? paymentTransactionId; // Nullable field
-  final String withdrawalRequestId;
   final String type;
   final double amount;
   final String currency;
   final double balanceBefore;
   final double balanceAfter;
-  final String description;
   final String status;
   final String referenceFor;
   final String referenceId;
@@ -21,13 +19,11 @@ class ServiceWalletTransactionModel {
     required this.walletId,
     required this.userId,
     this.paymentTransactionId,  // Optional argument, can be null
-    required this.withdrawalRequestId,
     required this.type,
     required this.amount,
     required this.currency,
     required this.balanceBefore,
     required this.balanceAfter,
-    required this.description,
     required this.status,
     required this.referenceFor,
     required this.referenceId,
@@ -42,13 +38,11 @@ class ServiceWalletTransactionModel {
       walletId: json['walletId'],
       userId: json['userId'],
       paymentTransactionId: json['paymentTransactionId'],  // Can be null
-      withdrawalRequestId: json['withdrawalRequestId'],
       type: json['type'],
       amount: json['amount'].toDouble(),  // Handle conversion to double
       currency: json['currency'],
       balanceBefore: json['balanceBefore'].toDouble(),
       balanceAfter: json['balanceAfter'].toDouble(),
-      description: json['description'],
       status: json['status'],
       referenceFor: json['referenceFor'],
       referenceId: json['referenceId'],
@@ -64,13 +58,11 @@ class ServiceWalletTransactionModel {
       walletId: map['walletId'],
       userId: map['userId'],
       paymentTransactionId: map['paymentTransactionId'],  // Can be null
-      withdrawalRequestId: map['withdrawalRequestId'],
       type: map['type'],
       amount: map['amount'].toDouble(),
       currency: map['currency'],
       balanceBefore: map['balanceBefore'].toDouble(),
       balanceAfter: map['balanceAfter'].toDouble(),
-      description: map['description'],
       status: map['status'],
       referenceFor: map['referenceFor'],
       referenceId: map['referenceId'],
@@ -86,13 +78,11 @@ class ServiceWalletTransactionModel {
       'walletId': walletId,
       'userId': userId,
       'paymentTransactionId': paymentTransactionId,  // Can be null
-      'withdrawalRequestId': withdrawalRequestId,
       'type': type,
       'amount': amount,
       'currency': currency,
       'balanceBefore': balanceBefore,
       'balanceAfter': balanceAfter,
-      'description': description,
       'status': status,
       'referenceFor': referenceFor,
       'referenceId': referenceId,

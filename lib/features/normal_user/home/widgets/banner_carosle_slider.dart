@@ -6,7 +6,6 @@ import 'package:kaz_bd/controllers/home_page_controller.dart';
 import 'package:kaz_bd/custom_widgets/custom_shimmer_effect.dart';
 
 import '../../../../constants/text_font_style.dart';
-import '../../../../gen/assets.gen.dart';
 import '../../../../gen/colors.gen.dart';
 
 class BannerCarosleSlider extends StatelessWidget {
@@ -21,7 +20,7 @@ class BannerCarosleSlider extends StatelessWidget {
               itemCount: controller.banners.length,
               options: CarouselOptions(
                 aspectRatio: 16 / 6,
-                viewportFraction: 0.8,
+                viewportFraction: 0.9,
                 initialPage: 0,
                 enableInfiniteScroll: true,
                 reverse: false,

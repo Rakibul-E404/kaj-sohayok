@@ -50,6 +50,14 @@
             <data android:mimeType="text/plain"/>
         </intent>
 
+        <!-- Allow querying for specific browsers -->
+        <package android:name="com.android.chrome" />
+        <package android:name="com.microsoft.emmx" /> <!-- Edge -->
+        <package android:name="org.mozilla.firefox" />
+        <package android:name="com.opera.browser" />
+        <package android:name="com.brave.browser" />
+        <!-- Allow querying for specific browsers closed-->
+
 
         <!-- ✅ Added for email -->
         <intent>
