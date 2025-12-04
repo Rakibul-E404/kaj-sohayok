@@ -1,66 +1,3 @@
-// import 'dart:developer';
-
-// import 'package:get/get.dart';
-// import 'package:kaz_bd/service/network_caller.dart';
-// import 'package:kaz_bd/service/network_response.dart';
-// import 'package:kaz_bd/utilities/app_url.dart';
-
-// import '../gen/colors.gen.dart';
-// import '../service/secured_storage.dart';
-// import '../utilities/app_constants.dart';
-
-// class NormalUserBookingServiceProviderController extends GetxController {
-//   RxBool isLoading = false.obs;
-//   ////Service Provider ID
-//   var serviceProviderId = ''.obs;
-//   void setServiceProviderId({required String svpId}) {
-//     serviceProviderId.value = svpId;
-//     getProviderBookingSlotAvailability();
-//   }
-
-//   Future<void> getProviderBookingSlotAvailability() async {
-//     if (serviceProviderId.isEmpty) {
-//       log('Service provider id is empty');
-//       Get.snackbar(
-//         'Error',
-//         'Failed to get details of the service: Provider ID is missing',
-//         backgroundColor: AppColors.cee3333,
-//         colorText: AppColors.cFFFFFF,
-//       );
-//       return;
-//     }
-
-//     try {
-//       isLoading.value = true;
-//       // Create request body
-//       final Map<String, dynamic> requestBody = {
-//         "bookingDateTime": formattedDateTime,
-//         "providerId": serviceProviderId.value,
-//       };
-
-//       // Get the authorization token
-//       final String token =
-//           await SecureStorageService().read(AppConstants.accessToken) ?? '';
-
-//       NetworkResponse response = await NetworkCaller().postRequest(
-//         AppUrl.checkProbiderScheduleAvailability,
-//         headers: token.isNotEmpty ? {'Authorization': 'Bearer $token'} : null,
-//         body: requestBody,
-//       );
-//     } catch (e) {
-//       log('Exception in showSpecificServiceDetails: $e');
-//       Get.snackbar(
-//         'Error',
-//         'Something went wrong: $e',
-//         backgroundColor: AppColors.cee3333,
-//         colorText: AppColors.cFFFFFF,
-//       );
-//     } finally {
-//       isLoading.value = false;
-//     }
-//   }
-// }
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -99,11 +36,10 @@ class NormalUserBookingServiceProviderController extends GetxController {
 
     if (serviceProviderId.isEmpty) {
       log('Service provider id is empty');
-      Get.snackbar(
-        'Error',
-        'Provider ID is missing',
-        backgroundColor: AppColors.cee3333,
-        colorText: AppColors.cFFFFFF,
+      _showSnackbar(
+        title: 'Missing Information',
+        message: 'Please select a service provider first',
+        backgroundColor: Colors.orange,
       );
       return;
     }
@@ -121,11 +57,10 @@ class NormalUserBookingServiceProviderController extends GetxController {
 
       // Check if date/time is in future
       if (!calendarController.isFutureDateTime) {
-        Get.snackbar(
-          'Invalid Selection',
-          'Please select a future date and time',
+        _showSnackbar(
+          title: 'Invalid Time Selection',
+          message: 'Please select a future date and time for booking',
           backgroundColor: Colors.orange,
-          colorText: Colors.white,
         );
         return;
       }
@@ -149,7 +84,6 @@ class NormalUserBookingServiceProviderController extends GetxController {
 
       NetworkResponse response = await NetworkCaller().postRequest(
         AppUrl.checkProbiderScheduleAvailability,
-
         headers: token.isNotEmpty ? {'Authorization': 'Bearer $token'} : null,
         body: requestBody,
       );
@@ -171,43 +105,102 @@ class NormalUserBookingServiceProviderController extends GetxController {
               response.jsonResponse!,
             );
 
-        if (availabilityResponse.value?.success == true) {
-          Get.snackbar(
-            'Available',
-            availabilityResponse.value?.message ??
-                'Provider is available at this time',
+        // Get the message from API response
+        final apiMessage = availabilityResponse.value?.message;
+        final isAvailable = availabilityResponse.value?.success == true;
+
+        if (isAvailable) {
+          _showSnackbar(
+            title: '✅ Available',
+            message: apiMessage ?? 'This time slot is available for booking',
             backgroundColor: Colors.green,
-            colorText: AppColors.cFFFFFF,
-            duration: Duration(seconds: 2),
+            duration: 3,
           );
         } else {
-          Get.snackbar(
-            'Not Available',
-            availabilityResponse.value?.message ??
-                'Provider not available at this time',
+          _showSnackbar(
+            title: '⏰ Not Available',
+            message:
+                apiMessage ?? 'Provider is not available at the selected time',
             backgroundColor: AppColors.cee3333,
-            colorText: AppColors.cFFFFFF,
+            duration: 3,
           );
         }
       } else {
-        Get.snackbar(
-          'Error',
-          'Failed to check availability',
+        // Check if there's an error message in the response
+        final errorMessage = _extractErrorMessage(response.jsonResponse);
+        _showSnackbar(
+          title: 'Connection Issue',
+          message:
+              errorMessage ?? 'Unable to check availability. Please try again',
           backgroundColor: AppColors.cee3333,
-          colorText: AppColors.cFFFFFF,
         );
       }
     } catch (e) {
       log('Exception in checkAvailabilityWithCalendarController: $e');
-      Get.snackbar(
-        'Error',
-        'Something went wrong: $e',
+      _showSnackbar(
+        title: 'Something Went Wrong',
+        message: 'Please check your connection and try again',
         backgroundColor: AppColors.cee3333,
-        colorText: AppColors.cFFFFFF,
       );
     } finally {
       isLoading.value = false;
     }
+  }
+
+  // Helper method to extract error message from response
+  String? _extractErrorMessage(Map<String, dynamic>? jsonResponse) {
+    if (jsonResponse == null) return null;
+
+    try {
+      // Try to get message from response
+      if (jsonResponse.containsKey('message')) {
+        return jsonResponse['message'].toString();
+      }
+
+      // Try to get error from response
+      if (jsonResponse.containsKey('error')) {
+        return jsonResponse['error'].toString();
+      }
+
+      // Try to parse as ProviderSchedulCheckBeforeSlotBookingModel
+      final model = ProviderSchedulCheckBeforeSlotBookingModel.fromJson(
+        jsonResponse,
+      );
+      return model.message;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Helper method for consistent snackbar styling
+  void _showSnackbar({
+    required String title,
+    required String message,
+    required Color backgroundColor,
+    int duration = 2,
+  }) {
+    Get.snackbar(
+      title,
+      message,
+      backgroundColor: backgroundColor,
+      colorText: Colors.white,
+      duration: Duration(seconds: duration),
+      snackPosition: SnackPosition.BOTTOM,
+      margin: EdgeInsets.all(10),
+      borderRadius: 8,
+      isDismissible: true,
+      dismissDirection: DismissDirection.horizontal,
+      forwardAnimationCurve: Curves.easeOutCubic,
+      reverseAnimationCurve: Curves.easeInCubic,
+      icon: Icon(
+        backgroundColor == Colors.green
+            ? Icons.check_circle
+            : backgroundColor == Colors.orange
+            ? Icons.warning
+            : Icons.error,
+        color: Colors.white,
+      ),
+    );
   }
 
   // Reset availability status

@@ -134,10 +134,15 @@ class AboutTab extends StatelessWidget {
                             width: 0.4.sw,
                           );
                         } else {
-                          return Text(
-                            detailsScreenController.providerName ?? "",
-                            style:
-                                TextFontStyle.headline16w500c202020StyleSatoshi,
+                          return SizedBox(
+                            width: 0.5.sw,
+                            child: Text(
+                              detailsScreenController.providerName ?? "",
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextFontStyle
+                                  .headline16w500c202020StyleSatoshi,
+                            ),
                           );
                         }
                       }),

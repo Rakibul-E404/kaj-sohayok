@@ -95,12 +95,20 @@ class NormalUserServicePreviewScreenController extends GetxController {
 
   /// Get the first service image URL from attachmentsForGallery
   String? get serviceImage {
+    log('serviceImage getter called');
     final result = serviceDataPreview.value?.data?.attributes?.result;
     if (result != null && result.isNotEmpty) {
+      log('Service data is not empty, count: ${result.length}');
       final attachments = result.first.attachmentsForGallery;
       if (attachments != null && attachments.isNotEmpty) {
+        log('Attachments found: ${attachments.length}');
+        log('First attachment: ${attachments.first.attachment}');
         return attachments.first.attachment;
+      } else {
+        log('No attachments found or attachments is null');
       }
+    } else {
+      log('Service data is null or empty');
     }
     return null;
   }

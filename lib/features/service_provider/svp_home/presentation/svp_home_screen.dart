@@ -7,9 +7,11 @@ import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/custom_widgets/custom_shimmer_effect.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../../controllers/svp_home_screen_controller.dart';
 import '../../../../custom_widgets/home_section_applogo_and_notification.dart';
+import '../../../../gen/assets.gen.dart';
 import '../../../../helpers/ui_helpers.dart';
 import '../../../../routes/routes.dart';
 import '../../../../custom_widgets/recent_job_request_status_widget.dart';
@@ -202,13 +204,10 @@ class SvpHomeScreen extends StatelessWidget {
                     Obx(() {
                       final recentRequests = controller.recentJobRequests;
                       if (recentRequests.isEmpty) {
-                        return CustomShimmerEffect(
-                          height: 80.h,
-                          width: 1.sw,
-                          child: Text(
-                            'Looking for recent job requests',
-                            style:
-                                TextFontStyle.headline14w500c4d4d4dStyleSatoshi,
+                        return Center(
+                          child: Lottie.asset(
+                            Assets.lottie.emptyScreen,
+                            fit: BoxFit.contain,
                           ),
                         );
                       }

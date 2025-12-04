@@ -129,11 +129,27 @@ class _DetailsScreenState extends State<DetailsScreen>
                 children: [
                   /// --- Service Image ---
                   Obx(() {
+                    if (detailsController?.isLoading.value == true) {
+                      log('⏳ DETAILS SCREEN: Data is still loading, showing shimmer effect');
+                      // Show loading placeholder while data is loading
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(24.r),
+                        child: CustomShimmerEffect(
+                          height: 220.h,
+                          width: 1.sw,
+                        ),
+                      );
+                    }
+
                     // Get the first gallery attachment from service details if available
+                    log('🔍 DETAILS SCREEN: Attempting to get service image');
                     String? imageUrl;
                     if (detailsController?.galleryImages.isNotEmpty == true) {
                       imageUrl =
                           detailsController?.galleryImages.first.attachment;
+                      log('🖼️ DETAILS SCREEN: Found image URL: $imageUrl');
+                    } else {
+                      log('❌ DETAILS SCREEN: No gallery images available in controller');
                     }
 
                     // Show network image if URL is available, otherwise show placeholder
@@ -143,6 +159,9 @@ class _DetailsScreenState extends State<DetailsScreen>
                       if (!imageUrl.startsWith('http')) {
                         // If it's a relative path, prepend the base URL
                         fullImageUrl = '${AppUrl.imageBaseUrl}$imageUrl';
+                        log('🔗 DETAILS SCREEN: Prepending base URL - Full URL: $fullImageUrl');
+                      } else {
+                        log('🌐 DETAILS SCREEN: Image URL is already absolute - Full URL: $fullImageUrl');
                       }
 
                       return ClipRRect(
@@ -153,14 +172,42 @@ class _DetailsScreenState extends State<DetailsScreen>
                           width: 1.sw,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
-                            // If network image fails, show placeholder
-                            return CustomShimmerEffect(
+                            log('🚨 DETAILS SCREEN: Image loading error - Error: $error, Stack: $stackTrace');
+                            // If network image fails, show error placeholder
+                            return Container(
                               height: 220.h,
                               width: 1.sw,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(24.r),
+                                border: Border.all(color: Colors.grey[300]!, width: 1),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.broken_image_outlined,
+                                    size: 50,
+                                    color: Colors.grey[500],
+                                  ),
+                                  SizedBox(height: 8),
+                                  Text(
+                                    'Image not available',
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             );
                           },
                           loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
+                            if (loadingProgress == null) {
+                              log('✅ DETAILS SCREEN: Image loaded successfully');
+                              return child;
+                            }
+                            log('⏳ DETAILS SCREEN: Image loading progress: ${loadingProgress.expectedTotalBytes != null ? (loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!) * 100 : 0}%');
                             return CustomShimmerEffect(
                               height: 220.h,
                               width: 1.sw,
@@ -170,9 +217,36 @@ class _DetailsScreenState extends State<DetailsScreen>
                       );
                     } else {
                       // Show placeholder if no image is available
+                      log('❌ DETAILS SCREEN: No image URL available, showing placeholder');
                       return ClipRRect(
                         borderRadius: BorderRadius.circular(24.r),
-                        child: CustomShimmerEffect(height: 220.h, width: 1.sw),
+                        child: Container(
+                          height: 220.h,
+                          width: 1.sw,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(24.r),
+                            border: Border.all(color: Colors.grey[300]!, width: 1),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.image_outlined,
+                                size: 50,
+                                color: Colors.grey[500],
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                'No Image Available',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       );
                     }
                   }),

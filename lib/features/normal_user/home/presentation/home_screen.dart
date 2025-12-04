@@ -12,6 +12,7 @@ import 'package:kaz_bd/features/normal_user/home/models/home_page_data_model.dar
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/routes/routes.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../../controllers/home_page_controller.dart';
 import '../../../../custom_widgets/home_section_applogo_and_notification.dart';
@@ -59,20 +60,60 @@ class HomeScreen extends StatelessWidget {
             UIHelper.verticalSpace(16.h),
 
             ///Section : Hero Booking
-            Obx(
-              () => controller.isLoading.value
-                  ? CustomShimmerEffect(height: 175, width: 1)
-                  : controller.banners.isNotEmpty
-                  ? BannerCarosleSlider(controller: controller)
-                  : CustomShimmerEffect(
-                      height: 175,
-                      width: 1,
-                      child: Text(
-                        'No banners available',
-                        style: TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
+            Obx(() {
+              log(
+                '🏠 HOME SCREEN: Banners section - Loading: ${controller.isLoading.value}, Banner count: ${controller.banners.length}',
+              );
+
+              if (controller.isLoading.value) {
+                log('⏳ HOME SCREEN: Showing loading shimmer for banners');
+                return CustomShimmerEffect(height: 175, width: 1);
+              }
+
+              if (controller.banners.isNotEmpty) {
+                log(
+                  '✅ HOME SCREEN: Banners found, showing BannerCarosleSlider with ${controller.banners.length} banners',
+                );
+                return BannerCarosleSlider(controller: controller);
+              } else {
+                log('❌ HOME SCREEN: No banners available, showing placeholder');
+                return Container(
+                  height: 175,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: AppColors.c778beb, // Background color
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        child: Lottie.asset(
+                          height: 80.h,
+                          width: 80.w,
+                          Assets.lottie.emptyScreen,
+                          fit: BoxFit.contain,
+                        ),
                       ),
-                    ),
-            ),
+                      SizedBox(height: 8.h),
+                      Flexible(
+                        child: Text(
+                          'Stay Tuned for Updates!',
+                          style: TextFontStyle.headline16w700cFFFFFFStyleSatoshi,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Flexible(
+                        child: Text(
+                          'Special offers coming soon',
+                          style: TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            }),
 
             Padding(
               padding: EdgeInsets.symmetric(

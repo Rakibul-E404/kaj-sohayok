@@ -3,12 +3,10 @@ import 'dart:developer';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/features/normal_user/service_preview/widgets/booking_placed_bottomsheet_widget.dart';
-import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 
@@ -117,15 +115,6 @@ class ServicesPreviewScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Image container with rounded corners and fit image
-                    // ClipRRect(
-                    //   borderRadius: BorderRadius.circular(24.r),
-                    //   child: Image.network(
-                    //     'https://deax38zvkau9d.cloudfront.net/prod/assets/images/uploads/services/1708074899how-to-start-cleaning-house.webp',
-                    //     height: 170,
-                    //     width: double.infinity,
-                    //     fit: BoxFit.cover,
-                    //   ),
-                    // ),
 
                     /// --- Service Image ---
                     Obx(() {

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -27,34 +29,66 @@ class HomePageController extends GetxController {
 
   Future<void> handleHomePageData() async {
     try {
+      log('🏠 HOME CONTROLLER: Starting to load home data');
       isLoading.value = true;
 
       final NetworkResponse response = await NetworkCaller().getRequest(
         AppUrl.getNormalUserHomeData,
       );
 
+      log(
+        '🏠 HOME CONTROLLER: Network response received - Success: ${response.isSuccess}, Status: ${response.statusCode}, Message: ${response.errorMessage}',
+      );
+
       if (response.isSuccess && response.jsonResponse != null) {
-        final homePageDataModel = Model.HomePageDataModel.fromJson(response.jsonResponse!);
+        log('🏠 HOME CONTROLLER: Raw response from API: ${response.jsonResponse}');
+        log('🏠 HOME CONTROLLER: Parsing home page data');
+        final homePageDataModel = Model.HomePageDataModel.fromJson(
+          response.jsonResponse!,
+        );
+
+        log('🏠 HOME CONTROLLER: Response parsed successfully');
 
         if (homePageDataModel.data?.attributes != null) {
           // Parse categories
-          categories.value = homePageDataModel.data!.attributes!.categories ?? [];
+          categories.value =
+              homePageDataModel.data!.attributes!.categories ?? [];
+          log('🏠 HOME CONTROLLER: Categories loaded: ${categories.length}');
 
           // Parse providers
           providers.value = homePageDataModel.data!.attributes!.providers ?? [];
+          log('🏠 HOME CONTROLLER: Providers loaded: ${providers.length}');
 
           // Parse banners
           banners.value = homePageDataModel.data!.attributes!.banners ?? [];
+          log('🏠 HOME CONTROLLER: Banners loaded: ${banners.length}');
+
+          // Additional logging to see what's in the banners
+          if (banners.isEmpty) {
+            log('🏠 HOME CONTROLLER: Banners list is empty - checking if attribute exists in response');
+            if (response.jsonResponse!['data'] != null &&
+                response.jsonResponse!['data']['attributes'] != null) {
+              dynamic bannerData = response.jsonResponse!['data']['attributes']['banners'];
+              log('🏠 HOME CONTROLLER: Raw banner data from API: $bannerData');
+              log('🏠 HOME CONTROLLER: Type of banner data: ${bannerData.runtimeType}');
+            }
+          }
+        } else {
+          log('🏠 HOME CONTROLLER: No attributes found in response');
         }
       } else {
+        log(
+          '🏠 HOME CONTROLLER: Failed to load home data - ${response.errorMessage}',
+        );
         Get.snackbar(
           'Error',
-          'Failed to load home data',
+          'Failed to load home data: ${response.errorMessage}',
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
       }
     } catch (e) {
+      log('🏠 HOME CONTROLLER: Exception occurred - $e');
       Get.snackbar(
         'Error',
         'Something went wrong: $e',
@@ -63,6 +97,7 @@ class HomePageController extends GetxController {
       );
     } finally {
       isLoading.value = false;
+      log('🏠 HOME CONTROLLER: Loading finished - isLoading: $isLoading');
     }
   }
 
