@@ -328,7 +328,6 @@
 //       ),
 //       body: Column(
 //         children: [
-
 //           // Map container
 //           Expanded(
 //             child: Stack(
