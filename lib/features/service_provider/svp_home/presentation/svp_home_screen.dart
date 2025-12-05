@@ -249,7 +249,7 @@ class SvpHomeScreen extends StatelessWidget {
                             acceptOnTap: () {
                               log("Button Tapped -> Accept for ${request.id}");
                             },
-                            userImageUrl: profileImageUrl,
+                            userImage: profileImageUrl ?? '',
                             userName: userId?.name ?? 'Unknown User',
                             location: address?.en ?? 'Unknown Location',
                             dateTime: _formatDateTime(request.bookingDateTime),

@@ -41,6 +41,7 @@ import 'package:kaz_bd/navigation_screen.dart';
 
 import '../bindings/route_bindings/normal_user_all_category_binding.dart';
 import '../bindings/route_bindings/normal_user_see_all_popular_provider_screen_binding.dart';
+import '../bindings/route_bindings/normal_user_booking_date_screen_binding.dart';
 import '../bindings/route_bindings/normal_user_service_details_screen_binding.dart';
 import '../bindings/route_bindings/normal_user_service_preview_screen_binding.dart';
 import '../bindings/route_bindings/service_of_specific_category_screen_binding.dart';
@@ -49,6 +50,7 @@ import '../features/auth/verify_otp/verify_otp_screen.dart';
 import '../features/normal_user/search_location/presentation/search_location_screen.dart';
 import '../features/service_provider/profile_under_review/presentation/profile_under_review_screen.dart';
 import '../features/service_provider/face_verification/presentation/face_verification_screen.dart';
+import '../features/service_provider/svp_profile/sub_presentation/svp_documents/presentation/svp_document_edit_screen.dart';
 
 class Routes {
   ///Section : Common Screens Routing
@@ -103,6 +105,7 @@ class Routes {
   static const String svpPendingPaymentRequestDetailsScreen =
       '/svp_PendingPayment_Details_screen';
   static const String svpEditProfileScreen = '/svp_edit_profile_screen';
+  static const String svpEditDocumentScreen = '/svp_edit_document_screen';
   static const String normalUserSeePopularProviderScreen =
       '/normal_user_see_popular_provider_screen';
 
@@ -314,6 +317,7 @@ class Routes {
     GetPage(
       name: bookingDateScreen,
       page: () => BookingDateScreen(),
+      binding: NormalUserBookingDateScreenBinding(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),
@@ -470,6 +474,20 @@ class Routes {
       name: normalUserSeePopularProviderScreen,
       page: () => SeeAllPopularProvidersScreen(),
       binding: NormalUserSeeAllPopularProviderScreenBinding(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+    GetPage(
+      name: svpEditProfileScreen,
+      page: () => SvpEditProfileScreen(),
+      transition: _transition(),
+      customTransition: _customTransition(),
+      transitionDuration: _duration(),
+    ),
+    GetPage(
+      name: svpEditDocumentScreen,
+      page: () => SvpDocumentEditPage(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),

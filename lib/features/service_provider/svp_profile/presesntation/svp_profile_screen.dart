@@ -37,7 +37,8 @@ class SvpProfileScreen extends StatelessWidget {
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
         centerTitle: true,
-        backgroundColor: AppColors.scaffoldBackgroundColor,
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
       ),
 
       body: NestedScrollView(

@@ -15,4 +15,4 @@ enum BookingStatusEnum {
 enum FaceVerificationStatus { initial, capture, verifying, done }
 
 ///Section : Job Request Status
-enum JobRequestStatusEnum { pending, accepted }
+enum JobRequestStatusEnum { pending, accepted, completed }

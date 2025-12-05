@@ -154,6 +154,7 @@ class SvpEditProfileScreen extends StatelessWidget {
                     ],
                   ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       /// Name Form Field
                       EditProfileFormFieldWidget(
@@ -231,10 +232,65 @@ class SvpEditProfileScreen extends StatelessWidget {
                       UIHelper.verticalSpace(16.h),
 
                       /// Gender Form Field
-                      EditProfileFormFieldWidget(
-                        lableText: "Gender",
-                        hintText: "Enter Your Gender",
-                        controller: controller.genderController,
+                      Text(
+                        'Gender',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      DropdownButtonFormField<String>(
+                        value: controller.genderController.text.isEmpty
+                            ? null
+                            : controller.genderController.text.toLowerCase(),
+                        // Convert to lowercase to match
+                        items: [
+                          DropdownMenuItem(value: 'male', child: Text('Male')),
+                          DropdownMenuItem(
+                            value: 'female',
+                            child: Text('Female'),
+                          ),
+                        ],
+                        onChanged: (String? newValue) {
+                          // Ensure value is converted to lowercase when setting
+                          controller.genderController.text =
+                              newValue?.toLowerCase() ?? '';
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select gender type';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          hintStyle: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 14.sp,
+                          ),
+                          filled: true,
+                          fillColor: Colors.grey[50],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                            borderSide: BorderSide(color: AppColors.ce6e6e6),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                            borderSide: BorderSide(color: AppColors.ce6e6e6),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.r),
+                            borderSide: BorderSide(
+                              color: AppColors.c778beb,
+                              width: 2,
+                            ),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 14.h,
+                          ),
+                        ),
                       ),
                     ],
                   ),

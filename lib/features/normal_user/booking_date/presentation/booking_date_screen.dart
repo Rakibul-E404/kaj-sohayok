@@ -84,9 +84,9 @@ class BookingDateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final arguments = Get.arguments as Map<String, dynamic>?;
-    final userId = arguments?['userId'] ?? '';
+    final providerId = arguments?['providerId'] ?? '';
 
-    log('BookingDateScreen - Received providerId: $userId');
+    log('BookingDateScreen - Received providerId: $providerId');
 
     ///------------------------------------------- Initialize the controllers
     final CalendarController controller = Get.find<CalendarController>();
@@ -97,7 +97,7 @@ class BookingDateScreen extends StatelessWidget {
     log(
       'BookingDateScreen - Before setting, bookingController.providerId: ${bookingController.serviceProviderId.value}',
     );
-    bookingController.setServiceProviderId(svpId: userId);
+    bookingController.setServiceProviderId(svpId: providerId);
     log(
       'BookingDateScreen - After setting, bookingController.providerId: ${bookingController.serviceProviderId.value}',
     );

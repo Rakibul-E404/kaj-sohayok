@@ -1,5 +1,5 @@
 import '../../../../constants/text_font_style.dart';
- import '../../../../controllers/user_profile_screen_controller.dart';
+import '../../../../controllers/user_profile_screen_controller.dart';
 import '../../../../custom_widgets/custom_elevated_button.dart';
 import '../../../../gen/colors.gen.dart';
 import '../../../../gen/assets.gen.dart';
@@ -14,6 +14,7 @@ class EditProfileFormFieldWidget extends StatelessWidget {
   final TextInputType? keyboardType;
   final Widget? suffixIcon;
   final bool readOnly;
+  final int? maxLines;
 
   const EditProfileFormFieldWidget({
     super.key,
@@ -23,6 +24,7 @@ class EditProfileFormFieldWidget extends StatelessWidget {
     this.keyboardType,
     this.suffixIcon,
     this.readOnly = false,
+    this.maxLines,
   });
 
   @override
@@ -46,12 +48,10 @@ class EditProfileFormFieldWidget extends StatelessWidget {
           controller: controller,
           keyboardType: keyboardType,
           readOnly: readOnly,
+          maxLines: maxLines,
           decoration: InputDecoration(
             hintText: hintText,
-            hintStyle: TextStyle(
-              color: Colors.grey[400],
-              fontSize: 14.sp,
-            ),
+            hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14.sp),
             filled: true,
             fillColor: Colors.grey[50],
             suffixIcon: suffixIcon,

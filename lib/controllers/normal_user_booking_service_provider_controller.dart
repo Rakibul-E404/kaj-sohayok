@@ -65,10 +65,14 @@ class NormalUserBookingServiceProviderController extends GetxController {
         return;
       }
 
-      log(
-        'Checking availability with CalendarController date/time: $formattedDateTime',
-      );
-      log('Checking availability with providerId: ${serviceProviderId.value}');
+      // Get the authorization token
+      final String token =
+          await SecureStorageService().read(AppConstants.accessToken) ?? '';
+
+      log('📅 Checking availability with CalendarController date/time: $formattedDateTime');
+      log('👤 Checking availability with providerId: ${serviceProviderId.value}');
+      log('🔗 API URL being called: ${AppUrl.checkProbiderScheduleAvailability}');
+      log('🔑 Token availability: ${token.isNotEmpty ? "YES" : "NO"}');
 
       // Create request body
       final Map<String, dynamic> requestBody = {
@@ -76,11 +80,7 @@ class NormalUserBookingServiceProviderController extends GetxController {
         "providerId": serviceProviderId.value,
       };
 
-      log('Request body being sent: $requestBody');
-
-      // Get the authorization token
-      final String token =
-          await SecureStorageService().read(AppConstants.accessToken) ?? '';
+      log('📤 Request body being sent: $requestBody');
 
       NetworkResponse response = await NetworkCaller().postRequest(
         AppUrl.checkProbiderScheduleAvailability,
@@ -88,14 +88,17 @@ class NormalUserBookingServiceProviderController extends GetxController {
         body: requestBody,
       );
 
-      log(
-        'Availability Check Response: ${response.statusCode} - ${response.jsonResponse}',
-      );
+      log('📥 Availability Check Response Status: ${response.statusCode}');
+      log('📥 Availability Check Response Body: ${response.jsonResponse}');
 
       if (response.jsonResponse != null) {
-        log('Full API response: ${response.jsonResponse}');
+        log('✅ Full API response: ${response.jsonResponse}');
+        log('📊 Response has "success": ${response.jsonResponse!.containsKey('success')}');
+        log('📊 Response has "message": ${response.jsonResponse!.containsKey('message')}');
+        log('📊 Response has "code": ${response.jsonResponse!.containsKey('code')}');
+        log('📊 Response has "data": ${response.jsonResponse!.containsKey('data')}');
       } else {
-        log('API response is null');
+        log('❌ API response is null');
       }
 
       if (response.isSuccess && response.jsonResponse != null) {

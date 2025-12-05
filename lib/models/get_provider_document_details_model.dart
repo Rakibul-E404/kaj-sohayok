@@ -31,6 +31,8 @@ class ServiceProvider {
   final LocalizedString introOrBio;
   final LocalizedString description;
   final int? yearsOfExperience;
+  final List<DocumentAttachment>?
+  documentAttachments; // Added documentAttachments
 
   ServiceProvider({
     this.id,
@@ -40,16 +42,20 @@ class ServiceProvider {
     required this.introOrBio,
     required this.description,
     this.yearsOfExperience,
+    this.documentAttachments, // Include documentAttachments in the constructor
   });
 
   factory ServiceProvider.fromJson(Map<String, dynamic>? json) {
-    if (json == null)
+    if (json == null) {
       return ServiceProvider(
         serviceName: LocalizedString(),
         serviceCategoryId: ServiceCategory(name: LocalizedString()),
         introOrBio: LocalizedString(),
         description: LocalizedString(),
+        documentAttachments:
+            [], // Return empty list for documentAttachments if JSON is null
       );
+    }
 
     return ServiceProvider(
       id: json['_id'] as String?,
@@ -59,6 +65,9 @@ class ServiceProvider {
       introOrBio: LocalizedString.fromJson(json['introOrBio']),
       description: LocalizedString.fromJson(json['description']),
       yearsOfExperience: json['yearsOfExperience'] as int?,
+      documentAttachments: (json['attachmentsForGallery'] as List<dynamic>?)
+          ?.map((e) => DocumentAttachment.fromJson(e as Map<String, dynamic>?))
+          .toList(),
     );
   }
 }
@@ -97,7 +106,7 @@ class UserProfile {
   final String? id;
   final List<CertificateImage> frontSideCertificateImage;
   final List<CertificateImage> backSideCertificateImage;
-  final List<dynamic> faceImageFromFrontCam;
+  final List<CertificateImage> faceImageFromFrontCam;
 
   UserProfile({
     this.id,
@@ -127,7 +136,13 @@ class UserProfile {
             .whereType<CertificateImage>()
             .toList() ??
         [];
-    final faceList = json['faceImageFromFrontCam'] as List<dynamic>? ?? [];
+    final faceList =
+        (json['faceImageFromFrontCam'] as List<dynamic>?)
+            ?.map((e) => CertificateImage.fromJson(e as Map<String, dynamic>?))
+            .whereType<CertificateImage>()
+            .toList() ??
+        [];
+    ;
 
     return UserProfile(
       id: json['_id'] as String?,
@@ -154,5 +169,32 @@ class CertificateImage {
     }
 
     return CertificateImage(id: json['_id'] as String?, attachmentUrl: url);
+  }
+}
+
+// Added a new class for document attachments
+class DocumentAttachment {
+  final String? id;
+  final String? attachment;
+  final String? attachmentType;
+
+  DocumentAttachment({this.id, this.attachment, this.attachmentType});
+
+  factory DocumentAttachment.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return DocumentAttachment();
+
+    return DocumentAttachment(
+      id: json['_id'] as String?,
+      attachment: json['attachment'] as String?,
+      attachmentType: json['attachmentType'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'attachment': attachment,
+      'attachmentType': attachmentType,
+    };
   }
 }
