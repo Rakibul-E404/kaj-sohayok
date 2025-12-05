@@ -67,8 +67,16 @@ class AppUrl {
       '${baseUrl}v1/service-bookings/paginate?status=cancelled';
   static String completedBookings =
       '${baseUrl}v1/service-bookings/paginate?status=completed';
-  static String paymentRequests =
-      '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
+  static String paymentRequests = '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
+
+
+  static String jobRequests = '${baseUrl}v1/service-bookings/paginate/for-provider?status=pending';
+  static String providerAcceptedBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=accepted';
+  static String providerInProgressBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=accepted';
+  static String providerPaymentRequests = '${baseUrl}v1/service-bookings/paginate/for-provider?status=paymentRequest';
+  static String providerCancelledBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=cancelled';
+  static String providerCompletedBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=completed';
+
 
   ///===> rakibul api add close
   ///

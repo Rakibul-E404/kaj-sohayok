@@ -1,5 +1,3 @@
-
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -38,23 +36,49 @@ class AcceptedBookingTab extends StatelessWidget {
     return address['en'] ?? address['bn'] ?? 'Unknown Location';
   }
 
-  // FIXED: Return network URL when available, otherwise asset path
   String _getImageUrl(String bookingId) {
     final imageUrl = controller.getImageUrl(bookingId);
 
-    // If we have a valid network image URL and it's accessible, return it
     if (imageUrl.isNotEmpty && controller.hasImage(bookingId)) {
       return imageUrl;
     }
 
-    // Return fallback asset path
     return Assets.images.userImage.path;
   }
 
-  // Check if the image is a network image
   bool _isNetworkImage(String bookingId) {
     final imageUrl = controller.getImageUrl(bookingId);
     return imageUrl.isNotEmpty && controller.hasImage(bookingId);
+  }
+
+  // FIXED: Extract provider ID from the correct location based on JSON structure
+  String _getProviderId(Map<String, dynamic> booking) {
+    String? providerId;
+
+    // According to the JSON structure, the provider ID is in:
+    // providerDetailsId._ServiceProviderId
+    if (booking['providerDetailsId'] != null) {
+      final providerDetailsMap = booking['providerDetailsId'] as Map<String, dynamic>?;
+      if (providerDetailsMap != null && providerDetailsMap['_ServiceProviderId'] != null) {
+        providerId = providerDetailsMap['_ServiceProviderId'].toString();
+        log('✅ Provider ID extracted from providerDetailsId._ServiceProviderId: $providerId');
+        return providerId;
+      }
+    }
+
+    // Fallback: Try to get from providerId._userId if providerDetailsId is not available
+    if (booking['providerId'] != null && booking['providerId'] is Map) {
+      final providerMap = booking['providerId'] as Map<String, dynamic>;
+      if (providerMap['_userId'] != null) {
+        providerId = providerMap['_userId'].toString();
+        log('⚠️ Provider ID extracted from providerId._userId (fallback): $providerId');
+        return providerId;
+      }
+    }
+
+    log('❌ ERROR: No provider ID found in booking data');
+    log('Booking data: $booking');
+    return '';
   }
 
   @override
@@ -139,6 +163,9 @@ class AcceptedBookingTab extends StatelessWidget {
             final booking = controller.acceptedBookings[index];
             final bookingId = booking['_ServiceBookingId'] ?? '';
 
+            // Extract provider ID from providerDetailsId._ServiceProviderId
+            final providerId = _getProviderId(booking);
+
             final serviceName = booking['providerDetailsId']?['serviceName'];
             final address = booking['address'];
             final provider = booking['providerId'];
@@ -146,14 +173,39 @@ class AcceptedBookingTab extends StatelessWidget {
             final imageUrl = _getImageUrl(bookingId);
             final isNetworkImage = _isNetworkImage(bookingId);
 
+            // Log for debugging
+            log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+            log('📋 Booking Index: $index');
+            log('🆔 Booking ID: $bookingId');
+            log('👤 Provider ID: $providerId');
+            log('📝 Service Name: ${_getServiceName(serviceName)}');
+            log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
             return BookingDetailsCardWidget(
               onTap: () {
+                if (providerId.isEmpty) {
+                  log('❌ Cannot navigate: Provider ID is empty');
+                  Get.snackbar(
+                    'Error',
+                    'Provider information not available',
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                  );
+                  return;
+                }
+
+                log('🚀 Card tapped - Navigating to details screen');
+                log('   Status: ${BookingStatusEnum.acceptedBooking}');
+                log('   Booking ID: $bookingId');
+                log('   Provider ID: $providerId');
+
                 Get.toNamed(
                   Routes.serviceDetailsScreen,
                   arguments: {
                     "status": BookingStatusEnum.acceptedBooking,
                     "bookingId": bookingId,
-                    "providerId": booking['serviceProviderDetailsId'] ?? booking['providerId']?['_userId'],
+                    "providerId": providerId,
                   },
                 );
               },
@@ -161,19 +213,36 @@ class AcceptedBookingTab extends StatelessWidget {
 
               ///Button OnTap : View
               isAcceptedBookingTabViewOnTap: () {
+                if (providerId.isEmpty) {
+                  log('❌ Cannot navigate: Provider ID is empty');
+                  Get.snackbar(
+                    'Error',
+                    'Provider information not available',
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                  );
+                  return;
+                }
+
+                log('👁️ VIEW button tapped - Navigating to details screen');
+                log('   Status: ${BookingStatusEnum.acceptedBooking}');
+                log('   Booking ID: $bookingId');
+                log('   Provider ID: $providerId');
+
                 Get.toNamed(
                   Routes.serviceDetailsScreen,
                   arguments: {
                     "status": BookingStatusEnum.acceptedBooking,
                     "bookingId": bookingId,
-                    "providerId": booking['serviceProviderDetailsId'] ?? booking['providerId']?['_userId'],
+                    "providerId": providerId,
                   },
                 );
               },
 
               ///Button OnTap : Message
               isAcceptedBookingTabMessageOnTap: () {
-                log("Accepted Tab Message Button Tapped for booking: $bookingId");
+                log("💬 Message button tapped for booking: $bookingId");
                 // Add your message functionality here
               },
               title: _getServiceName(serviceName),
@@ -183,7 +252,7 @@ class AcceptedBookingTab extends StatelessWidget {
               serviceProviderProfileImage: imageUrl,
               serviceProviderName: provider?['name'] ?? 'Unknown Provider',
               serviceProviderDesignation: 'Service Provider',
-              isNetworkImage: isNetworkImage, // PASS THIS TO THE WIDGET
+              isNetworkImage: isNetworkImage,
             );
           },
         ),
@@ -191,4 +260,3 @@ class AcceptedBookingTab extends StatelessWidget {
     });
   }
 }
-
