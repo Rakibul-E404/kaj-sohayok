@@ -1,11 +1,8 @@
 import 'dart:developer';
-
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:kaz_bd/constants/appList.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/features/normal_user/home/models/home_page_data_model.dart'
     as Model;
@@ -62,11 +59,13 @@ class HomeScreen extends StatelessWidget {
             ///Section : Hero Booking
             Obx(() {
               log(
-                '🏠 HOME SCREEN: Banners section - Loading: ${controller.isLoading.value}, Banner count: ${controller.banners.length}',
+                '🏠------------ HOME SCREEN: Banners section - Loading: ${controller.isLoading.value}, Banner count: ${controller.banners.length}',
               );
 
               if (controller.isLoading.value) {
-                log('⏳ HOME SCREEN: Showing loading shimmer for banners');
+                log(
+                  '⏳ ---------HOME SCREEN: Showing loading shimmer for banners',
+                );
                 return CustomShimmerEffect(height: 175, width: 1);
               }
 
@@ -99,14 +98,16 @@ class HomeScreen extends StatelessWidget {
                       Flexible(
                         child: Text(
                           'Stay Tuned for Updates!',
-                          style: TextFontStyle.headline16w700cFFFFFFStyleSatoshi,
+                          style:
+                              TextFontStyle.headline16w700cFFFFFFStyleSatoshi,
                         ),
                       ),
                       SizedBox(height: 4.h),
                       Flexible(
                         child: Text(
                           'Special offers coming soon',
-                          style: TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
+                          style:
+                              TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
                         ),
                       ),
                     ],
