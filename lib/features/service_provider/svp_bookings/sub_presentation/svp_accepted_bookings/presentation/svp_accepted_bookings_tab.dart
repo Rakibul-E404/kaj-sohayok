@@ -40,7 +40,7 @@ class SvpAcceptedBookingsTab extends StatelessWidget {
                 },
                 isJobRequestAccpted: true,
 
-                userImage: Assets.images.userImage.path,
+                userImageUrl: Assets.images.userImage.path,
                 userName: "Chowdhury Md. Imtiazul Islam",
                 location: "Rampura Dhaka, Bangladesh",
                 dateTime: "Jun 17, 2025  09:31AM",

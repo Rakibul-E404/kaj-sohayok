@@ -6,15 +6,13 @@ import 'package:kaz_bd/features/service_provider/svp_home/widgets/custom_chart_b
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 
-import '../../../../constants/appList.dart';
 import '../../../../controllers/svp_home_screen_controller.dart';
 
 class IncomeChartCard extends StatelessWidget {
   IncomeChartCard({super.key});
 
-  final SvpHomeScreenController controller = Get.put(
-    SvpHomeScreenController(),
-  ); // inject controller
+  final SvpHomeScreenController controller =
+      Get.find<SvpHomeScreenController>();
 
   @override
   Widget build(BuildContext context) {
@@ -64,14 +62,19 @@ class IncomeChartCard extends StatelessWidget {
                         color: AppColors.c000000,
                       ),
                       style: TextFontStyle.headline12w500c000000StyleSatoshi,
-                      items: ['Weekly', 'Monthly'].map((String value) {
+                      items: ['weekly', 'monthly'].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
-                          child: Text(value),
+                          child: Text(
+                            value[0].toUpperCase() + value.substring(1),
+                          ),
                         );
                       }).toList(),
                       onChanged: (String? newValue) {
-                        controller.selectedPeriod.value = newValue!;
+                        if (newValue != null) {
+                          controller.selectedPeriod.value = newValue;
+                          controller.getServiceProviderHomeData();
+                        }
                       },
                     ),
                   ),
@@ -92,117 +95,147 @@ class IncomeChartCard extends StatelessWidget {
 
           // Chart
           Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                // Y-axis labels
-                Obx(
-                  () => SizedBox(
+            child: Obx(() {
+              final chartData = controller.chartData;
+              final maxValue = controller.maxValue;
+
+              if (chartData.isEmpty) {
+                return const Center(child: Text('No chart data available'));
+              }
+
+              // Generate Y-axis labels based on maxValue
+              final yAxisLabels = _generateYAxisLabels(maxValue);
+
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  // Y-axis labels
+                  SizedBox(
                     height: 120.h,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          controller.selectedPeriod.value == 'Weekly'
-                              ? '20 K'
-                              : '60 K',
+                      children: yAxisLabels.reversed.map((label) {
+                        return Text(
+                          label,
                           style:
                               TextFontStyle.headline12w500c4d4d4dStyleSatoshi,
-                        ),
-                        Text(
-                          controller.selectedPeriod.value == 'Weekly'
-                              ? '15 K'
-                              : '45 K',
-                          style:
-                              TextFontStyle.headline12w500c4d4d4dStyleSatoshi,
-                        ),
-                        Text(
-                          controller.selectedPeriod.value == 'Weekly'
-                              ? '10 K'
-                              : '30 K',
-                          style:
-                              TextFontStyle.headline12w500c4d4d4dStyleSatoshi,
-                        ),
-                        Text(
-                          controller.selectedPeriod.value == 'Weekly'
-                              ? '5 K'
-                              : '15 K',
-                          style:
-                              TextFontStyle.headline12w500c4d4d4dStyleSatoshi,
-                        ),
-                        Text(
-                          '0 K',
-                          style:
-                              TextFontStyle.headline12w500c4d4d4dStyleSatoshi,
-                        ),
-                      ],
+                        );
+                      }).toList(),
                     ),
                   ),
-                ),
-                UIHelper.horizontalSpace(8.w),
+                  UIHelper.horizontalSpace(8.w),
 
-                // Custom Chart
-                Expanded(
-                  child: Obx(
-                    () => SizedBox(
+                  // Custom Chart
+                  Expanded(
+                    child: SizedBox(
                       height: 120.h,
                       child: Column(
                         children: [
-                          // Chart area
-                          Expanded(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: AppList
-                                  .chartData[controller.selectedPeriod.value]!
-                                  .map(
-                                    (data) => CustomBar(
-                                      value: data.value,
-                                      maxValue: controller.maxValue,
-                                      label: data.day,
-                                      barWidth:
-                                          controller.selectedPeriod.value ==
-                                              "Monthly"
-                                          ? 14.w
-                                          : 28.w,
+                          // Combined chart area with bars and labels - Make it scrollable when there are too many items
+                          Obx(() {
+                            // Access the observable values to ensure reactivity
+                            final localChartData = controller.chartData;
+                            final localMaxValue = controller.maxValue;
+                            final localSelectedPeriod = controller.selectedPeriod.value;
+
+                            // If there are many items (> 7), make it horizontally scrollable
+                            bool shouldScroll = localChartData.length > 7;
+
+                            return Expanded(
+                              child: shouldScroll
+                                ? SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: localChartData.asMap().entries.map((entry) {
+                                        var data = entry.value;
+                                        return Container(
+                                          margin: EdgeInsets.only(right: 8.w),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              // Bar
+                                              CustomBar(
+                                                value: (data.income ?? 0).toDouble(),
+                                                maxValue: localMaxValue,
+                                                label: data.label ?? '',
+                                                barWidth: 14.w,
+                                              ),
+                                              UIHelper.verticalSpace(4.h), // Reduced to save space
+                                              // Label below the bar
+                                              Text(
+                                                data.label ?? '',
+                                                style: TextFontStyle
+                                                    .headline12w500c4d4d4dStyleSatoshi
+                                                    .copyWith(fontSize: 8.sp), // Reduced font size to save space
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
                                     ),
                                   )
-                                  .toList(),
-                            ),
-                          ),
-                          UIHelper.verticalSpace(8.h),
-
-                          // X-axis labels
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: AppList
-                                .chartData[controller.selectedPeriod.value]!
-                                .map(
-                                  (data) => Text(
-                                    data.day,
-                                    style: TextFontStyle
-                                        .headline12w500c4d4d4dStyleSatoshi
-                                        .copyWith(
-                                          fontSize:
-                                              controller.selectedPeriod.value ==
-                                                  "Monthly"
-                                              ? 8.sp
-                                              : 12.sp,
-                                        ),
+                                : Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: localChartData.asMap().entries.map((entry) {
+                                      var data = entry.value;
+                                      return Column(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          // Bar
+                                          CustomBar(
+                                            value: (data.income ?? 0).toDouble(),
+                                            maxValue: localMaxValue,
+                                            label: data.label ?? '',
+                                            barWidth: 14.w,
+                                          ),
+                                          UIHelper.verticalSpace(4.h), // Reduced to save space
+                                          // Label below the bar
+                                          Text(
+                                            data.label ?? '',
+                                            style: TextFontStyle
+                                                .headline12w500c4d4d4dStyleSatoshi
+                                                .copyWith(fontSize: 8.sp), // Reduced font size to save space
+                                          ),
+                                        ],
+                                      );
+                                    }).toList(),
                                   ),
-                                )
-                                .toList(),
-                          ),
+                            );
+                          }),
                         ],
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              );
+            }),
           ),
         ],
       ),
     );
+  }
+
+  // Helper method to generate Y-axis labels with proper "K" formatting
+  List<String> _generateYAxisLabels(double maxValue) {
+    // Create 5 evenly spaced labels (including 0 at bottom)
+    final labels = <String>[];
+
+    // Generate from 0 to maxValue (ascending)
+    for (int i = 0; i <= 5; i++) {
+      final value = (maxValue * i / 5).toInt();
+
+      // Format the value with "K" for thousands if value >= 1000
+      if (value >= 1000) {
+        labels.add(
+          '${(value / 1000).toStringAsFixed(value % 1000 == 0 ? 0 : 1)}K',
+        );
+      } else {
+        labels.add(value.toString());
+      }
+    }
+
+    return labels;
   }
 }

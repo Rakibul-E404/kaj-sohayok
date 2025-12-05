@@ -71,8 +71,11 @@ class AppUrl {
       '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
 
   ///===> rakibul api add close
-
-
+  ///
+  ///
+  ///
+  ///
+  ///-------------///Imtiaz Chowdhury Start///------------------
   static String getNormalUserHomeData = '${baseUrl}v1/users/home-page';
   static String getNormalUserAllCategory =
       '${baseUrl}v1/service-categories/paginate?page=1&limit=2000';
@@ -105,4 +108,17 @@ class AppUrl {
   }
 
   static String getAllPopularProviders = '${baseUrl}v1/users/home-page/popular';
+  static String checkProbiderScheduleAvailability =
+      '${baseUrl}v1/service-bookings/schedule-check';
+
+  static String bookAService = '${baseUrl}v1/service-bookings';
+  static String getServiceDataPreview({required String userId}) {
+    return '${baseUrl}v1/service-providers/limited-info/$userId';
+  }
+
+  static String getServiceProviderHomeData({required String dataType}) {
+    return '${baseUrl}v1/users/home-page/for-provider?type=$dataType';
+  }
+
+  ///-------------///Imtiaz Chowdhury End///------------------
 }

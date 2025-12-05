@@ -3,14 +3,16 @@ import 'dart:developer';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/features/normal_user/service_preview/widgets/booking_placed_bottomsheet_widget.dart';
-import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 
+import '../../../../controllers/normal_user_service_preview_screen_controller.dart';
+import '../../../../custom_widgets/custom_shimmer_effect.dart';
+import '../../../../utilities/app_url.dart';
 import '../widgets/details_card_widget.dart';
 
 class ServicesPreviewScreen extends StatelessWidget {
@@ -18,6 +20,75 @@ class ServicesPreviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Initialize controller
+    final NormalUserServicePreviewScreenController controller =
+        Get.find<NormalUserServicePreviewScreenController>();
+
+    final arguments = Get.arguments as Map<String, dynamic>?;
+    final providerId = arguments?['userId'] ?? '';
+    final bookingDateTime = arguments?['bookingDateTime'] ?? '';
+    final address = arguments?['address'] ?? '';
+    final latDynamic = arguments?['lat'];
+    final longDynamic = arguments?['long'];
+
+    // In your ServicesPreviewScreen:
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      controller.setProviderId(pid: providerId);
+      controller.setBookingDateTime(bDateTime: bookingDateTime);
+      controller.setAddress(addr: address);
+
+      // Handle both string and numeric values for lat and long
+      try {
+        double? latDouble;
+        double? longDouble;
+
+        // Parse latitude
+        if (latDynamic is String) {
+          latDouble = double.tryParse(latDynamic);
+        } else if (latDynamic is num) {
+          latDouble = latDynamic.toDouble();
+        } else {
+          latDouble = null;
+        }
+
+        // Parse longitude
+        if (longDynamic is String) {
+          longDouble = double.tryParse(longDynamic);
+        } else if (longDynamic is num) {
+          longDouble = longDynamic.toDouble();
+        } else {
+          longDouble = null;
+        }
+
+        // Set values with appropriate validity status
+        controller.setLatValue(
+          latValue: latDouble ?? 0.0,
+          isValid: latDouble != null,
+        );
+        controller.setLongValue(
+          longValue: longDouble ?? 0.0,
+          isValid: longDouble != null,
+        );
+
+        // If parsing failed, make sure validity flags are set appropriately
+        if (latDouble == null || longDouble == null) {
+          log(
+            'Warning: One or both coordinates could not be parsed - lat: ${latDouble ?? "null"}, long: ${longDouble ?? "null"}',
+          );
+        } else {
+          log('Successfully parsed lat: $latDouble, long: $longDouble');
+        }
+      } catch (e) {
+        log('Error parsing lat/long: $e');
+        // Mark as invalid in case of exception
+        controller.setLatValue(latValue: 0.0, isValid: false);
+        controller.setLongValue(longValue: 0.0, isValid: false);
+      }
+
+      // Load service data preview after setting up the provider ID
+      await controller.getServiceDataPreview();
+    });
+
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -44,15 +115,58 @@ class ServicesPreviewScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Image container with rounded corners and fit image
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(24.r),
-                      child: Image.network(
-                        'https://deax38zvkau9d.cloudfront.net/prod/assets/images/uploads/services/1708074899how-to-start-cleaning-house.webp',
-                        height: 170,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+
+                    /// --- Service Image ---
+                    Obx(() {
+                      // Get the first gallery attachment from service details if available
+                      String? imageUrl;
+                      if (controller.serviceImage != null) {
+                        imageUrl = controller.serviceImage;
+                      }
+
+                      // Show network image if URL is available, otherwise show placeholder
+                      if (imageUrl != null && imageUrl.isNotEmpty) {
+                        // Make sure the URL is properly formatted
+                        String fullImageUrl = imageUrl;
+                        if (!imageUrl.startsWith('http')) {
+                          // If it's a relative path, prepend the base URL
+                          fullImageUrl = '${AppUrl.imageBaseUrl}$imageUrl';
+                        }
+
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(24.r),
+                          child: Image.network(
+                            fullImageUrl,
+                            height: 170.h,
+                            width: 1.sw,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              // If network image fails, show placeholder
+                              return CustomShimmerEffect(
+                                height: 170.h,
+                                width: 1.sw,
+                              );
+                            },
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return CustomShimmerEffect(
+                                height: 170.h,
+                                width: 1.sw,
+                              );
+                            },
+                          ),
+                        );
+                      } else {
+                        // Show placeholder if no image is available
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(24.r),
+                          child: CustomShimmerEffect(
+                            height: 170.h,
+                            width: 1.sw,
+                          ),
+                        );
+                      }
+                    }),
                     const SizedBox(height: 12),
 
                     // Section : Service title
@@ -60,25 +174,44 @@ class ServicesPreviewScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'Home Cleaning',
-                          style:
-                              TextFontStyle.headline16w700c000000StyleSatoshi,
-                        ),
-                        RichText(
-                          text: TextSpan(
-                            text: 'Start From ',
+                        Obx(() {
+                          if (controller.isServicePreViewDataLoading.value ==
+                              true) {
+                            return CustomShimmerEffect(
+                              height: 10.h,
+                              width: 0.5.sw,
+                            );
+                          }
+
+                          return Text(
+                            controller.serviceName.toString(),
                             style:
-                                TextFontStyle.headline12w500c6a6a6aStyleSatoshi,
-                            children: [
-                              TextSpan(
-                                text: '\$30.90',
-                                style: TextFontStyle
-                                    .headline16w700c778bebStyleSatoshi,
-                              ),
-                            ],
-                          ),
-                        ),
+                                TextFontStyle.headline16w700c000000StyleSatoshi,
+                          );
+                        }),
+                        Obx(() {
+                          if (controller.isServicePreViewDataLoading.value ==
+                              true) {
+                            return CustomShimmerEffect(
+                              height: 10.h,
+                              width: 0.3.sw,
+                            );
+                          }
+                          return RichText(
+                            text: TextSpan(
+                              text: 'Start From ',
+                              style: TextFontStyle
+                                  .headline12w500c6a6a6aStyleSatoshi,
+                              children: [
+                                TextSpan(
+                                  text: '\$${controller.serviceStartPrice}',
+                                  style: TextFontStyle
+                                      .headline16w700c778bebStyleSatoshi,
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
                       ],
                     ),
 
@@ -107,7 +240,7 @@ class ServicesPreviewScreen extends StatelessWidget {
                         log("Location Edit Button Taped!");
                       },
                       title: "Location",
-                      data: 'Rampura Dhaka, Bangladesh',
+                      data: address,
                       icon: Icons.location_on,
                     ),
 
@@ -128,12 +261,23 @@ class ServicesPreviewScreen extends StatelessWidget {
               const Spacer(),
 
               /// Confirm Booking button
-              CustomElevatedButton(
-                onTap: () {
-                  _showBottomModal(context);
-                },
-                buttonTitle: "Confirm Booking",
-              ),
+              Obx(() {
+                return CustomElevatedButton(
+                  onTap: () async {
+                    // Call the API
+                    await controller.confirmServiceBooking();
+
+                    // Check if booking was successful
+                    if (controller.serviceBookingModel.value?.success == true) {
+                      // Show success bottom sheet
+                      _showBottomModal(context);
+                    }
+                  },
+                  buttonTitle: controller.isCSBLoading.value
+                      ? "Confirming Your Order"
+                      : "Confirm Booking",
+                );
+              }),
               UIHelper.verticalSpace(20.h),
             ],
           ),

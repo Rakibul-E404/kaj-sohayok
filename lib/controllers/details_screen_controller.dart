@@ -171,9 +171,31 @@ class DetailsScreenController extends GetxController {
   String? get providerProfileImage =>
       serviceDetails.value?.providerId?.profileImage?.imageUrl;
 
+  String? get userId => serviceDetails.value?.providerId?.userId;
+
   // Get gallery images
-  List<AttachmentsForGallery> get galleryImages =>
-      serviceDetails.value?.attachmentsForGallery ?? [];
+  List<AttachmentsForGallery> get galleryImages {
+    log('🖼️ DETAILS CONTROLLER: galleryImages getter called');
+    final result = serviceDetails.value?.attachmentsForGallery;
+    if (serviceDetails.value == null) {
+      log('❌ DETAILS CONTROLLER: serviceDetails.value is null');
+    } else {
+      log('✅ DETAILS CONTROLLER: serviceDetails.value is not null');
+      log('📊 DETAILS CONTROLLER: attachmentsForGallery length: ${serviceDetails.value?.attachmentsForGallery?.length ?? 0}');
+      log('📊 DETAILS CONTROLLER: attachmentsForGallery content: ${serviceDetails.value?.attachmentsForGallery}');
+
+      if (result != null && result.isNotEmpty) {
+        log('✅ DETAILS CONTROLLER: Gallery images found: ${result.length}');
+        for (int i = 0; i < result.length; i++) {
+          log('🖼️ DETAILS CONTROLLER: Gallery image $i - attachment: ${result[i].attachment}, attachmentId: ${result[i].attachmentId}');
+        }
+        log('🖼️ DETAILS CONTROLLER: First attachmentForGallery attachment: ${result.first.attachment}');
+      } else {
+        log('❌ DETAILS CONTROLLER: No gallery images found in service details');
+      }
+    }
+    return result ?? [];
+  }
 
   // Get cover photos
   List<dynamic> get coverPhotos =>
