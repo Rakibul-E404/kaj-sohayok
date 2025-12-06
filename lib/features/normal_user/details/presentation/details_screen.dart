@@ -807,6 +807,7 @@ class _DetailsScreenState extends State<DetailsScreen>
               if (providerId.isNotEmpty) {
                 Get.toNamed(
                   Routes.bookingDateScreen,
+                  // arguments: {'providerId': providerId},
                   arguments: {'providerId': providerId},
                 );
               }

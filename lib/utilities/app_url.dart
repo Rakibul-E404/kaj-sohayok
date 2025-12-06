@@ -76,11 +76,24 @@ class AppUrl {
   static String providerPaymentRequests = '${baseUrl}v1/service-bookings/paginate/for-provider?status=paymentRequest';
   static String providerCancelledBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=cancelled';
   static String providerCompletedBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=completed';
+  // static String providerJobRequestAcceptButton = '${baseUrl}v1/service-bookings/update-status/69315f4db1f9edce7fdbbb9e/status/accept';
+  // static String providerJobRequestCancelButton = '${baseUrl}v1/service-bookings/update-status/691ea05ad088d0c1daf6ea24/status/cancel-by-provider';
+
+  // Reusable methods for dynamic booking IDs
+  // static String getProviderJobRequestAcceptUrl(String bookingId) {
+  static String providerJobRequestAcceptButton(String bookingId) {
+    return '${baseUrl}v1/service-bookings/update-status/$bookingId/status/accept';
+  }
+
+  // static String getProviderJobRequestCancelUrl(String bookingId) {
+  static String providerJobRequestCancelButton(String bookingId) {
+    return '${baseUrl}v1/service-bookings/update-status/$bookingId/status/cancel-by-provider';
+  }
 
 
   ///===> rakibul api add close
-  ///
-  ///
+
+
   ///
   ///
   ///-------------///Imtiaz Chowdhury Start///------------------

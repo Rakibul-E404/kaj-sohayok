@@ -8,24 +8,24 @@ import '../../../../../../helpers/ui_helpers.dart';
 import '../controller/svp_job_request_tab_controller.dart';
 
 class SvpJobRequestTab extends StatelessWidget {
-  SvpJobRequestTab({super.key});
-
-  final SvpJobRequestTabController controller = Get.put(SvpJobRequestTabController());
+  const SvpJobRequestTab({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(SvpJobRequestTabController());
+
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(top: UIHelper.kDefaulutPadding()),
-          child: Obx(() => _buildContent()),
+          child: Obx(() => _buildContent(controller)),
         ),
       ),
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(SvpJobRequestTabController controller) {
     if (controller.isLoading.value) {
       return Center(
         child: Padding(
@@ -33,9 +33,7 @@ class SvpJobRequestTab extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircularProgressIndicator(
-                color: AppColors.c000e08,
-              ),
+              CircularProgressIndicator(color: AppColors.c000e08),
               UIHelper.verticalSpace(16.h),
               Text(
                 'Loading job requests...',
@@ -54,16 +52,11 @@ class SvpJobRequestTab extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
-                Icons.error_outline,
-                size: 50.h,
-                color: Colors.red,
-              ),
+              Icon(Icons.error_outline, size: 50.h, color: Colors.red),
               UIHelper.verticalSpace(16.h),
               Text(
                 controller.errorMessage.value,
-                style: TextFontStyle.headline10w400c6c606cStyleSatoshi
-                    .copyWith(color: Colors.red),
+                style: TextFontStyle.headline10w400c6c606cStyleSatoshi.copyWith(color: Colors.red),
                 textAlign: TextAlign.center,
               ),
               UIHelper.verticalSpace(16.h),
@@ -86,22 +79,16 @@ class SvpJobRequestTab extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.work_outline,
-              size: 60.h,
-              color: Colors.grey,
-            ),
+            Icon(Icons.work_outline, size: 60.h, color: Colors.grey),
             UIHelper.verticalSpace(16.h),
             Text(
               'No job requests available',
-              style: TextFontStyle.headline10w500c000000StyleSatoshi
-                  .copyWith(color: Colors.grey),
+              style: TextFontStyle.headline10w500c000000StyleSatoshi.copyWith(color: Colors.grey),
             ),
             UIHelper.verticalSpace(8.h),
             Text(
               'New job requests will appear here',
-              style: TextFontStyle.headline10w400c6c606cStyleSatoshi
-                  .copyWith(color: Colors.grey),
+              style: TextFontStyle.headline10w400c6c606cStyleSatoshi.copyWith(color: Colors.grey),
             ),
           ],
         ),
@@ -125,6 +112,14 @@ class SvpJobRequestTab extends StatelessWidget {
 
 
 
+
+
+
+///
+///
+/// todo:: adding the button api
+///
+///
 
 
 
@@ -239,3 +234,5 @@ class SvpJobRequestTab extends StatelessWidget {
     );
   }
 }
+
+
