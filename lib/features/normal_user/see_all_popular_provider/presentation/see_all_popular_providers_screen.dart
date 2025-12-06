@@ -123,16 +123,17 @@ class _SeeAllPopularProvidersScreenState
                           Get.toNamed(
                             Routes.serviceDetailsScreen,
                             arguments: {
-                              'providerId': controller.getProviderId(index),
+                              'providerID': controller.getProviderId(index),
+                              'serviceProviderID':
+                                  controller.getServiceProviderId(index),
                             },
                           );
                         },
                         imagePath: controller.getServiceImage(index).isNotEmpty
                             ? controller.getServiceImage(index)
                             : Assets.images.medalImage.path, // Fallback image
-                        initialPayablePrice: controller
-                            .getInitialPrice(index)
-                            .toDouble(),
+                        initialPayablePrice:
+                            controller.getInitialPrice(index).toDouble(),
                         serviceTitle: controller.getServiceTitle(index),
                         userRating: controller.getRating(index),
                       );
