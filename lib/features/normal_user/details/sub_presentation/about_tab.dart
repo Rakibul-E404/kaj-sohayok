@@ -182,7 +182,10 @@ class AboutTab extends StatelessWidget {
                           );
                         } else {
                           return InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              ///TODO : Add message here ============>
+
+                            },
                             child: Container(
                               padding: EdgeInsets.all(6.sp),
                               decoration: BoxDecoration(

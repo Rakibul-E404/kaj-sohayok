@@ -4,21 +4,35 @@ import 'package:intl/intl.dart';
 
 import '../constants/appList.dart';
 import '../features/normal_user/chat_inbox/model/chat_message_model.dart';
+import '../service/socket_service.dart';
+import 'message_screen_controller.dart';
 
 class ChatInboxScreenController extends GetxController {
   TextEditingController sendMessageController = TextEditingController();
 
-  void sendMessage() {
+  Future<void> sendMessage({required String conversationId}) async {
     if (sendMessageController.text.isNotEmpty) {
-      final newMessage = ChatMessageModel(
-        message: sendMessageController.text,
-        isSentByMe: true,
-        time: DateFormat('h:mm a').format(DateTime.now()),
-      );
+      final chatListResponse =
+          await SocketServices().emitAsync("send-new-message", {
+        // for send-new-message
+        "conversationId": conversationId,
+        "text": sendMessageController.text.trim()
+      });
+      if (chatListResponse != null)
+        {
+          Get.find<MessageScreenController>().handleFetchChatList(); 
+          Get.find<MessageScreenController>().handleViewSingleProfileChat(conversationId: conversationId);
+          sendMessageController.clear();
+        }
+      // final newMessage = ChatMessageModel(
+      //   message: sendMessageController.text,
+      //   isSentByMe: true,
+      //   time: DateFormat('h:mm a').format(DateTime.now()),
+      // );
 
-      AppList.chatInboxMessageList.add(newMessage);
+      // AppList.chatInboxMessageList.add(newMessage);
 
-      sendMessageController.clear();
+      // sendMessageController.clear();
     }
   }
 

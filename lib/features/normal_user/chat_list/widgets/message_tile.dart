@@ -58,9 +58,11 @@
 //   }
 // }
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
@@ -70,10 +72,12 @@ import '../../chat_inbox/presentation/chat_inbox_screen.dart';
 
 class MessageTile extends StatelessWidget {
   final String userName;
+  final String imageUrl;
   final String lastMessage;
   final String time;
   final bool isUnread;
   final int totalUnrededMessage;
+
   const MessageTile({
     super.key,
     required this.userName,
@@ -81,37 +85,54 @@ class MessageTile extends StatelessWidget {
     required this.time,
     required this.isUnread,
     required this.totalUnrededMessage,
+    required this.imageUrl,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Get.to(() => PersonalInbox(name: userName));
-      },
-      child: Row(
-        children: [
-          ///Section : User Image
-          CircleAvatar(
-            radius: 30.r,
-            backgroundImage: AssetImage(Assets.images.userImage.path),
+    return Row(
+      children: [
+        ///Section : User Image
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 2),
           ),
-          UIHelper.horizontalSpace(12.w),
+          child: ClipOval(
+            child: CachedNetworkImage(
+              width: 60,
+              height: 60,
+              imageUrl: imageUrl.trim(),
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                color: Colors.grey[300],
+              ),
+              errorWidget: (context, url, error) => Container(
+                color: Colors.red,
+                child: const Icon(Icons.person, size: 15),
+              ),
+            ),
+          ),
+        ),
 
-          ///Section : User Name
-          ///Section : Last Message
-          ///Section : Last Message Time
-          ///Section : Total Unread Message
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ///Section : Use Name
-                ///Section : Last Message Time
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
+        UIHelper.horizontalSpace(12.w),
+
+        ///Section : User Name
+        ///Section : Last Message
+        ///Section : Last Message Time
+        ///Section : Total Unread Message
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ///Section : Use Name
+              ///Section : Last Message Time
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: SizedBox(
                       width: 0.57.sw,
                       child: Text(
                         userName,
@@ -119,64 +140,73 @@ class MessageTile extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextFontStyle.headline16w700c202020StyleSatoshi
                             .copyWith(
-                              fontWeight: isUnread ? FontWeight.w700 : null,
-                            ),
+                          fontWeight: isUnread ? FontWeight.w700 : null,
+                        ),
                       ),
                     ),
-                    Spacer(),
-                    Text(
+                  ),
+                  Expanded(
+                    child: Text(
                       time,
                       style: TextFontStyle.headline10w400c797c7bStyleSatoshi,
                     ),
-                  ],
-                ),
-                UIHelper.verticalSpace(2.h),
+                  ),
+                ],
+              ),
+              UIHelper.verticalSpace(2.h),
 
-                ///Section : Last Message
-                ///Section : Total Unreaded Message
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ///Section : Last Message
-                    SizedBox(
-                      width: 0.6.sw,
-                      child: Text(
-                        lastMessage,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style:
-                            TextFontStyle.headline12w400c616161StyleSatoshi,
-                      ),
+              ///Section : Last Message
+              ///Section : Total Unreaded Message
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ///Section : Last Message
+                  SizedBox(
+                    width: 0.6.sw,
+                    child: Text(
+                      lastMessage,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextFontStyle.headline12w400c616161StyleSatoshi,
                     ),
-                    Spacer(),
+                  ),
 
-                    ///Section : Total Unreaded Message
-                    isUnread
-                        ? Container(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 4.h,
-                              horizontal: 7.w,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.cf04a4c,
-                              shape: BoxShape.circle,
-                            ),
-                            child: Text(
-                              totalUnrededMessage != 0
-                                  ? totalUnrededMessage.toString()
-                                  : "",
-                              style: TextFontStyle
-                                  .headline12w400cFFFFFFStyleSatoshi,
-                            ),
-                          )
-                        : SizedBox.shrink(),
-                  ],
-                ),
-              ],
-            ),
+                  ///Section : Total Unreaded Message
+                  isUnread
+                      ? Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: 4.h,
+                            horizontal: 7.w,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.cf04a4c,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Text(
+                            totalUnrededMessage != 0
+                                ? totalUnrededMessage.toString()
+                                : "",
+                            style:
+                                TextFontStyle.headline12w400cFFFFFFStyleSatoshi,
+                          ),
+                        )
+                      : SizedBox.shrink(),
+                ],
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
+  }
+}
+
+String formatIsoDate(String isoString) {
+  try {
+    final DateTime dateTime = DateTime.parse(isoString);
+    return DateFormat('MMM d • h:mm a').format(dateTime.toLocal());
+  } catch (e) {
+    // Return original or a placeholder if parsing fails
+    return 'Invalid date';
   }
 }

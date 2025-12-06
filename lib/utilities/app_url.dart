@@ -3,6 +3,7 @@ class AppUrl {
 
   static const String baseUrl = 'https://newsheakh6737.sobhoy.com/api/';
   static const String imageBaseUrl = 'https://newsheakh6737.sobhoy.com';
+  static const String socketBaseUrl = "https://newsheakh6737.sobhoy.com";
 
   static String registerUser = '${baseUrl}v1/auth/register';
   static String registerUserEmailVerify = '${baseUrl}v1/auth/verify-email';
@@ -46,15 +47,18 @@ class AppUrl {
   static String getProviderTransactionDetails =
       '${baseUrl}v1/wallet-transactions/paginate-with-wallet?page=1&limit=2000';
 
-  static String updateProviderDocuments({required String serviceProviderDetailsId}) {
+  static String updateProviderDocuments(
+      {required String serviceProviderDetailsId}) {
     return '${baseUrl}v1/service-providers/upload-attachments-v2?serviceProviderDetailsId=$serviceProviderDetailsId';
   }
 
   static String userDocumentDelete({required String id}) {
     return '${baseUrl}v1/attachments/$id';
   }
-  // =======
 
+  // ======= Conversation ==============>
+
+  static String createConversation = '${baseUrl}v1/conversations/';
 
   ///===> rakiubl added api:
   static String pendingBookings =
@@ -67,16 +71,21 @@ class AppUrl {
       '${baseUrl}v1/service-bookings/paginate?status=cancelled';
   static String completedBookings =
       '${baseUrl}v1/service-bookings/paginate?status=completed';
-  static String paymentRequests = '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
+  static String paymentRequests =
+      '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
 
-
-  static String jobRequests = '${baseUrl}v1/service-bookings/paginate/for-provider?status=pending';
-  static String providerAcceptedBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=accepted';
-  static String providerInProgressBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=accepted';
-  static String providerPaymentRequests = '${baseUrl}v1/service-bookings/paginate/for-provider?status=paymentRequest';
-  static String providerCancelledBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=cancelled';
-  static String providerCompletedBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=completed';
-
+  static String jobRequests =
+      '${baseUrl}v1/service-bookings/paginate/for-provider?status=pending';
+  static String providerAcceptedBookings =
+      '${baseUrl}v1/service-bookings/paginate/for-provider?status=accepted';
+  static String providerInProgressBookings =
+      '${baseUrl}v1/service-bookings/paginate/for-provider?status=accepted';
+  static String providerPaymentRequests =
+      '${baseUrl}v1/service-bookings/paginate/for-provider?status=paymentRequest';
+  static String providerCancelledBookings =
+      '${baseUrl}v1/service-bookings/paginate/for-provider?status=cancelled';
+  static String providerCompletedBookings =
+      '${baseUrl}v1/service-bookings/paginate/for-provider?status=completed';
 
   ///===> rakibul api add close
   ///
@@ -120,6 +129,7 @@ class AppUrl {
       '${baseUrl}v1/service-bookings/schedule-check';
 
   static String bookAService = '${baseUrl}v1/service-bookings';
+
   static String getServiceDataPreview({required String userId}) {
     return '${baseUrl}v1/service-providers/limited-info/$userId';
   }
