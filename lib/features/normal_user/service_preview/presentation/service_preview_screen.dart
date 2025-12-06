@@ -25,7 +25,7 @@ class ServicesPreviewScreen extends StatelessWidget {
         Get.find<NormalUserServicePreviewScreenController>();
 
     final arguments = Get.arguments as Map<String, dynamic>?;
-    final providerId = arguments?['userId'] ?? '';
+    final providerID = arguments?['providerID'] ?? '';
     final bookingDateTime = arguments?['bookingDateTime'] ?? '';
     final address = arguments?['address'] ?? '';
     final latDynamic = arguments?['lat'];
@@ -33,7 +33,7 @@ class ServicesPreviewScreen extends StatelessWidget {
 
     // In your ServicesPreviewScreen:
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      controller.setProviderId(pid: providerId);
+      controller.setProviderId(pid: providerID);
       controller.setBookingDateTime(bDateTime: bookingDateTime);
       controller.setAddress(addr: address);
 

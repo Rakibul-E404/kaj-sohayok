@@ -485,7 +485,8 @@ class _DetailsScreenState extends State<DetailsScreen>
   late BookingStatusEnum? status;
   late bool hideBookServiceNowButton;
   late bool isRoutedFromBookingTab;
-  String providerId = '';
+  String serviceProviderID = '';
+  String providerID = '';
 
   @override
   void initState() {
@@ -500,7 +501,8 @@ class _DetailsScreenState extends State<DetailsScreen>
 
     // Get arguments
     final arguments = Get.arguments as Map<String, dynamic>?;
-    providerId = arguments?['providerId']?.toString() ?? '';
+    serviceProviderID = arguments?['serviceProviderID']?.toString() ?? '';
+    providerID = arguments?['providerID']?.toString() ?? '';
     status = arguments?["status"] as BookingStatusEnum?;
 
     hideBookServiceNowButton = _getButtonVisibility(status);
@@ -510,18 +512,18 @@ class _DetailsScreenState extends State<DetailsScreen>
     log('🎯 DetailsScreen Initialization');
     log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     log('📦 Received arguments: $arguments');
-    log('👤 Provider ID: $providerId');
+    log('👤 Service Provider ID: $serviceProviderID');
     log('📊 Status: $status');
     log('🔘 Hide Button: $hideBookServiceNowButton');
     log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
     // Validate provider ID
-    if (providerId.isEmpty) {
-      log('❌ ERROR: Provider ID is empty!');
+    if (serviceProviderID.isEmpty) {
+      log('❌ ERROR: Service Provider ID is empty!');
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Get.snackbar(
           'Error',
-          'Provider ID is missing. Cannot load service details.',
+          'Service Provider ID is missing. Cannot load service details.',
           backgroundColor: Colors.red,
           colorText: Colors.white,
           snackPosition: SnackPosition.BOTTOM,
@@ -534,11 +536,13 @@ class _DetailsScreenState extends State<DetailsScreen>
     // Set provider ID and fetch data
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
-        log('🚀 Starting API calls with Provider ID: $providerId');
+        log('🚀 Starting API calls with Provider ID: $serviceProviderID');
 
         // Set provider ID for both controllers
-        detailsController?.setServiceProviderId(svpId: providerId);
-        svpProfileInfoController?.setServiceProviderId(svpId: providerId);
+        detailsController?.setServiceProviderId(svpId: serviceProviderID);
+        svpProfileInfoController?.setServiceProviderId(
+            svpId: serviceProviderID);
+        detailsController?.setProviderID(pvID: providerID);
 
         log('⏳ Fetching service details...');
         await detailsController?.showSpecificServiceDetails();
@@ -805,11 +809,12 @@ class _DetailsScreenState extends State<DetailsScreen>
           color: Colors.transparent,
           child: CustomElevatedButton(
             onTap: () {
-              if (providerId.isNotEmpty) {
+              if (detailsController?.providerID != null) {
                 Get.toNamed(
                   Routes.bookingDateScreen,
                   arguments: {
-                    'providerId': detailsController?.serviceProviderId.value
+                    // 'providerId': detailsController?.serviceProviderId.value
+                    'providerID': detailsController?.providerID.value,
                   },
                 );
               }

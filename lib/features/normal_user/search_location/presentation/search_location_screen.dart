@@ -267,7 +267,7 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
   Widget build(BuildContext context) {
     final arguments = Get.arguments as Map<String, dynamic>?;
     final bookingDateTime = arguments?['bookingDateTime'] ?? '';
-    final providerId = arguments?['providerId'] ?? '';
+    final providerID = arguments?['providerID'] ?? '';
 
     // Determine initial camera position
     CameraPosition initialPosition;
@@ -388,7 +388,7 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
                           Get.toNamed(
                             Routes.servicePreviewScreen,
                             arguments: {
-                              'userId': providerId,
+                              'providerID': providerID,
                               'bookingDateTime': bookingDateTime,
                               'lat': _selectedLocation!.latitude,
                               'long': _selectedLocation!.longitude,
@@ -396,7 +396,7 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
                             },
                           );
 
-                          log('User ID : $providerId');
+                          log('Provider ID : $providerID');
                           log('Booking Date Time : $bookingDateTime');
                           log('Latitude : ${_selectedLocation!.latitude}');
                           log('Longitude : ${_selectedLocation!.longitude}');

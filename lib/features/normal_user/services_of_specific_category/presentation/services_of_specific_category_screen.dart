@@ -150,7 +150,8 @@ class _ServicesOfSpecificCategoryScreenState
                           Get.toNamed(
                             Routes.serviceDetailsScreen,
                             arguments: {
-                              'providerId': service.serviceProviderId,
+                              'providerID': service.providerId?.userId,
+                              'serviceProviderID': service.serviceProviderId,
                               'serviceName': serviceName,
                               'providerName': providerName,
                             },
@@ -162,7 +163,7 @@ class _ServicesOfSpecificCategoryScreenState
                         initialPayablePrice: price,
                         serviceProviderImage:
                             service.providerId?.profileImage?.imageUrl ??
-                            Assets.images.userImage.path,
+                                Assets.images.userImage.path,
                         serviceProviderName: providerName,
                         serviceProviderRating: rating,
                       );

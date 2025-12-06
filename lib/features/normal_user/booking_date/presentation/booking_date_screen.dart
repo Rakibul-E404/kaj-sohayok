@@ -84,9 +84,9 @@ class BookingDateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final arguments = Get.arguments as Map<String, dynamic>?;
-    final providerId = arguments?['providerId'] ?? '';
+    final providerID = arguments?['providerID'] ?? '';
 
-    log('BookingDateScreen - Received providerId: $providerId');
+    log('BookingDateScreen - Received providerId: $providerID');
 
     ///------------------------------------------- Initialize the controllers
     final CalendarController controller = Get.find<CalendarController>();
@@ -95,11 +95,11 @@ class BookingDateScreen extends StatelessWidget {
 
     // Set provider ID in the booking controller
     log(
-      'BookingDateScreen - Before setting, bookingController.providerId: ${bookingController.serviceProviderId.value}',
+      'BookingDateScreen - Before setting, bookingController.providerId: ${bookingController.providerID.value}',
     );
-    bookingController.setServiceProviderId(svpId: providerId);
+    bookingController.setProviderId(pvID: providerID);
     log(
-      'BookingDateScreen - After setting, bookingController.providerId: ${bookingController.serviceProviderId.value}',
+      'BookingDateScreen - After setting, bookingController.providerId: ${bookingController.providerID.value}',
     );
 
     return Scaffold(
@@ -119,11 +119,8 @@ class BookingDateScreen extends StatelessWidget {
             children: [
               CalenderContainerWidget(),
               UIHelper.verticalSpace(20.h),
-
               TimePickerWidget(),
-
               Spacer(),
-
               CustomElevatedButton(
                 onTap: () async {
                   // Validate if date/time is in future
@@ -138,8 +135,7 @@ class BookingDateScreen extends StatelessWidget {
                   }
 
                   // Double check provider ID before availability check
-                  final currentProviderId =
-                      bookingController.serviceProviderId.value;
+                  final currentProviderId = bookingController.providerID.value;
                   if (currentProviderId.isEmpty) {
                     Get.snackbar(
                       'Error',
@@ -174,7 +170,7 @@ class BookingDateScreen extends StatelessWidget {
                     Get.toNamed(
                       Routes.searchLocationScreen,
                       arguments: {
-                        'providerId':
+                        'providerID':
                             currentProviderId, // Use the validated providerId
                         'bookingDateTime':
                             apiFormattedDateTime, // "2025-12-03T10:55:00"

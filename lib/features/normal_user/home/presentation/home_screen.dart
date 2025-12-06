@@ -193,6 +193,8 @@ class HomeScreen extends StatelessWidget {
                           );
                           final String serviceProviderId =
                               _getServiceProviderID(provider);
+
+                          final String providerID = _getProviderID(provider);
                           final double rating = _getProviderRating(provider);
                           final int startPrice = _getProviderStartPrice(
                             provider,
@@ -203,14 +205,16 @@ class HomeScreen extends StatelessWidget {
 
                           return ServiceWidget(
                             onTap: () {
-                              log("-------Provider tapped: $serviceTitle");
-                              log("-------------Provider ID : $serviceProviderId");
+                              log("😀-------Provider tapped: $serviceTitle");
+                              log("😀-------------Service Provider ID 👉🏻 $serviceProviderId");
+                              log("😀-------------Provider ID 👉🏻 $serviceProviderId");
                               Get.toNamed(
                                 Routes.serviceDetailsScreen,
 
                                 // arguments: {'providerId': serviceProviderId},
                                 arguments: {
-                                  'providerId': serviceProviderId
+                                  'serviceProviderID': serviceProviderId,
+                                  'providerID': providerID,
                                 },
                               );
                             },
@@ -245,8 +249,13 @@ class HomeScreen extends StatelessWidget {
   }
 
   String _getServiceProviderID(Model.Provider svpId) {
-    log("😊😊😊Provider ID  : ${svpId.serviceProviderId}");
+    log("😊😊😊Service Provider ID  : ${svpId.serviceProviderId}");
     return svpId.serviceProviderId ?? '';
+  }
+
+  String _getProviderID(Model.Provider svpId) {
+    log("😊😊😊Provider ID  : ${svpId.providerId}");
+    return svpId.providerId ?? '';
   }
 
   double _getProviderRating(Model.Provider provider) {
