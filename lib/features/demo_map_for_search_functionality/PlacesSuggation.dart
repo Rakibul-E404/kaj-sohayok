@@ -7,7 +7,8 @@
 // class PlaceAutocompleteWidget extends StatefulWidget {
 //   final TextEditingController controller;
 //   final String hintText;
-//   final Function(String placeId, String description, {bool isCurrentLocation}) onPlaceSelected;
+//   final Function(String placeId, String description, {bool isCurrentLocation})
+//       onPlaceSelected;
 //   final bool showCurrentLocation;
 //   final String? currentLocationAddress;
 //   final Widget? prefixIcon;
@@ -19,7 +20,7 @@
 //   final int? maxSuggestions;
 //   final bool enabled;
 //   final FocusNode? focusNode;
-  
+
 //   const PlaceAutocompleteWidget({
 //     Key? key,
 //     required this.controller,
@@ -39,23 +40,24 @@
 //   }) : super(key: key);
 
 //   @override
-//   State<PlaceAutocompleteWidget> createState() => _PlaceAutocompleteWidgetState();
+//   State<PlaceAutocompleteWidget> createState() =>
+//       _PlaceAutocompleteWidgetState();
 // }
 
 // class _PlaceAutocompleteWidgetState extends State<PlaceAutocompleteWidget> {
 //   final LocationRepository _locationRepository = LocationRepository();
 //   late FocusNode _focusNode;
-  
+
 //   List<dynamic> _predictions = [];
 //   bool _isLoading = false;
 //   bool _showSuggestions = false;
 //   bool _isDisposed = false;
-  
+
 //   @override
 //   void initState() {
 //     super.initState();
 //     _focusNode = widget.focusNode ?? FocusNode();
-    
+
 //     _focusNode.addListener(() {
 //       if (_focusNode.hasFocus && mounted && !_isDisposed) {
 //         _handleFocus();
@@ -106,15 +108,16 @@
 
 //     if (query.isEmpty) {
 //       setState(() {
-//         _predictions = widget.showCurrentLocation && widget.currentLocationAddress != null
-//             ? [
-//                 {
-//                   'place_id': 'current_location',
-//                   'description': widget.currentLocationAddress!,
-//                   'is_current_location': true,
-//                 }
-//               ]
-//             : [];
+//         _predictions =
+//             widget.showCurrentLocation && widget.currentLocationAddress != null
+//                 ? [
+//                     {
+//                       'place_id': 'current_location',
+//                       'description': widget.currentLocationAddress!,
+//                       'is_current_location': true,
+//                     }
+//                   ]
+//                 : [];
 //         _isLoading = false;
 //         _showSuggestions = _predictions.isNotEmpty;
 //       });
@@ -128,36 +131,40 @@
 
 //     try {
 //       final predictions = await _locationRepository.placeAutoComplete(query);
-      
+
 //       if (_isDisposed || !mounted) return;
 
 //       setState(() {
 //         List<dynamic> finalPredictions = [];
-        
+
 //         // Add current location option if enabled
-//         if (widget.showCurrentLocation && widget.currentLocationAddress != null) {
+//         if (widget.showCurrentLocation &&
+//             widget.currentLocationAddress != null) {
 //           finalPredictions.add({
 //             'place_id': 'current_location',
 //             'description': widget.currentLocationAddress!,
 //             'is_current_location': true,
 //           });
 //         }
-        
+
 //         // Add search predictions
 //         finalPredictions.addAll(predictions);
-        
+
 //         // Limit suggestions if specified
-//         if (widget.maxSuggestions != null && finalPredictions.length > widget.maxSuggestions!) {
-//           finalPredictions = finalPredictions.take(widget.maxSuggestions!).toList();
+//         if (widget.maxSuggestions != null &&
+//             finalPredictions.length > widget.maxSuggestions!) {
+//           finalPredictions =
+//               finalPredictions.take(widget.maxSuggestions!).toList();
 //         }
-        
+
 //         _predictions = finalPredictions;
 //         _isLoading = false;
 //       });
 //     } catch (e) {
 //       if (mounted && !_isDisposed) {
 //         setState(() {
-//           _predictions = widget.showCurrentLocation && widget.currentLocationAddress != null
+//           _predictions = widget.showCurrentLocation &&
+//                   widget.currentLocationAddress != null
 //               ? [
 //                   {
 //                     'place_id': 'current_location',
@@ -173,16 +180,18 @@
 //     }
 //   }
 
-//   void _selectPlace(String placeId, String description, bool isCurrentLocation) {
+//   void _selectPlace(
+//       String placeId, String description, bool isCurrentLocation) {
 //     if (_isDisposed) return;
-    
+
 //     setState(() {
 //       _showSuggestions = false;
 //       _predictions = [];
 //     });
-    
+
 //     widget.controller.text = description;
-//     widget.onPlaceSelected(placeId, description, isCurrentLocation: isCurrentLocation);
+//     widget.onPlaceSelected(placeId, description,
+//         isCurrentLocation: isCurrentLocation);
 //     _focusNode.unfocus();
 //   }
 
@@ -214,7 +223,8 @@
 //           ),
 //           itemBuilder: (context, index) {
 //             final prediction = _predictions[index];
-//             final bool isCurrentLocation = prediction['is_current_location'] == true;
+//             final bool isCurrentLocation =
+//                 prediction['is_current_location'] == true;
 
 //             return InkWell(
 //               onTap: () => _selectPlace(
@@ -223,14 +233,14 @@
 //                 isCurrentLocation,
 //               ),
 //               child: Padding(
-//                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+//                 padding:
+//                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
 //                 child: Row(
 //                   children: [
 //                     Icon(
 //                       isCurrentLocation ? Icons.my_location : Icons.location_on,
-//                       color: isCurrentLocation 
-//                           ? Colors.black 
-//                           : Colors.greenAccent,
+//                       color:
+//                           isCurrentLocation ? Colors.black : Colors.greenAccent,
 //                       size: 20,
 //                     ),
 //                     const SizedBox(width: 12),
@@ -239,8 +249,8 @@
 //                         prediction['description'],
 //                         style: TextStyle(
 //                           fontSize: 14,
-//                           fontWeight: isCurrentLocation 
-//                               ? FontWeight.w600 
+//                           fontWeight: isCurrentLocation
+//                               ? FontWeight.w600
 //                               : FontWeight.normal,
 //                           color: Colors.black,
 //                         ),
@@ -323,45 +333,46 @@
 //           controller: widget.controller,
 //           focusNode: _focusNode,
 //           enabled: widget.enabled,
-//           style: widget.textStyle ?? const TextStyle(
-//             color: Colors.amberAccent,
-//             fontSize: 16,
-//           ),
+//           style: widget.textStyle ??
+//               const TextStyle(
+//                 color: Colors.amberAccent,
+//                 fontSize: 16,
+//               ),
 //           onChanged: _searchPlaces,
 //           onTap: _handleFocus,
-//           decoration: widget.decoration ?? InputDecoration(
-//             hintText: widget.hintText,
-//             hintStyle: widget.hintStyle ?? const TextStyle(
-//               color: Colors.blue,
-//               fontSize: 16,
-//             ),
-//             prefixIcon: widget.prefixIcon,
-//             contentPadding: widget.contentPadding ?? const EdgeInsets.symmetric(
-//               horizontal: 16,
-//               vertical: 12,
-//             ),
-//             border: OutlineInputBorder(
-//               borderRadius: BorderRadius.circular(8),
-//               borderSide: const BorderSide(color: Colors.grey),
-//             ),
-//             focusedBorder: OutlineInputBorder(
-//               borderRadius: BorderRadius.circular(8),
-//               borderSide: const BorderSide(color: Colors.black, width: 2),
-//             ),
-//             enabledBorder: OutlineInputBorder(
-//               borderRadius: BorderRadius.circular(8),
-//               borderSide: const BorderSide(color: Colors.grey),
-//             ),
-//             filled: true,
-//             fillColor: Colors.white,
-//           ),
+//           decoration: widget.decoration ??
+//               InputDecoration(
+//                 hintText: widget.hintText,
+//                 hintStyle: widget.hintStyle ??
+//                     const TextStyle(
+//                       color: Colors.blue,
+//                       fontSize: 16,
+//                     ),
+//                 prefixIcon: widget.prefixIcon,
+//                 contentPadding: widget.contentPadding ??
+//                     const EdgeInsets.symmetric(
+//                       horizontal: 16,
+//                       vertical: 12,
+//                     ),
+//                 border: OutlineInputBorder(
+//                   borderRadius: BorderRadius.circular(8),
+//                   borderSide: const BorderSide(color: Colors.grey),
+//                 ),
+//                 focusedBorder: OutlineInputBorder(
+//                   borderRadius: BorderRadius.circular(8),
+//                   borderSide: const BorderSide(color: Colors.black, width: 2),
+//                 ),
+//                 enabledBorder: OutlineInputBorder(
+//                   borderRadius: BorderRadius.circular(8),
+//                   borderSide: const BorderSide(color: Colors.grey),
+//                 ),
+//                 filled: true,
+//                 fillColor: Colors.white,
+//               ),
 //         ),
 //         if (_isLoading || _showSuggestions) ...[
 //           const SizedBox(height: 8),
-//           if (_isLoading)
-//             _buildLoadingIndicator()
-//           else
-//             _buildSuggestionsList(),
+//           if (_isLoading) _buildLoadingIndicator() else _buildSuggestionsList(),
 //         ],
 //       ],
 //     );
