@@ -151,3 +151,12 @@ class AcceptedBookingsController extends GetxController {
     super.onInit();
   }
 }
+
+
+
+
+
+
+
+
+
