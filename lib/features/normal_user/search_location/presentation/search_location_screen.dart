@@ -9,7 +9,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
@@ -224,15 +223,9 @@ class LocationRepository {
 
   LocationRepository._internal();
 
-  // Load Google Maps API key from .env file
-  static String? _apiKey;
-  static String get apiKey {
-    _apiKey ??= dotenv.env['GOOGLE_MAPS_API_KEY'];
-    if (_apiKey == null || _apiKey!.isEmpty) {
-      throw Exception('Google Maps API key is not set. Please add GOOGLE_MAPS_API_KEY to your .env file.');
-    }
-    return _apiKey!;
-  }
+  // Google Maps API key
+  static const String apiKey = 'AIzaSyBFi80uuJIWkkLCpodFa8oXmD8XD_h8LMc';
+  // static const String apiKey = 'AIzaSyDjwPmy5gPopQRKK5zCEa-_0u18e8Lmgi';
 
   // Place auto-complete suggestions
   Future<List<dynamic>> placeAutoComplete(String query) async {

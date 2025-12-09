@@ -28,11 +28,6 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-
-        // Apply Google Maps API key from environment variable
-        // Set GOOGLE_MAPS_API_KEY environment variable or add MAPS_API_KEY property to local.properties or gradle.properties
-        val mapsApiKey: String = System.getenv("GOOGLE_MAPS_API_KEY") ?: project.findProperty("MAPS_API_KEY") as String? ?: ""
-        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     buildTypes {
@@ -40,12 +35,6 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
-        }
-
-        debug {
-            // Read the API key from environment variable or local.properties for debug builds
-            val mapsApiKey: String = System.getenv("GOOGLE_MAPS_API_KEY") ?: project.findProperty("MAPS_API_KEY") as String? ?: ""
-            manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
         }
     }
 }

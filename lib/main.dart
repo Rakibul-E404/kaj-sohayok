@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kaz_bd/helpers/di.dart';
 import 'package:kaz_bd/routes/routes.dart';
 
@@ -12,7 +11,6 @@ import 'bindings/controllers_binding.dart';
 // List<CameraDescription>? cameras;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
   await diSetup();
   // cameras = await availableCameras();
   await GetStorage.init();

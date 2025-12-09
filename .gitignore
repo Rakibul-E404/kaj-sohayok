@@ -44,11 +44,5 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Environment files
-.env
-
-# Android local properties (may contain API keys)
-local.properties
-
 macos/Flutter/GeneratedPluginRegistrant.swift
 /pubspec.lock
