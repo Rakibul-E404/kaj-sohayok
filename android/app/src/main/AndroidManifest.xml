@@ -52,14 +52,14 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-        <!-- 
+        <!--
         Imtiaz Added Code for location :
 
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyBFi80uuJIWkkLCpodFa8oXmD8XD_h8LMc"/>
         -->
         <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyBFi80uuJIWkkLCpodFa8oXmD8XD_h8LMc"/>
+               android:value="${MAPS_API_KEY}"/>
 
         <!-- Add this meta-data for geolocator background mode -->
         <meta-data

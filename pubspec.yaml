@@ -88,6 +88,9 @@ dependencies:
   webview_flutter_android: ^4.3.2
   webview_flutter: ^4.13.0
 
+  #for environment variables
+  flutter_dotenv: ^5.1.0
+
 
 dev_dependencies:
   flutter_test:
