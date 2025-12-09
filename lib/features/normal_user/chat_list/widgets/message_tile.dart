@@ -108,8 +108,8 @@ class MessageTile extends StatelessWidget {
                 color: Colors.grey[300],
               ),
               errorWidget: (context, url, error) => Container(
-                color: Colors.red,
-                child: const Icon(Icons.person, size: 15),
+                color: Colors.grey[200],
+                child: const Icon(Icons.person, size: 25),
               ),
             ),
           ),

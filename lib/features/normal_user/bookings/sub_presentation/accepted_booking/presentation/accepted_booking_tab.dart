@@ -5,17 +5,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/constants/app_enums.dart';
 import 'package:kaz_bd/routes/routes.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 
+import '../../../../../../controllers/message_screen_controller.dart';
 import '../../../../../../gen/assets.gen.dart';
 import '../../../../../../helpers/ui_helpers.dart';
 import '../../../widgets/bookings_details_card_widget.dart';
 import '../controller/accepted_booking_controller.dart';
 
-
 class AcceptedBookingTab extends StatelessWidget {
   AcceptedBookingTab({super.key});
 
-  final AcceptedBookingsController controller = Get.put(AcceptedBookingsController());
+  final AcceptedBookingsController controller =
+      Get.put(AcceptedBookingsController());
 
   String _formatDateTime(String dateTimeString) {
     try {
@@ -58,8 +60,10 @@ class AcceptedBookingTab extends StatelessWidget {
     // According to the JSON structure, the provider ID is in:
     // providerDetailsId._ServiceProviderId
     if (booking['providerDetailsId'] != null) {
-      final providerDetailsMap = booking['providerDetailsId'] as Map<String, dynamic>?;
-      if (providerDetailsMap != null && providerDetailsMap['_ServiceProviderId'] != null) {
+      final providerDetailsMap =
+          booking['providerDetailsId'] as Map<String, dynamic>?;
+      if (providerDetailsMap != null &&
+          providerDetailsMap['_ServiceProviderId'] != null) {
         providerId = providerDetailsMap['_ServiceProviderId'].toString();
         log('✅ Provider ID extracted from providerDetailsId._ServiceProviderId: $providerId');
         return providerId;
@@ -156,7 +160,7 @@ class AcceptedBookingTab extends StatelessWidget {
       return RefreshIndicator(
         onRefresh: () => controller.getAcceptedBookings(),
         child: ListView.separated(
-          padding: EdgeInsets.only(top:16.sp),
+          padding: EdgeInsets.only(top: 16.sp),
           itemCount: controller.acceptedBookings.length,
           separatorBuilder: (context, index) => UIHelper.verticalSpace(16.h),
           itemBuilder: (context, index) {
@@ -241,9 +245,12 @@ class AcceptedBookingTab extends StatelessWidget {
               },
 
               ///Button OnTap : Message
-              isAcceptedBookingTabMessageOnTap: () {
+              isAcceptedBookingTabMessageOnTap: () async {
                 log("💬 Message button tapped for booking: $bookingId");
-                // Add your message functionality here
+                Get.find<MessageScreenController>().createMessage(
+                    participantId: booking['providerId']['_userId'],
+                    name: _getServiceName(serviceName),
+                    imageUrl: imageUrl);
               },
               title: _getServiceName(serviceName),
               initialPayablePrice: (booking['startPrice'] ?? 0).toString(),

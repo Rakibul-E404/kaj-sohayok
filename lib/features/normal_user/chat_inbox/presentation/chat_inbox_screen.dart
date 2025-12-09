@@ -32,8 +32,8 @@ class _PersonalInboxState extends State<PersonalInbox> {
   MessageScreenController messageScreenController =
       Get.find<MessageScreenController>();
 
-  final UserIdModel receiverProfile = Get.arguments["receiverModel"];
-  final String conversationId = Get.arguments["conversationId"];
+  final UserIdModel? receiverProfile = Get.arguments["receiverModel"];
+  final String? conversationId = Get.arguments["conversationId"];
 
   @override
   Widget build(BuildContext context) {
@@ -63,14 +63,14 @@ class _PersonalInboxState extends State<PersonalInbox> {
                 borderRadius: BorderRadius.circular(50),
                 child: CachedNetworkImage(
                   height: 45,
-                  imageUrl: receiverProfile.profileImage?.imageUrl ?? '',
+                  imageUrl: receiverProfile?.profileImage?.imageUrl ?? '',
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Container(
                     color: Colors.grey[300],
                   ),
                   errorWidget: (context, url, error) => Container(
-                    color: Colors.red,
-                    child: const Icon(Icons.person, size: 15),
+                    color: Colors.grey[200],
+                    child: const Icon(Icons.person, size: 26),
                   ),
                 ),
               ),
@@ -83,7 +83,7 @@ class _PersonalInboxState extends State<PersonalInbox> {
                 children: [
                   ///Section : User Name
                   Text(
-                    receiverProfile.name ?? '',
+                    receiverProfile?.name ?? '',
                     style: TextStyle(
                       color: AppColors.c111111,
                       fontSize: 16, // Slightly smaller font
@@ -175,7 +175,7 @@ class _PersonalInboxState extends State<PersonalInbox> {
           ///Section : Send Message Option.....
           SendMessageWidget(
             onTap: () {
-              controller.sendMessage(conversationId: conversationId);
+              controller.sendMessage(conversationId: conversationId ?? '');
             },
             controller: controller.sendMessageController,
           ),

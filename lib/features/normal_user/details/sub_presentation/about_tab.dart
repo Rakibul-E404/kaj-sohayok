@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/controllers/details_screen_controller.dart';
+import 'package:kaz_bd/controllers/message_screen_controller.dart';
 import 'package:kaz_bd/custom_widgets/custom_shimmer_effect.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
@@ -15,7 +16,10 @@ import '../../../../helpers/ui_helpers.dart';
 
 class AboutTab extends StatelessWidget {
   final bool isRoutedFromBookingTab;
-  const AboutTab({super.key, required this.isRoutedFromBookingTab});
+  final String? providerId;
+
+  const AboutTab(
+      {super.key, required this.isRoutedFromBookingTab, this.providerId});
 
   @override
   Widget build(BuildContext context) {
@@ -68,15 +72,13 @@ class AboutTab extends StatelessWidget {
                 border: Border.all(color: AppColors.cb4b4b4),
                 borderRadius: BorderRadius.circular(8.r),
               ),
-
               child: Row(
                 children: [
                   ///Section : Service Provider Image
                   Obx(() {
                     String? imageUrl;
                     if (detailsScreenController
-                            .providerProfileImage
-                            ?.isNotEmpty ==
+                            .providerProfileImage?.isNotEmpty ==
                         true) {
                       imageUrl = detailsScreenController.providerProfileImage;
                     }
@@ -184,7 +186,18 @@ class AboutTab extends StatelessWidget {
                           return InkWell(
                             onTap: () {
                               ///TODO : Add message here ============>
-
+                              Get.find<MessageScreenController>().createMessage(
+                                  participantId: detailsScreenController
+                                          .serviceDetails
+                                          .value
+                                          ?.providerId
+                                          ?.userId ??
+                                      '',
+                                  name: detailsScreenController.providerName ??
+                                      "",
+                                  imageUrl: detailsScreenController
+                                          .providerProfileImage ??
+                                      '');
                             },
                             child: Container(
                               padding: EdgeInsets.all(6.sp),

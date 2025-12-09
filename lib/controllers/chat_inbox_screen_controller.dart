@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../constants/appList.dart';
 import '../features/normal_user/chat_inbox/model/chat_message_model.dart';
 import '../service/socket_service.dart';
+import '../utilities/logger_util.dart';
 import 'message_screen_controller.dart';
 
 class ChatInboxScreenController extends GetxController {
@@ -23,6 +24,7 @@ class ChatInboxScreenController extends GetxController {
           Get.find<MessageScreenController>().handleFetchChatList(); 
           Get.find<MessageScreenController>().handleViewSingleProfileChat(conversationId: conversationId);
           sendMessageController.clear();
+
         }
       // final newMessage = ChatMessageModel(
       //   message: sendMessageController.text,

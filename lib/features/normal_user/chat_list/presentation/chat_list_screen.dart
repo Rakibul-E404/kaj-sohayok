@@ -22,7 +22,7 @@ class MessageScreen extends StatefulWidget {
 }
 
 class _MessageScreenState extends State<MessageScreen> {
-  MessageScreenController controller = Get.put(MessageScreenController());
+  MessageScreenController controller = Get.find<MessageScreenController>();
 
   @override
   Widget build(BuildContext context) {
@@ -58,45 +58,63 @@ class _MessageScreenState extends State<MessageScreen> {
 
               ///Section : Message List
               Obx(
-                () => ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: controller.chatLists.length,
-                  separatorBuilder: (context, index) =>
-                      UIHelper.verticalSpace(24.h),
-                  itemBuilder: (context, index) {
-                    final ChatListResponseModel message =
-                        controller.chatLists[index];
-                    return InkWell(
-                      onTap: () async {
-                        await controller.handleViewSingleProfileChat(
-                            conversationId: message.conversations.firstOrNull
-                                    ?.conversationId ??
-                                '');
-                        Get.to(() => PersonalInbox(),
-                            arguments: {
-                              'receiverModel': message.userId,
-                              'conversationId': message.conversations
-                                      .firstOrNull?.conversationId ??
-                                  ''
-                            },
-                            transition: Transition.rightToLeft);
-                      },
-                      child: MessageTile(
-                        imageUrl: message.userId?.profileImage?.imageUrl ?? '',
-                        userName: message.userId?.name ?? '',
-                        lastMessage:
-                            message.conversations.firstOrNull?.lastMessage ??
-                                '',
-                        time: (formatIsoDate(
-                            message.conversations.firstOrNull?.updatedAt ??
-                                '')),
-                        isUnread: false,
-                        totalUnrededMessage: 0,
+                    () {
+                  // Use the filtered list instead of the full list
+                  final filteredChats = controller.filteredChatLists;
+
+                  // Show "No results" message if search is active but no results
+                  if (controller.searchText.value.isNotEmpty && filteredChats.isEmpty) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(vertical: 40.h),
+                      child: Text(
+                        'No chats found',
+                        style: TextFontStyle.headline18w700c4d4d4dStyleSatoshi.copyWith(
+                          color: Colors.grey,
+                        ),
                       ),
                     );
-                  },
-                ),
+                  }
+
+                  return ListView.separated(
+                    shrinkWrap: true,
+                    // reverse: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: filteredChats.length,
+                    separatorBuilder: (context, index) =>
+                        UIHelper.verticalSpace(24.h),
+                    itemBuilder: (context, index) {
+                      final ChatListResponseModel message = filteredChats[index];
+                      return InkWell(
+                        onTap: () async {
+                          await controller.handleViewSingleProfileChat(
+                              conversationId: message.conversations.firstOrNull
+                                  ?.conversationId ??
+                                  '');
+                          Get.to(() => PersonalInbox(),
+                              arguments: {
+                                'receiverModel': message.userId,
+                                'conversationId': message.conversations
+                                    .firstOrNull?.conversationId ??
+                                    ''
+                              },
+                              transition: Transition.rightToLeft);
+                        },
+                        child: MessageTile(
+                          imageUrl: message.userId?.profileImage?.imageUrl ?? '',
+                          userName: message.userId?.name ?? '',
+                          lastMessage:
+                          message.conversations.firstOrNull?.lastMessage ??
+                              '',
+                          time: (formatIsoDate(
+                              message.conversations.firstOrNull?.updatedAt ??
+                                  '')),
+                          isUnread: false,
+                          totalUnrededMessage: 0,
+                        ),
+                      );
+                    },
+                  );
+                },
               ),
               UIHelper.verticalSpace(120),
             ],
