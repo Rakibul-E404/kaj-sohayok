@@ -5,16 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
-import '../../../../constants/appList.dart';
-import '../../../../constants/text_font_style.dart';
-import '../../../../custom_widgets/payment_summery_widget.dart';
-import '../../../../custom_widgets/proof_of_image_uploading_widget.dart';
-import '../../../../controllers/svp_submit_work_form_screen_controller.dart';
-import '../../../../custom_widgets/work_address_and_date_widget.dart';
-import '../../../../gen/colors.gen.dart';
-import '../../../../custom_widgets/more_info_widget_tile.dart';
+import 'package:kaz_bd/constants/text_font_style.dart';
+import 'package:kaz_bd/custom_widgets/payment_summery_widget.dart';
+import 'package:kaz_bd/controllers/svp_submit_work_form_screen_controller.dart';
+import 'package:kaz_bd/custom_widgets/proof_of_image_uploading_widget.dart';
+import 'package:kaz_bd/custom_widgets/work_address_and_date_widget.dart';
+import 'package:kaz_bd/gen/colors.gen.dart';
+import 'package:kaz_bd/custom_widgets/more_info_widget_tile.dart';
+
 import '../../../normal_user/work_completed_details/widgets/additional_cost_popup.dart';
 
 class SvpSubmitWorkFormScreen extends StatefulWidget {
@@ -25,7 +26,7 @@ class SvpSubmitWorkFormScreen extends StatefulWidget {
 }
 
 class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
-  SvpSubmitWorkFormScreenController controller = Get.put(
+  final SvpSubmitWorkFormScreenController controller = Get.put(
     SvpSubmitWorkFormScreenController(),
   );
 
@@ -34,574 +35,894 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text(
-          "Submit Work Form",
+        title: Obx(() => Text(
+          controller.isLoadingWorkDetails.value ? "Loading..." : "Submit Work Form",
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
-        ),
+        )),
         centerTitle: true,
         backgroundColor: AppColors.scaffoldBackgroundColor,
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: UIHelper.kDefaulutPadding(),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ///Section : Working Address & Booking Order Date
-                WorkAddressAndDateWidget(
-                  address: "Rampura Dhaka, Bangladesh",
-                  dateTime: "Jun 17, 2025  09:31AM",
-                ),
-                UIHelper.verticalSpace(24.h),
-
-                ///Section : Text -> Proof Of Work Complete Information
-                Text(
-                  "Proof Of Work Complete Information",
-                  style: TextFontStyle.headline16w700c202020StyleSatoshi,
-                ),
-                UIHelper.verticalSpace(16.h),
-
-                ///Section : Completion Date
-                InkWell(
-                  onTap: () async {
-                    final DateTime? picked = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(), // today by default
-                      firstDate: DateTime(2000), // earliest date
-                      lastDate: DateTime(2100), // latest date
-                    );
-
-                    if (picked != null) {
-                      final formatted = DateFormat('MM-dd-yyyy').format(picked);
-                      controller.completionDateController.text = formatted;
-                    }
-                  },
-                  child: MoreInfoWidgetTile(
-                    title: "Completion Date",
-                    hintText: "Select Date",
-                    isEnabled: false,
-                    controller: controller.completionDateController,
-                  ),
-                ),
-                UIHelper.verticalSpace(16.h),
-
-                ///Section : Duration Time
-                MoreInfoWidgetTile(
-                  title: "Duration Time",
-                  hintText: "Type Day's In Numbers",
-                  keyboardType: TextInputType.number,
-                  controller: controller.durationTimeController,
-                ),
-                UIHelper.verticalSpace(24.h),
-
-                ///Section : Proof of Image Upload
-                Obx(() {
-                  return ProofOfImageUploadWidget(
-                    onTap: () {
-                      log("Browse Button Tapped - Image");
-                      controller.showImageSourceDialog();
-                    },
-                    removeImageOnTap: () {
-                      controller.removeImage();
-                    },
-                    imagePath: controller.selectedImage.value,
-                    title: "Proof of Image",
-                  );
-                }),
-                UIHelper.verticalSpace(24.h),
-
-                ///Section : Proof of Video Upload
-                Obx(() {
-                  return controller.selectedVideo.value.isEmpty
-                      ? ProofOfImageUploadWidget(
-                    onTap: () {
-                      log("Browse Button Tapped - Video");
-                      controller.showVideoSourceDialog();
-                    },
-                    removeImageOnTap: () {
-                      controller.removeVideo();
-                    },
-                    imagePath: controller.selectedVideo.value,
-                    title: "Proof of Video",
-                  )
-                      : Container(
-                    padding: EdgeInsets.all(16.w),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12.r),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          spreadRadius: 1,
-                          blurRadius: 8,
-                          offset: Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Title for video section
-                        Text(
-                          "Proof of Video",
-                          style: TextFontStyle.headline16w700c202020StyleSatoshi,
-                        ),
-                        UIHelper.verticalSpace(12.h),
-
-                        // Video preview container with remove button
-                        Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.all(12.w),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12.r),
-                            border: Border.all(
-                              color: Colors.grey.shade300,
-                              width: 1,
-                              style: BorderStyle.solid,
-                            ),
-                            color: Colors.white,
-                          ),
-                          child: Column(
-                            children: [
-                              // Video Player
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8.r),
-                                child: VideoPlayerWidget(controller.selectedVideo.value),
-                              ),
-                              UIHelper.verticalSpace(12.h),
-
-                              // Remove button at the bottom of container
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: InkWell(
-                                  onTap: () {
-                                    controller.removeVideo();
-                                  },
-                                  child: Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 16.w,
-                                      vertical: 8.h,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(6.r),
-                                    ),
-                                    child: Text(
-                                      "Remove",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
-                UIHelper.verticalSpace(24.h),
-
-                ///Section : Payment Summary
-                PaymentSummeryWidget(
-                  onTap: () {
-                    showAdditionalCostDialog(
-                      context: context,
-                      additionlCostSubmitOnTap: () {
-                        Get.back();
-                      },
-                    );
-                  },
-                  initialCost: 30,
-                  additionalCostList: AppList.additionalCosts,
-                  totalPayment:
-                  30 +
-                      AppList.additionalCosts.fold(
-                        0,
-                            (sum, item) => sum + item.price,
-                      ),
-                  isAddAdditionalCostButtonVisible: true,
-                ),
-                UIHelper.verticalSpace(32.h),
-
-                ///Section : Payment Request Button
-                CustomElevatedButton(
-                  onTap: () {
-                    log("Button Tapped -> Payment Request!");
-                  },
-                  buttonTitle: "Payment Request",
-                ),
-                UIHelper.verticalSpace(32.h),
-              ],
-            ),
-          ),
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Get.back(),
         ),
       ),
-    );
-  }
-}
-*/
+      body: Obx(() {
+        if (controller.isLoadingWorkDetails.value && controller.bookingId.value != null) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
 
-
-
-
-
-
-
-///
-///
-///
-/// todo:: merging the image-video field
-///
-///
-///
-
-
-
-// import 'dart:log';
-import 'dart:developer';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
-import 'package:kaz_bd/helpers/ui_helpers.dart';
-import '../../../../constants/appList.dart';
-import '../../../../constants/text_font_style.dart';
-import '../../../../custom_widgets/payment_summery_widget.dart';
-import '../../../../controllers/svp_submit_work_form_screen_controller.dart';
-import '../../../../custom_widgets/proof_of_image_uploading_widget.dart';
-import '../../../../custom_widgets/work_address_and_date_widget.dart';
-import '../../../../gen/colors.gen.dart';
-import '../../../../custom_widgets/more_info_widget_tile.dart';
-import '../../../normal_user/work_completed_details/widgets/additional_cost_popup.dart';
-// import '../../../../custom_widgets/proof_of_media_upload_widget.dart';
-
-class SvpSubmitWorkFormScreen extends StatefulWidget {
-  const SvpSubmitWorkFormScreen({super.key});
-
-  @override
-  State<SvpSubmitWorkFormScreen> createState() => _SvpSubmitWorkFormScreenState();
-}
-
-class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
-  SvpSubmitWorkFormScreenController controller = Get.put(
-    SvpSubmitWorkFormScreenController(),
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: Text(
-          "Submit Work Form",
-          style: TextFontStyle.headline18w700c000000StyleSatoshi,
-        ),
-        centerTitle: true,
-        backgroundColor: AppColors.scaffoldBackgroundColor,
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: UIHelper.kDefaulutPadding(),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ///Section : Working Address & Booking Order Date
-                WorkAddressAndDateWidget(
-                  address: "Rampura Dhaka, Bangladesh",
-                  dateTime: "Jun 17, 2025  09:31AM",
-                ),
-                UIHelper.verticalSpace(24.h),
-
-                ///Section : Text -> Proof Of Work Complete Information
-                Text(
-                  "Proof Of Work Complete Information",
-                  style: TextFontStyle.headline16w700c202020StyleSatoshi,
-                ),
-                UIHelper.verticalSpace(16.h),
-
-                ///Section : Completion Date
-                InkWell(
-                  onTap: () async {
-                    final DateTime? picked = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2100),
-                    );
-
-                    if (picked != null) {
-                      final formatted = DateFormat('MM-dd-yyyy').format(picked);
-                      controller.completionDateController.text = formatted;
-                    }
-                  },
-                  child: MoreInfoWidgetTile(
-                    title: "Completion Date",
-                    hintText: "Select Date",
-                    isEnabled: false,
-                    controller: controller.completionDateController,
+        return SafeArea(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(bottom: 20.h),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: UIHelper.kDefaulutPadding(),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ///Section : Working Address & Booking Order Date
+                  WorkAddressAndDateWidget(
+                    address: controller.address.value.isNotEmpty
+                        ? controller.address.value
+                        : "Address not available",
+                    dateTime: controller.bookingDateTime.value.isNotEmpty
+                        ? controller.bookingDateTime.value
+                        : "Date not available",
                   ),
-                ),
-                UIHelper.verticalSpace(16.h),
+                  UIHelper.verticalSpace(24.h),
 
-                ///Section : Duration Time
-                MoreInfoWidgetTile(
-                  title: "Duration Time",
-                  hintText: "Type Day's In Numbers",
-                  keyboardType: TextInputType.number,
-                  controller: controller.durationTimeController,
-                ),
-                UIHelper.verticalSpace(24.h),
+                  ///Section : Text -> Proof Of Work Complete Information
+                  Text(
+                    "Proof Of Work Complete Information",
+                    style: TextFontStyle.headline16w700c202020StyleSatoshi,
+                  ),
+                  UIHelper.verticalSpace(16.h),
 
-                ///Section : Single upload field for both images and videos
-                Obx(() {
-                  return ProofOfMediaUploadWidget(
-                    title: "Proof Files",
-                    mediaFiles: controller.mediaFiles.toList(), // Convert RxList to List
-                    onTap: () {
-                      log("Browse Button Tapped");
-                      controller.showMediaSourceDialog();
+                  ///Section : Completion Date
+                  InkWell(
+                    onTap: () async {
+                      final DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+
+                      if (picked != null) {
+                        final formatted = DateFormat('MM-dd-yyyy').format(picked);
+                        controller.completionDateController.text = formatted;
+                      }
                     },
-                    removeMediaOnTap: (index) async {
-                      await controller.removeMediaFile(index);
-                    },
-                  );
-                }),
-                UIHelper.verticalSpace(24.h),
+                    child: MoreInfoWidgetTile(
+                      title: "Completion Date",
+                      hintText: "Select Date",
+                      isEnabled: false,
+                      controller: controller.completionDateController,
+                    ),
+                  ),
+                  UIHelper.verticalSpace(16.h),
 
-                ///Section : Media Summary
-                Obx(() {
-                  final totalMedia = controller.totalMediaCount;
-                  final imageCount = controller.imageCount;
-                  final videoCount = controller.videoCount;
+                  ///Section : Duration Time
+                  MoreInfoWidgetTile(
+                    title: "Duration Time",
+                    hintText: "Type Day's In Numbers",
+                    keyboardType: TextInputType.number,
+                    controller: controller.durationTimeController,
+                  ),
+                  UIHelper.verticalSpace(24.h),
 
-                  if (totalMedia > 0) {
-                    return Container(
-                      padding: EdgeInsets.all(16.w),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
-                        borderRadius: BorderRadius.circular(12.r),
-                        border: Border.all(color: Colors.blue.shade100),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ///Section : Existing API Attachments
+                  Obx(() {
+                    if (controller.apiAttachments.isNotEmpty) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Media Summary",
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.blue.shade800,
-                                ),
-                              ),
-                              SizedBox(height: 4.h),
-                              Text(
-                                "Total: $totalMedia file${totalMedia > 1 ? 's' : ''}",
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  color: Colors.blue.shade600,
-                                ),
-                              ),
-                            ],
-                          ),
                           Row(
                             children: [
-                              if (imageCount > 0)
-                                Container(
-                                  margin: EdgeInsets.only(right: 8.w),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 12.w,
-                                    vertical: 6.h,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.green.shade100,
-                                    borderRadius: BorderRadius.circular(20.r),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.image,
-                                        size: 14.h,
-                                        color: Colors.green.shade800,
-                                      ),
-                                      SizedBox(width: 4.w),
-                                      Text(
-                                        "$imageCount",
-                                        style: TextStyle(
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.green.shade800,
-                                        ),
-                                      ),
-                                    ],
+                              Text(
+                                "Existing Proof Files",
+                                style: TextFontStyle.headline16w700c202020StyleSatoshi,
+                              ),
+                              SizedBox(width: 8.w),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                                decoration: BoxDecoration(
+                                  color: AppColors.c000e08,
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                child: Text(
+                                  '${controller.apiAttachments.length}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                              if (videoCount > 0)
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 12.w,
-                                    vertical: 6.h,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.purple.shade100,
-                                    borderRadius: BorderRadius.circular(20.r),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.videocam,
-                                        size: 14.h,
-                                        color: Colors.purple.shade800,
-                                      ),
-                                      SizedBox(width: 4.w),
-                                      Text(
-                                        "$videoCount",
-                                        style: TextStyle(
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.purple.shade800,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                              ),
                             ],
                           ),
-                        ],
-                      ),
-                    );
-                  }
-                  return SizedBox();
-                }),
-                UIHelper.verticalSpace(24.h),
+                          UIHelper.verticalSpace(12.h),
+                          Container(
+                            padding: EdgeInsets.all(16.w),
+                            decoration: BoxDecoration(
+                              color: Colors.blue.shade50,
+                              borderRadius: BorderRadius.circular(12.r),
+                              border: Border.all(color: Colors.blue.shade100),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Wrap(
+                                  spacing: 8.w,
+                                  runSpacing: 8.h,
+                                  children: controller.apiAttachments.asMap().entries.map((entry) {
+                                    final index = entry.key;
+                                    final attachment = entry.value;
+                                    final imageUrl = controller.getImageUrl(attachment.url);
 
-                ///Section : Payment Summary
-                PaymentSummeryWidget(
-                  onTap: () {
-                    showAdditionalCostDialog(
-                      context: context,
-                      additionlCostSubmitOnTap: () {
-                        Get.back();
+                                    return Stack(
+                                      children: [
+                                        Container(
+                                          width: 80.w,
+                                          height: 80.h,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(8.r),
+                                            border: Border.all(color: Colors.grey.shade300),
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(8.r),
+                                            child: CachedNetworkImage(
+                                              imageUrl: imageUrl,
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) => Center(
+                                                child: CircularProgressIndicator(strokeWidth: 2),
+                                              ),
+                                              errorWidget: (context, url, error) => Center(
+                                                child: Icon(Icons.error, color: Colors.red, size: 24),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 2,
+                                          right: 2,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              controller.removeApiAttachment(index);
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.all(4),
+                                              decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Icon(
+                                                Icons.close,
+                                                size: 12,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          bottom: 4,
+                                          left: 4,
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                                            decoration: BoxDecoration(
+                                              color: Colors.black.withOpacity(0.6),
+                                              borderRadius: BorderRadius.circular(4.r),
+                                            ),
+                                            child: Text(
+                                              '${index + 1}',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 10.sp,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }).toList(),
+                                ),
+                                UIHelper.verticalSpace(8.h),
+                                Text(
+                                  "Note: These are existing files from the work order",
+                                  style: TextStyle(
+                                    fontSize: 11.sp,
+                                    color: Colors.grey.shade600,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          UIHelper.verticalSpace(16.h),
+                        ],
+                      );
+                    }
+                    return SizedBox();
+                  }),
+
+                  ///Section : Upload new media files
+                  Obx(() {
+                    return ProofOfMediaUploadWidget(
+                      title: "Add New Proof Files",
+                      mediaFiles: controller.mediaFiles.toList(),
+                      onTap: () {
+                        log("Browse Button Tapped");
+                        controller.showMediaSourceDialog();
+                      },
+                      removeMediaOnTap: (index) async {
+                        await controller.removeMediaFile(index);
                       },
                     );
-                  },
-                  initialCost: 30,
-                  additionalCostList: AppList.additionalCosts,
-                  totalPayment:
-                  30 +
-                      AppList.additionalCosts.fold(
-                        0,
-                            (sum, item) => sum + item.price,
-                      ),
-                  isAddAdditionalCostButtonVisible: true,
-                ),
-                UIHelper.verticalSpace(32.h),
+                  }),
+                  UIHelper.verticalSpace(24.h),
 
-                ///Section : Submit Button
-                CustomElevatedButton(
-                  onTap: () {
-                    log("Button Tapped -> Submit Work Form!");
+                  ///Section : Payment Summary - FIXED
+                  Obx(() {
+                    return PaymentSummeryWidget(
+                      initialCost: controller.initialCost.value,
+                      additionalCostList: controller.additionalCosts.toList(), // Convert RxList to List
+                      totalPayment: controller.calculateTotalPayment(),
+                      isAddAdditionalCostButtonVisible: true,
+                      onTap: () {
+                        showAdditionalCostDialog(
+                          context: context,
+                          additionlCostSubmitOnTap: (String name, double price) {
+                            controller.addAdditionalCost(name, price);
+                          },
+                        );
+                      },
+                    );
+                  }),
+                  UIHelper.verticalSpace(32.h),
 
-                    final totalMedia = controller.totalMediaCount;
-
-                    if (totalMedia == 0) {
-                      Get.snackbar(
-                        "Warning",
-                        "Please add at least one file as proof",
-                        backgroundColor: Colors.orange,
-                        colorText: Colors.white,
-                      );
-                      return;
-                    }
-
-                    // Show success dialog
-                    Get.dialog(
-                      AlertDialog(
-                        title: const Text("Work Form Ready"),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Your work form includes $totalMedia file${totalMedia > 1 ? 's' : ''}:"),
-                            SizedBox(height: 8),
-                            if (controller.imageCount > 0)
-                              Text("• ${controller.imageCount} image${controller.imageCount > 1 ? 's' : ''}"),
-                            if (controller.videoCount > 0)
-                              Text("• ${controller.videoCount} video${controller.videoCount > 1 ? 's' : ''}"),
-                            SizedBox(height: 16),
-                            const Text("Are you sure you want to submit?"),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: Get.back,
-                            child: const Text("Cancel"),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              Get.back();
-                              // Submit the form
-                              _submitWorkForm();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                            ),
-                            child: const Text(
-                              "Submit",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ],
+                  ///Section : Submit Button
+                  Obx(() {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w),
+                      child: CustomElevatedButton(
+                        onTap: controller.isLoading.value ? null : () {
+                          _submitWorkForm();
+                        },
+                        buttonTitle: controller.isLoading.value
+                            ? "Submitting..."
+                            : "Submit Work Form",
                       ),
                     );
-                  },
-                  buttonTitle: "Submit Work Form",
-                ),
-                UIHelper.verticalSpace(32.h),
-              ],
+                  }),
+                  UIHelper.verticalSpace(32.h),
+                ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 
   void _submitWorkForm() {
     final totalMedia = controller.totalMediaCount;
 
-    log("Submitting work form with $totalMedia file(s)");
-    log("Completion Date: ${controller.completionDateController.text}");
-    log("Duration Time: ${controller.durationTimeController.text}");
+    if (controller.completionDateController.text.isEmpty) {
+      Get.snackbar(
+        "Warning",
+        "Please select completion date",
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
 
-    Get.snackbar(
-      "Success",
-      "Work form submitted successfully!",
-      backgroundColor: Colors.green,
-      colorText: Colors.white,
-      duration: const Duration(seconds: 3),
+    if (controller.durationTimeController.text.isEmpty) {
+      Get.snackbar(
+        "Warning",
+        "Please enter duration time",
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    if (totalMedia == 0) {
+      Get.snackbar(
+        "Warning",
+        "Please add at least one file as proof",
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    // Show confirmation dialog
+    Get.dialog(
+      AlertDialog(
+        title: Text("Confirm Submission", style: TextStyle(fontWeight: FontWeight.bold)),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("You are about to submit the work form with:", style: TextStyle(fontWeight: FontWeight.w500)),
+              SizedBox(height: 12.h),
+              _buildDetailRow("Completion Date:", controller.completionDateController.text),
+              _buildDetailRow("Duration:", "${controller.durationTimeController.text} days"),
+              _buildDetailRow("Total Files:", "$totalMedia"),
+              if (controller.apiAttachments.isNotEmpty)
+                _buildDetailRow("  - Existing files:", "${controller.apiAttachments.length}"),
+              if (controller.mediaFiles.isNotEmpty)
+                _buildDetailRow("  - New files:", "${controller.mediaFiles.length}"),
+              SizedBox(height: 8.h),
+              _buildDetailRow("Initial Cost:", "\$${controller.initialCost.value.toStringAsFixed(2)}"),
+              if (controller.additionalCosts.isNotEmpty)
+                _buildDetailRow("Additional Costs:", "\$${(controller.calculateTotalPayment() - controller.initialCost.value).toStringAsFixed(2)}"),
+              _buildDetailRow("Total Payment:", "\$${controller.calculateTotalPayment().toStringAsFixed(2)}", isBold: true),
+              SizedBox(height: 16.h),
+              Text("Are you sure you want to submit?", style: TextStyle(fontStyle: FontStyle.italic)),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: Get.back,
+            child: Text("Cancel", style: TextStyle(color: Colors.grey.shade600)),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Get.back();
+              await controller.submitWorkForm();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+            ),
+            child: Text(
+              "Submit",
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+      ),
     );
+  }
 
-    // Clear form after submission
-    Future.delayed(const Duration(seconds: 2), () {
-      controller.completionDateController.clear();
-      controller.durationTimeController.clear();
-      controller.clearAllMediaFiles();
-    });
+  Widget _buildDetailRow(String label, String value, {bool isBold = false}) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 2.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 13.sp,
+                color: Colors.grey.shade700,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 13.sp,
+                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
+
+ */
+
+
+
+
+
+
+
+
+///
+///
+///
+///
+/// todo:::: fixing the error
+///
+///
+///
+///
+
+
+
+
+
+
+import 'dart:developer';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
+import 'package:kaz_bd/helpers/ui_helpers.dart';
+import 'package:kaz_bd/constants/text_font_style.dart';
+import 'package:kaz_bd/custom_widgets/payment_summery_widget.dart';
+import 'package:kaz_bd/controllers/svp_submit_work_form_screen_controller.dart';
+import 'package:kaz_bd/custom_widgets/proof_of_image_uploading_widget.dart';
+import 'package:kaz_bd/custom_widgets/work_address_and_date_widget.dart';
+import 'package:kaz_bd/gen/colors.gen.dart';
+import 'package:kaz_bd/custom_widgets/more_info_widget_tile.dart';
+import '../../../normal_user/work_completed_details/widgets/additional_cost_popup.dart';
+
+class SvpSubmitWorkFormScreen extends StatefulWidget {
+  const SvpSubmitWorkFormScreen({super.key});
+
+  @override
+  State<SvpSubmitWorkFormScreen> createState() => _SvpSubmitWorkFormScreenState();
+}
+
+class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
+  final SvpSubmitWorkFormScreenController controller = Get.put(
+    SvpSubmitWorkFormScreenController(),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBackgroundColor,
+      appBar: AppBar(
+        title: Obx(() => Text(
+          controller.isLoadingWorkDetails.value ? "Loading..." : "Submit Work Form",
+          style: TextFontStyle.headline18w700c000000StyleSatoshi,
+        )),
+        centerTitle: true,
+        backgroundColor: AppColors.scaffoldBackgroundColor,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Get.back(),
+        ),
+      ),
+      body: Obx(() {
+        if (controller.isLoadingWorkDetails.value && controller.bookingId.value != null) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        return SafeArea(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.only(bottom: 20.h),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: UIHelper.kDefaulutPadding(),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ///Section : Working Address & Booking Order Date
+                  WorkAddressAndDateWidget(
+                    address: controller.address.value.isNotEmpty
+                        ? controller.address.value
+                        : "Address not available",
+                    dateTime: controller.bookingDateTime.value.isNotEmpty
+                        ? controller.bookingDateTime.value
+                        : "Date not available",
+                  ),
+                  UIHelper.verticalSpace(24.h),
+
+                  ///Section : Text -> Proof Of Work Complete Information
+                  Text(
+                    "Proof Of Work Complete Information",
+                    style: TextFontStyle.headline16w700c202020StyleSatoshi,
+                  ),
+                  UIHelper.verticalSpace(16.h),
+
+                  ///Section : Completion Date
+                  InkWell(
+                    onTap: () async {
+                      final DateTime? picked = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+
+                      if (picked != null) {
+                        final formatted = DateFormat('MM-dd-yyyy').format(picked);
+                        controller.completionDateController.text = formatted;
+                      }
+                    },
+                    child: MoreInfoWidgetTile(
+                      title: "Completion Date",
+                      hintText: "Select Date",
+                      isEnabled: false,
+                      controller: controller.completionDateController,
+                    ),
+                  ),
+                  UIHelper.verticalSpace(16.h),
+
+                  ///Section : Duration Time
+                  MoreInfoWidgetTile(
+                    title: "Duration Time",
+                    hintText: "Type Day's In Numbers",
+                    keyboardType: TextInputType.number,
+                    controller: controller.durationTimeController,
+                  ),
+                  UIHelper.verticalSpace(24.h),
+
+                  ///Section : Existing API Attachments
+                  Obx(() {
+                    if (controller.apiAttachments.isNotEmpty) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Existing Proof Files",
+                                style: TextFontStyle.headline16w700c202020StyleSatoshi,
+                              ),
+                              SizedBox(width: 8.w),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                                decoration: BoxDecoration(
+                                  color: AppColors.c000e08,
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                child: Text(
+                                  '${controller.apiAttachments.length}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          UIHelper.verticalSpace(12.h),
+                          Container(
+                            padding: EdgeInsets.all(16.w),
+                            decoration: BoxDecoration(
+                              color: Colors.blue.shade50,
+                              borderRadius: BorderRadius.circular(12.r),
+                              border: Border.all(color: Colors.blue.shade100),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Wrap(
+                                  spacing: 8.w,
+                                  runSpacing: 8.h,
+                                  children: controller.apiAttachments.asMap().entries.map((entry) {
+                                    final index = entry.key;
+                                    final attachment = entry.value;
+                                    final imageUrl = controller.getImageUrl(attachment.url);
+
+                                    return Stack(
+                                      children: [
+                                        Container(
+                                          width: 80.w,
+                                          height: 80.h,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(8.r),
+                                            border: Border.all(color: Colors.grey.shade300),
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(8.r),
+                                            child: CachedNetworkImage(
+                                              imageUrl: imageUrl,
+                                              fit: BoxFit.cover,
+                                              placeholder: (context, url) => Center(
+                                                child: CircularProgressIndicator(strokeWidth: 2),
+                                              ),
+                                              errorWidget: (context, url, error) => Center(
+                                                child: Icon(Icons.error, color: Colors.red, size: 24),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 2,
+                                          right: 2,
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              controller.removeApiAttachment(index);
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.all(4),
+                                              decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                shape: BoxShape.circle,
+                                              ),
+                                              child: Icon(
+                                                Icons.close,
+                                                size: 12,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          bottom: 4,
+                                          left: 4,
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                                            decoration: BoxDecoration(
+                                              color: Colors.black.withOpacity(0.6),
+                                              borderRadius: BorderRadius.circular(4.r),
+                                            ),
+                                            child: Text(
+                                              '${index + 1}',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 10.sp,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }).toList(),
+                                ),
+                                UIHelper.verticalSpace(8.h),
+                                Text(
+                                  "Note: These are existing files from the work order",
+                                  style: TextStyle(
+                                    fontSize: 11.sp,
+                                    color: Colors.grey.shade600,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          UIHelper.verticalSpace(16.h),
+                        ],
+                      );
+                    }
+                    return SizedBox();
+                  }),
+
+                  ///Section : Upload new media files
+                  Obx(() {
+                    return ProofOfMediaUploadWidget(
+                      title: "Add New Proof Files",
+                      mediaFiles: controller.mediaFiles.toList(),
+                      onTap: () {
+                        log("Browse Button Tapped");
+                        controller.showMediaSourceDialog();
+                      },
+                      removeMediaOnTap: (index) async {
+                        await controller.removeMediaFile(index);
+                      },
+                    );
+                  }),
+                  UIHelper.verticalSpace(24.h),
+
+                  ///Section : Payment Summary - FIXED
+                  Obx(() {
+                    return PaymentSummeryWidget(
+                      initialCost: controller.initialCost.value,
+                      additionalCostList: controller.additionalCosts.toList(),
+                      totalPayment: controller.calculateTotalPayment(),
+                      isAddAdditionalCostButtonVisible: true,
+                      onTap: () {
+                        showAdditionalCostDialog(
+                          context: context,
+                          additionlCostSubmitOnTap: (String name, double price) {
+                            controller.addAdditionalCost(name, price);
+                          },
+                        );
+                      },
+                    );
+                  }),
+                  UIHelper.verticalSpace(32.h),
+
+                  ///Section : Submit Button
+                  Obx(() {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w),
+                      child: CustomElevatedButton(
+                        onTap: controller.isLoading.value ? null : () {
+                          _submitWorkForm();
+                        },
+                        buttonTitle: controller.isLoading.value
+                            ? "Submitting..."
+                            : "Submit Work Form",
+                      ),
+                    );
+                  }),
+                  UIHelper.verticalSpace(16.h),
+
+                  ///Section : Payment Request Button
+                  Obx(() {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w),
+                      child: CustomElevatedButton(
+                        onTap: controller.isPaymentRequestLoading.value
+                            ? null
+                            : () {
+                          _requestPayment();
+                        },
+                        buttonTitle: controller.isPaymentRequestLoading.value
+                            ? "Requesting..."
+                            : "Request Payment",
+                        // backgroundColor: AppColors.c000e08,
+                        // foregroundColor: Colors.white,
+                      ),
+                    );
+                  }),
+                  UIHelper.verticalSpace(32.h),
+                ],
+              ),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
+  void _submitWorkForm() {
+    final totalMedia = controller.totalMediaCount;
+
+    if (controller.completionDateController.text.isEmpty) {
+      Get.snackbar(
+        "Warning",
+        "Please select completion date",
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    if (controller.durationTimeController.text.isEmpty) {
+      Get.snackbar(
+        "Warning",
+        "Please enter duration time",
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    if (totalMedia == 0) {
+      Get.snackbar(
+        "Warning",
+        "Please add at least one file as proof",
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    // Show confirmation dialog
+    Get.dialog(
+      AlertDialog(
+        title: Text("Confirm Submission", style: TextStyle(fontWeight: FontWeight.bold)),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("You are about to submit the work form with:", style: TextStyle(fontWeight: FontWeight.w500)),
+              SizedBox(height: 12.h),
+              _buildDetailRow("Completion Date:", controller.completionDateController.text),
+              _buildDetailRow("Duration:", "${controller.durationTimeController.text} days"),
+              _buildDetailRow("Total Files:", "$totalMedia"),
+              if (controller.apiAttachments.isNotEmpty)
+                _buildDetailRow("  - Existing files:", "${controller.apiAttachments.length}"),
+              if (controller.mediaFiles.isNotEmpty)
+                _buildDetailRow("  - New files:", "${controller.mediaFiles.length}"),
+              SizedBox(height: 8.h),
+              _buildDetailRow("Initial Cost:", "\$${controller.initialCost.value.toStringAsFixed(2)}"),
+              if (controller.additionalCosts.isNotEmpty)
+                _buildDetailRow("Additional Costs:", "\$${(controller.calculateTotalPayment() - controller.initialCost.value).toStringAsFixed(2)}"),
+              _buildDetailRow("Total Payment:", "\$${controller.calculateTotalPayment().toStringAsFixed(2)}", isBold: true),
+              SizedBox(height: 16.h),
+              Text("Are you sure you want to submit?", style: TextStyle(fontStyle: FontStyle.italic)),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: Get.back,
+            child: Text("Cancel", style: TextStyle(color: Colors.grey.shade600)),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Get.back();
+              await controller.submitWorkForm();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+            ),
+            child: Text(
+              "Submit",
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _requestPayment() {
+    Get.dialog(
+      AlertDialog(
+        title: Text("Request Payment", style: TextStyle(fontWeight: FontWeight.bold)),
+        content: Text("Are you sure you want to send a payment request for this completed work?"),
+        actions: [
+          TextButton(
+            onPressed: Get.back,
+            child: Text("Cancel", style: TextStyle(color: Colors.grey.shade600)),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              Get.back();
+              await controller.requestPayment();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.c000e08,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+            ),
+            child: Text(
+              "Yes, Request",
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value, {bool isBold = false}) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 2.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 13.sp,
+                color: Colors.grey.shade700,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 13.sp,
+                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

@@ -72,6 +72,7 @@ class SvpBookingsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                SizedBox(height: 120,)
               ],
             ),
           ),
