@@ -27,6 +27,10 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
     SvpSubmitWorkFormScreenController(),
   );
 
+  // Track completion status
+  final RxBool isMediaCompleted = false.obs;
+  final RxBool isPaymentCompleted = false.obs;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -261,9 +265,69 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                       },
                     );
                   }),
-                  UIHelper.verticalSpace(24.h),
+                  UIHelper.verticalSpace(16.h),
 
-                  ///Section : Payment Summary - FIXED
+                  ///Section : Media Done Button (Only visible when media is added)
+                  Obx(() {
+                    final hasMedia = controller.totalMediaCount > 0;
+
+                    if (!hasMedia) {
+                      return SizedBox.shrink();
+                    }
+
+                    return Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            if (isMediaCompleted.value)
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                                decoration: BoxDecoration(
+                                  color: Colors.green.shade100,
+                                  borderRadius: BorderRadius.circular(20.r),
+                                  border: Border.all(color: Colors.green.shade300),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.check_circle, color: Colors.green.shade700, size: 16.h),
+                                    SizedBox(width: 4.w),
+                                    Text(
+                                      "Completed",
+                                      style: TextStyle(
+                                        color: Colors.green.shade700,
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            else
+                              CustomElevatedButton(
+                                onTap: () {
+                                  isMediaCompleted.value = true;
+                                  Get.snackbar(
+                                    "Success",
+                                    "Media files marked as complete",
+                                    backgroundColor: Colors.green,
+                                    colorText: Colors.white,
+                                  );
+                                },
+                                buttonWidth: 120.w,
+                                buttonHeight: 36.h,
+                                buttonTitle: "Done",
+                                // backgroundColor: AppColors.c000e08,
+                              ),
+                          ],
+                        ),
+                        UIHelper.verticalSpace(24.h),
+                      ],
+                    );
+                  }),
+
+                  ///Section : Payment Summary
                   Obx(() {
                     return PaymentSummeryWidget(
                       initialCost: controller.initialCost.value,
@@ -280,25 +344,69 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                       },
                     );
                   }),
-                  UIHelper.verticalSpace(32.h),
-
-                  ///Section : Submit Button
-                  Obx(() {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w),
-                      child: CustomElevatedButton(
-                        onTap: controller.isLoading.value ? null : () {
-                          _submitWorkForm();
-                        },
-                        buttonTitle: controller.isLoading.value
-                            ? "Submitting..."
-                            : "Submit Work Form",
-                      ),
-                    );
-                  }),
                   UIHelper.verticalSpace(16.h),
 
-                  ///Section : Payment Request Button
+                  ///Section : Payment Done Button (Only visible when additional costs are added)
+                  Obx(() {
+                    final hasAdditionalCosts = controller.additionalCosts.isNotEmpty;
+
+                    if (!hasAdditionalCosts) {
+                      return SizedBox.shrink();
+                    }
+
+                    return Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            if (isPaymentCompleted.value)
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                                decoration: BoxDecoration(
+                                  color: Colors.green.shade100,
+                                  borderRadius: BorderRadius.circular(20.r),
+                                  border: Border.all(color: Colors.green.shade300),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.check_circle, color: Colors.green.shade700, size: 16.h),
+                                    SizedBox(width: 4.w),
+                                    Text(
+                                      "Completed",
+                                      style: TextStyle(
+                                        color: Colors.green.shade700,
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            else
+                              CustomElevatedButton(
+                                onTap: () {
+                                  isPaymentCompleted.value = true;
+                                  Get.snackbar(
+                                    "Success",
+                                    "Payment details marked as complete",
+                                    backgroundColor: Colors.green,
+                                    colorText: Colors.white,
+                                  );
+                                },
+                                buttonWidth: 120.w,
+                                buttonHeight: 36.h,
+                                buttonTitle: "Done",
+                                // backgroundColor: AppColors.c000e08,
+                              ),
+                          ],
+                        ),
+                        UIHelper.verticalSpace(32.h),
+                      ],
+                    );
+                  }),
+
+                  ///Section : Payment Request Button (Always visible)
                   Obx(() {
                     return Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8.w),
@@ -311,8 +419,6 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                         buttonTitle: controller.isPaymentRequestLoading.value
                             ? "Requesting..."
                             : "Request Payment",
-                        // backgroundColor: AppColors.c000e08,
-                        // foregroundColor: Colors.white,
                       ),
                     );
                   }),
@@ -326,9 +432,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
     );
   }
 
-  void _submitWorkForm() {
-    final totalMedia = controller.totalMediaCount;
-
+  void _requestPayment() {
+    // Validate all fields
     if (controller.completionDateController.text.isEmpty) {
       Get.snackbar(
         "Warning",
@@ -349,27 +454,27 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
       return;
     }
 
-    if (totalMedia == 0) {
-      Get.snackbar(
-        "Warning",
-        "Please add at least one file as proof",
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
-      return;
-    }
+    final totalMedia = controller.totalMediaCount;
 
-    // Show confirmation dialog
     Get.dialog(
       AlertDialog(
-        title: Text("Confirm Submission", style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Row(
+          children: [
+            Icon(Icons.payment, color: AppColors.c000e08),
+            SizedBox(width: 8.w),
+            Text("Request Payment", style: TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("You are about to submit the work form with:", style: TextStyle(fontWeight: FontWeight.w500)),
-              SizedBox(height: 12.h),
+              Text(
+                "You are about to request payment with the following details:",
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
+              SizedBox(height: 16.h),
               _buildDetailRow("Completion Date:", controller.completionDateController.text),
               _buildDetailRow("Duration:", "${controller.durationTimeController.text} days"),
               _buildDetailRow("Total Files:", "$totalMedia"),
@@ -377,45 +482,37 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                 _buildDetailRow("  - Existing files:", "${controller.apiAttachments.length}"),
               if (controller.mediaFiles.isNotEmpty)
                 _buildDetailRow("  - New files:", "${controller.mediaFiles.length}"),
-              SizedBox(height: 8.h),
+              SizedBox(height: 12.h),
+              Divider(),
+              SizedBox(height: 12.h),
               _buildDetailRow("Initial Cost:", "\$${controller.initialCost.value.toStringAsFixed(2)}"),
               if (controller.additionalCosts.isNotEmpty)
                 _buildDetailRow("Additional Costs:", "\$${(controller.calculateTotalPayment() - controller.initialCost.value).toStringAsFixed(2)}"),
-              _buildDetailRow("Total Payment:", "\$${controller.calculateTotalPayment().toStringAsFixed(2)}", isBold: true),
+              SizedBox(height: 8.h),
+              _buildDetailRow(
+                "Total Payment:",
+                "\$${controller.calculateTotalPayment().toStringAsFixed(2)}",
+                isBold: true,
+              ),
               SizedBox(height: 16.h),
-              Text("Are you sure you want to submit?", style: TextStyle(fontStyle: FontStyle.italic)),
+              Container(
+                padding: EdgeInsets.all(12.w),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Text(
+                  "The client will be notified about this payment request.",
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: Colors.blue.shade900,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ),
             ],
           ),
         ),
-        actions: [
-          TextButton(
-            onPressed: Get.back,
-            child: Text("Cancel", style: TextStyle(color: Colors.grey.shade600)),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              Get.back();
-              await controller.submitWorkForm();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
-            ),
-            child: Text(
-              "Submit",
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _requestPayment() {
-    Get.dialog(
-      AlertDialog(
-        title: Text("Request Payment", style: TextStyle(fontWeight: FontWeight.bold)),
-        content: Text("Are you sure you want to send a payment request for this completed work?"),
         actions: [
           TextButton(
             onPressed: Get.back,
@@ -431,7 +528,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
             ),
             child: Text(
-              "Yes, Request",
+              "Send Request",
               style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
             ),
           ),
