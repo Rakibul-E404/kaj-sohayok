@@ -48,11 +48,11 @@ class _WorkCompletedDetailsScreenState
         _paymentDetails.serviceBooking?.attachments
             ?.where(
               (a) =>
-                  (a.attachmentType?.toLowerCase() == 'video') &&
-                  (a.attachment?.isNotEmpty == true),
-            )
+          (a.attachmentType?.toLowerCase() == 'video') &&
+              (a.attachment?.isNotEmpty == true),
+        )
             .toList() ??
-        [];
+            [];
 
     for (var att in videoAttachments) {
       final url = att.attachment!;
@@ -65,16 +65,16 @@ class _WorkCompletedDetailsScreenState
       _videoControllers[key]!
           .initialize()
           .then((_) {
-            if (mounted) {
-              setState(() {
-                _initializedVideos.add(key);
-              });
-              log('Video initialized: $url');
-            }
-          })
-          .catchError((error) {
-            log('Failed to load video: $url | Error: $error');
+        if (mounted) {
+          setState(() {
+            _initializedVideos.add(key);
           });
+          log('Video initialized: $url');
+        }
+      })
+          .catchError((error) {
+        log('Failed to load video: $url | Error: $error');
+      });
 
       _videoControllers[key]!.addListener(() {
         if (mounted) setState(() {});
@@ -272,8 +272,8 @@ class _WorkCompletedDetailsScreenState
     final List<Widget> widgets = [];
 
     final imageAttachments = attachments.where(
-      (a) =>
-          a.attachmentType?.toLowerCase() == 'image' &&
+          (a) =>
+      a.attachmentType?.toLowerCase() == 'image' &&
           a.attachment?.isNotEmpty == true,
     );
 
@@ -300,8 +300,8 @@ class _WorkCompletedDetailsScreenState
     }
 
     final videoAttachments = attachments.where(
-      (a) =>
-          a.attachmentType?.toLowerCase() == 'video' &&
+          (a) =>
+      a.attachmentType?.toLowerCase() == 'video' &&
           a.attachment?.isNotEmpty == true,
     );
 
@@ -329,15 +329,15 @@ class _WorkCompletedDetailsScreenState
     final List<AdditionalCostModel> additionalCosts = apiAdditionalCosts
         .map(
           (cost) => AdditionalCostModel(
-            title: cost.costName ?? "Additional Cost",
-            price: cost.price ?? 0.0,
-          ),
-        )
+        title: cost.costName ?? "Additional Cost",
+        price: cost.price ?? 0.0,
+      ),
+    )
         .toList();
 
     final totalPayment =
         initialCost +
-        additionalCosts.fold(0.0, (sum, cost) => sum + cost.price);
+            additionalCosts.fold(0.0, (sum, cost) => sum + cost.price);
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
@@ -441,7 +441,7 @@ class _WorkCompletedDetailsScreenState
                               borderRadius: BorderRadius.circular(24),
                               child: CachedNetworkImage(
                                 imageUrl:
-                                    '${AppUrl.imageBaseUrl}${provider.profileImage?.imageUrl}',
+                                '${AppUrl.imageBaseUrl}${provider.profileImage?.imageUrl}',
                               ),
                             ),
                           ),
@@ -502,21 +502,29 @@ class _WorkCompletedDetailsScreenState
                 if (provider != null) UIHelper.verticalSpace(24.h),
 
                 /// Payment Summary
+                /// Payment Summary
                 PaymentSummeryWidget(
-                  onTap: () {
-                    showAdditionalCostDialog(
-                      context: context,
-                      additionlCostSubmitOnTap: () {
-                        Get.back();
-                      },
-                    );
-                  },
                   initialCost: initialCost,
                   additionalCostList: additionalCosts,
                   totalPayment: totalPayment,
-                  isTransactionIdCardVisible:
-                      serviceBooking?.paymentTransactionId != null,
+                  isTransactionIdCardVisible: serviceBooking?.paymentTransactionId != null,
                   transactionID: serviceBooking?.paymentTransactionId ?? "N/A",
+                  isAddAdditionalCostButtonVisible: false, // Hide button in read-only view
+                  onTap: () {
+                    showAdditionalCostDialog(
+                      context: context,
+                      additionlCostSubmitOnTap: (String name, double price) {
+                        // This is a completed work view, so we just show info message
+                        log('Additional cost view requested: $name = \$$price');
+                        Get.snackbar(
+                          'Info',
+                          'This is a read-only view. Additional costs cannot be modified.',
+                          backgroundColor: Colors.orange,
+                          colorText: Colors.white,
+                        );
+                      },
+                    );
+                  },
                 ),
                 UIHelper.verticalSpace(55.h),
               ],
@@ -527,3 +535,4 @@ class _WorkCompletedDetailsScreenState
     );
   }
 }
+
