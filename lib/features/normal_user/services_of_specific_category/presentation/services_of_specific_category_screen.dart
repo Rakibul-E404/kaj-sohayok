@@ -27,18 +27,33 @@ class ServicesOfSpecificCategoryScreen extends StatefulWidget {
 class _ServicesOfSpecificCategoryScreenState
     extends State<ServicesOfSpecificCategoryScreen> {
   final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   ServiceOfSpecificCategoryScreenController? itemsOfCategory;
 
   @override
   void initState() {
     super.initState();
     itemsOfCategory = Get.find<ServiceOfSpecificCategoryScreenController>();
+    _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent -
+                200 && // Trigger 200 pixels before end
+        !itemsOfCategory!.isLoadingMore.value && // Only if not already loading
+        itemsOfCategory!.hasMoreData.value) {
+      // Only if there's more data
+      itemsOfCategory?.loadMoreServices();
+    }
   }
 
   @override
@@ -67,34 +82,34 @@ class _ServicesOfSpecificCategoryScreenState
           );
         }),
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),
-            child: Column(
-              children: [
-                ///Section : Search Bar
-                CustomFormField(
-                  showVerticalDivider: false,
-                  controller: _searchController,
-                  prefixIcon: SvgPicture.asset(Assets.icons.searchIcon),
-                  hintText: "Search $categoryName Services",
-                  onFieldSubmitted: (value) {
-                    itemsOfCategory?.performSearch(value);
-                  },
-                  onChanged: (value) {
-                    // Optional: Add debounce if you want real-time search
-                    // For now, we'll search on submit only to reduce API calls
-                  },
-                ),
-                UIHelper.verticalSpace(16.h),
+      body: Padding(
+        padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),
+        child: Column(
+          children: [
+            ///Section : Search Bar
+            CustomFormField(
+              showVerticalDivider: false,
+              controller: _searchController,
+              prefixIcon: SvgPicture.asset(Assets.icons.searchIcon),
+              hintText: "Search $categoryName Services",
+              onFieldSubmitted: (value) {
+                itemsOfCategory?.performSearch(value);
+              },
+              onChanged: (value) {
+                // Optional: Add debounce if you want real-time search
+                // For now, we'll search on submit only to reduce API calls
+              },
+            ),
+            UIHelper.verticalSpace(16.h),
 
-                ///Section : Available Services
-                Obx(() {
-                  ///When Loading state is true
-                  if (itemsOfCategory?.isLoading.value == true) {
-                    return Column(
-                      children: List.generate(
+            ///Section : Available Services
+            Expanded(
+              child: Obx(() {
+                ///When Loading state is true
+                if (itemsOfCategory?.isLoading.value == true) {
+                  return ListView(
+                    children: [
+                      ...List.generate(
                         6,
                         (index) => Padding(
                           padding: EdgeInsets.only(bottom: 16.h),
@@ -104,27 +119,44 @@ class _ServicesOfSpecificCategoryScreenState
                           ),
                         ),
                       ),
-                    );
-                  }
+                    ],
+                  );
+                }
 
-                  ///When There is no Data to Show
-                  if (itemsOfCategory?.specificCategoryList.isEmpty == true) {
-                    return Center(
-                      child: Lottie.asset(
-                        Assets.lottie.emptyScreen,
-                        fit: BoxFit.contain,
-                      ),
-                    );
-                  }
+                ///When There is no Data to Show
+                if (itemsOfCategory?.specificCategoryList.isEmpty == true) {
+                  return Center(
+                    child: Lottie.asset(
+                      Assets.lottie.emptyScreen,
+                      fit: BoxFit.contain,
+                    ),
+                  );
+                }
 
-                  return ListView.separated(
-                    itemCount:
-                        itemsOfCategory?.specificCategoryList.length ?? 0,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    separatorBuilder: (context, index) =>
-                        UIHelper.verticalSpace(16.h),
-                    itemBuilder: (contexxt, index) {
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    itemsOfCategory?.pageId.value = '1';
+                    await itemsOfCategory?.handleServiceFromSpecificCategory();
+                  },
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    itemCount: itemsOfCategory!.specificCategoryList.length +
+                        (itemsOfCategory!.isLoadingMore.value
+                            ? 1
+                            : 0), // Add 1 for loading indicator if needed
+                    itemBuilder: (context, index) {
+                      // Check if we're on the last item and need to show a loading indicator
+                      if (index >=
+                          itemsOfCategory!.specificCategoryList.length) {
+                        // This is the loading indicator at the end
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.h),
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        );
+                      }
+
                       final service =
                           itemsOfCategory!.specificCategoryList[index];
 
@@ -143,36 +175,42 @@ class _ServicesOfSpecificCategoryScreenState
                         imageUrl = service.attachmentsForGallery![0].attachment;
                       }
 
-                      return SpecificServiceShowingWidget(
-                        onTap: () {
-                          log("Specific Service Item taped at index : $index");
-                          log("Service Image Url : $imageUrl");
-                          Get.toNamed(
-                            Routes.serviceDetailsScreen,
-                            arguments: {
-                              'providerID': service.providerId?.userId,
-                              'serviceProviderID': service.serviceProviderId,
-                              'serviceName': serviceName,
-                              'providerName': providerName,
+                      return Column(
+                        children: [
+                          SpecificServiceShowingWidget(
+                            onTap: () {
+                              log("Specific Service Item taped at index : $index");
+                              log("Service Image Url : $imageUrl");
+                              Get.toNamed(
+                                Routes.serviceDetailsScreen,
+                                arguments: {
+                                  'providerID': service.providerId?.userId,
+                                  'serviceProviderID':
+                                      service.serviceProviderId,
+                                  'serviceName': serviceName,
+                                  'providerName': providerName,
+                                },
+                              );
                             },
-                          );
-                        },
-                        serviceImagePath:
-                            imageUrl ?? Assets.images.serviceImage.path,
-                        serviceName: serviceName,
-                        initialPayablePrice: price,
-                        serviceProviderImage:
-                            service.providerId?.profileImage?.imageUrl ??
-                                Assets.images.userImage.path,
-                        serviceProviderName: providerName,
-                        serviceProviderRating: rating,
+                            serviceImagePath:
+                                imageUrl ?? Assets.images.serviceImage.path,
+                            serviceName: serviceName,
+                            initialPayablePrice: price,
+                            serviceProviderImage:
+                                service.providerId?.profileImage?.imageUrl ??
+                                    Assets.images.userImage.path,
+                            serviceProviderName: providerName,
+                            serviceProviderRating: rating,
+                          ),
+                          UIHelper.verticalSpace(16.h),
+                        ],
                       );
                     },
-                  );
-                }),
-              ],
+                  ),
+                );
+              }),
             ),
-          ),
+          ],
         ),
       ),
     );
