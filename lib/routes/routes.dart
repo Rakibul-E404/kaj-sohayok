@@ -323,14 +323,14 @@ class Routes {
       transitionDuration: _duration(),
     ),
 
-    ///searchLocationScreen
-    GetPage(
-      name: searchLocationScreen,
-      page: () => SearchLocationScreen(),
-      transition: _transition(),
-      customTransition: _customTransition(),
-      transitionDuration: _duration(),
-    ),
+    // ///searchLocationScreen
+    // GetPage(
+    //   name: searchLocationScreen,
+    //   page: () => SearchLocationScreen(),
+    //   transition: _transition(),
+    //   customTransition: _customTransition(),
+    //   transitionDuration: _duration(),
+    // ),
 
     ///bookingsPaymentRequestDetailsScreen
     GetPage(
@@ -524,7 +524,7 @@ Duration _duration() => Platform.isAndroid
 
 // /// All GetPages in your app
 // final List<GetPage> appRoutes = [
-  
+
 //   GetPage(
 //     name: AppRoutes.notificationsScreen,
 //     page: () => NotificationsScreen(),
@@ -555,5 +555,5 @@ Duration _duration() => Platform.isAndroid
 //     transitionDuration: _duration(),
 //   ),
 
-  
+
 // ];

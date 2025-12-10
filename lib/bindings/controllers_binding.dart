@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 
 import '../controllers/change_password_screen_controller.dart';
 import '../controllers/chat_inbox_screen_controller.dart';
- import '../controllers/face_verification_controller.dart';
+import '../controllers/face_verification_controller.dart';
 import '../controllers/home_page_controller.dart';
 import '../controllers/message_screen_controller.dart';
 import '../controllers/more_information_screen_controller.dart';
@@ -23,6 +23,8 @@ import '../controllers/svp_submit_work_form_screen_controller.dart';
 class ControllerBindings extends Bindings {
   @override
   void dependencies() {
+    /// ==============> Shahriar ==============>
+    Get.put(MessageScreenController());
     Get.lazyPut(() => OnboardingController());
     Get.lazyPut(() => SignInScreenController());
     Get.lazyPut(() => UserSignUpController());

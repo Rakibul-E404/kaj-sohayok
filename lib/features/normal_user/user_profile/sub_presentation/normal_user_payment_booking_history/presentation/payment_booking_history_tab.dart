@@ -21,31 +21,38 @@ class PaymentBookingHistoryTab extends StatelessWidget {
     );
     userPaymentHistoryController.fetchPaymentHistory();
     return Obx(
-      () => ListView.separated(
-        itemCount: userPaymentHistoryController.userPaymentHistories.length,
-        separatorBuilder: (context, index) => UIHelper.verticalSpace(20.h),
-        itemBuilder: (context, index) {
-          final UserPaymentHistoryModel singlePayment =
-              userPaymentHistoryController.userPaymentHistories[index];
+      () => Visibility(
+        visible: userPaymentHistoryController.userPaymentHistories.isNotEmpty,
+        replacement: Center(
+            child: Text(
+          'No Payment History Available',
+          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
+        )),
+        child: ListView.separated(
+          itemCount: userPaymentHistoryController.userPaymentHistories.length,
+          separatorBuilder: (context, index) => UIHelper.verticalSpace(20.h),
+          itemBuilder: (context, index) {
+            final UserPaymentHistoryModel singlePayment =
+                userPaymentHistoryController.userPaymentHistories[index];
 
-          return PaymentHistoryShowingCard(
-            onTap: () {
-              userPaymentHistoryController.fetchPaymentHistoryDetails(
-                id: singlePayment.serviceBookingId ?? '',
-              );
-
-            },
-            serviceName:
-                "${singlePayment.providerDetailsId?.serviceName?.en ?? ''} ",
-            initialPayablePrice: singlePayment.startPrice ?? 0.0,
-            address: "${singlePayment.address?.en ?? ''} ",
-            dateAndTime: "${formatDateTime(singlePayment.bookingDateTime)}",
-            serviceProviderProfileImage:
-                "${AppUrl.imageBaseUrl}${singlePayment.providerId?.profileImage?.imageUrl}",
-            serviceProviderName: "${singlePayment.providerId?.name ?? ''} ",
-            serviceProviderDesignation: "Service Provider",
-          );
-        },
+            return PaymentHistoryShowingCard(
+              onTap: () {
+                userPaymentHistoryController.fetchPaymentHistoryDetails(
+                  id: singlePayment.serviceBookingId ?? '',
+                );
+              },
+              serviceName:
+                  "${singlePayment.providerDetailsId?.serviceName?.en ?? ''} ",
+              initialPayablePrice: singlePayment.startPrice ?? 0.0,
+              address: "${singlePayment.address?.en ?? ''} ",
+              dateAndTime: "${formatDateTime(singlePayment.bookingDateTime)}",
+              serviceProviderProfileImage:
+                  "${AppUrl.imageBaseUrl}${singlePayment.providerId?.profileImage?.imageUrl}",
+              serviceProviderName: "${singlePayment.providerId?.name ?? ''} ",
+              serviceProviderDesignation: "Service Provider",
+            );
+          },
+        ),
       ),
     );
   }

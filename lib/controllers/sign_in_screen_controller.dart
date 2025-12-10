@@ -46,14 +46,14 @@ class SignInScreenController extends GetxController {
 
         await SecureStorageService().write(
           AppConstants.accessToken,
-          postResponse
-                  .jsonResponse?['data']['attributes']['tokens']['accessToken'] ??
+          postResponse.jsonResponse?['data']['attributes']['tokens']
+                  ['accessToken'] ??
               '',
         );
         await SecureStorageService().write(
           AppConstants.refreshToken,
-          postResponse
-                  .jsonResponse?['data']['attributes']['tokens']['refreshToken'] ??
+          postResponse.jsonResponse?['data']['attributes']['tokens']
+                  ['refreshToken'] ??
               '',
         );
 
@@ -62,6 +62,10 @@ class SignInScreenController extends GetxController {
           postResponse.jsonResponse?['data']['attributes'],
         );
         LoggerUtils.debug(postResponse.jsonResponse?['data']['attributes']);
+        GetStorageModel().saveString(
+          AppConstants.userId,
+          signedProfile.value?.id ?? '',
+        );
         if (signedProfile.value != null &&
             signedProfile.value!.role == 'user') {
           GetStorageModel().saveString(

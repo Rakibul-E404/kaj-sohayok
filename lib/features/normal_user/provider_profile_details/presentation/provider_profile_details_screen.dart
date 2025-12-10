@@ -13,6 +13,7 @@ import 'package:kaz_bd/helpers/ui_helpers.dart';
 
 import '../../../../constants/text_font_style.dart';
 import '../../../../controllers/get_nrm_user_service_provider_profile_info.dart';
+import '../../../../controllers/message_screen_controller.dart';
 import '../../../../custom_widgets/custom_shimmer_effect.dart';
 import '../../../../custom_widgets/profile_tile_widget.dart';
 import '../../../../utilities/app_url.dart';
@@ -54,7 +55,6 @@ class ProviderDetailsScreen extends StatelessWidget {
                       elevation: 4.sp,
                       child: Container(
                         width: 1.sw,
-
                         decoration: BoxDecoration(
                           // color: Colors.amber,
                           borderRadius: BorderRadius.circular(16.r),
@@ -84,8 +84,7 @@ class ProviderDetailsScreen extends StatelessWidget {
                                     // Get the first gallery attachment from service details if available
                                     String? imageUrl;
                                     if (svpProfileDetailsController
-                                            .profileImageUrl
-                                            .isNotEmpty ==
+                                            .profileImageUrl.isNotEmpty ==
                                         true) {
                                       imageUrl = svpProfileDetailsController
                                           .profileImageUrl;
@@ -106,7 +105,6 @@ class ProviderDetailsScreen extends StatelessWidget {
                                         child: CachedNetworkImage(
                                           imageUrl: fullImageUrl,
                                           height: 94.h,
-
                                           width: 94.w,
                                           fit: BoxFit.cover,
                                         ),
@@ -187,7 +185,18 @@ class ProviderDetailsScreen extends StatelessWidget {
                                       ///Section : Message
                                       InkWell(
                                         onTap: () {
-                                          log("Message Button Taped!");
+                                          Get.find<MessageScreenController>()
+                                              .createMessage(
+                                                  participantId:
+                                                      svpProfileDetailsController
+                                                          .serviceProviderId
+                                                          .value,
+                                                  name:
+                                                      svpProfileDetailsController
+                                                          .providerName,
+                                                  imageUrl:
+                                                      svpProfileDetailsController
+                                                          .profileImageUrl);
                                         },
                                         child: Container(
                                           padding: EdgeInsets.all(6.sp),
@@ -231,7 +240,6 @@ class ProviderDetailsScreen extends StatelessWidget {
                                 horizontal: 16.w,
                                 vertical: 10.h,
                               ),
-
                               child: Text(
                                 "Profile information",
                                 style: TextFontStyle
@@ -255,38 +263,40 @@ class ProviderDetailsScreen extends StatelessWidget {
                                     title: data.title,
                                     data: index == 0
                                         ? svpProfileDetailsController
-                                                  .serviceNameEn
-                                                  ?.toString() ??
-                                              ""
+                                                .serviceNameEn
+                                                ?.toString() ??
+                                            ""
                                         : index == 1
-                                        ? svpProfileDetailsController
-                                                  .yearsOfExperience
-                                                  ?.toString() ??
-                                              ""
-                                        : index == 2
-                                        ? svpProfileDetailsController
-                                                  .providerName
-                                                  ?.toString() ??
-                                              ""
-                                        : index == 3
-                                        ? svpProfileDetailsController
-                                                  .phoneNumber
-                                                  ?.toString() ??
-                                              ""
-                                        : index == 4
-                                        ? svpProfileDetailsController.locationEn
-                                                  ?.toString() ??
-                                              ""
-                                        : index == 5
-                                        ? svpProfileDetailsController
-                                                  .dateOfBirthShort
-                                                  ?.toString() ??
-                                              ""
-                                        : index == 6
-                                        ? svpProfileDetailsController.gender
-                                                  ?.toString() ??
-                                              ""
-                                        : "",
+                                            ? svpProfileDetailsController
+                                                    .yearsOfExperience
+                                                    ?.toString() ??
+                                                ""
+                                            : index == 2
+                                                ? svpProfileDetailsController
+                                                        .providerName
+                                                        ?.toString() ??
+                                                    ""
+                                                : index == 3
+                                                    ? svpProfileDetailsController
+                                                            .phoneNumber
+                                                            ?.toString() ??
+                                                        ""
+                                                    : index == 4
+                                                        ? svpProfileDetailsController
+                                                                .locationEn
+                                                                ?.toString() ??
+                                                            ""
+                                                        : index == 5
+                                                            ? svpProfileDetailsController
+                                                                    .dateOfBirthShort
+                                                                    ?.toString() ??
+                                                                ""
+                                                            : index == 6
+                                                                ? svpProfileDetailsController
+                                                                        .gender
+                                                                        ?.toString() ??
+                                                                    ""
+                                                                : "",
                                   );
                                 },
                               ),
