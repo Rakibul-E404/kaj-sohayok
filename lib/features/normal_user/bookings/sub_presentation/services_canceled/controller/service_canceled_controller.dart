@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../../../../../service/network_caller.dart';
@@ -19,15 +18,15 @@ class CanceledBookingsController extends GetxController {
     try {
       isLoading.value = true;
       errorMessage.value = '';
-      log('Starting to fetch canceled bookings...');
+      log('🚀 [CANCELED CONTROLLER] Starting to fetch canceled bookings...');
 
       final token = await SecureStorageService().read(AppConstants.accessToken);
-      log('Token retrieved: ${token != null ? 'Yes' : 'No'}');
+      log('🔑 [CANCELED CONTROLLER] Token retrieved: ${token != null ? 'Yes' : 'No'}');
 
       if (token == null) {
         errorMessage.value = 'Authentication token not found. Please login again.';
         isLoading.value = false;
-        log('No token found');
+        log('❌ [CANCELED CONTROLLER] No token found');
         return;
       }
 
@@ -36,22 +35,43 @@ class CanceledBookingsController extends GetxController {
         'Content-Type': 'application/json',
       };
 
-      log('Making API call to: ${AppUrl.cancelledBookings}');
+      log('🌐 [CANCELED CONTROLLER] Making API call to: ${AppUrl.cancelledBookings}');
 
       NetworkResponse response = await NetworkCaller().getRequest(
         AppUrl.cancelledBookings,
         headers: headers,
       );
 
-      log('API Response - Status Code: ${response.statusCode}');
-      log('API Response - Is Success: ${response.isSuccess}');
+      log('📥 [CANCELED CONTROLLER] API Response - Status Code: ${response.statusCode}');
+      log('📊 [CANCELED CONTROLLER] API Response - Is Success: ${response.isSuccess}');
 
       if (response.isSuccess && response.jsonResponse != null) {
-        log('API Response Data: ${response.jsonResponse}');
+        log('📋 [CANCELED CONTROLLER] Full API Response Data: ${response.jsonResponse}');
 
         if (response.jsonResponse!['success'] == true) {
           List<dynamic> results = response.jsonResponse!['data']['attributes']['results'];
-          log('Found ${results.length} canceled bookings');
+          log('✅ [CANCELED CONTROLLER] Found ${results.length} canceled bookings');
+
+          // Log the structure of first booking for debugging
+          if (results.isNotEmpty) {
+            final firstBooking = results.first;
+            log('🔍 [CANCELED CONTROLLER] First booking structure:');
+            log('   Booking ID: ${firstBooking['_ServiceBookingId']}');
+            log('   providerDetailsId exists: ${firstBooking['providerDetailsId'] != null}');
+            if (firstBooking['providerDetailsId'] != null) {
+              log('   providerDetailsId._ServiceProviderId: ${firstBooking['providerDetailsId']['_ServiceProviderId']}');
+            }
+            log('   serviceProviderDetailsId exists: ${firstBooking['serviceProviderDetailsId'] != null}');
+            if (firstBooking['serviceProviderDetailsId'] != null) {
+              log('   serviceProviderDetailsId: ${firstBooking['serviceProviderDetailsId']}');
+            }
+            log('   providerId exists: ${firstBooking['providerId'] != null}');
+            if (firstBooking['providerId'] != null) {
+              log('   providerId._userId: ${firstBooking['providerId']['_userId']}');
+              log('   providerId.name: ${firstBooking['providerId']['name']}');
+            }
+          }
+
           canceledBookings.assignAll(results);
 
           // Process image URLs for all bookings
@@ -59,41 +79,59 @@ class CanceledBookingsController extends GetxController {
         } else {
           String apiMessage = response.jsonResponse!['message'] ?? 'Failed to load bookings';
           errorMessage.value = apiMessage;
-          log('API returned error: $apiMessage');
+          log('❌ [CANCELED CONTROLLER] API returned error: $apiMessage');
         }
       } else {
         String error = response.errorMessage ?? 'Something went wrong';
         errorMessage.value = error;
-        log('Network error: $error');
+        log('❌ [CANCELED CONTROLLER] Network error: $error');
       }
     } catch (e) {
       errorMessage.value = 'Connection error: Please check your internet connection';
-      log('Exception in getCanceledBookings: $e');
+      log('❌ [CANCELED CONTROLLER] Exception in getCanceledBookings: $e');
     } finally {
       isLoading.value = false;
-      log('Loading completed');
+      log('🏁 [CANCELED CONTROLLER] Loading completed');
     }
   }
 
   Future<void> _processBookingImages(List<dynamic> bookings) async {
+    log('🖼️ [CANCELED CONTROLLER] Processing images for ${bookings.length} bookings');
+
     for (final booking in bookings) {
       final bookingId = booking['_ServiceBookingId'] ?? '';
       final profileImage = booking['providerId']?['profileImage'];
 
       if (profileImage != null && profileImage['imageUrl'] != null) {
-        String imageUrl = _constructImageUrl(profileImage['imageUrl']);
-        bookingImageUrls[bookingId] = imageUrl;
-        log('Image URL for booking $bookingId: $imageUrl');
+        String imageUrl = profileImage['imageUrl'];
+        log("🖼️ [CANCELED CONTROLLER] Booking $bookingId image: $imageUrl");
 
-        // Verify if image is accessible
-        await _verifyImageAccessibility(bookingId, imageUrl);
+        // Check if it's an AWS S3 URL
+        if (_isAwsS3Url(imageUrl)) {
+          log('✅ [CANCELED CONTROLLER] AWS S3 URL detected for booking $bookingId');
+          bookingImageUrls[bookingId] = imageUrl;
+          imageLoadStatus[bookingId] = true;
+        } else {
+          // For non-AWS URLs, construct full URL
+          String constructedUrl = _constructImageUrl(imageUrl);
+          bookingImageUrls[bookingId] = constructedUrl;
+          log('🖼️ [CANCELED CONTROLLER] Non-AWS image URL for booking $bookingId: $constructedUrl');
+
+          // Verify if image is accessible
+          await _verifyImageAccessibility(bookingId, constructedUrl);
+        }
       } else {
         // Store empty string to indicate no image
         bookingImageUrls[bookingId] = '';
         imageLoadStatus[bookingId] = false;
-        log('No image found for booking $bookingId');
+        log('⚠️ [CANCELED CONTROLLER] No image found for booking $bookingId');
       }
     }
+  }
+
+  // Check if the URL is from AWS S3 (contains 'amazonaws')
+  bool _isAwsS3Url(String imageUrl) {
+    return imageUrl.toLowerCase().contains('amazonaws');
   }
 
   String _constructImageUrl(String imageUrl) {
@@ -112,34 +150,34 @@ class CanceledBookingsController extends GetxController {
 
     // Construct full URL using AppUrl.imageBaseUrl
     String fullUrl = '${AppUrl.imageBaseUrl}/$cleanImageUrl';
-    log('Constructed image URL: $fullUrl');
+    log('🔗 [CANCELED CONTROLLER] Constructed image URL: $fullUrl');
 
     return fullUrl;
   }
 
   Future<void> _verifyImageAccessibility(String bookingId, String imageUrl) async {
     try {
-      log('Verifying image accessibility for: $imageUrl');
+      log('🔍 [CANCELED CONTROLLER] Verifying image accessibility for: $imageUrl');
+
+      final token = await SecureStorageService().read(AppConstants.accessToken);
 
       final response = await http.get(
         Uri.parse(imageUrl),
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        },
+        headers: token != null ? {'Authorization': 'Bearer $token'} : {},
       );
 
-      log('Image verification response status: ${response.statusCode}');
+      log('📊 [CANCELED CONTROLLER] Image verification response status: ${response.statusCode}');
 
       if (response.statusCode == 200) {
         imageLoadStatus[bookingId] = true;
-        log('✅ Image accessible for booking $bookingId');
+        log('✅ [CANCELED CONTROLLER] Image accessible for booking $bookingId');
       } else {
         imageLoadStatus[bookingId] = false;
-        log('❌ Image not accessible for booking $bookingId. Status: ${response.statusCode}');
+        log('❌ [CANCELED CONTROLLER] Image not accessible for booking $bookingId. Status: ${response.statusCode}');
       }
     } catch (e) {
       imageLoadStatus[bookingId] = false;
-      log('❌ Error verifying image for booking $bookingId: $e');
+      log('❌ [CANCELED CONTROLLER] Error verifying image for booking $bookingId: $e');
     }
   }
 
@@ -159,8 +197,9 @@ class CanceledBookingsController extends GetxController {
 
   @override
   void onInit() {
-    log('CanceledBookingsController initialized');
+    log('🎯 [CANCELED CONTROLLER] Controller initialized');
     getCanceledBookings();
     super.onInit();
   }
 }
+

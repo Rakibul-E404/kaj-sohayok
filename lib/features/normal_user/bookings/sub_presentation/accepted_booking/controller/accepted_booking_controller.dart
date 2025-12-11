@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../../../../../service/network_caller.dart';
@@ -19,15 +18,15 @@ class AcceptedBookingsController extends GetxController {
     try {
       isLoading.value = true;
       errorMessage.value = '';
-      log('Starting to fetch accepted bookings...');
+      log('🚀 [ACCEPTED CONTROLLER] Starting to fetch accepted bookings...');
 
       final token = await SecureStorageService().read(AppConstants.accessToken);
-      log('Token retrieved: ${token != null ? 'Yes' : 'No'}');
+      log('🔑 [ACCEPTED CONTROLLER] Token retrieved: ${token != null ? 'Yes' : 'No'}');
 
       if (token == null) {
         errorMessage.value = 'Authentication token not found. Please login again.';
         isLoading.value = false;
-        log('No token found');
+        log('❌ [ACCEPTED CONTROLLER] No token found');
         return;
       }
 
@@ -36,22 +35,39 @@ class AcceptedBookingsController extends GetxController {
         'Content-Type': 'application/json',
       };
 
-      log('Making API call to: ${AppUrl.acceptedBookings}');
+      log('🌐 [ACCEPTED CONTROLLER] Making API call to: ${AppUrl.acceptedBookings}');
 
       NetworkResponse response = await NetworkCaller().getRequest(
         AppUrl.acceptedBookings,
         headers: headers,
       );
 
-      log('API Response - Status Code: ${response.statusCode}');
-      log('API Response - Is Success: ${response.isSuccess}');
+      log('📥 [ACCEPTED CONTROLLER] API Response - Status Code: ${response.statusCode}');
+      log('📊 [ACCEPTED CONTROLLER] API Response - Is Success: ${response.isSuccess}');
 
       if (response.isSuccess && response.jsonResponse != null) {
-        log('API Response Data: ${response.jsonResponse}');
+        log('📋 [ACCEPTED CONTROLLER] Full API Response Data: ${response.jsonResponse}');
 
         if (response.jsonResponse!['success'] == true) {
           List<dynamic> results = response.jsonResponse!['data']['attributes']['results'];
-          log('Found ${results.length} accepted bookings');
+          log('✅ [ACCEPTED CONTROLLER] Found ${results.length} accepted bookings');
+
+          // Log the structure of first booking for debugging
+          if (results.isNotEmpty) {
+            final firstBooking = results.first;
+            log('🔍 [ACCEPTED CONTROLLER] First booking structure:');
+            log('   Booking ID: ${firstBooking['_ServiceBookingId']}');
+            log('   providerDetailsId exists: ${firstBooking['providerDetailsId'] != null}');
+            if (firstBooking['providerDetailsId'] != null) {
+              log('   providerDetailsId._ServiceProviderId: ${firstBooking['providerDetailsId']['_ServiceProviderId']}');
+            }
+            log('   providerId exists: ${firstBooking['providerId'] != null}');
+            if (firstBooking['providerId'] != null) {
+              log('   providerId._userId: ${firstBooking['providerId']['_userId']}');
+              log('   providerId.name: ${firstBooking['providerId']['name']}');
+            }
+          }
+
           acceptedBookings.assignAll(results);
 
           // Process image URLs for all bookings
@@ -59,41 +75,59 @@ class AcceptedBookingsController extends GetxController {
         } else {
           String apiMessage = response.jsonResponse!['message'] ?? 'Failed to load bookings';
           errorMessage.value = apiMessage;
-          log('API returned error: $apiMessage');
+          log('❌ [ACCEPTED CONTROLLER] API returned error: $apiMessage');
         }
       } else {
         String error = response.errorMessage ?? 'Something went wrong';
         errorMessage.value = error;
-        log('Network error: $error');
+        log('❌ [ACCEPTED CONTROLLER] Network error: $error');
       }
     } catch (e) {
       errorMessage.value = 'Connection error: Please check your internet connection';
-      log('Exception in getAcceptedBookings: $e');
+      log('❌ [ACCEPTED CONTROLLER] Exception in getAcceptedBookings: $e');
     } finally {
       isLoading.value = false;
-      log('Loading completed');
+      log('🏁 [ACCEPTED CONTROLLER] Loading completed');
     }
   }
 
   Future<void> _processBookingImages(List<dynamic> bookings) async {
+    log('🖼️ [ACCEPTED CONTROLLER] Processing images for ${bookings.length} bookings');
+
     for (final booking in bookings) {
       final bookingId = booking['_ServiceBookingId'] ?? '';
       final profileImage = booking['providerId']?['profileImage'];
 
       if (profileImage != null && profileImage['imageUrl'] != null) {
-        String imageUrl = _constructImageUrl(profileImage['imageUrl']);
-        bookingImageUrls[bookingId] = imageUrl;
-        log('Image URL for booking $bookingId: $imageUrl');
+        String imageUrl = profileImage['imageUrl'];
+        log("🖼️ [ACCEPTED CONTROLLER] Booking $bookingId image: $imageUrl");
 
-        // Verify if image is accessible
-        await _verifyImageAccessibility(bookingId, imageUrl);
+        // Check if it's an AWS S3 URL
+        if (_isAwsS3Url(imageUrl)) {
+          log('✅ [ACCEPTED CONTROLLER] AWS S3 URL detected for booking $bookingId');
+          bookingImageUrls[bookingId] = imageUrl;
+          imageLoadStatus[bookingId] = true;
+        } else {
+          // For non-AWS URLs, construct full URL
+          String constructedUrl = _constructImageUrl(imageUrl);
+          bookingImageUrls[bookingId] = constructedUrl;
+          log('🖼️ [ACCEPTED CONTROLLER] Non-AWS image URL for booking $bookingId: $constructedUrl');
+
+          // Verify if image is accessible
+          await _verifyImageAccessibility(bookingId, constructedUrl);
+        }
       } else {
         // Store empty string to indicate no image
         bookingImageUrls[bookingId] = '';
         imageLoadStatus[bookingId] = false;
-        log('No image found for booking $bookingId');
+        log('⚠️ [ACCEPTED CONTROLLER] No image found for booking $bookingId');
       }
     }
+  }
+
+  // Check if the URL is from AWS S3 (contains 'amazonaws')
+  bool _isAwsS3Url(String imageUrl) {
+    return imageUrl.toLowerCase().contains('amazonaws');
   }
 
   String _constructImageUrl(String imageUrl) {
@@ -102,31 +136,29 @@ class AcceptedBookingsController extends GetxController {
     } else {
       // Remove any leading slash to avoid double slashes in URL
       String cleanImageUrl = imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
-
-      // Construct the URL using AppUrl.imageBaseUrl as requested
       return '${AppUrl.imageBaseUrl}/$cleanImageUrl';
     }
   }
 
   Future<void> _verifyImageAccessibility(String bookingId, String imageUrl) async {
     try {
+      final token = await SecureStorageService().read(AppConstants.accessToken);
+
       final response = await http.get(
         Uri.parse(imageUrl),
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        },
+        headers: token != null ? {'Authorization': 'Bearer $token'} : {},
       );
 
       if (response.statusCode == 200) {
         imageLoadStatus[bookingId] = true;
-        log('Image accessible for booking $bookingId');
+        log('✅ [ACCEPTED CONTROLLER] Image accessible for booking $bookingId');
       } else {
         imageLoadStatus[bookingId] = false;
-        log('Image not accessible for booking $bookingId. Status: ${response.statusCode}');
+        log('❌ [ACCEPTED CONTROLLER] Image not accessible for booking $bookingId. Status: ${response.statusCode}');
       }
     } catch (e) {
       imageLoadStatus[bookingId] = false;
-      log('Error verifying image for booking $bookingId: $e');
+      log('❌ [ACCEPTED CONTROLLER] Error verifying image for booking $bookingId: $e');
     }
   }
 
@@ -146,16 +178,11 @@ class AcceptedBookingsController extends GetxController {
 
   @override
   void onInit() {
-    log('AcceptedBookingsController initialized');
+    log('🎯 [ACCEPTED CONTROLLER] Controller initialized');
     getAcceptedBookings();
     super.onInit();
   }
 }
-
-
-
-
-
 
 
 

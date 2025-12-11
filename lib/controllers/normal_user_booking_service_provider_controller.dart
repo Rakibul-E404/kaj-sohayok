@@ -16,25 +16,25 @@ class NormalUserBookingServiceProviderController extends GetxController {
   RxBool isLoading = false.obs;
 
   // Service Provider ID
-  var serviceProviderId = ''.obs;
+  var providerID = ''.obs;
 
   // Store availability response
   Rx<ProviderSchedulCheckBeforeSlotBookingModel?> availabilityResponse =
       Rx<ProviderSchedulCheckBeforeSlotBookingModel?>(null);
 
-  void setServiceProviderId({required String svpId}) {
-    log('setServiceProviderId called with: $svpId');
-    serviceProviderId.value = svpId;
-    log('serviceProviderId after setting: ${serviceProviderId.value}');
+  void setProviderId({required String pvID}) {
+    log('setProviderId called with: $pvID from Booking Date Screen');
+    providerID.value = pvID;
+    log('ProviderId after setting: ${providerID.value}');
   }
 
   // Main method to check availability using CalendarController
   Future<void> checkAvailabilityWithCalendarController() async {
     log(
-      'checkAvailabilityWithCalendarController - serviceProviderId: ${serviceProviderId.value}',
+      'checkAvailabilityWithCalendarController - serviceProviderId: ${providerID.value}',
     );
 
-    if (serviceProviderId.isEmpty) {
+    if (providerID.isEmpty) {
       log('Service provider id is empty');
       _showSnackbar(
         title: 'Missing Information',
@@ -65,22 +65,22 @@ class NormalUserBookingServiceProviderController extends GetxController {
         return;
       }
 
-      log(
-        'Checking availability with CalendarController date/time: $formattedDateTime',
-      );
-      log('Checking availability with providerId: ${serviceProviderId.value}');
+      // Get the authorization token
+      final String token =
+          await SecureStorageService().read(AppConstants.accessToken) ?? '';
+
+      log('📅 Checking availability with CalendarController date/time: $formattedDateTime');
+      log('👤 Checking availability with providerId: ${providerID.value}');
+      log('🔗 API URL being called: ${AppUrl.checkProbiderScheduleAvailability}');
+      log('🔑 Token availability: ${token.isNotEmpty ? "YES" : "NO"}');
 
       // Create request body
       final Map<String, dynamic> requestBody = {
         "bookingDateTime": formattedDateTime,
-        "providerId": serviceProviderId.value,
+        "providerId": providerID.value,
       };
 
-      log('Request body being sent: $requestBody');
-
-      // Get the authorization token
-      final String token =
-          await SecureStorageService().read(AppConstants.accessToken) ?? '';
+      log('📤 Request body being sent: $requestBody');
 
       NetworkResponse response = await NetworkCaller().postRequest(
         AppUrl.checkProbiderScheduleAvailability,
@@ -88,22 +88,25 @@ class NormalUserBookingServiceProviderController extends GetxController {
         body: requestBody,
       );
 
-      log(
-        'Availability Check Response: ${response.statusCode} - ${response.jsonResponse}',
-      );
+      log('📥 Availability Check Response Status: ${response.statusCode}');
+      log('📥 Availability Check Response Body: ${response.jsonResponse}');
 
       if (response.jsonResponse != null) {
-        log('Full API response: ${response.jsonResponse}');
+        log('✅ Full API response: ${response.jsonResponse}');
+        log('📊 Response has "success": ${response.jsonResponse!.containsKey('success')}');
+        log('📊 Response has "message": ${response.jsonResponse!.containsKey('message')}');
+        log('📊 Response has "code": ${response.jsonResponse!.containsKey('code')}');
+        log('📊 Response has "data": ${response.jsonResponse!.containsKey('data')}');
       } else {
-        log('API response is null');
+        log('❌ API response is null');
       }
 
       if (response.isSuccess && response.jsonResponse != null) {
         // Parse response using your model
         availabilityResponse.value =
             ProviderSchedulCheckBeforeSlotBookingModel.fromJson(
-              response.jsonResponse!,
-            );
+          response.jsonResponse!,
+        );
 
         // Get the message from API response
         final apiMessage = availabilityResponse.value?.message;
@@ -196,8 +199,8 @@ class NormalUserBookingServiceProviderController extends GetxController {
         backgroundColor == Colors.green
             ? Icons.check_circle
             : backgroundColor == Colors.orange
-            ? Icons.warning
-            : Icons.error,
+                ? Icons.warning
+                : Icons.error,
         color: Colors.white,
       ),
     );

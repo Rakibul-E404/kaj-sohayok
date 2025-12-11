@@ -24,7 +24,6 @@ class ChangePasswordScreen extends StatelessWidget {
     );
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
-
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: AppColors.scaffoldBackgroundColor,
@@ -33,145 +32,145 @@ class ChangePasswordScreen extends StatelessWidget {
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Obx(
+        () => Visibility(
+          visible: controller.loader.value == false,
+          replacement: WaitingWidget(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+                maxWidth: MediaQuery.sizeOf(context).width * 0.9),
+            child: CustomElevatedButton(
+              onTap: () {
+                controller.loader.value == true
+                    ? () {}
+                    : controller.handleChangePassword();
+              },
+              buttonTitle: "Change Password",
+            ),
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),
           child: Form(
             key: controller.formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Obx(() {
-                  return CustomFormField(
-                    controller: controller.oldPasswordController,
-                    labelText: "Old Password",
-                    hintText: "Enter Password",
-                    isPass: true,
-
-                    isObsecure: controller.isVisibleOldPassword.value,
-                    prefixIcon: SvgPicture.asset(
-                      fit: BoxFit.contain,
-                      Assets.icons.lockIcon,
-                    ),
-                    suffixIcon: InkWell(
-                      onTap: () {
-                        log(
-                          "Old Password visibility Icon taped! ${controller.isVisibleOldPassword.value}",
-                        );
-                        controller.setOldPasswrdVisibility();
-                      },
-                      child: Icon(
-                        controller.isVisibleOldPassword.value
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: AppColors.c6b6b6b,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Obx(() {
+                    return CustomFormField(
+                      controller: controller.oldPasswordController,
+                      labelText: "Old Password",
+                      hintText: "Enter Password",
+                      isPass: true,
+                      isObsecure: controller.isVisibleOldPassword.value,
+                      prefixIcon: SvgPicture.asset(
+                        fit: BoxFit.contain,
+                        Assets.icons.lockIcon,
                       ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please Enter Old Password !!';
-                      }
-                      return null;
-                    },
-                  );
-                }),
-                UIHelper.verticalSpace(16.h),
-
-                ///Section : New Passwrd Form Field
-                Obx(() {
-                  return CustomFormField(
-                    controller: controller.newPasswordController,
-                    labelText: "New Password",
-                    hintText: "Enter Password",
-                    isPass: true,
-
-                    isObsecure: controller.isVisibleNewPassword.value,
-                    prefixIcon: SvgPicture.asset(
-                      fit: BoxFit.contain,
-                      Assets.icons.lockIcon,
-                    ),
-                    suffixIcon: InkWell(
-                      onTap: () {
-                        log(
-                          "Old Password visibility Icon taped! ${controller.isVisibleNewPassword.value}",
-                        );
-                        controller.setNewPasswrdVisibility();
-                      },
-                      child: Icon(
-                        controller.isVisibleNewPassword.value
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: AppColors.c6b6b6b,
+                      suffixIcon: InkWell(
+                        onTap: () {
+                          log(
+                            "Old Password visibility Icon taped! ${controller.isVisibleOldPassword.value}",
+                          );
+                          controller.setOldPasswrdVisibility();
+                        },
+                        child: Icon(
+                          controller.isVisibleOldPassword.value
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: AppColors.c6b6b6b,
+                        ),
                       ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please Enter New Password !!';
-                      }
-
-                      return null;
-                    },
-                  );
-                }),
-                UIHelper.verticalSpace(16.h),
-
-                ///Section : Confirm Passwrd Form Field
-                Obx(() {
-                  return CustomFormField(
-                    controller: controller.confirmPasswordController,
-                    labelText: "Confirm Password",
-                    hintText: "Enter Password",
-                    isPass: true,
-
-                    isObsecure: controller.isVisibleConfirmPassword.value,
-                    prefixIcon: SvgPicture.asset(
-                      fit: BoxFit.contain,
-                      Assets.icons.lockIcon,
-                    ),
-                    suffixIcon: InkWell(
-                      onTap: () {
-                        log(
-                          "Old Password visibility Icon taped! ${controller.isVisibleConfirmPassword.value}",
-                        );
-                        controller.setConfirmPasswrdVisibility();
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please Enter Old Password !!';
+                        }
+                        return null;
                       },
-                      child: Icon(
-                        controller.isVisibleConfirmPassword.value
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: AppColors.c6b6b6b,
+                    );
+                  }),
+                  UIHelper.verticalSpace(16.h),
+              
+                  ///Section : New Passwrd Form Field
+                  Obx(() {
+                    return CustomFormField(
+                      controller: controller.newPasswordController,
+                      labelText: "New Password",
+                      hintText: "Enter Password",
+                      isPass: true,
+                      isObsecure: controller.isVisibleNewPassword.value,
+                      prefixIcon: SvgPicture.asset(
+                        fit: BoxFit.contain,
+                        Assets.icons.lockIcon,
                       ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please confirm password !!';
-                      } else if (value !=
-                          controller.newPasswordController.text) {
-                        return "Passwords do not match !!";
-                      }
-                      return null;
-                    },
-                  );
-                }),
-                UIHelper.verticalSpace(16.h),
-                Spacer(),
-
-                Obx(
-                  () => Visibility(
-                    visible: controller.loader.value == false,
-                    replacement: WaitingWidget(),
-                    child: CustomElevatedButton(
-                      onTap: () {
-                        controller.loader.value == true
-                            ? () {}
-                            : controller.handleChangePassword();
+                      suffixIcon: InkWell(
+                        onTap: () {
+                          log(
+                            "Old Password visibility Icon taped! ${controller.isVisibleNewPassword.value}",
+                          );
+                          controller.setNewPasswrdVisibility();
+                        },
+                        child: Icon(
+                          controller.isVisibleNewPassword.value
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: AppColors.c6b6b6b,
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please Enter New Password !!';
+                        }
+              
+                        return null;
                       },
-                      buttonTitle: "Change Password",
-                    ),
-                  ),
-                ),
-                UIHelper.verticalSpace(16.h),
-              ],
+                    );
+                  }),
+                  UIHelper.verticalSpace(16.h),
+              
+                  ///Section : Confirm Passwrd Form Field
+                  Obx(() {
+                    return CustomFormField(
+                      controller: controller.confirmPasswordController,
+                      labelText: "Confirm Password",
+                      hintText: "Enter Password",
+                      isPass: true,
+                      isObsecure: controller.isVisibleConfirmPassword.value,
+                      prefixIcon: SvgPicture.asset(
+                        fit: BoxFit.contain,
+                        Assets.icons.lockIcon,
+                      ),
+                      suffixIcon: InkWell(
+                        onTap: () {
+                          log(
+                            "Old Password visibility Icon taped! ${controller.isVisibleConfirmPassword.value}",
+                          );
+                          controller.setConfirmPasswrdVisibility();
+                        },
+                        child: Icon(
+                          controller.isVisibleConfirmPassword.value
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: AppColors.c6b6b6b,
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please confirm password !!';
+                        } else if (value !=
+                            controller.newPasswordController.text) {
+                          return "Passwords do not match !!";
+                        }
+                        return null;
+                      },
+                    );
+                  }),
+                  UIHelper.verticalSpace(16.h),
+                ],
+              ),
             ),
           ),
         ),

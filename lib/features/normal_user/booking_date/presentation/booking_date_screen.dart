@@ -22,10 +22,9 @@ class BookingDateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final arguments = Get.arguments as Map<String, dynamic>?;
-LoggerUtils.debug(arguments);
-    final userId = arguments?['userId'] ?? '';
+    final providerID = arguments?['providerID'] ?? '';
 
-    log('BookingDateScreen - Received providerId: $userId');
+    log('BookingDateScreen - Received providerId: $providerID');
 
     ///------------------------------------------- Initialize the controllers
     final CalendarController controller = Get.put(CalendarController());
@@ -34,11 +33,11 @@ LoggerUtils.debug(arguments);
 
     // Set provider ID in the booking controller
     log(
-      'BookingDateScreen - Before setting, bookingController.providerId: ${bookingController.serviceProviderId.value}',
+      'BookingDateScreen - Before setting, bookingController.providerId: ${bookingController.providerID.value}',
     );
-    bookingController.setServiceProviderId(svpId: userId);
+    bookingController.setProviderId(pvID: providerID);
     log(
-      'BookingDateScreen - After setting, bookingController.providerId: ${bookingController.serviceProviderId.value}',
+      'BookingDateScreen - After setting, bookingController.providerId: ${bookingController.providerID.value}',
     );
 
     return Scaffold(
@@ -58,11 +57,8 @@ LoggerUtils.debug(arguments);
             children: [
               CalenderContainerWidget(),
               UIHelper.verticalSpace(20.h),
-
               TimePickerWidget(),
-
               Spacer(),
-
               CustomElevatedButton(
                 onTap: () async {
                   // Validate if date/time is in future
@@ -77,8 +73,7 @@ LoggerUtils.debug(arguments);
                   }
 
                   // Double check provider ID before availability check
-                  final currentProviderId =
-                      bookingController.serviceProviderId.value;
+                  final currentProviderId = bookingController.providerID.value;
                   if (currentProviderId.isEmpty) {
                     Get.snackbar(
                       'Error',
@@ -113,7 +108,7 @@ LoggerUtils.debug(arguments);
                     Get.toNamed(
                       Routes.searchLocationScreen,
                       arguments: {
-                        'providerId':
+                        'providerID':
                             currentProviderId, // Use the validated providerId
                         'bookingDateTime':
                             apiFormattedDateTime, // "2025-12-03T10:55:00"

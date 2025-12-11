@@ -41,6 +41,7 @@ import 'package:kaz_bd/navigation_screen.dart';
 
 import '../bindings/route_bindings/normal_user_all_category_binding.dart';
 import '../bindings/route_bindings/normal_user_see_all_popular_provider_screen_binding.dart';
+import '../bindings/route_bindings/normal_user_booking_date_screen_binding.dart';
 import '../bindings/route_bindings/normal_user_service_details_screen_binding.dart';
 import '../bindings/route_bindings/normal_user_service_preview_screen_binding.dart';
 import '../bindings/route_bindings/service_of_specific_category_screen_binding.dart';
@@ -316,6 +317,7 @@ class Routes {
     GetPage(
       name: bookingDateScreen,
       page: () => BookingDateScreen(),
+      binding: NormalUserBookingDateScreenBinding(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),
@@ -522,7 +524,7 @@ Duration _duration() => Platform.isAndroid
 
 // /// All GetPages in your app
 // final List<GetPage> appRoutes = [
-  
+
 //   GetPage(
 //     name: AppRoutes.notificationsScreen,
 //     page: () => NotificationsScreen(),
@@ -553,5 +555,5 @@ Duration _duration() => Platform.isAndroid
 //     transitionDuration: _duration(),
 //   ),
 
-  
+
 // ];

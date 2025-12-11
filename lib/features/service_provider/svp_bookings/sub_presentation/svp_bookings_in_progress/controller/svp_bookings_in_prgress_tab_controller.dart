@@ -25,67 +25,6 @@ class SvpBookingsInProgressController extends GetxController {
     fetchInProgressBookings();
   }
 
-/**  Future<void> fetchInProgressBookings() async {
-    try {
-      isLoading.value = true;
-      hasError.value = false;
-      errorMessage.value = '';
-
-      final token = await SecureStorageService().read(AppConstants.accessToken);
-
-      if (token == null) {
-        hasError.value = true;
-        errorMessage.value = 'Authentication required. Please login again.';
-        isLoading.value = false;
-        return;
-      }
-
-      final NetworkResponse response = await _networkCaller.getRequest(
-        AppUrl.providerInProgressBookings,
-        headers: {'Authorization': 'Bearer $token'},
-      );
-
-      log('In Progress Bookings API Response: ${response.statusCode}');
-
-      if (response.isSuccess && response.jsonResponse != null) {
-        final responseData = response.jsonResponse!;
-
-        if (responseData['success'] == true &&
-            responseData['data'] != null &&
-            responseData['data']['attributes'] != null &&
-            responseData['data']['attributes']['results'] != null) {
-          jobRequests.assignAll(List<dynamic>.from(responseData['data']['attributes']['results']));
-          isLoading.value = false;
-        } else {
-          hasError.value = true;
-          errorMessage.value = 'Unexpected response format';
-          isLoading.value = false;
-        }
-      } else {
-        final errorMsg = response.jsonResponse?['message'] ??
-            response.errorMessage ??
-            'Failed to load in-progress bookings';
-
-        hasError.value = true;
-        errorMessage.value = errorMsg;
-        isLoading.value = false;
-
-        if (response.statusCode == 401 || response.statusCode == 403) {
-          await SecureStorageService().delete(AppConstants.accessToken);
-          await SecureStorageService().delete(AppConstants.refreshToken);
-        }
-      }
-    } catch (e, stackTrace) {
-      log('Error fetching in-progress bookings: $e', error: e, stackTrace: stackTrace);
-      hasError.value = true;
-      errorMessage.value = 'Network error. Please check your connection.';
-      isLoading.value = false;
-    }
-  }*/
-
-
-
-
 
   Future<void> fetchInProgressBookings() async {
     try {

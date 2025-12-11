@@ -52,12 +52,15 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-        <!-- 
+        <!--
         Imtiaz Added Code for location :
 
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyBFi80uuJIWkkLCpodFa8oXmD8XD_h8LMc"/>
         -->
+<!--       <meta-data android:name="com.google.android.geo.API_KEY"-->
+<!--               android:value="AIzaSyDjwPmy5gPopQRKK5zCEa-_0u18e8Lmgi"/>-->
+
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyBFi80uuJIWkkLCpodFa8oXmD8XD_h8LMc"/>
 

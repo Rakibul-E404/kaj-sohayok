@@ -1,68 +1,22 @@
-
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../../../../../constants/app_enums.dart';
+import 'package:kaz_bd/constants/app_enums.dart';
+import 'package:kaz_bd/features/normal_user/bookings/widgets/bookings_details_card_widget.dart';
 import '../../../../../../gen/assets.gen.dart';
 import '../../../../../../helpers/ui_helpers.dart';
-import '../../../../../../helpers/ui_helpers.dart';
 import '../../../../../../routes/routes.dart';
-import '../../../widgets/bookings_details_card_widget.dart';
 import '../controller/service_canceled_controller.dart';
 
 class ServicesCanceledTab extends StatelessWidget {
-  ServicesCanceledTab({super.key});
-
-  final CanceledBookingsController controller = Get.put(CanceledBookingsController());
-
-  String _formatDateTime(String dateTimeString) {
-    try {
-      DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-      return '${dateTime.day}/${dateTime.month}/${dateTime.year} at ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-    } catch (e) {
-      return dateTimeString;
-    }
-  }
-
-  String _getServiceName(Map<String, dynamic>? serviceName) {
-    if (serviceName == null) return 'Unknown Service';
-    return serviceName['en'] ?? serviceName['bn'] ?? 'Unknown Service';
-  }
-
-  String _getAddress(Map<String, dynamic>? address) {
-    if (address == null) return 'Unknown Location';
-    return address['en'] ?? address['bn'] ?? 'Unknown Location';
-  }
-
-  // Return network URL when available, otherwise asset path
-  String _getImageUrl(String bookingId) {
-    final imageUrl = controller.getImageUrl(bookingId);
-
-    log('Getting image for booking $bookingId: $imageUrl');
-    log('Has image: ${controller.hasImage(bookingId)}');
-
-    // If we have a valid network image URL and it's accessible, return it
-    if (imageUrl.isNotEmpty && controller.hasImage(bookingId)) {
-      log('✅ Using network image: $imageUrl');
-      return imageUrl;
-    }
-
-    // Return fallback asset path
-    log('❌ Using fallback asset image');
-    return Assets.images.userImage.path;
-  }
-
-  // Check if the image is a network image
-  bool _isNetworkImage(String bookingId) {
-    final imageUrl = controller.getImageUrl(bookingId);
-    final isNetwork = imageUrl.isNotEmpty && controller.hasImage(bookingId);
-    log('Is network image for $bookingId: $isNetwork');
-    return isNetwork;
-  }
+  const ServicesCanceledTab({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Initialize controller
+    final controller = Get.put(CanceledBookingsController());
+
     return Obx(() {
       if (controller.isLoading.value) {
         return Center(
@@ -141,39 +95,45 @@ class ServicesCanceledTab extends StatelessWidget {
           separatorBuilder: (context, index) => UIHelper.verticalSpace(16.h),
           itemBuilder: (context, index) {
             final booking = controller.canceledBookings[index];
-            final bookingId = booking['_ServiceBookingId'] ?? '';
+            final bookingId = booking['_ServiceBookingId']?.toString() ?? '';
 
-            final serviceName = booking['providerDetailsId']?['serviceName'];
-            final address = booking['address'];
-            final provider = booking['providerId'];
+            // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
+            final serviceProviderId = _getServiceProviderId(booking);
+            final providerId = _getProviderUserId(booking);
 
-            final imageUrl = _getImageUrl(bookingId);
-            final isNetworkImage = _isNetworkImage(bookingId);
+            // 🔍 DEBUG: Log what IDs are extracted
+            log('🧾 [CANCELED TAB] Card #$index →');
+            log('   Booking ID: "$bookingId"');
+            log('   Service Provider ID: "$serviceProviderId"');
+            log('   Provider User ID: "$providerId"');
 
-            log('Building canceled booking card for $bookingId');
-            log('Final image URL: $imageUrl');
-            log('Is network image: $isNetworkImage');
+            final serviceName = booking['providerDetailsId']?['serviceName'] as Map<String, dynamic>?;
+            final address = booking['address'] as Map<String, dynamic>?;
+            final provider = booking['providerId'] as Map<String, dynamic>?;
+
+            final imageUrl = _getImageUrl(bookingId, controller);
+            final isNetworkImage = _isNetworkImage(bookingId, controller);
 
             return BookingDetailsCardWidget(
+              // ➤ CARD TAP → Navigate with ALL required parameters
               onTap: () {
-                Get.toNamed(
-                  Routes.serviceDetailsScreen,
-                  arguments: {
-                    "status": BookingStatusEnum.canceled,
-                    "bookingId": bookingId,
-                    "providerId": booking['serviceProviderDetailsId'] ?? booking['providerId']?['_userId'],
-                  },
-                );
+                _navigateToDetailsScreen(bookingId, serviceProviderId, providerId);
               },
+
               isCanceledTab: true,
+
+              // Cancel button on canceled tab (typically for rebooking or feedback)
               isCanceledTabCancelOnTap: () {
-                log("Canceled tab cancel button tapped for booking: $bookingId");
+                log("❌ [CANCELED TAB] Cancel button tapped for booking: $bookingId");
+                // You could add functionality here for rebooking or feedback
               },
+
+              // Data
               title: _getServiceName(serviceName),
               initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
               location: _getAddress(address),
-              dateTime: _formatDateTime(booking['bookingDateTime'] ?? ''),
-              serviceProviderProfileImage: imageUrl,
+              dateTime: _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
+              serviceProviderProfileImage: imageUrl ?? Assets.images.userImage.path,
               serviceProviderName: provider?['name'] ?? 'Unknown Provider',
               serviceProviderDesignation: 'Service Provider',
               isNetworkImage: isNetworkImage,
@@ -183,6 +143,116 @@ class ServicesCanceledTab extends StatelessWidget {
       );
     });
   }
+
+  // ─── HELPER METHODS ───────────────────────────────────────────────
+
+  static String _formatDateTime(String dateTimeString) {
+    try {
+      final dateTime = DateTime.parse(dateTimeString).toLocal();
+      return '${dateTime.day}/${dateTime.month}/${dateTime.year} at ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+    } catch (e) {
+      log('⚠️ [CANCELED TAB] DateTime parse error: $e');
+      return dateTimeString;
+    }
+  }
+
+  static String _getServiceName(Map<String, dynamic>? serviceName) {
+    if (serviceName == null) return 'Unknown Service';
+    return serviceName['en'] ?? serviceName['bn'] ?? 'Unknown Service';
+  }
+
+  static String _getAddress(Map<String, dynamic>? address) {
+    if (address == null) return 'Unknown Location';
+    return address['en'] ?? address['bn'] ?? 'Unknown Location';
+  }
+
+  // 🔴 FIXED: Extract Service Provider ID (_ServiceProviderId)
+  static String _getServiceProviderId(Map<String, dynamic> booking) {
+    // 1. Primary: providerDetailsId._ServiceProviderId
+    final providerDetails = booking['providerDetailsId'] as Map<String, dynamic>?;
+    if (providerDetails?['_ServiceProviderId'] != null) {
+      final id = providerDetails!['_ServiceProviderId'].toString();
+      log('✅ [CANCELED TAB] Service Provider ID from providerDetailsId._ServiceProviderId: $id');
+      return id;
+    }
+
+    // 2. Secondary: serviceProviderDetailsId
+    if (booking['serviceProviderDetailsId'] != null) {
+      final id = booking['serviceProviderDetailsId'].toString();
+      log('✅ [CANCELED TAB] Service Provider ID from serviceProviderDetailsId: $id');
+      return id;
+    }
+
+    log('⚠️ [CANCELED TAB] No Service Provider ID found');
+    return '';
+  }
+
+  // 🔴 FIXED: Extract Provider User ID (_userId)
+  static String _getProviderUserId(Map<String, dynamic> booking) {
+    // From providerId._userId
+    final provider = booking['providerId'] as Map<String, dynamic>?;
+    if (provider?['_userId'] != null) {
+      final id = provider!['_userId'].toString();
+      log('✅ [CANCELED TAB] Provider User ID from providerId._userId: $id');
+      return id;
+    }
+
+    log('⚠️ [CANCELED TAB] No Provider User ID found in providerId');
+    return '';
+  }
+
+  static String? _getImageUrl(String bookingId, CanceledBookingsController controller) {
+    final url = controller.getImageUrl(bookingId);
+    if (url.isEmpty) return null;
+
+    if (url.toLowerCase().contains('amazonaws')) {
+      return url;
+    }
+
+    return controller.hasImage(bookingId) ? url : null;
+  }
+
+  static bool _isNetworkImage(String bookingId, CanceledBookingsController controller) {
+    final url = controller.getImageUrl(bookingId);
+    if (url.isEmpty) return false;
+
+    if (url.toLowerCase().contains('amazonaws')) return true;
+    return controller.hasImage(bookingId);
+  }
+
+  // 🔴 FIXED: Navigation with ALL required parameters for DetailsScreen
+  static void _navigateToDetailsScreen(String bookingId, String serviceProviderId, String providerId) {
+    log('🔍 [CANCELED TAB] Navigation to DetailsScreen → preparing arguments...');
+    log('   ➤ bookingId = "$bookingId"');
+    log('   ➤ serviceProviderId = "$serviceProviderId"');
+    log('   ➤ providerId = "$providerId"');
+
+    if (serviceProviderId.isEmpty) {
+      log('❌ [CANCELED TAB] Navigation ABORTED: serviceProviderId is empty!');
+      Get.snackbar(
+        'Navigation Error',
+        'Service provider details unavailable',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    if (providerId.isEmpty) {
+      log('⚠️ [CANCELED TAB] Warning: providerId is empty (may cause issues in details screen)');
+    }
+
+    log('✅ [CANCELED TAB] Navigating to service details screen with required IDs');
+
+    Get.toNamed(
+      Routes.serviceDetailsScreen,
+      arguments: {
+        "status": BookingStatusEnum.canceled,
+        "bookingId": bookingId,
+        "serviceProviderID": serviceProviderId,  // Required for service details
+        "providerID": providerId,                // Required for booking flow
+      },
+    );
+  }
 }
-
-

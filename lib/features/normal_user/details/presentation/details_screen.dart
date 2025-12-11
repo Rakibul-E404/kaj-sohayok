@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -10,7 +9,6 @@ import 'package:kaz_bd/features/normal_user/details/sub_presentation/about_tab.d
 import 'package:kaz_bd/features/normal_user/details/sub_presentation/gallery_tab.dart';
 import 'package:kaz_bd/features/normal_user/details/sub_presentation/reviews_tab.dart';
 import 'package:kaz_bd/custom_widgets/tab_showing_widget.dart';
-import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import '../../../../constants/text_font_style.dart';
@@ -37,7 +35,8 @@ class _DetailsScreenState extends State<DetailsScreen>
   late BookingStatusEnum? status;
   late bool hideBookServiceNowButton;
   late bool isRoutedFromBookingTab;
-  String providerId = '';
+  String serviceProviderID = '';
+  String providerID = '';
 
   @override
   void initState() {
@@ -45,13 +44,15 @@ class _DetailsScreenState extends State<DetailsScreen>
 
     // Initialize controllers
     detailsController = Get.find<DetailsScreenController>();
-    svpProfileInfoController = Get.find<GetNrmUserServiceProviderProfileInfoController>();
+    svpProfileInfoController =
+        Get.find<GetNrmUserServiceProviderProfileInfoController>();
 
     tabController = TabController(length: 3, vsync: this);
 
     // Get arguments
     final arguments = Get.arguments as Map<String, dynamic>?;
-    providerId = arguments?['providerId']?.toString() ?? '';
+    serviceProviderID = arguments?['serviceProviderID']?.toString() ?? '';
+    providerID = arguments?['providerID']?.toString() ?? '';
     status = arguments?["status"] as BookingStatusEnum?;
 
     hideBookServiceNowButton = _getButtonVisibility(status);
@@ -61,18 +62,18 @@ class _DetailsScreenState extends State<DetailsScreen>
     log('🎯 DetailsScreen Initialization');
     log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     log('📦 Received arguments: $arguments');
-    log('👤 Provider ID: $providerId');
+    log('👤 Service Provider ID: $serviceProviderID');
     log('📊 Status: $status');
     log('🔘 Hide Button: $hideBookServiceNowButton');
     log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
     // Validate provider ID
-    if (providerId.isEmpty) {
-      log('❌ ERROR: Provider ID is empty!');
+    if (serviceProviderID.isEmpty) {
+      log('❌ ERROR: Service Provider ID is empty!');
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Get.snackbar(
           'Error',
-          'Provider ID is missing. Cannot load service details.',
+          'Service Provider ID is missing. Cannot load service details.',
           backgroundColor: Colors.red,
           colorText: Colors.white,
           snackPosition: SnackPosition.BOTTOM,
@@ -85,11 +86,13 @@ class _DetailsScreenState extends State<DetailsScreen>
     // Set provider ID and fetch data
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
-        log('🚀 Starting API calls with Provider ID: $providerId');
+        log('🚀 Starting API calls with Provider ID: $serviceProviderID');
 
         // Set provider ID for both controllers
-        detailsController?.setServiceProviderId(svpId: providerId);
-        svpProfileInfoController?.setServiceProviderId(svpId: providerId);
+        detailsController?.setServiceProviderId(svpId: serviceProviderID);
+        svpProfileInfoController?.setServiceProviderId(
+            svpId: serviceProviderID);
+        detailsController?.setProviderID(pvID: providerID);
 
         log('⏳ Fetching service details...');
         await detailsController?.showSpecificServiceDetails();
@@ -155,7 +158,8 @@ class _DetailsScreenState extends State<DetailsScreen>
                   Obx(() {
                     String? imageUrl;
                     if (detailsController?.galleryImages.isNotEmpty == true) {
-                      imageUrl = detailsController?.galleryImages.first.attachment;
+                      imageUrl =
+                          detailsController?.galleryImages.first.attachment;
                     }
 
                     if (imageUrl != null && imageUrl.isNotEmpty) {
@@ -208,7 +212,8 @@ class _DetailsScreenState extends State<DetailsScreen>
                         } else {
                           return Text(
                             detailsController?.serviceName ?? 'Service Name',
-                            style: TextFontStyle.headline18w700c000000StyleSatoshi,
+                            style:
+                            TextFontStyle.headline18w700c000000StyleSatoshi,
                           );
                         }
                       }),
@@ -232,8 +237,10 @@ class _DetailsScreenState extends State<DetailsScreen>
                             child: Row(
                               children: [
                                 Text(
-                                  detailsController?.serviceRating.toString() ?? "0",
-                                  style: TextFontStyle.headline12w400cFFFFFFStyleSatoshi,
+                                  detailsController?.serviceRating.toString() ??
+                                      "0",
+                                  style: TextFontStyle
+                                      .headline12w400cFFFFFFStyleSatoshi,
                                 ),
                                 UIHelper.horizontalSpace(4.w),
                                 Icon(
@@ -257,12 +264,15 @@ class _DetailsScreenState extends State<DetailsScreen>
                     } else {
                       return RichText(
                         text: TextSpan(
-                          style: TextFontStyle.headline12w500c6a6a6aStyleSatoshi,
+                          style:
+                          TextFontStyle.headline12w500c6a6a6aStyleSatoshi,
                           children: [
                             const TextSpan(text: "Start from "),
                             TextSpan(
-                              text: "${AppText.bdTkSign}${detailsController?.startPrice ?? 0}",
-                              style: TextFontStyle.headline18w700c778bebStyleSatoshi,
+                              text:
+                              "${AppText.bdTkSign}${detailsController?.startPrice ?? 0}",
+                              style: TextFontStyle
+                                  .headline18w700c778bebStyleSatoshi,
                             ),
                           ],
                         ),
@@ -349,11 +359,13 @@ class _DetailsScreenState extends State<DetailsScreen>
           color: Colors.transparent,
           child: CustomElevatedButton(
             onTap: () {
-              if (providerId.isNotEmpty) {
+              if (detailsController?.providerID != null) {
                 Get.toNamed(
                   Routes.bookingDateScreen,
-                  // arguments: {'providerId': providerId},
-                  arguments: {'providerId': providerId},
+                  arguments: {
+                    // 'providerId': detailsController?.serviceProviderId.value
+                    'providerID': detailsController?.providerID.value,
+                  },
                 );
               }
             },
@@ -364,5 +376,3 @@ class _DetailsScreenState extends State<DetailsScreen>
     );
   }
 }
-
-

@@ -10,6 +10,8 @@ import '../features/normal_user/services_of_specific_category/model/get_services
 class ServiceOfSpecificCategoryScreenController extends GetxController {
   // var currentPage = 0.obs;
   RxBool isLoading = false.obs;
+  RxBool isLoadingMore = false.obs; // For loading more indicator
+  RxBool hasMoreData = true.obs; // Track if there's more data to load
   RxList<Result> specificCategoryList =
       <Result>[].obs; // Changed to Result type
   var categoryId = ''.obs; // Add this to store categoryId
@@ -34,7 +36,7 @@ class ServiceOfSpecificCategoryScreenController extends GetxController {
     handleServiceFromSpecificCategory();
   }
 
-  Future<void> handleServiceFromSpecificCategory({String? searchQuery}) async {
+  Future<void> handleServiceFromSpecificCategory({String? searchQuery, bool isLoadMore = false}) async {
     // Check if categoryId is available
     if (categoryId.value.isEmpty) {
       Get.snackbar(
@@ -52,7 +54,12 @@ class ServiceOfSpecificCategoryScreenController extends GetxController {
     }
 
     try {
-      isLoading.value = true;
+      // Set the appropriate loading indicator
+      if (!isLoadMore) {
+        isLoading.value = true;
+      } else {
+        isLoadingMore.value = true;
+      }
 
       final NetworkResponse response = await NetworkCaller().getRequest(
         AppUrl.getSpecificServiceByCategory(
@@ -68,17 +75,32 @@ class ServiceOfSpecificCategoryScreenController extends GetxController {
             GetServicesByCategoriesModel.fromJson(response.jsonResponse!);
 
         if (responseModel.data?.attributes?.results != null) {
-          specificCategoryList.assignAll(
-            responseModel.data!.attributes!.results!,
-          );
+          if (!isLoadMore) {
+            // Clear the list and assign new data for initial load
+            specificCategoryList.assignAll(
+              responseModel.data!.attributes!.results!,
+            );
+          } else {
+            // Append new data for load more
+            specificCategoryList.addAll(
+              responseModel.data!.attributes!.results!,
+            );
+          }
+
+          // Check if there are more pages available
+          int currentPage = int.tryParse(pageId.value) ?? 1;
+          int totalPages = responseModel.data?.attributes?.totalPages ?? 1;
+          hasMoreData.value = currentPage < totalPages;
         } else {
-          specificCategoryList.clear();
-          Get.snackbar(
-            'Info',
-            'No services found for this category',
-            backgroundColor: AppColors.cffb701,
-            colorText: AppColors.cFFFFFF,
-          );
+          if (!isLoadMore) {
+            specificCategoryList.clear();
+            Get.snackbar(
+              'Info',
+              'No services found for this category',
+              backgroundColor: AppColors.cffb701,
+              colorText: AppColors.cFFFFFF,
+            );
+          }
         }
       } else {
         Get.snackbar(
@@ -96,7 +118,11 @@ class ServiceOfSpecificCategoryScreenController extends GetxController {
         colorText: AppColors.cFFFFFF,
       );
     } finally {
-      isLoading.value = false;
+      if (!isLoadMore) {
+        isLoading.value = false;
+      } else {
+        isLoadingMore.value = false;
+      }
     }
   }
 
@@ -109,16 +135,11 @@ class ServiceOfSpecificCategoryScreenController extends GetxController {
 
   // Method to load more data for pagination
   Future<void> loadMoreServices() async {
-    pageId.value = (int.parse(pageId.value) + 1).toString();
-    await handleServiceFromSpecificCategory();
-  }
+    if (!hasMoreData.value || isLoadingMore.value) return; // Prevent multiple calls when loading or no more data
 
-  // @override
-  // void onInit() {
-  //   // Don't call handleServiceFromSpecificCategory here anymore
-  //   // It will be called from setCategoryData
-  //   super.onInit();
-  // }
+    pageId.value = (int.parse(pageId.value) + 1).toString();
+    await handleServiceFromSpecificCategory(isLoadMore: true);
+  }
 
   @override
   void onClose() {

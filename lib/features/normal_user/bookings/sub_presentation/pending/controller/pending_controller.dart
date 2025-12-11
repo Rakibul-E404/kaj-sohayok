@@ -22,15 +22,15 @@ class PendingBookingsController extends GetxController {
     try {
       isLoading.value = true;
       errorMessage.value = '';
-      log('Starting to fetch pending bookings...');
+      log('🚀 [PENDING CONTROLLER] Starting to fetch pending bookings...');
 
       final token = await SecureStorageService().read(AppConstants.accessToken);
-      log('Token retrieved: ${token != null ? 'Yes' : 'No'}');
+      log('🔑 [PENDING CONTROLLER] Token retrieved: ${token != null ? 'Yes' : 'No'}');
 
       if (token == null) {
         errorMessage.value = 'Authentication token not found. Please login again.';
         isLoading.value = false;
-        log('No token found');
+        log('❌ [PENDING CONTROLLER] No token found');
         return;
       }
 
@@ -39,22 +39,38 @@ class PendingBookingsController extends GetxController {
         'Content-Type': 'application/json',
       };
 
-      log('Making API call to: ${AppUrl.pendingBookings}');
+      log('🌐 [PENDING CONTROLLER] Making API call to: ${AppUrl.pendingBookings}');
 
       NetworkResponse response = await NetworkCaller().getRequest(
         AppUrl.pendingBookings,
         headers: headers,
       );
 
-      log('API Response - Status Code: ${response.statusCode}');
-      log('API Response - Is Success: ${response.isSuccess}');
+      log('📥 [PENDING CONTROLLER] API Response - Status Code: ${response.statusCode}');
+      log('📊 [PENDING CONTROLLER] API Response - Is Success: ${response.isSuccess}');
 
       if (response.isSuccess && response.jsonResponse != null) {
-        log('API Response Data: ${response.jsonResponse}');
+        log('📋 [PENDING CONTROLLER] Full API Response Data: ${response.jsonResponse}');
 
         if (response.jsonResponse!['success'] == true) {
           List<dynamic> results = response.jsonResponse!['data']['attributes']['results'];
-          log('Found ${results.length} pending bookings');
+          log('✅ [PENDING CONTROLLER] Found ${results.length} pending bookings');
+
+          // Log the structure of first booking for debugging
+          if (results.isNotEmpty) {
+            final firstBooking = results.first;
+            log('🔍 [PENDING CONTROLLER] First booking structure:');
+            log('   Booking ID: ${firstBooking['_ServiceBookingId']}');
+            log('   providerDetailsId exists: ${firstBooking['providerDetailsId'] != null}');
+            if (firstBooking['providerDetailsId'] != null) {
+              log('   providerDetailsId._ServiceProviderId: ${firstBooking['providerDetailsId']['_ServiceProviderId']}');
+            }
+            log('   providerId exists: ${firstBooking['providerId'] != null}');
+            if (firstBooking['providerId'] != null) {
+              log('   providerId._userId: ${firstBooking['providerId']['_userId']}');
+            }
+          }
+
           pendingBookings.assignAll(results);
 
           // Process image URLs for all bookings
@@ -62,19 +78,19 @@ class PendingBookingsController extends GetxController {
         } else {
           String apiMessage = response.jsonResponse!['message'] ?? 'Failed to load bookings';
           errorMessage.value = apiMessage;
-          log('API returned error: $apiMessage');
+          log('❌ [PENDING CONTROLLER] API returned error: $apiMessage');
         }
       } else {
         String error = response.errorMessage ?? 'Something went wrong';
         errorMessage.value = error;
-        log('Network error: $error');
+        log('❌ [PENDING CONTROLLER] Network error: $error');
       }
     } catch (e) {
       errorMessage.value = 'Connection error: Please check your internet connection';
-      log('Exception in getPendingBookings: $e');
+      log('❌ [PENDING CONTROLLER] Exception in getPendingBookings: $e');
     } finally {
       isLoading.value = false;
-      log('Loading completed');
+      log('🏁 [PENDING CONTROLLER] Loading completed');
     }
   }
 
@@ -83,14 +99,14 @@ class PendingBookingsController extends GetxController {
     try {
       isCancelling.value = true;
       cancelErrorMessage.value = '';
-      log('Starting to cancel booking: $bookingId');
+      log('🚀 [PENDING CONTROLLER] Starting to cancel booking: $bookingId');
 
       final token = await SecureStorageService().read(AppConstants.accessToken);
 
       if (token == null) {
         cancelErrorMessage.value = 'Authentication token not found. Please login again.';
         isCancelling.value = false;
-        log('No token found for cancellation');
+        log('❌ [PENDING CONTROLLER] No token found for cancellation');
         return false;
       }
 
@@ -101,26 +117,24 @@ class PendingBookingsController extends GetxController {
 
       // Construct the cancel URL
       String cancelUrl = '${AppUrl.baseUrl}v1/service-bookings/update-status/$bookingId/status/cancel';
-      log('Making PUT call to: $cancelUrl');
+      log('🌐 [PENDING CONTROLLER] Making PUT call to: $cancelUrl');
 
-      // FIXED: Use PUT request instead of POST
       NetworkResponse response = await NetworkCaller().putRequest(
         cancelUrl,
         headers: headers,
         body: {
           "status": "cancel"
-          // Add any other required fields if needed by your API
         },
       );
 
-      log('Cancel API Response - Status Code: ${response.statusCode}');
-      log('Cancel API Response - Is Success: ${response.isSuccess}');
+      log('📥 [PENDING CONTROLLER] Cancel API Response - Status Code: ${response.statusCode}');
+      log('📊 [PENDING CONTROLLER] Cancel API Response - Is Success: ${response.isSuccess}');
 
       if (response.isSuccess && response.jsonResponse != null) {
-        log('Cancel API Response Data: ${response.jsonResponse}');
+        log('📋 [PENDING CONTROLLER] Cancel API Response Data: ${response.jsonResponse}');
 
         if (response.isSuccess) {
-          log('✅ Booking $bookingId cancelled successfully');
+          log('✅ [PENDING CONTROLLER] Booking $bookingId cancelled successfully');
 
           // Remove the cancelled booking from the list
           pendingBookings.removeWhere((booking) => booking['_ServiceBookingId'] == bookingId);
@@ -135,12 +149,12 @@ class PendingBookingsController extends GetxController {
             snackPosition: SnackPosition.TOP,
           );
 
-          LoggerUtils.debug("uytfuyd6tuutr");
+          LoggerUtils.debug("Booking cancelled successfully");
           return true;
         } else {
           String apiMessage = response.jsonResponse!['message'] ?? 'Failed to cancel booking';
           cancelErrorMessage.value = apiMessage;
-          log('Cancel API returned error: $apiMessage');
+          log('❌ [PENDING CONTROLLER] Cancel API returned error: $apiMessage');
 
           Get.snackbar(
             'Error',
@@ -153,19 +167,18 @@ class PendingBookingsController extends GetxController {
           return false;
         }
       } else {
-        // Enhanced error handling
         String error = 'Failed to cancel booking. Status: ${response.statusCode}';
         if (response.jsonResponse != null) {
           if (response.jsonResponse!['message'] != null) {
             error = response.jsonResponse!['message'];
           }
-          log('Cancel API Error Response: ${response.jsonResponse}');
+          log('❌ [PENDING CONTROLLER] Cancel API Error Response: ${response.jsonResponse}');
         } else if (response.errorMessage != null) {
           error = response.errorMessage!;
         }
 
         cancelErrorMessage.value = error;
-        log('Cancel Network error: $error');
+        log('❌ [PENDING CONTROLLER] Cancel Network error: $error');
 
         Get.snackbar(
           'Error',
@@ -179,7 +192,7 @@ class PendingBookingsController extends GetxController {
       }
     } catch (e) {
       cancelErrorMessage.value = 'Connection error: Please check your internet connection';
-      log('Exception in cancelBooking: $e');
+      log('❌ [PENDING CONTROLLER] Exception in cancelBooking: $e');
 
       Get.snackbar(
         'Error',
@@ -192,30 +205,31 @@ class PendingBookingsController extends GetxController {
       return false;
     } finally {
       isCancelling.value = false;
-      log('Cancel booking process completed');
+      log('🏁 [PENDING CONTROLLER] Cancel booking process completed');
     }
   }
 
   Future<void> _processBookingImages(List<dynamic> bookings) async {
+    log('🖼️ [PENDING CONTROLLER] Processing images for ${bookings.length} bookings');
+
     for (final booking in bookings) {
       final bookingId = booking['_ServiceBookingId'] ?? '';
       final profileImage = booking['providerId']?['profileImage'];
 
       if (profileImage != null && profileImage['imageUrl'] != null) {
         String imageUrl = profileImage['imageUrl'];
-        log("image:::: $imageUrl");
+        log("🖼️ [PENDING CONTROLLER] Booking $bookingId image: $imageUrl");
 
         // Check if it's an AWS S3 URL (contains 'amazonaws')
         if (_isAwsS3Url(imageUrl)) {
-          log('AWS S3 URL detected for booking $bookingId: $imageUrl');
+          log('✅ [PENDING CONTROLLER] AWS S3 URL detected for booking $bookingId');
           bookingImageUrls[bookingId] = imageUrl;
-          imageLoadStatus[bookingId] = true; // Assume AWS URLs are accessible
-          log('✅ AWS S3 image set for booking $bookingId');
+          imageLoadStatus[bookingId] = true;
         } else {
           // For non-AWS URLs, construct full URL
           String constructedUrl = _constructImageUrl(imageUrl);
           bookingImageUrls[bookingId] = constructedUrl;
-          log('Non-AWS image URL for booking $bookingId: $constructedUrl');
+          log('🖼️ [PENDING CONTROLLER] Non-AWS image URL for booking $bookingId: $constructedUrl');
 
           // Verify if image is accessible
           await _verifyImageAccessibility(bookingId, constructedUrl);
@@ -224,7 +238,7 @@ class PendingBookingsController extends GetxController {
         // Store empty string to indicate no image
         bookingImageUrls[bookingId] = '';
         imageLoadStatus[bookingId] = false;
-        log('No image found for booking $bookingId');
+        log('⚠️ [PENDING CONTROLLER] No image found for booking $bookingId');
       }
     }
   }
@@ -240,8 +254,6 @@ class PendingBookingsController extends GetxController {
     } else {
       // Remove any leading slash to avoid double slashes in URL
       String cleanImageUrl = imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
-
-      // Construct the URL using AppUrl.imageBaseUrl
       return '${AppUrl.imageBaseUrl}/$cleanImageUrl';
     }
   }
@@ -257,14 +269,14 @@ class PendingBookingsController extends GetxController {
 
       if (response.statusCode == 200) {
         imageLoadStatus[bookingId] = true;
-        log('Image accessible for booking $bookingId');
+        log('✅ [PENDING CONTROLLER] Image accessible for booking $bookingId');
       } else {
         imageLoadStatus[bookingId] = false;
-        log('Image not accessible for booking $bookingId. Status: ${response.statusCode}');
+        log('❌ [PENDING CONTROLLER] Image not accessible for booking $bookingId. Status: ${response.statusCode}');
       }
     } catch (e) {
       imageLoadStatus[bookingId] = false;
-      log('Error verifying image for booking $bookingId: $e');
+      log('❌ [PENDING CONTROLLER] Error verifying image for booking $bookingId: $e');
     }
   }
 
@@ -284,10 +296,8 @@ class PendingBookingsController extends GetxController {
 
   @override
   void onInit() {
-    log('PendingBookingsController initialized');
+    log('🎯 [PENDING CONTROLLER] Controller initialized');
     getPendingBookings();
     super.onInit();
   }
 }
-
-
