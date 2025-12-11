@@ -94,6 +94,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/models/user_profile_model.dart';
+import 'package:kaz_bd/service/socket_service.dart';
 
 import '../routes/routes.dart';
 import '../service/network_caller.dart';
@@ -102,6 +103,7 @@ import '../service/secured_storage.dart';
 import '../utilities/app_constants.dart';
 import '../utilities/app_url.dart';
 import '../utilities/logger_util.dart';
+import 'message_screen_controller.dart';
 
 class UserProfileScreenController extends GetxController
     with GetTickerProviderStateMixin {
@@ -218,19 +220,56 @@ class UserProfileScreenController extends GetxController
 
   Future<void> handleLogOut() async {
     try {
-      loader.value = true;
+      LoggerUtils.debug('🚪 ===== LOGOUT STARTED =====');
 
+      // 1. Clear MessageScreenController data FIRST
+      if (Get.isRegistered<MessageScreenController>()) {
+        LoggerUtils.debug('Step 1: Clearing MessageScreenController...');
+        Get.find<MessageScreenController>().clearAllData();
+      }
+
+      // 2. Disconnect socket (also disables it)
+      LoggerUtils.debug('Step 2: Disconnecting socket...');
+      SocketServices().disconnect();
+
+      // 3. Clear storage
+      LoggerUtils.debug('Step 3: Clearing storage...');
       await SecureStorageService().clear();
-      Get.offAllNamed(Routes.onboardingScreen);
-    } catch (e) {
-      // loader.value = false;
 
+      // 4. Wait for cleanup
+      await Future.delayed(Duration(milliseconds: 300));
+
+      // 5. Verify cleanup
+      final token = await SecureStorageService().read(AppConstants.accessToken);
+      LoggerUtils.debug('Verification - Token: ${token ?? "NULL"}');
+      LoggerUtils.debug('Verification - Socket: ${SocketServices().socket}');
+
+      LoggerUtils.debug('✅ Logout complete');
+
+      // 6. Navigate
+      Get.offAllNamed(Routes.onboardingScreen);
+
+    } catch (e) {
       LoggerUtils.debug("Exception : ${e.toString()}");
-    } finally {
-      // clearTextFields();
-      // loader.value = false;
+      Get.offAllNamed(Routes.onboardingScreen);
     }
   }
+  // Future<void> handleLogOut() async {
+  //   try {
+  //     loader.value = true;
+  //
+  //     await SecureStorageService().clear();
+  //     SocketServices().reset();
+  //     Get.offAllNamed(Routes.onboardingScreen);
+  //   } catch (e) {
+  //     // loader.value = false;
+  //
+  //     LoggerUtils.debug("Exception : ${e.toString()}");
+  //   } finally {
+  //     // clearTextFields();
+  //     // loader.value = false;
+  //   }
+  // }
 
   /// ===================> USER profile fetch ===================>
   final Rxn<UserProfileModel> userProfileModel = Rxn<UserProfileModel>();

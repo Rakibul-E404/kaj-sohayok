@@ -185,6 +185,7 @@ class ProviderDetailsScreen extends StatelessWidget {
                                       ///Section : Message
                                       InkWell(
                                         onTap: () {
+
                                           Get.find<MessageScreenController>()
                                               .createMessage(
                                                   participantId:

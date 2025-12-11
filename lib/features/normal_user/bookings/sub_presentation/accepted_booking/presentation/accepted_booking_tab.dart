@@ -247,7 +247,7 @@ class AcceptedBookingTab extends StatelessWidget {
               ///Button OnTap : Message
               isAcceptedBookingTabMessageOnTap: () async {
                 log("💬 Message button tapped for booking: $bookingId");
-                Get.find<MessageScreenController>().createMessage(
+                 Get.find<MessageScreenController>().createMessage(
                     participantId: booking['providerId']['_userId'],
                     name: _getServiceName(serviceName),
                     imageUrl: imageUrl);

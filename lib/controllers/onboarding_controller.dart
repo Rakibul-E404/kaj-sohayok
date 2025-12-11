@@ -6,6 +6,8 @@ import 'package:kaz_bd/utilities/enum.dart';
 import 'package:kaz_bd/utilities/logger_util.dart';
 
 import '../routes/routes.dart';
+import '../service/socket_service.dart';
+import 'message_screen_controller.dart';
 
 class OnboardingController extends GetxController {
   // Reactive variable to track the selected tab index
@@ -20,16 +22,33 @@ class OnboardingController extends GetxController {
     final bool hasToken = await SecureStorageService().containsKey(
       AppConstants.accessToken,
     );
+
+    /// ======================= SOCKET =====================>
+    SocketServices().disconnect();
+
+    // Clear MessageScreenController if exists
+    if (Get.isRegistered<MessageScreenController>()) {
+      Get.find<MessageScreenController>().clearAllData();
+    }
+    await Future.delayed(Duration(milliseconds: 300));
+    SocketServices().enable();
+
+    LoggerUtils.debug('🔌 Initializing socket...');
+    await SocketServices().init();
+
+    /// ======================= SOCKET =====================>
     if (hasToken) {
       final String currentRole = GetStorageModel().read(
         AppConstants.currentRole,
       );
+
       final bool isProviderProfileComplete =
           GetStorageModel().read(AppConstants.providerProfileIsComplete) ??
-          false;
-      LoggerUtils.warning(GetStorageModel().exists(AppConstants.providerProfileIsComplete));
+              false;
+      LoggerUtils.warning(
+          GetStorageModel().exists(AppConstants.providerProfileIsComplete));
       LoggerUtils.warning(isProviderProfileComplete);
-       if (currentRole == UserRole.provider.name &&
+      if (currentRole == UserRole.provider.name &&
           isProviderProfileComplete == false) {
         Get.offAllNamed(Routes.moreInformationScreen);
         return;
