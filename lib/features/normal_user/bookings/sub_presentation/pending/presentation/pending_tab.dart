@@ -225,10 +225,6 @@ class PendingTab extends StatelessWidget {
 }
 */
 
-
-
-
-
 ///
 ///
 ///
@@ -237,13 +233,6 @@ class PendingTab extends StatelessWidget {
 ///
 ///
 ///
-
-
-
-
-
-
-
 
 // import 'dart:developer';
 // import 'package:flutter/material.dart';
@@ -531,11 +520,6 @@ class PendingTab extends StatelessWidget {
 //   }
 // }
 
-
-
-
-
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -641,7 +625,8 @@ class PendingTab extends StatelessWidget {
             // 🔍 DEBUG: Log what IDs are extracted for this card
             log('🧾 [PENDING TAB] Card #$index → bookingId: "$bookingId", providerId: "$providerId"');
 
-            final serviceName = booking['providerDetailsId']?['serviceName'] as Map<String, dynamic>?;
+            final serviceName = booking['providerDetailsId']?['serviceName']
+                as Map<String, dynamic>?;
             final address = booking['address'] as Map<String, dynamic>?;
             final provider = booking['providerId'] as Map<String, dynamic>?;
 
@@ -672,8 +657,10 @@ class PendingTab extends StatelessWidget {
               title: _getServiceName(serviceName),
               initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
               location: _getAddress(address),
-              dateTime: _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
-              serviceProviderProfileImage: imageUrl ?? Assets.images.userImage.path,
+              dateTime:
+                  _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
+              serviceProviderProfileImage:
+                  imageUrl ?? Assets.images.userImage.path,
               serviceProviderName: provider?['name'] ?? 'Unknown Provider',
               serviceProviderDesignation: 'Service Provider',
               isNetworkImage: isNetworkImage,
@@ -708,7 +695,8 @@ class PendingTab extends StatelessWidget {
 
   static String _getProviderId(Map<String, dynamic> booking) {
     // Primary: providerDetailsId._ServiceProviderId
-    final providerDetails = booking['providerDetailsId'] as Map<String, dynamic>?;
+    final providerDetails =
+        booking['providerDetailsId'] as Map<String, dynamic>?;
     if (providerDetails?['_ServiceProviderId'] != null) {
       final id = providerDetails!['_ServiceProviderId'].toString();
       return id;
@@ -724,7 +712,8 @@ class PendingTab extends StatelessWidget {
     return '';
   }
 
-  static String? _getImageUrl(String bookingId, PendingBookingsController controller) {
+  static String? _getImageUrl(
+      String bookingId, PendingBookingsController controller) {
     final url = controller.getImageUrl(bookingId);
     if (url.isEmpty) return null;
 
@@ -735,7 +724,8 @@ class PendingTab extends StatelessWidget {
     return controller.hasImage(bookingId) ? url : null;
   }
 
-  static bool _isNetworkImage(String bookingId, PendingBookingsController controller) {
+  static bool _isNetworkImage(
+      String bookingId, PendingBookingsController controller) {
     final url = controller.getImageUrl(bookingId);
     if (url.isEmpty) return false;
 
@@ -744,7 +734,8 @@ class PendingTab extends StatelessWidget {
   }
 
   // 🔍 ENHANCED DEBUG NAVIGATION
-  static void _navigateToDetails(BuildContext context, String bookingId, String providerId) {
+  static void _navigateToDetails(
+      BuildContext context, String bookingId, String providerId) {
     log('🔍 [PENDING TAB] Navigation triggered → preparing arguments...');
     log('   ➤ bookingId = "$bookingId"');
     log('   ➤ providerId = "$providerId"');
@@ -777,6 +768,3 @@ class PendingTab extends StatelessWidget {
     );
   }
 }
-
-
-
