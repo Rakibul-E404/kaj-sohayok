@@ -191,7 +191,10 @@ class HomeScreen extends StatelessWidget {
                           final String serviceTitle = _getProviderName(
                             provider,
                           );
-                          final String providerId = _getProviderId(provider);
+                          final String serviceProviderId =
+                              _getServiceProviderID(provider);
+
+                          final String providerID = _getProviderID(provider);
                           final double rating = _getProviderRating(provider);
                           final int startPrice = _getProviderStartPrice(
                             provider,
@@ -202,13 +205,17 @@ class HomeScreen extends StatelessWidget {
 
                           return ServiceWidget(
                             onTap: () {
-                              log("-------Provider tapped: $serviceTitle");
-                              log("-------------Provider ID : $providerId");
+                              log("😀-------Provider tapped: $serviceTitle");
+                              log("😀-------------Service Provider ID 👉🏻 $serviceProviderId");
+                              log("😀-------------Provider ID 👉🏻 $serviceProviderId");
                               Get.toNamed(
                                 Routes.serviceDetailsScreen,
 
-                                // arguments: {'providerId': providerId},
-                                arguments: {'providerId': providerId},
+                                // arguments: {'providerId': serviceProviderId},
+                                arguments: {
+                                  'serviceProviderID': serviceProviderId,
+                                  'providerID': providerID,
+                                },
                               );
                             },
                             imagePath:
@@ -241,9 +248,14 @@ class HomeScreen extends StatelessWidget {
     return 'Provider';
   }
 
-  String _getProviderId(Model.Provider provider) {
-    log("😊😊😊Provider ID  : ${provider.serviceProviderId}");
-    return provider.serviceProviderId ?? '';
+  String _getServiceProviderID(Model.Provider svpId) {
+    log("😊😊😊Service Provider ID  : ${svpId.serviceProviderId}");
+    return svpId.serviceProviderId ?? '';
+  }
+
+  String _getProviderID(Model.Provider svpId) {
+    log("😊😊😊Provider ID  : ${svpId.providerId}");
+    return svpId.providerId ?? '';
   }
 
   double _getProviderRating(Model.Provider provider) {

@@ -86,10 +86,40 @@ class AppUrl {
       '${baseUrl}v1/service-bookings/paginate/for-provider?status=cancelled';
   static String providerCompletedBookings =
       '${baseUrl}v1/service-bookings/paginate/for-provider?status=completed';
+  // static String paymentRequests = '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
+
+
+  // static String jobRequests = '${baseUrl}v1/service-bookings/paginate/for-provider?status=pending';
+  // static String providerAcceptedBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=accepted';
+  // static String providerInProgressBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=inProgress';
+  // static String providerPaymentRequests = '${baseUrl}v1/service-bookings/paginate/for-provider?status=paymentRequest';
+  // static String providerCancelledBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=cancelled';
+  // static String providerCompletedBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=completed';
+
+  static String providerJobRequestAcceptButton(String bookingId) {
+    return '${baseUrl}v1/service-bookings/update-status/$bookingId/status/accept';
+  }
+  static String providerJobRequestCancelButton(String bookingId) {
+    return '${baseUrl}v1/service-bookings/update-status/$bookingId/status/cancel-by-provider';
+  }
+  static String providerStartWorkButton(String bookingId) {
+    return '${baseUrl}v1/service-bookings/update-status/$bookingId/status/inProgress';
+  }
+  static String providerJobDetailsApi(String bookingId) {
+    return '${baseUrl}v1/service-bookings/user-details/$bookingId';
+  }
+  static String providerWorkSubmitForm(String bookingId) {
+    return '${baseUrl}v1/service-bookings/with-costs-summary/$bookingId';
+  }
+
+  static String addNewProofFile(String bookingId) {
+    return '${baseUrl}v1/service-bookings/update-work-proof/$bookingId';
+  }
+
 
   ///===> rakibul api add close
-  ///
-  ///
+
+
   ///
   ///
   ///-------------///Imtiaz Chowdhury Start///------------------

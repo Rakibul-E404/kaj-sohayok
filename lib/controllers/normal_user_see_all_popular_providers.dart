@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/service/network_caller.dart';
@@ -99,8 +101,23 @@ class NormalUserSeeAllPopularProvidersController extends GetxController {
   String getProviderId(int index) {
     if (index >= 0 && index < providers.length) {
       final provider = providers[index];
-      return provider.serviceProviderId ?? provider.providerId ?? '';
+
+      log("Got Provider ID From See All Providers Screen 👉🏻👉🏻 ${provider.providerId}");
+      return provider.providerId ?? '';
     }
+
+    log("☠️☠️ Couldn't Get Provider ID From See All Popular Providers Screen!");
+    return '';
+  }
+
+  // Getter for service provider ID at specific index
+  String getServiceProviderId(int index) {
+    if (index >= 0 && index < providers.length) {
+      final provider = providers[index];
+      log("Got Service Provider ID From See All Providers Screen 👉🏻👉🏻 ${provider.serviceProviderId}");
+      return provider.serviceProviderId ?? '';
+    }
+    log("☠️☠️ Couldn't Get Service Provider ID From See All Popular Providers Screen!");
     return '';
   }
 

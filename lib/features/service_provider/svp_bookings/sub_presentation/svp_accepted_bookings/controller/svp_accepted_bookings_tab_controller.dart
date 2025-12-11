@@ -1,5 +1,3 @@
-// lib/.../svp_accepted_bookings_controller.dart
-
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,6 +15,7 @@ class SvpAcceptedBookingsController extends GetxController {
   final isLoading = true.obs;
   final hasError = false.obs;
   final errorMessage = ''.obs;
+  final processingStartWork = <String, bool>{}.obs; // Track loading per booking
 
   final NetworkCaller _networkCaller = NetworkCaller();
 
@@ -31,6 +30,7 @@ class SvpAcceptedBookingsController extends GetxController {
       isLoading.value = true;
       hasError.value = false;
       errorMessage.value = '';
+      processingStartWork.clear();
 
       final token = await SecureStorageService().read(AppConstants.accessToken);
 
@@ -138,6 +138,98 @@ class SvpAcceptedBookingsController extends GetxController {
     );
   }
 
+  Future<void> startWork(String bookingId, int index) async {
+    try {
+      // Set loading state for this specific booking
+      processingStartWork[bookingId] = true;
+
+      final token = await SecureStorageService().read(AppConstants.accessToken);
+
+      if (token == null) {
+        Get.snackbar(
+          'Error',
+          'Authentication required. Please login again.',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        processingStartWork[bookingId] = false;
+        return;
+      }
+
+      // Make PUT request to start work
+      final NetworkResponse response = await _networkCaller.putRequest(
+        AppUrl.providerStartWorkButton(bookingId),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: {}, // Empty body as requested
+      );
+
+      log('Start Work API Response: ${response.statusCode}');
+
+      if (response.isSuccess && response.jsonResponse != null) {
+        final responseData = response.jsonResponse!;
+
+        if (responseData['code'] == 200) {
+          // Show success message
+          Get.snackbar(
+            'Success',
+            'Work started successfully!',
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+          );
+
+          // Update the status in the local list
+          if (index >= 0 && index < jobRequests.length) {
+            final updatedJobRequest = Map<String, dynamic>.from(jobRequests[index]);
+            updatedJobRequest['status'] = 'inProgress';
+            jobRequests[index] = updatedJobRequest;
+          }
+
+          // Optionally refresh the list
+          await fetchAcceptedBookings();
+        } else {
+          final errorMsg = responseData['message'] ?? 'Failed to start work';
+          Get.snackbar(
+            'Error',
+            errorMsg,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+        }
+      } else {
+        final errorMsg = response.jsonResponse?['message'] ??
+            response.errorMessage ??
+            'Failed to start work';
+
+        Get.snackbar(
+          'Error',
+          errorMsg,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+
+        // Handle authentication errors
+        if (response.statusCode == 401 || response.statusCode == 403) {
+          await SecureStorageService().delete(AppConstants.accessToken);
+          await SecureStorageService().delete(AppConstants.refreshToken);
+        }
+      }
+    } catch (e, stackTrace) {
+      log('Error starting work: $e', error: e, stackTrace: stackTrace);
+      Get.snackbar(
+        'Network Error',
+        'Failed to start work. Please check your connection.',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      // Clear loading state for this booking
+      processingStartWork[bookingId] = false;
+    }
+  }
+
   RecentJobRequestStatusWidget buildAcceptedBookingWidget(int index) {
     final jobRequest = jobRequests[index];
     final userData = jobRequest['userId'] as Map<String, dynamic>? ?? {};
@@ -146,18 +238,27 @@ class SvpAcceptedBookingsController extends GetxController {
     final bookingId = jobRequest['_ServiceBookingId'] as String? ?? '';
     final userName = userData['name'] as String? ?? 'Unknown User';
     final profileImage = userData['profileImage']?['imageUrl'] as String?;
+    final currentStatus = jobRequest['status'] as String? ?? '';
+
+    // Check if work is already started
+    final isWorkStarted = currentStatus == 'inProgress' || currentStatus == 'completed';
+
+    // Get loading state for this booking
+    final isLoadingStartWork = processingStartWork[bookingId] ?? false;
 
     return RecentJobRequestStatusWidget(
       onTap: () => navigateToJobDetails(jobRequest),
-      startWorkOnTap: () {
-        log("Start Work tapped for booking: $bookingId");
-        // Add your 'Start Work' logic here if needed
-      },
+      startWorkOnTap: isWorkStarted
+          ? null
+          : () => startWork(bookingId, index),
       isJobRequestAccpted: true,
       userImage: getImageUrl(profileImage),
       userName: userName,
       location: address,
       dateTime: formatDateTime(bookingDateTime),
+      // Add the new parameters here
+      isStartWorkLoading: isLoadingStartWork,
+      isWorkStarted: isWorkStarted,
     );
   }
 }

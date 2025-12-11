@@ -23,6 +23,10 @@ class GetNrmUserServiceProviderProfileInfoController extends GetxController {
   Rx<Attributes?> serviceProviderAttributes = Rx<Attributes?>(null);
 
   void setServiceProviderId({required String svpId}) {
+    log('🔧 setServiceProviderId called From Service Provider Profile Screen');
+    log('   Previous ID: ${serviceProviderId.value}');
+    log('   New ID: $svpId');
+    log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     serviceProviderId.value = svpId;
   }
 
@@ -60,8 +64,8 @@ class GetNrmUserServiceProviderProfileInfoController extends GetxController {
       if (response.isSuccess && response.jsonResponse != null) {
         final serviceProviderProfileInfoModel =
             GetServiceProviderProfileDetailsModel.fromJson(
-              response.jsonResponse!,
-            );
+          response.jsonResponse!,
+        );
 
         // Store the complete model
         // getServiceProviderProfileInfo.value = serviceProviderProfileInfoModel;
