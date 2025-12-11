@@ -79,7 +79,7 @@ class AppUrl {
   static String providerAcceptedBookings =
       '${baseUrl}v1/service-bookings/paginate/for-provider?status=accepted';
   static String providerInProgressBookings =
-      '${baseUrl}v1/service-bookings/paginate/for-provider?status=accepted';
+      '${baseUrl}v1/service-bookings/paginate/for-provider?status=inProgress';
   static String providerPaymentRequests =
       '${baseUrl}v1/service-bookings/paginate/for-provider?status=paymentRequest';
   static String providerCancelledBookings =
@@ -116,8 +116,15 @@ class AppUrl {
     return '${baseUrl}v1/service-bookings/update-work-proof/$bookingId';
   }
 
+  static String addNewCost(String bookingId) {
+    return '${baseUrl}v1/additional-cost';
+  }
+
 
   ///===> rakibul api add close
+  ///
+  ///
+  ///
 
 
   ///

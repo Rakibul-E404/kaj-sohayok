@@ -1,92 +1,23 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/constants/app_enums.dart';
-import 'package:kaz_bd/routes/routes.dart';
-import 'package:kaz_bd/utilities/logger_util.dart';
-
+import 'package:kaz_bd/features/normal_user/bookings/widgets/bookings_details_card_widget.dart';
 import '../../../../../../controllers/message_screen_controller.dart';
 import '../../../../../../gen/assets.gen.dart';
 import '../../../../../../helpers/ui_helpers.dart';
-import '../../../widgets/bookings_details_card_widget.dart';
+import '../../../../../../routes/routes.dart';
 import '../controller/accepted_booking_controller.dart';
 
 class AcceptedBookingTab extends StatelessWidget {
-  AcceptedBookingTab({super.key});
-
-  final AcceptedBookingsController controller =
-      Get.put(AcceptedBookingsController());
-
-  String _formatDateTime(String dateTimeString) {
-    try {
-      DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-      return '${dateTime.day}/${dateTime.month}/${dateTime.year} at ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-    } catch (e) {
-      return dateTimeString;
-    }
-  }
-
-  String _getServiceName(Map<String, dynamic>? serviceName) {
-    if (serviceName == null) return 'Unknown Service';
-    return serviceName['en'] ?? serviceName['bn'] ?? 'Unknown Service';
-  }
-
-  String _getAddress(Map<String, dynamic>? address) {
-    if (address == null) return 'Unknown Location';
-    return address['en'] ?? address['bn'] ?? 'Unknown Location';
-  }
-
-  String _getImageUrl(String bookingId) {
-    final imageUrl = controller.getImageUrl(bookingId);
-
-    if (imageUrl.isNotEmpty && controller.hasImage(bookingId)) {
-      return imageUrl;
-    }
-
-    return Assets.images.userImage.path;
-  }
-
-  bool _isNetworkImage(String bookingId) {
-    final imageUrl = controller.getImageUrl(bookingId);
-    return imageUrl.isNotEmpty && controller.hasImage(bookingId);
-  }
-
-  // FIXED: Extract provider ID from the correct location based on JSON structure
-  String _getProviderId(Map<String, dynamic> booking) {
-    String? providerId;
-
-    // According to the JSON structure, the provider ID is in:
-    // providerDetailsId._ServiceProviderId
-    if (booking['providerDetailsId'] != null) {
-      final providerDetailsMap =
-          booking['providerDetailsId'] as Map<String, dynamic>?;
-      if (providerDetailsMap != null &&
-          providerDetailsMap['_ServiceProviderId'] != null) {
-        providerId = providerDetailsMap['_ServiceProviderId'].toString();
-        log('✅ Provider ID extracted from providerDetailsId._ServiceProviderId: $providerId');
-        return providerId;
-      }
-    }
-
-    // Fallback: Try to get from providerId._userId if providerDetailsId is not available
-    if (booking['providerId'] != null && booking['providerId'] is Map) {
-      final providerMap = booking['providerId'] as Map<String, dynamic>;
-      if (providerMap['_userId'] != null) {
-        providerId = providerMap['_userId'].toString();
-        log('⚠️ Provider ID extracted from providerId._userId (fallback): $providerId');
-        return providerId;
-      }
-    }
-
-    log('❌ ERROR: No provider ID found in booking data');
-    log('Booking data: $booking');
-    return '';
-  }
+  const AcceptedBookingTab({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // ✅ Initialize controller
+    final controller = Get.put(AcceptedBookingsController());
+
     return Obx(() {
       if (controller.isLoading.value) {
         return Center(
@@ -165,63 +96,50 @@ class AcceptedBookingTab extends StatelessWidget {
           separatorBuilder: (context, index) => UIHelper.verticalSpace(16.h),
           itemBuilder: (context, index) {
             final booking = controller.acceptedBookings[index];
-            final bookingId = booking['_ServiceBookingId'] ?? '';
+            final bookingId = booking['_ServiceBookingId']?.toString() ?? '';
 
-            // Extract provider ID from providerDetailsId._ServiceProviderId
-            final providerId = _getProviderId(booking);
+            // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
+            final serviceProviderId = _getServiceProviderId(booking);
+            final providerId = _getProviderUserId(booking);
 
-            final serviceName = booking['providerDetailsId']?['serviceName'];
-            final address = booking['address'];
-            final provider = booking['providerId'];
+            // 🔍 DEBUG: Log what IDs are extracted
+            log('🧾 [ACCEPTED TAB] Card #$index →');
+            log('   Booking ID: "$bookingId"');
+            log('   Service Provider ID: "$serviceProviderId"');
+            log('   Provider User ID: "$providerId"');
 
-            final imageUrl = _getImageUrl(bookingId);
-            final isNetworkImage = _isNetworkImage(bookingId);
+            final serviceName = booking['providerDetailsId']?['serviceName'] as Map<String, dynamic>?;
+            final address = booking['address'] as Map<String, dynamic>?;
+            final provider = booking['providerId'] as Map<String, dynamic>?;
 
-            // Log for debugging
-            log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-            log('📋 Booking Index: $index');
-            log('🆔 Booking ID: $bookingId');
-            log('👤 Provider ID: $providerId');
-            log('📝 Service Name: ${_getServiceName(serviceName)}');
-            log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+            final imageUrl = _getImageUrl(bookingId, controller);
+            final isNetworkImage = _isNetworkImage(bookingId, controller);
 
             return BookingDetailsCardWidget(
+              // ➤ CARD TAP → Navigate with ALL required parameters
               onTap: () {
-                if (providerId.isEmpty) {
-                  log('❌ Cannot navigate: Provider ID is empty');
-                  Get.snackbar(
-                    'Error',
-                    'Provider information not available',
-                    snackPosition: SnackPosition.BOTTOM,
-                    backgroundColor: Colors.red,
-                    colorText: Colors.white,
-                  );
-                  return;
-                }
-
-                log('🚀 Card tapped - Navigating to details screen');
-                log('   Status: ${BookingStatusEnum.acceptedBooking}');
-                log('   Booking ID: $bookingId');
-                log('   Provider ID: $providerId');
-
-                Get.toNamed(
-                  Routes.serviceDetailsScreen,
-                  arguments: {
-                    "status": BookingStatusEnum.acceptedBooking,
-                    "bookingId": bookingId,
-                    "providerId": providerId,
-                  },
-                );
+                _navigateToDetailsScreen(bookingId, serviceProviderId, providerId);
               },
+
               isAcceptedBookingTab: true,
 
               ///Button OnTap : View
               isAcceptedBookingTabViewOnTap: () {
-                if (providerId.isEmpty) {
-                  log('❌ Cannot navigate: Provider ID is empty');
+                _navigateToDetailsScreen(bookingId, serviceProviderId, providerId);
+              },
+
+              ///Button OnTap : Message
+              isAcceptedBookingTabMessageOnTap: () async {
+                log("💬 [ACCEPTED TAB] Message button tapped for booking: $bookingId");
+
+                // Use providerId for message (user ID)
+                final messageProviderId = providerId.isNotEmpty ? providerId : _getProviderUserId(booking);
+
+                if (messageProviderId.isEmpty) {
+                  log('❌ [ACCEPTED TAB] Cannot send message: Provider ID is empty');
                   Get.snackbar(
                     'Error',
-                    'Provider information not available',
+                    'Cannot send message: Provider information not available',
                     snackPosition: SnackPosition.BOTTOM,
                     backgroundColor: Colors.red,
                     colorText: Colors.white,
@@ -229,34 +147,19 @@ class AcceptedBookingTab extends StatelessWidget {
                   return;
                 }
 
-                log('👁️ VIEW button tapped - Navigating to details screen');
-                log('   Status: ${BookingStatusEnum.acceptedBooking}');
-                log('   Booking ID: $bookingId');
-                log('   Provider ID: $providerId');
-
-                Get.toNamed(
-                  Routes.serviceDetailsScreen,
-                  arguments: {
-                    "status": BookingStatusEnum.acceptedBooking,
-                    "bookingId": bookingId,
-                    "providerId": providerId,
-                  },
+                Get.find<MessageScreenController>().createMessage(
+                  participantId: messageProviderId,
+                  name: provider?['name'] ?? 'Unknown Provider',
+                  imageUrl: imageUrl ?? Assets.images.userImage.path,
                 );
               },
 
-              ///Button OnTap : Message
-              isAcceptedBookingTabMessageOnTap: () async {
-                log("💬 Message button tapped for booking: $bookingId");
-                Get.find<MessageScreenController>().createMessage(
-                    participantId: booking['providerId']['_userId'],
-                    name: _getServiceName(serviceName),
-                    imageUrl: imageUrl);
-              },
+              // Data
               title: _getServiceName(serviceName),
               initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
               location: _getAddress(address),
-              dateTime: _formatDateTime(booking['bookingDateTime'] ?? ''),
-              serviceProviderProfileImage: imageUrl,
+              dateTime: _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
+              serviceProviderProfileImage: imageUrl ?? Assets.images.userImage.path,
               serviceProviderName: provider?['name'] ?? 'Unknown Provider',
               serviceProviderDesignation: 'Service Provider',
               isNetworkImage: isNetworkImage,
@@ -266,4 +169,111 @@ class AcceptedBookingTab extends StatelessWidget {
       );
     });
   }
+
+  // ─── HELPER METHODS ───────────────────────────────────────────────
+
+  static String _formatDateTime(String dateTimeString) {
+    try {
+      final dateTime = DateTime.parse(dateTimeString).toLocal();
+      return '${dateTime.day}/${dateTime.month}/${dateTime.year} at ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+    } catch (e) {
+      log('⚠️ [ACCEPTED TAB] DateTime parse error: $e');
+      return dateTimeString;
+    }
+  }
+
+  static String _getServiceName(Map<String, dynamic>? serviceName) {
+    if (serviceName == null) return 'Unknown Service';
+    return serviceName['en'] ?? serviceName['bn'] ?? 'Unknown Service';
+  }
+
+  static String _getAddress(Map<String, dynamic>? address) {
+    if (address == null) return 'Unknown Location';
+    return address['en'] ?? address['bn'] ?? 'Unknown Location';
+  }
+
+  // 🔴 FIXED: Extract Service Provider ID (_ServiceProviderId)
+  static String _getServiceProviderId(Map<String, dynamic> booking) {
+    // Primary: providerDetailsId._ServiceProviderId
+    final providerDetails = booking['providerDetailsId'] as Map<String, dynamic>?;
+    if (providerDetails?['_ServiceProviderId'] != null) {
+      final id = providerDetails!['_ServiceProviderId'].toString();
+      log('✅ [ACCEPTED TAB] Service Provider ID from providerDetailsId._ServiceProviderId: $id');
+      return id;
+    }
+
+    log('⚠️ [ACCEPTED TAB] No Service Provider ID found in providerDetailsId');
+    return '';
+  }
+
+  // 🔴 FIXED: Extract Provider User ID (_userId)
+  static String _getProviderUserId(Map<String, dynamic> booking) {
+    // From providerId._userId
+    final provider = booking['providerId'] as Map<String, dynamic>?;
+    if (provider?['_userId'] != null) {
+      final id = provider!['_userId'].toString();
+      log('✅ [ACCEPTED TAB] Provider User ID from providerId._userId: $id');
+      return id;
+    }
+
+    log('⚠️ [ACCEPTED TAB] No Provider User ID found in providerId');
+    return '';
+  }
+
+  static String? _getImageUrl(String bookingId, AcceptedBookingsController controller) {
+    final url = controller.getImageUrl(bookingId);
+    if (url.isEmpty) return null;
+
+    if (url.toLowerCase().contains('amazonaws')) {
+      return url;
+    }
+
+    return controller.hasImage(bookingId) ? url : null;
+  }
+
+  static bool _isNetworkImage(String bookingId, AcceptedBookingsController controller) {
+    final url = controller.getImageUrl(bookingId);
+    if (url.isEmpty) return false;
+
+    if (url.toLowerCase().contains('amazonaws')) return true;
+    return controller.hasImage(bookingId);
+  }
+
+  // 🔴 FIXED: Navigation with ALL required parameters for DetailsScreen
+  static void _navigateToDetailsScreen(String bookingId, String serviceProviderId, String providerId) {
+    log('🔍 [ACCEPTED TAB] Navigation to DetailsScreen → preparing arguments...');
+    log('   ➤ bookingId = "$bookingId"');
+    log('   ➤ serviceProviderId = "$serviceProviderId"');
+    log('   ➤ providerId = "$providerId"');
+
+    if (serviceProviderId.isEmpty) {
+      log('❌ [ACCEPTED TAB] Navigation ABORTED: serviceProviderId is empty!');
+      Get.snackbar(
+        'Navigation Error',
+        'Service provider details unavailable',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    if (providerId.isEmpty) {
+      log('⚠️ [ACCEPTED TAB] Warning: providerId is empty (may cause issues in details screen)');
+    }
+
+    log('✅ [ACCEPTED TAB] Navigating to service details screen with required IDs');
+
+    Get.toNamed(
+      Routes.serviceDetailsScreen,
+      arguments: {
+        "status": BookingStatusEnum.acceptedBooking,
+        "bookingId": bookingId,
+        "serviceProviderID": serviceProviderId,  // Required for service details
+        "providerID": providerId,                // Required for booking flow
+      },
+    );
+  }
 }
+
+
