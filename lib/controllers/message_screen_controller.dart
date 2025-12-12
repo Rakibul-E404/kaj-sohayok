@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/service/get_storage.dart';
 import 'package:kaz_bd/utilities/app_constants.dart';
-
 import '../features/normal_user/chat_inbox/model/chat_individual_message_model.dart';
 import '../features/normal_user/chat_inbox/presentation/chat_inbox_screen.dart';
 import '../features/normal_user/chat_list/model/chat_list_response_model.dart';
