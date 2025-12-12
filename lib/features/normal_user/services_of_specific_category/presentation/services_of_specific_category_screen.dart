@@ -178,7 +178,7 @@ class _ServicesOfSpecificCategoryScreenState
                       return Column(
                         children: [
                           SpecificServiceShowingWidget(
-                            onTap: () {
+                            seeDetailsOnTap: () {
                               log("Specific Service Item taped at index : $index");
                               log("Service Image Url : $imageUrl");
                               Get.toNamed(
@@ -191,6 +191,13 @@ class _ServicesOfSpecificCategoryScreenState
                                   'providerName': providerName,
                                 },
                               );
+                            },
+                            goToBookingsOnTap: () {
+                              log("Book Now Button Taped at Index : $index");
+                              log("Service Image Url : $imageUrl");
+                              Get.toNamed(Routes.bookingDateScreen, arguments: {
+                                'providerID': service.providerId?.userId,
+                              });
                             },
                             serviceImagePath:
                                 imageUrl ?? Assets.images.serviceImage.path,
