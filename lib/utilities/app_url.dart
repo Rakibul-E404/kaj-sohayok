@@ -119,9 +119,6 @@ class AppUrl {
     return '${baseUrl}v1/service-bookings/update-work-proof/$bookingId';
   }
 
-  // static String additionalCost(String bookingId) {
-  //   return '${baseUrl}v1/additional-cost';
-  // }
   static const String additionalCost = '${baseUrl}v1/additional-cost';
 
 

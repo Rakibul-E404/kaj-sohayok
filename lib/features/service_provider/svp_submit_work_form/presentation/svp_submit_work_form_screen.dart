@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -25,7 +26,206 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
   final SvpSubmitWorkFormScreenController controller = Get.put(SvpSubmitWorkFormScreenController());
 
   final RxBool isMediaCompleted = false.obs;
-  final RxBool isPaymentCompleted = false.obs;
+
+  // Function to show image in fullscreen dialog
+  void _showImageInDialog(String imageUrl, String? title) {
+    Get.dialog(
+      Dialog(
+        insetPadding: EdgeInsets.all(20.w),
+        backgroundColor: Colors.transparent,
+        child: Stack(
+          children: [
+            // Semi-transparent background
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+            ),
+            // Image viewer
+            Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Title if available
+                    if (title != null && title.isNotEmpty)
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 16.h),
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+
+                    // Image container
+                    Container(
+                      constraints: BoxConstraints(
+                        maxWidth: 0.9.sw,
+                        maxHeight: 0.7.sh,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 20,
+                            spreadRadius: 5,
+                          ),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12.r),
+                        child: CachedNetworkImage(
+                          imageUrl: imageUrl,
+                          fit: BoxFit.contain,
+                          placeholder: (context, url) => Container(
+                            width: 200.w,
+                            height: 200.h,
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            width: 200.w,
+                            height: 200.h,
+                            color: Colors.grey.shade800,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.error_outline,
+                                    color: Colors.white,
+                                    size: 48.h,
+                                  ),
+                                  SizedBox(height: 8.h),
+                                  Text(
+                                    'Failed to load image',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14.sp,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Gesture detector to close on tap outside
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: () => Get.back(),
+                behavior: HitTestBehavior.translucent,
+              ),
+            ),
+          ],
+        ),
+      ),
+      barrierColor: Colors.black.withOpacity(0.7),
+    );
+  }
+
+  // Function to upload media files via PUT API
+  Future<void> _uploadMediaFiles() async {
+    if (controller.bookingId.value == null || controller.bookingId.value!.isEmpty) {
+      Get.snackbar(
+        "Error",
+        "Booking ID not found",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    if (controller.mediaFiles.isEmpty) {
+      Get.snackbar(
+        "Info",
+        "No new files to upload",
+        backgroundColor: Colors.blue,
+        colorText: Colors.white,
+      );
+      isMediaCompleted.value = true;
+      return;
+    }
+
+    try {
+      // Prepare files for multipart request
+      final List<File> fileObjects = [];
+
+      // Collect all valid files
+      for (final mediaFile in controller.mediaFiles) {
+        final file = File(mediaFile.path);
+        if (file.existsSync()) {
+          fileObjects.add(file);
+        }
+      }
+
+      if (fileObjects.isEmpty) {
+        Get.snackbar(
+          "Error",
+          "No valid files to upload",
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return;
+      }
+
+      log("Uploading ${fileObjects.length} media files to PUT API...");
+
+      // Call the new method that handles multiple files
+      final response = await controller.uploadMultipleMediaFiles(
+        bookingId: controller.bookingId.value!,
+        files: fileObjects,
+      );
+
+      if (response.isSuccess) {
+        // ✅ Hide the Done button and show success message
+        isMediaCompleted.value = true;
+
+        Get.snackbar(
+          "Success",
+          "${fileObjects.length} file(s) uploaded successfully",
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          duration: Duration(seconds: 3),
+        );
+
+        // Optional: Clear media files after successful upload
+        // controller.mediaFiles.clear();
+      } else {
+        final errorMsg = response.errorMessage ?? "Failed to upload files";
+        Get.snackbar(
+          "Upload Failed",
+          errorMsg,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e, stackTrace) {
+      log("Error uploading media: $e", error: e, stackTrace: stackTrace);
+      Get.snackbar(
+        "Error",
+        "Failed to upload files: ${e.toString()}",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,74 +356,61 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                     final attachment = entry.value;
                                     final imageUrl = controller.getImageUrl(attachment.url);
 
-                                    return Stack(
-                                      children: [
-                                        Container(
-                                          width: 80.w,
-                                          height: 80.h,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(8.r),
-                                            border: Border.all(color: Colors.grey.shade300),
-                                          ),
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(8.r),
-                                            child: CachedNetworkImage(
-                                              imageUrl: imageUrl,
-                                              fit: BoxFit.cover,
-                                              placeholder: (context, url) =>
-                                                  Center(child: CircularProgressIndicator(strokeWidth: 2)),
-                                              errorWidget: (context, url, error) =>
-                                                  Center(child: Icon(Icons.error, color: Colors.red, size: 24)),
-                                            ),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          top: 2,
-                                          right: 2,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              controller.removeApiAttachment(index);
-                                            },
-                                            child: Container(
-                                              padding: EdgeInsets.all(4),
-                                              decoration: BoxDecoration(
-                                                color: Colors.red,
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: Icon(
-                                                Icons.close,
-                                                size: 12,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          bottom: 4,
-                                          left: 4,
-                                          child: Container(
-                                            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                                    return GestureDetector(
+                                      onTap: () {
+                                        // ✅ Show image in dialog when tapped
+                                        _showImageInDialog(imageUrl, "Proof File ${index + 1}");
+                                      },
+                                      child: Stack(
+                                        children: [
+                                          Container(
+                                            width: 80.w,
+                                            height: 80.h,
                                             decoration: BoxDecoration(
-                                              color: Colors.black.withOpacity(0.6),
-                                              borderRadius: BorderRadius.circular(4.r),
+                                              borderRadius: BorderRadius.circular(8.r),
+                                              border: Border.all(color: Colors.grey.shade300),
                                             ),
-                                            child: Text(
-                                              '${index + 1}',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 10.sp,
-                                                fontWeight: FontWeight.w600,
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.circular(8.r),
+                                              child: CachedNetworkImage(
+                                                imageUrl: imageUrl,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) => Center(
+                                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                                ),
+                                                errorWidget: (context, url, error) => Center(
+                                                  child: Icon(Icons.error, color: Colors.red, size: 24),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                          Positioned(
+                                            bottom: 4,
+                                            left: 4,
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                                              decoration: BoxDecoration(
+                                                color: Colors.black.withOpacity(0.6),
+                                                borderRadius: BorderRadius.circular(4.r),
+                                              ),
+                                              child: Text(
+                                                '${index + 1}',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     );
                                   }).toList(),
                                 ),
                                 UIHelper.verticalSpace(8.h),
                                 Text(
-                                  "Note: These are existing files from the work order",
+                                  "Note: Tap on any image to view in full screen",
                                   style: TextStyle(
                                     fontSize: 11.sp,
                                     color: Colors.grey.shade600,
@@ -256,33 +443,41 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   }),
                   UIHelper.verticalSpace(16.h),
 
-                  /// Section: Media Done Button
+                  /// Section: Media Done Button (Hides after tapping + Uploads files via PUT API)
                   Obx(() {
-                    final hasMedia = controller.totalMediaCount > 0;
-                    if (!hasMedia) return SizedBox.shrink();
+                    final hasNewMedia = controller.mediaFiles.isNotEmpty;
+                    final showMediaDoneButton = hasNewMedia && !isMediaCompleted.value;
+
+                    if (!showMediaDoneButton) {
+                      return SizedBox.shrink();
+                    }
 
                     return Column(
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            if (isMediaCompleted.value)
+                            if (controller.isUploadingMedia.value)
                               Container(
                                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                                 decoration: BoxDecoration(
-                                  color: Colors.green.shade100,
+                                  color: Colors.blue.shade100,
                                   borderRadius: BorderRadius.circular(20.r),
-                                  border: Border.all(color: Colors.green.shade300),
+                                  border: Border.all(color: Colors.blue.shade300),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Icon(Icons.check_circle, color: Colors.green.shade700, size: 16.h),
-                                    SizedBox(width: 4.w),
+                                    SizedBox(
+                                      width: 16.h,
+                                      height: 16.h,
+                                      child: CircularProgressIndicator(strokeWidth: 2),
+                                    ),
+                                    SizedBox(width: 8.w),
                                     Text(
-                                      "Completed",
+                                      "Uploading...",
                                       style: TextStyle(
-                                        color: Colors.green.shade700,
+                                        color: Colors.blue.shade800,
                                         fontSize: 12.sp,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -292,15 +487,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                               )
                             else
                               CustomElevatedButton(
-                                onTap: () {
-                                  isMediaCompleted.value = true;
-                                  Get.snackbar(
-                                    "Success",
-                                    "Media files marked as complete",
-                                    backgroundColor: Colors.green,
-                                    colorText: Colors.white,
-                                  );
-                                },
+                                onTap: _uploadMediaFiles,
                                 buttonWidth: 120.w,
                                 buttonHeight: 36.h,
                                 buttonTitle: "Done",
@@ -320,52 +507,11 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                       totalPayment: controller.calculateTotalPayment(),
                       isAddAdditionalCostButtonVisible: true,
                       onTap: () {
-                        _showAddAdditionalCostDialog(); // ✅ Now defined below
+                        _showAddAdditionalCostDialog();
                       },
                     );
                   }),
                   UIHelper.verticalSpace(16.h),
-
-                  /// Section: Payment Done Button
-                  Obx(() {
-                    final hasAdditionalCosts = controller.additionalCosts.isNotEmpty;
-                    if (!hasAdditionalCosts) return SizedBox.shrink();
-
-                    return Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            if (isPaymentCompleted.value)
-                              Container(
-                                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-                                decoration: BoxDecoration(
-                                  color: Colors.green.shade100,
-                                  borderRadius: BorderRadius.circular(20.r),
-                                  border: Border.all(color: Colors.green.shade300),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(Icons.check_circle, color: Colors.green.shade700, size: 16.h),
-                                    SizedBox(width: 4.w),
-                                    Text(
-                                      "Completed",
-                                      style: TextStyle(
-                                        color: Colors.green.shade700,
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                          ],
-                        ),
-                        UIHelper.verticalSpace(32.h),
-                      ],
-                    );
-                  }),
 
                   /// Section: Payment Request Button
                   Obx(() {
@@ -393,16 +539,14 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
     );
   }
 
-  // ✅ FIXED: ADDITIONAL COST DIALOG (EXACT SAME DESIGN, JUST FIXED THE CLOSING ISSUE)
+  // Additional Cost Dialog
   Future<void> _showAddAdditionalCostDialog() async {
     final TextEditingController additionalCostTitle = TextEditingController();
     final TextEditingController additionalCost = TextEditingController();
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-    return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => AlertDialog(
+    Get.dialog(
+      AlertDialog(
         backgroundColor: AppColors.cFFFFFF,
         title: Text(
           "Add Additional Cost",
@@ -468,7 +612,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
             children: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Get.back();
                 },
                 child: Text(
                   'Cancel',
@@ -481,29 +625,16 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
               SizedBox(width: 8.w),
               CustomElevatedButton(
                 onTap: () async {
-                  // ✅ FIX: Check if form is valid FIRST
                   if (formKey.currentState != null && formKey.currentState!.validate()) {
                     final name = additionalCostTitle.text.trim();
                     final price = double.parse(additionalCost.text.trim());
 
-                    // ✅ Call controller method (returns Future<bool>)
                     final success = await controller.addAdditionalCost(name, price);
 
+                    // ✅ Close the dialog on success
                     if (success) {
-                      // ✅ CLOSE THE DIALOG ON SUCCESS
-                      Navigator.of(context).pop();
-
-                      // Show success message
-                      Get.snackbar(
-                        'Success',
-                        'Additional cost added',
-                        backgroundColor: Colors.green,
-                        colorText: Colors.white,
-                        snackPosition: SnackPosition.BOTTOM,
-                        duration: Duration(seconds: 2),
-                      );
+                      Get.back();
                     }
-                    // If failed, dialog stays open (error shown by controller)
                   }
                 },
                 buttonWidth: 107.w,
@@ -514,6 +645,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
           ),
         ],
       ),
+      barrierDismissible: false,
     );
   }
 
@@ -615,33 +747,38 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
 
   Widget _buildDetailRow(String label, String value, {bool isBold = false}) {
     return Padding(
-        padding: EdgeInsets.symmetric(vertical: 2.h),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: 2,
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  color: Colors.grey.shade700,
-                ),
+      padding: EdgeInsets.symmetric(vertical: 2.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 13.sp,
+                color: Colors.grey.shade700,
               ),
             ),
-            Expanded(
-              flex: 3,
-              child: Text(
-                value,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                  color: Colors.black,
-                ),
+          ),
+          Expanded(
+            flex: 3,
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 13.sp,
+                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                color: Colors.black,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

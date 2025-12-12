@@ -14,7 +14,7 @@ void main() {
             serviceProviderImage: 'https://example.com/provider.jpg',
             serviceProviderName: 'Test Provider',
             serviceProviderRating: 4.5,
-            onTap: null,
+            // onTap: null,
           ),
         ),
       );
@@ -37,7 +37,7 @@ void main() {
             serviceProviderImage: '/uploads/provider.jpg',
             serviceProviderName: 'Test Provider',
             serviceProviderRating: 4.5,
-            onTap: null,
+            // onTap: null,
           ),
         ),
       );

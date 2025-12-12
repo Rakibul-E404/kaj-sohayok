@@ -1,11 +1,12 @@
-
+import 'dart:convert';
 import 'dart:developer';
-import 'dart:convert'; // ✅ Required for jsonEncode
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http; // ✅ Required for direct HTTP call (if NetworkCaller doesn't support JSON)
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:mime/mime.dart';
+import 'package:http_parser/http_parser.dart';
 import '../features/normal_user/work_completed_details/model/additional_cost_model.dart';
 import '../features/service_provider/svp_submit_work_form/model/media_file.dart';
 import '../service/network_caller.dart';
@@ -27,6 +28,7 @@ class SvpSubmitWorkFormScreenController extends GetxController {
   Rx<String?> bookingId = Rx<String?>(null);
   RxBool isLoadingWorkDetails = false.obs;
   RxBool isPaymentRequestLoading = false.obs;
+  RxBool isUploadingMedia = false.obs;
 
   // API Data
   RxString address = ''.obs;
@@ -79,10 +81,6 @@ class SvpSubmitWorkFormScreenController extends GetxController {
     }
   }
 
-  void _parseServiceBookingToData(dynamic serviceBookingData, dynamic additionalCostsData) {
-    // This method is renamed below — kept for reference only
-  }
-
   void _parseServiceBookingData(dynamic serviceBookingData, dynamic additionalCostsData) {
     try {
       if (serviceBookingData == null) {
@@ -131,7 +129,7 @@ class SvpSubmitWorkFormScreenController extends GetxController {
         }
       }
 
-      // ✅ SAFE ADDITIONAL COST PARSING
+      // Additional costs
       additionalCosts.clear();
       if (additionalCostsData != null && additionalCostsData is List) {
         for (final cost in additionalCostsData) {
@@ -335,7 +333,269 @@ class SvpSubmitWorkFormScreenController extends GetxController {
 
   int get totalMediaCount => mediaFiles.length + apiAttachments.length;
 
-  // ================== COST HANDLING (JSON) ==================
+  // ================== CUSTOM FILE UPLOAD USING HTTP DIRECTLY ==================
+
+  /// Upload multiple files using direct HTTP multipart request
+  /// This matches exactly what Postman is doing
+  Future<NetworkResponse> uploadMultipleMediaFiles({
+    required String bookingId,
+    required List<File> files,
+  }) async {
+    try {
+      isUploadingMedia.value = true;
+
+      log("🚀 Starting custom file upload...");
+      log("Booking ID: $bookingId");
+      log("Total files to upload: ${files.length}");
+
+      // Get authorization token
+      final token = await SecureStorageService().read(AppConstants.accessToken);
+
+      if (token == null || token.isEmpty) {
+        log("❌ No auth token found");
+        return NetworkResponse(
+          isSuccess: false,
+          errorMessage: 'Authentication token not found',
+        );
+      }
+
+      final url = AppUrl.addNewProofFile(bookingId);
+      log("📤 URL: $url");
+
+      // Create multipart request
+      final uri = Uri.parse(url);
+      final request = http.MultipartRequest('PUT', uri);
+
+      // Add authorization header
+      request.headers['Authorization'] = 'Bearer $token';
+
+      log("🔑 Authorization header added");
+
+      // Add all files with the field name "attachments"
+      for (int i = 0; i < files.length; i++) {
+        final file = files[i];
+
+        log("📎 Processing file ${i + 1}/${files.length}:");
+        log("   Path: ${file.path}");
+        log("   Exists: ${file.existsSync()}");
+
+        if (!file.existsSync()) {
+          log("   ❌ File does not exist, skipping");
+          continue;
+        }
+
+        final fileSize = await file.length();
+        log("   Size: $fileSize bytes");
+
+        // Get MIME type
+        final mimeType = lookupMimeType(file.path);
+        log("   MIME Type: $mimeType");
+
+        // Parse MIME type
+        MediaType? contentType;
+        if (mimeType != null) {
+          final mimeTypeParts = mimeType.split('/');
+          contentType = MediaType(
+            mimeTypeParts[0],
+            mimeTypeParts.length > 1 ? mimeTypeParts[1] : 'octet-stream',
+          );
+        } else {
+          contentType = MediaType('application', 'octet-stream');
+        }
+
+        // Add file with field name "attachments" (as shown in Postman)
+        final multipartFile = await http.MultipartFile.fromPath(
+          'attachments', // This is the exact field name from Postman
+          file.path,
+          contentType: contentType,
+        );
+
+        request.files.add(multipartFile);
+        log("   ✅ File added to request");
+      }
+
+      log("📤 Sending ${request.files.length} files...");
+      log("Request headers: ${request.headers}");
+      log("Request fields: ${request.fields}");
+      log("Request files count: ${request.files.length}");
+
+      // Send request
+      final streamedResponse = await request.send();
+      log("📥 Response received");
+      log("Status Code: ${streamedResponse.statusCode}");
+
+      // Convert streamed response to regular response
+      final response = await http.Response.fromStream(streamedResponse);
+      log("Response Body: ${response.body}");
+
+      // Parse response
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log("✅ Upload successful!");
+
+        try {
+          final jsonResponse = response.body.isNotEmpty
+              ? json.decode(response.body) as Map<String, dynamic>
+              : <String, dynamic>{};
+
+          return NetworkResponse(
+            isSuccess: true,
+            statusCode: response.statusCode,
+            jsonResponse: jsonResponse,
+          );
+        } catch (e) {
+          log("⚠️ Could not parse JSON response, but upload was successful");
+          return NetworkResponse(
+            isSuccess: true,
+            statusCode: response.statusCode,
+          );
+        }
+      } else {
+        log("❌ Upload failed with status: ${response.statusCode}");
+
+        String errorMessage = 'Upload failed';
+        try {
+          final jsonResponse = json.decode(response.body) as Map<String, dynamic>;
+          errorMessage = jsonResponse['message']?.toString() ??
+              jsonResponse['error']?.toString() ??
+              'Upload failed';
+
+          return NetworkResponse(
+            isSuccess: false,
+            statusCode: response.statusCode,
+            jsonResponse: jsonResponse,
+            errorMessage: errorMessage,
+          );
+        } catch (e) {
+          log("Could not parse error response: ${response.body}");
+          return NetworkResponse(
+            isSuccess: false,
+            statusCode: response.statusCode,
+            errorMessage: response.body.isNotEmpty ? response.body : errorMessage,
+          );
+        }
+      }
+    } catch (e, stackTrace) {
+      log("❌ Upload error: $e", error: e, stackTrace: stackTrace);
+      return NetworkResponse(
+        isSuccess: false,
+        errorMessage: 'Upload failed: ${e.toString()}',
+      );
+    } finally {
+      isUploadingMedia.value = false;
+    }
+  }
+
+  /// Alternative: Upload files one by one (more reliable for large files)
+  Future<NetworkResponse> uploadFilesSequentially({
+    required String bookingId,
+    required List<File> files,
+  }) async {
+    try {
+      isUploadingMedia.value = true;
+
+      log("🚀 Starting sequential file upload...");
+      log("Total files: ${files.length}");
+
+      final token = await SecureStorageService().read(AppConstants.accessToken);
+
+      if (token == null || token.isEmpty) {
+        return NetworkResponse(
+          isSuccess: false,
+          errorMessage: 'Authentication token not found',
+        );
+      }
+
+      int successCount = 0;
+      String? lastErrorMessage;
+      List<String> errors = [];
+
+      for (int i = 0; i < files.length; i++) {
+        try {
+          log("📤 Uploading file ${i + 1}/${files.length}");
+
+          final url = AppUrl.addNewProofFile(bookingId);
+          final uri = Uri.parse(url);
+          final request = http.MultipartRequest('PUT', uri);
+
+          // Add authorization header
+          request.headers['Authorization'] = 'Bearer $token';
+
+          // Get MIME type
+          final mimeType = lookupMimeType(files[i].path);
+          MediaType? contentType;
+          if (mimeType != null) {
+            final mimeTypeParts = mimeType.split('/');
+            contentType = MediaType(
+              mimeTypeParts[0],
+              mimeTypeParts.length > 1 ? mimeTypeParts[1] : 'octet-stream',
+            );
+          } else {
+            contentType = MediaType('application', 'octet-stream');
+          }
+
+          // Add single file
+          final multipartFile = await http.MultipartFile.fromPath(
+            'attachments',
+            files[i].path,
+            contentType: contentType,
+          );
+
+          request.files.add(multipartFile);
+
+          // Send request
+          final streamedResponse = await request.send();
+          final response = await http.Response.fromStream(streamedResponse);
+
+          if (response.statusCode == 200 || response.statusCode == 201) {
+            successCount++;
+            log("   ✅ File ${i + 1} uploaded successfully");
+          } else {
+            try {
+              final jsonResponse = json.decode(response.body) as Map<String, dynamic>;
+              lastErrorMessage = jsonResponse['message']?.toString() ?? 'Upload failed';
+            } catch (e) {
+              lastErrorMessage = response.body.isNotEmpty ? response.body : 'Upload failed';
+            }
+            errors.add("File ${i + 1}: $lastErrorMessage");
+            log("   ❌ File ${i + 1} failed: $lastErrorMessage");
+          }
+        } catch (e) {
+          lastErrorMessage = e.toString();
+          errors.add("File ${i + 1}: $lastErrorMessage");
+          log("   ❌ File ${i + 1} error: $e");
+        }
+      }
+
+      if (successCount == files.length) {
+        log("✅ All files uploaded successfully");
+        return NetworkResponse(isSuccess: true);
+      } else if (successCount > 0) {
+        final errorMsg = "Uploaded $successCount/${files.length} files.\n${errors.join('\n')}";
+        log("⚠️ Partial success: $errorMsg");
+        return NetworkResponse(
+          isSuccess: false,
+          errorMessage: errorMsg,
+        );
+      } else {
+        final errorMsg = lastErrorMessage ?? "Failed to upload all files";
+        log("❌ All uploads failed: $errorMsg");
+        return NetworkResponse(
+          isSuccess: false,
+          errorMessage: errorMsg,
+        );
+      }
+    } catch (e, stackTrace) {
+      log("❌ Sequential upload error: $e", error: e, stackTrace: stackTrace);
+      return NetworkResponse(
+        isSuccess: false,
+        errorMessage: 'Upload failed: ${e.toString()}',
+      );
+    } finally {
+      isUploadingMedia.value = false;
+    }
+  }
+
+  // ================== COST HANDLING ==================
 
   double calculateTotalPayment() {
     double total = initialCost.value;
@@ -345,8 +605,6 @@ class SvpSubmitWorkFormScreenController extends GetxController {
     return total;
   }
 
-  /// ✅ SENDS JSON BODY TO BACKEND
-  /// ✅ Sends JSON with Bearer token authorization
   Future<bool> addAdditionalCost(String name, double price) async {
     if (bookingId.value == null || bookingId.value!.isEmpty) {
       Get.snackbar("Error", "No booking ID found",
@@ -355,69 +613,48 @@ class SvpSubmitWorkFormScreenController extends GetxController {
     }
 
     try {
-      // ✅ Fetch token from secure storage
       final token = await SecureStorageService().read(AppConstants.accessToken);
 
       if (token == null || token.isEmpty) {
         Get.snackbar("Auth Error", "Session expired. Please log in again.",
             backgroundColor: Colors.red, colorText: Colors.white);
-        // Optionally: redirect to login
-        // Get.offAllNamed(Routes.login);
         return false;
       }
 
-      final Map<String, dynamic> costBody = {
+      final costBody = {
         'serviceBookingId': bookingId.value!,
         'costName': name,
-        'price': price,
+        'price': price.toString(),
       };
 
-      log("Sending JSON with auth: ${jsonEncode(costBody)}");
+      log("Sending additional cost: $costBody");
 
-      final uri = Uri.parse(AppUrl.additionalCost);
-      final response = await http.post(
-        uri,
+      final response = await _networkCaller.postRequest(
+        AppUrl.additionalCost,
+        body: costBody,
         headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer $token', // ✅ JWT Auth
+          'Authorization': 'Bearer $token',
         },
-        body: jsonEncode(costBody),
       );
 
-      // Handle response
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.isSuccess) {
         additionalCosts.add(AdditionalCostModel(title: name, price: price));
         update();
         log("✅ Additional cost added successfully");
-        Get.snackbar("Success", "Additional cost added",
-            backgroundColor: Colors.green, colorText: Colors.white);
         return true;
       } else {
-        String errorMsg = 'Request failed. Status: ${response.statusCode}';
-        try {
-          final errorJson = jsonDecode(response.body);
-          errorMsg = errorJson['message'] ?? errorJson['error'] ?? response.body;
-        } catch (e) {
-          if (response.body.isNotEmpty) errorMsg = response.body;
+        String errorMsg = response.errorMessage ?? "Failed to add cost";
+        if (response.jsonResponse != null && response.jsonResponse!['message'] != null) {
+          errorMsg = response.jsonResponse!['message'].toString();
         }
 
-        // Handle 401 Unauthorized
-        if (response.statusCode == 401) {
-          Get.snackbar("Session Expired", "Please log in again.",
-              backgroundColor: Colors.red, colorText: Colors.white);
-          // Optional: clear token and navigate to login
-          // SecureStorageService().delete(AppConstants.accessToken);
-          // Get.offAllNamed(Routes.login);
-        } else {
-          Get.snackbar("Error", errorMsg,
-              backgroundColor: Colors.red, colorText: Colors.white);
-        }
-        log("❌ API Error: $errorMsg");
+        Get.snackbar("Error", errorMsg,
+            backgroundColor: Colors.red, colorText: Colors.white);
         return false;
       }
     } catch (e, stackTrace) {
       log("❌ Network/Auth error: $e", error: e, stackTrace: stackTrace);
-      Get.snackbar("Error", "Failed to add cost: $e",
+      Get.snackbar("Error", "Failed to add cost: ${e.toString()}",
           backgroundColor: Colors.red, colorText: Colors.white);
       return false;
     }
@@ -458,34 +695,14 @@ class SvpSubmitWorkFormScreenController extends GetxController {
     isPaymentRequestLoading.value = true;
 
     try {
-      // Upload new images (videos are not uploaded)
-      if (mediaFiles.isNotEmpty) {
-        final Map<String, File> files = {};
-        int index = 0;
-        final imageFiles = mediaFiles.where((file) => !file.isVideo).toList();
+      final workCompletionBody = {
+        'serviceBookingId': bookingId.value!,
+        'completionDate': completionDateController.text,
+        'durationTime': durationTimeController.text,
+        'status': 'completed',
+      };
 
-        for (final mediaFile in imageFiles) {
-          files['attachment_$index'] = File(mediaFile.path);
-          index++;
-        }
-
-        if (files.isNotEmpty) {
-          log("Uploading ${files.length} proof files...");
-          final NetworkResponse uploadResponse = await _networkCaller.multipartPutRequest(
-            AppUrl.addNewProofFile(bookingId.value!),
-            files: files,
-          );
-
-          if (!uploadResponse.isSuccess) {
-            final errorMsg = uploadResponse.errorMessage ?? "Failed to upload proof files";
-            Get.snackbar("Upload Failed", errorMsg,
-                backgroundColor: Colors.red, colorText: Colors.white);
-            isPaymentRequestLoading.value = false;
-            return;
-          }
-          log("✅ Proof files uploaded successfully");
-        }
-      }
+      log("Submitting work completion data...");
 
       Get.snackbar(
         "Success",
@@ -535,5 +752,3 @@ class ApiAttachment {
   @override
   String toString() => 'ApiAttachment(url: $url, type: $type, id: $id)';
 }
-
-
