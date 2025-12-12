@@ -9,6 +9,7 @@ import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/features/normal_user/service_preview/widgets/booking_placed_bottomsheet_widget.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
+import 'package:kaz_bd/routes/routes.dart';
 
 import '../../../../controllers/normal_user_service_preview_screen_controller.dart';
 import '../../../../custom_widgets/custom_shimmer_effect.dart';
@@ -30,6 +31,37 @@ class ServicesPreviewScreen extends StatelessWidget {
     final address = arguments?['address'] ?? '';
     final latDynamic = arguments?['lat'];
     final longDynamic = arguments?['long'];
+
+    // Helper to get month name
+    String _getMonthName(int month) {
+      const months = [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      ];
+      return month >= 1 && month <= 12 ? months[month - 1] : '';
+    }
+
+    // Helper to format time in 12-hour format
+    String _formatTime12Hour(int hour, int minute) {
+      String period = hour >= 12 ? 'PM' : 'AM';
+      int displayHour = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
+      String formattedMinute = minute.toString().padLeft(2, '0');
+      return "${displayHour}:${formattedMinute}$period";
+    }
+
+    // Helper function to format date time for display
+    String _formatDisplayDateTime(String apiDateTime) {
+      try {
+        DateTime dateTime = DateTime.parse(apiDateTime);
+        // Format as "Jun 17, 2025  09:31AM" or similar format
+        String formattedDate = "${_getMonthName(dateTime.month)} ${dateTime.day}, ${dateTime.year}";
+        String formattedTime = _formatTime12Hour(dateTime.hour, dateTime.minute);
+        return "$formattedDate  $formattedTime";
+      } catch (e) {
+        log('Error parsing date time: $e');
+        return apiDateTime; // Return original if parsing fails
+      }
+    }
 
     // In your ServicesPreviewScreen:
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -241,6 +273,7 @@ class ServicesPreviewScreen extends StatelessWidget {
                     ServicePreviewDetailsCardWidget(
                       onTap: () {
                         log("Location Edit Button Taped!");
+                        Get.back();
                       },
                       title: "Location",
                       data: address,
@@ -253,9 +286,12 @@ class ServicesPreviewScreen extends StatelessWidget {
                     ServicePreviewDetailsCardWidget(
                       onTap: () {
                         log("Date/Time Edit Button Taped!");
+                        Get.toNamed(Routes.bookingDateScreen, arguments: {
+                          'providerID': providerID,
+                        });
                       },
                       title: "Date/Time",
-                      data: 'Jun 17, 2025  09:31AM',
+                      data: bookingDateTime.isNotEmpty ? _formatDisplayDateTime(bookingDateTime) : 'Select Date & Time',
                       icon: Icons.watch_later,
                     ),
                   ],

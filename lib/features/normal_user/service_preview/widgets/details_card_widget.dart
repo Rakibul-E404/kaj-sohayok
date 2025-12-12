@@ -54,9 +54,7 @@ class ServicePreviewDetailsCardWidget extends StatelessWidget {
 
               /// Edit Button
               InkWell(
-                onTap: () {
-                  Get.back();
-                },
+                onTap: onTap,
                 borderRadius: BorderRadius.circular(6.r),
                 child: Row(
                   children: [
