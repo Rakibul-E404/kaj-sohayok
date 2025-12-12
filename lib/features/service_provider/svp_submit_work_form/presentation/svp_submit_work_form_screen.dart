@@ -13,7 +13,6 @@ import 'package:kaz_bd/custom_widgets/proof_of_image_uploading_widget.dart';
 import 'package:kaz_bd/custom_widgets/work_address_and_date_widget.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/custom_widgets/more_info_widget_tile.dart';
-import '../../../normal_user/work_completed_details/widgets/additional_cost_popup.dart';
 
 class SvpSubmitWorkFormScreen extends StatefulWidget {
   const SvpSubmitWorkFormScreen({super.key});
@@ -23,11 +22,8 @@ class SvpSubmitWorkFormScreen extends StatefulWidget {
 }
 
 class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
-  final SvpSubmitWorkFormScreenController controller = Get.put(
-    SvpSubmitWorkFormScreenController(),
-  );
+  final SvpSubmitWorkFormScreenController controller = Get.put(SvpSubmitWorkFormScreenController());
 
-  // Track completion status
   final RxBool isMediaCompleted = false.obs;
   final RxBool isPaymentCompleted = false.obs;
 
@@ -50,22 +46,18 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
       ),
       body: Obx(() {
         if (controller.isLoadingWorkDetails.value && controller.bookingId.value != null) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return Center(child: CircularProgressIndicator());
         }
 
         return SafeArea(
           child: SingleChildScrollView(
             padding: EdgeInsets.only(bottom: 20.h),
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: UIHelper.kDefaulutPadding(),
-              ),
+              padding: EdgeInsets.symmetric(horizontal: UIHelper.kDefaulutPadding()),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ///Section : Working Address & Booking Order Date
+                  /// Section: Working Address & Booking Order Date
                   WorkAddressAndDateWidget(
                     address: controller.address.value.isNotEmpty
                         ? controller.address.value
@@ -76,14 +68,14 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   ),
                   UIHelper.verticalSpace(24.h),
 
-                  ///Section : Text -> Proof Of Work Complete Information
+                  /// Section: Proof Of Work Complete Information
                   Text(
                     "Proof Of Work Complete Information",
                     style: TextFontStyle.headline16w700c202020StyleSatoshi,
                   ),
                   UIHelper.verticalSpace(16.h),
 
-                  ///Section : Completion Date
+                  /// Section: Completion Date
                   InkWell(
                     onTap: () async {
                       final DateTime? picked = await showDatePicker(
@@ -92,7 +84,6 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                         firstDate: DateTime(2000),
                         lastDate: DateTime(2100),
                       );
-
                       if (picked != null) {
                         final formatted = DateFormat('MM-dd-yyyy').format(picked);
                         controller.completionDateController.text = formatted;
@@ -107,7 +98,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   ),
                   UIHelper.verticalSpace(16.h),
 
-                  ///Section : Duration Time
+                  /// Section: Duration Time
                   MoreInfoWidgetTile(
                     title: "Duration Time",
                     hintText: "Type Day's In Numbers",
@@ -116,7 +107,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   ),
                   UIHelper.verticalSpace(24.h),
 
-                  ///Section : Existing API Attachments
+                  /// Section: Existing API Attachments
                   Obx(() {
                     if (controller.apiAttachments.isNotEmpty) {
                       return Column(
@@ -179,12 +170,10 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                             child: CachedNetworkImage(
                                               imageUrl: imageUrl,
                                               fit: BoxFit.cover,
-                                              placeholder: (context, url) => Center(
-                                                child: CircularProgressIndicator(strokeWidth: 2),
-                                              ),
-                                              errorWidget: (context, url, error) => Center(
-                                                child: Icon(Icons.error, color: Colors.red, size: 24),
-                                              ),
+                                              placeholder: (context, url) =>
+                                                  Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                                              errorWidget: (context, url, error) =>
+                                                  Center(child: Icon(Icons.error, color: Colors.red, size: 24)),
                                             ),
                                           ),
                                         ),
@@ -251,7 +240,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                     return SizedBox();
                   }),
 
-                  ///Section : Upload new media files
+                  /// Section: Upload new media files
                   Obx(() {
                     return ProofOfMediaUploadWidget(
                       title: "Add New Proof Files",
@@ -267,13 +256,10 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   }),
                   UIHelper.verticalSpace(16.h),
 
-                  ///Section : Media Done Button (Only visible when media is added)
+                  /// Section: Media Done Button
                   Obx(() {
                     final hasMedia = controller.totalMediaCount > 0;
-
-                    if (!hasMedia) {
-                      return SizedBox.shrink();
-                    }
+                    if (!hasMedia) return SizedBox.shrink();
 
                     return Column(
                       children: [
@@ -318,7 +304,6 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                 buttonWidth: 120.w,
                                 buttonHeight: 36.h,
                                 buttonTitle: "Done",
-                                // backgroundColor: AppColors.c000e08,
                               ),
                           ],
                         ),
@@ -327,7 +312,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                     );
                   }),
 
-                  ///Section : Payment Summary
+                  /// Section: Payment Summary
                   Obx(() {
                     return PaymentSummeryWidget(
                       initialCost: controller.initialCost.value,
@@ -335,24 +320,16 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                       totalPayment: controller.calculateTotalPayment(),
                       isAddAdditionalCostButtonVisible: true,
                       onTap: () {
-                        showAdditionalCostDialog(
-                          context: context,
-                          additionlCostSubmitOnTap: (String name, double price) {
-                            controller.addAdditionalCost(name, price);
-                          },
-                        );
+                        _showAddAdditionalCostDialog(); // ✅ Now defined below
                       },
                     );
                   }),
                   UIHelper.verticalSpace(16.h),
 
-                  ///Section : Payment Done Button (Only visible when additional costs are added)
+                  /// Section: Payment Done Button
                   Obx(() {
                     final hasAdditionalCosts = controller.additionalCosts.isNotEmpty;
-
-                    if (!hasAdditionalCosts) {
-                      return SizedBox.shrink();
-                    }
+                    if (!hasAdditionalCosts) return SizedBox.shrink();
 
                     return Column(
                       children: [
@@ -383,22 +360,6 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                   ],
                                 ),
                               )
-                            else
-                              CustomElevatedButton(
-                                onTap: () {
-                                  isPaymentCompleted.value = true;
-                                  Get.snackbar(
-                                    "Success",
-                                    "Payment details marked as complete",
-                                    backgroundColor: Colors.green,
-                                    colorText: Colors.white,
-                                  );
-                                },
-                                buttonWidth: 120.w,
-                                buttonHeight: 36.h,
-                                buttonTitle: "Done",
-                                // backgroundColor: AppColors.c000e08,
-                              ),
                           ],
                         ),
                         UIHelper.verticalSpace(32.h),
@@ -406,7 +367,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                     );
                   }),
 
-                  ///Section : Payment Request Button (Always visible)
+                  /// Section: Payment Request Button
                   Obx(() {
                     return Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8.w),
@@ -432,25 +393,144 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
     );
   }
 
+  // ✅ FIXED: ADDITIONAL COST DIALOG (EXACT SAME DESIGN, JUST FIXED THE CLOSING ISSUE)
+  Future<void> _showAddAdditionalCostDialog() async {
+    final TextEditingController additionalCostTitle = TextEditingController();
+    final TextEditingController additionalCost = TextEditingController();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        backgroundColor: AppColors.cFFFFFF,
+        title: Text(
+          "Add Additional Cost",
+          style: TextFontStyle.headline16w500c000000StyleSatoshi,
+        ),
+        content: Form(
+          key: formKey,
+          child: Container(
+            width: 1.sw,
+            decoration: BoxDecoration(color: AppColors.cFFFFFF),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                /// Section: Additional Cost Title Field
+                TextFormField(
+                  controller: additionalCostTitle,
+                  decoration: InputDecoration(
+                    hintText: "Enter cost title",
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.ce6e6e6),
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter cost title';
+                    }
+                    return null;
+                  },
+                ),
+                UIHelper.verticalSpace(10.h),
+
+                /// Section: Additional Cost Field
+                TextFormField(
+                  controller: additionalCost,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration: InputDecoration(
+                    hintText: "Enter cost amount",
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: AppColors.ce6e6e6),
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter cost amount';
+                    }
+                    final price = double.tryParse(value.trim());
+                    if (price == null || price <= 0) {
+                      return 'Please enter a valid amount';
+                    }
+                    return null;
+                  },
+                ),
+                UIHelper.verticalSpace(10.h),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 14.sp,
+                  ),
+                ),
+              ),
+              SizedBox(width: 8.w),
+              CustomElevatedButton(
+                onTap: () async {
+                  // ✅ FIX: Check if form is valid FIRST
+                  if (formKey.currentState != null && formKey.currentState!.validate()) {
+                    final name = additionalCostTitle.text.trim();
+                    final price = double.parse(additionalCost.text.trim());
+
+                    // ✅ Call controller method (returns Future<bool>)
+                    final success = await controller.addAdditionalCost(name, price);
+
+                    if (success) {
+                      // ✅ CLOSE THE DIALOG ON SUCCESS
+                      Navigator.of(context).pop();
+
+                      // Show success message
+                      Get.snackbar(
+                        'Success',
+                        'Additional cost added',
+                        backgroundColor: Colors.green,
+                        colorText: Colors.white,
+                        snackPosition: SnackPosition.BOTTOM,
+                        duration: Duration(seconds: 2),
+                      );
+                    }
+                    // If failed, dialog stays open (error shown by controller)
+                  }
+                },
+                buttonWidth: 107.w,
+                buttonHeight: 38.h,
+                buttonTitle: "Save",
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   void _requestPayment() {
-    // Validate all fields
     if (controller.completionDateController.text.isEmpty) {
-      Get.snackbar(
-        "Warning",
-        "Please select completion date",
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
+      Get.snackbar("Warning", "Please select completion date");
       return;
     }
 
     if (controller.durationTimeController.text.isEmpty) {
-      Get.snackbar(
-        "Warning",
-        "Please enter duration time",
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
+      Get.snackbar("Warning", "Please enter duration time");
+      return;
+    }
+
+    final duration = double.tryParse(controller.durationTimeController.text);
+    if (duration == null) {
+      Get.snackbar("Warning", "Please enter a valid number for duration");
       return;
     }
 
@@ -470,10 +550,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "You are about to request payment with the following details:",
-                style: TextStyle(fontWeight: FontWeight.w500),
-              ),
+              Text("You are about to request payment with the following details:",
+                  style: TextStyle(fontWeight: FontWeight.w500)),
               SizedBox(height: 16.h),
               _buildDetailRow("Completion Date:", controller.completionDateController.text),
               _buildDetailRow("Duration:", "${controller.durationTimeController.text} days"),
@@ -487,7 +565,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
               SizedBox(height: 12.h),
               _buildDetailRow("Initial Cost:", "\$${controller.initialCost.value.toStringAsFixed(2)}"),
               if (controller.additionalCosts.isNotEmpty)
-                _buildDetailRow("Additional Costs:", "\$${(controller.calculateTotalPayment() - controller.initialCost.value).toStringAsFixed(2)}"),
+                _buildDetailRow(
+                    "Additional Costs:", "\$${(controller.calculateTotalPayment() - controller.initialCost.value).toStringAsFixed(2)}"),
               SizedBox(height: 8.h),
               _buildDetailRow(
                 "Total Payment:",
@@ -527,10 +606,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
               backgroundColor: AppColors.c000e08,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
             ),
-            child: Text(
-              "Send Request",
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-            ),
+            child: Text("Send Request", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
           ),
         ],
       ),
@@ -539,33 +615,33 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
 
   Widget _buildDetailRow(String label, String value, {bool isBold = false}) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 2.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 2,
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: Colors.grey.shade700,
+        padding: EdgeInsets.symmetric(vertical: 2.h),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  color: Colors.grey.shade700,
+                ),
               ),
             ),
-          ),
-          Expanded(
-            flex: 3,
-            child: Text(
-              value,
-              style: TextStyle(
-                fontSize: 13.sp,
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                color: Colors.black,
+            Expanded(
+              flex: 3,
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                  color: Colors.black,
+                ),
               ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
     );
   }
 }
