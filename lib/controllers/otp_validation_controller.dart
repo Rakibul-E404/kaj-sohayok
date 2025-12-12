@@ -7,8 +7,10 @@ import 'package:kaz_bd/utilities/app_constants.dart';
 import '../routes/routes.dart';
 import '../service/network_caller.dart';
 import '../service/network_response.dart';
+import '../service/socket_service.dart';
 import '../utilities/app_url.dart';
 import '../utilities/logger_util.dart';
+import 'message_screen_controller.dart';
 
 class OtpValidationController extends GetxController {
   var pin = ''.obs;
@@ -23,8 +25,6 @@ class OtpValidationController extends GetxController {
     super.onInit();
     startTimer();
   }
-
-
 
   // Called when OTP completed
   void onCompleted(String value) {
@@ -54,32 +54,47 @@ class OtpValidationController extends GetxController {
       loader.value = true;
       final String verificationToken =
           await SecureStorageService().read(AppConstants.verificationToken) ??
-          '';
+              '';
       final Map<String, dynamic> registrationOTPForm = <String, dynamic>{
         "email": "${email}",
         "otp": "${pin.value}",
         "token": verificationToken,
       };
-       final NetworkResponse postResponse = await NetworkCaller().postRequest(
+      final NetworkResponse postResponse = await NetworkCaller().postRequest(
         AppUrl.registerUserEmailVerify,
         body: registrationOTPForm,
       );
-       LoggerUtils.debug(postResponse.jsonResponse);
+      LoggerUtils.debug(postResponse.jsonResponse);
       if (postResponse.isSuccess) {
         // LoggerUtils.debug(registrationOTPForm);
 
         await SecureStorageService().write(
           AppConstants.accessToken,
-          postResponse
-                  .jsonResponse?['data']['attributes']['result']['tokens']['accessToken'] ??
+          postResponse.jsonResponse?['data']['attributes']['result']['tokens']
+                  ['accessToken'] ??
               '',
         );
         await SecureStorageService().write(
           AppConstants.refreshToken,
-          postResponse
-                  .jsonResponse?['data']['attributes']['result']['tokens']['refreshToken'] ??
+          postResponse.jsonResponse?['data']['attributes']['result']['tokens']
+                  ['refreshToken'] ??
               '',
         );
+
+        /// ======================= SOCKET =====================>
+        SocketServices().disconnect();
+
+        // Clear MessageScreenController if exists
+        if (Get.isRegistered<MessageScreenController>()) {
+          Get.find<MessageScreenController>().clearAllData();
+        }
+        await Future.delayed(Duration(milliseconds: 300));
+        SocketServices().enable();
+
+        LoggerUtils.debug('🔌 Initializing socket...');
+        await SocketServices().init();
+
+        /// ======================= SOCKET =====================>
         Get.offAllNamed(Routes.signInScreen);
         // Get.toNamed(
         //   Routes.verifyOtpScreen,
@@ -110,22 +125,23 @@ class OtpValidationController extends GetxController {
       loader.value = false;
     }
   }
+
   handleSendOtpForgotPassword({required String email}) async {
     try {
       loader.value = true;
       final String verificationToken =
           await SecureStorageService().read(AppConstants.verificationToken) ??
-          '';
+              '';
       final Map<String, dynamic> registrationOTPForm = <String, dynamic>{
         "email": "${email}",
         "otp": "${pin.value}",
         "token": verificationToken,
       };
-       final NetworkResponse postResponse = await NetworkCaller().postRequest(
+      final NetworkResponse postResponse = await NetworkCaller().postRequest(
         AppUrl.registerUserEmailVerify,
         body: registrationOTPForm,
       );
-       LoggerUtils.debug(postResponse.jsonResponse);
+      LoggerUtils.debug(postResponse.jsonResponse);
       if (postResponse.isSuccess) {
         // LoggerUtils.debug(registrationOTPForm);
 

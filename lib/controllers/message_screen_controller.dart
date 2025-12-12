@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/service/get_storage.dart';
 import 'package:kaz_bd/utilities/app_constants.dart';
-
 import '../features/normal_user/chat_inbox/model/chat_individual_message_model.dart';
 import '../features/normal_user/chat_inbox/presentation/chat_inbox_screen.dart';
 import '../features/normal_user/chat_list/model/chat_list_response_model.dart';
@@ -21,6 +19,9 @@ class MessageScreenController extends GetxController {
   final RxBool loader = false.obs;
   final RxList<ChatListResponseModel> chatLists = <ChatListResponseModel>[].obs;
 
+  // Flag to prevent initialization after logout
+  bool _isInitialized = false;
+
   // Add this computed property to get filtered chat list
   List<ChatListResponseModel> get filteredChatLists {
     if (searchText.value.isEmpty) {
@@ -29,58 +30,112 @@ class MessageScreenController extends GetxController {
 
     return chatLists.where((chat) {
       final userName = chat.userId?.name?.toLowerCase() ?? '';
-      final lastMessage = chat.conversations.firstOrNull?.lastMessage?.toLowerCase() ?? '';
+      final lastMessage =
+          chat.conversations.firstOrNull?.lastMessage?.toLowerCase() ?? '';
       final searchQuery = searchText.value.toLowerCase();
 
-      return userName.contains(searchQuery) || lastMessage.contains(searchQuery);
+      return userName.contains(searchQuery) ||
+          lastMessage.contains(searchQuery);
     }).toList();
+  }
+
+  Future<void> messagingInitialize() async {
+    // Check if user is actually logged in
+    final token = await SecureStorageService().read(AppConstants.accessToken);
+    if (token == null || token.isEmpty) {
+      LoggerUtils.warning('🚫 No token - skipping messagingInitialize');
+      return;
+    }
+
+    final String userId = GetStorageModel().read(AppConstants.userId);
+    if (userId.isEmpty) {
+      LoggerUtils.warning('🚫 No userId - skipping messagingInitialize');
+      return;
+    }
+
+    LoggerUtils.debug('🔧 Initializing messaging for user: $userId');
+
+    // Clear old data first
+    chatLists.clear();
+    individualChatLists.clear();
+
+    SocketServices().listen("conversation-list-updated::$userId",
+            (dynamic data) async {
+          LoggerUtils.warning(data);
+      // Get.snackbar(
+      //   'New Message',
+      //   data?['lastMessage']?['text']?.toString() ?? 'No message',
+      //   snackPosition: SnackPosition.TOP,
+      //   duration: Duration(seconds: 3),
+      //   backgroundColor: AppColors.c778beb,
+      //   colorText: Colors.white,
+      //   icon: Icon(
+      //     Icons.message,
+      //     color: Colors.white,
+      //   ),
+      //   borderRadius: 12,
+      //   margin: EdgeInsets.all(16),
+      //   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      //   snackStyle: SnackStyle.FLOATING,
+      //   animationDuration: Duration(milliseconds: 500),
+      //   isDismissible: true,
+      //   forwardAnimationCurve: Curves.easeOutBack,
+      // );
+
+      await handleFetchChatList();
+        });
+
+    SocketServices().listen("related-user-online-status::$userId",
+            (dynamic data) {
+          LoggerUtils.warning(data);
+        });
+
+    SocketServices().listen("notification::$userId", (dynamic data) {
+      LoggerUtils.warning(data);
+    });
+
+    await handleFetchChatList();
+    _isInitialized = true;
   }
 
   @override
   Future<void> onInit() async {
-    final String userId = GetStorageModel().read(AppConstants.userId);
-    SocketServices().listen("conversation-list-updated::$userId",
-            (dynamic data) async {
-          LoggerUtils.warning(data);
-          // debugPrint("notifications data : $data");
-          Get.snackbar(
-            'New Message',
-            data?['lastMessage']?['text']?.toString() ?? 'No message',
-            snackPosition: SnackPosition.TOP,
-            duration: Duration(seconds: 3),
-            backgroundColor: AppColors.c778beb,
-            colorText: Colors.white,
-            icon: Icon(
-              Icons.message,
-              color: Colors.white,
-            ),
-            borderRadius: 12,
-            margin: EdgeInsets.all(16),
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            snackStyle: SnackStyle.FLOATING,
-            // Makes it appear floating
-            animationDuration: Duration(milliseconds: 500),
-            isDismissible: true,
-            forwardAnimationCurve: Curves.easeOutBack,
-          );
+    LoggerUtils.debug('📱 MessageScreenController onInit called');
 
-          await handleFetchChatList();
-        });
-    SocketServices().listen("related-user-online-status::$userId",
-            (dynamic data) {
-          LoggerUtils.warning(data);
-          // debugPrint("notifications data : $data");
-        });
-    SocketServices().listen("notification::$userId", (dynamic data) {
-      LoggerUtils.warning(data);
-      // debugPrint("notifications data : $data");
-    });
-
-    await handleFetchChatList();
+    // Only initialize if not already initialized and user is logged in
+    if (!_isInitialized) {
+      final token = await SecureStorageService().read(AppConstants.accessToken);
+      if (token != null && token.isNotEmpty) {
+        await messagingInitialize();
+      } else {
+        LoggerUtils.warning('⚠️ onInit skipped - no token');
+      }
+    }
     super.onInit();
   }
 
-  ///  ================== Create  a conversation =========================
+  // Clear all data on logout
+  void clearAllData() {
+    LoggerUtils.debug('🧹 Clearing MessageScreenController data...');
+
+    chatLists.clear();
+    individualChatLists.clear();
+    messageScreenSearchController.clear();
+    searchText.value = '';
+    loader.value = false;
+    _isInitialized = false;
+
+    LoggerUtils.debug('✅ MessageScreenController cleared');
+  }
+
+  @override
+  void onClose() {
+    clearAllData();
+    messageScreenSearchController.dispose();
+    super.onClose();
+  }
+
+  ///  ================== Create a conversation =========================
   createMessage(
       {required String participantId,
         required String name,
@@ -89,7 +144,7 @@ class MessageScreenController extends GetxController {
 
     final Map<String, dynamic> loginForm = <String, dynamic>{
       "participants": [participantId],
-      "message": "" //
+      "message": ""
     };
     final String token =
         await SecureStorageService().read(AppConstants.accessToken) ?? '';
@@ -99,7 +154,6 @@ class MessageScreenController extends GetxController {
       headers: {'Authorization': 'Bearer $token'},
     );
     if (postResponse.isSuccess) {
-      // LoggerUtils.debug(postResponse.jsonResponse);
       await Get.find<MessageScreenController>().handleViewSingleProfileChat(
           conversationId: postResponse.jsonResponse?['data']['attributes']
           ['_conversationId']);
@@ -129,11 +183,7 @@ class MessageScreenController extends GetxController {
       if (chatListResponse != null) {
         chatLists.clear();
         final resultList = chatListResponse['data']['results'];
-        //   LoggerUtils.warning(resultList);
-        //   chatLists.addAll(resultList
-        //       .map((e) => ChatListResponseModel.fromJson(e as Map<String, dynamic>))
-        //       .toList());
-        // }
+
         for (final result in resultList) {
           final ChatListResponseModel model = ChatListResponseModel.fromJson(
             result as Map<String, dynamic>,
@@ -142,13 +192,8 @@ class MessageScreenController extends GetxController {
         }
       }
     } catch (e) {
-      // ToastManager.show(
-      //   message: e.toString(),
-      //   backgroundColor: AppColors.red,
-      //   textColor: AppColors.white,
-      // );
       LoggerUtils.debug("Exception : ${e.toString()}");
-    } finally {}
+    }
   }
 
   // ================== Handle the individual messaging ==========>
@@ -159,7 +204,6 @@ class MessageScreenController extends GetxController {
     final chatListResponse = await SocketServices().emitAsync(
       "get-all-message-by-conversationId",
       {
-        // for get-all-message-by-conversationId
         "conversationId": conversationId,
         "page": 1,
         "limit": 50000000
@@ -179,8 +223,6 @@ class MessageScreenController extends GetxController {
 
       SocketServices().listen("new-message-received::$conversationId",
               (dynamic data) {
-            // LoggerUtils.warning(data);
-            // debugPrint("notifications data : $data");
             handleViewSingleProfileChat(conversationId: conversationId);
           });
     }

@@ -11,6 +11,7 @@ import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/routes/routes.dart';
+import 'package:kaz_bd/service/socket_service.dart';
 
 import '../../../../controllers/onboarding_controller.dart';
 import '../widgets/get_started_button.dart';
@@ -32,6 +33,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   @override
   void initState() {
     super.initState();
+    SocketServices().disconnect();
+    SocketServices().init();
     _tabController = TabController(
       length: 2,
       vsync: this,

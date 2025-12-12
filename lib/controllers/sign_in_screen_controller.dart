@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:kaz_bd/controllers/message_screen_controller.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/models/sign_in_model.dart';
 import 'package:kaz_bd/service/get_storage.dart';
+import 'package:kaz_bd/service/socket_service.dart';
 import 'package:kaz_bd/utilities/enum.dart';
 
 import '../routes/routes.dart';
@@ -66,6 +68,27 @@ class SignInScreenController extends GetxController {
           AppConstants.userId,
           signedProfile.value?.id ?? '',
         );
+
+        // ///==================> Fix the Message Controller ====================>
+        // await Get.find<MessageScreenController>().messagingInitialize();
+        //
+        // ///======================================>
+        /// ======================= SOCKET =====================>
+        SocketServices().disconnect();
+
+        // Clear MessageScreenController if exists
+        if (Get.isRegistered<MessageScreenController>()) {
+          Get.find<MessageScreenController>().clearAllData();
+        }
+        await Future.delayed(Duration(milliseconds: 300));
+        SocketServices().enable();
+
+        LoggerUtils.debug('🔌 Initializing socket...');
+        await SocketServices().init();
+
+        /// ======================= SOCKET =====================>
+
+        /// ===========================> Socket ==================>
         if (signedProfile.value != null &&
             signedProfile.value!.role == 'user') {
           GetStorageModel().saveString(

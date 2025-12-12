@@ -19,13 +19,12 @@ class ChatInboxScreenController extends GetxController {
         "conversationId": conversationId,
         "text": sendMessageController.text.trim()
       });
-      if (chatListResponse != null)
-        {
-          Get.find<MessageScreenController>().handleFetchChatList(); 
-          Get.find<MessageScreenController>().handleViewSingleProfileChat(conversationId: conversationId);
-          sendMessageController.clear();
-
-        }
+      if (chatListResponse != null) {
+         Get.find<MessageScreenController>().handleFetchChatList();
+        Get.find<MessageScreenController>()
+            .handleViewSingleProfileChat(conversationId: conversationId);
+        sendMessageController.clear();
+      }
       // final newMessage = ChatMessageModel(
       //   message: sendMessageController.text,
       //   isSentByMe: true,

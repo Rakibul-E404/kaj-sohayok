@@ -155,6 +155,14 @@ class AcceptedBookingTab extends StatelessWidget {
               },
 
               // Data
+              // ///Button OnTap : Message
+              // isAcceptedBookingTabMessageOnTap: () async {
+              //   log("💬 Message button tapped for booking: $bookingId");
+              //    Get.find<MessageScreenController>().createMessage(
+              //       participantId: booking['providerId']['_userId'],
+              //       name: _getServiceName(serviceName),
+              //       imageUrl: imageUrl);
+              // },
               title: _getServiceName(serviceName),
               initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
               location: _getAddress(address),

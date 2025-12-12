@@ -24,7 +24,8 @@ class ControllerBindings extends Bindings {
   @override
   void dependencies() {
     /// ==============> Shahriar ==============>
-    Get.put(MessageScreenController());
+    // Get.put(MessageScreenController());
+    Get.lazyPut(() => MessageScreenController(), fenix: true);
     Get.lazyPut(() => OnboardingController());
     Get.lazyPut(() => SignInScreenController());
     Get.lazyPut(() => UserSignUpController());
@@ -34,7 +35,7 @@ class ControllerBindings extends Bindings {
     Get.lazyPut(() => UserProfileScreenController());
     Get.lazyPut(() => ChangePasswordScreenController());
     Get.lazyPut(() => UserEditProfileScreenController());
-    Get.lazyPut(() => MessageScreenController());
+    // Get.lazyPut(() => MessageScreenController());
     Get.lazyPut(() => ChatInboxScreenController());
     Get.lazyPut(() => MoreInformationScreenController());
     Get.lazyPut(() => FaceVerificationController());

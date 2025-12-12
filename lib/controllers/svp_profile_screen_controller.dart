@@ -9,9 +9,11 @@ import '../routes/routes.dart';
 import '../service/network_caller.dart';
 import '../service/network_response.dart';
 import '../service/secured_storage.dart';
+import '../service/socket_service.dart';
 import '../utilities/app_constants.dart';
 import '../utilities/app_url.dart';
 import '../utilities/logger_util.dart';
+import 'message_screen_controller.dart';
 
 class SvpProfileScreenController extends GetxController
     with GetTickerProviderStateMixin {
@@ -119,26 +121,64 @@ class SvpProfileScreenController extends GetxController
     svpProfileOptionsTabController.addListener(() {
       changeProfileOptionsTab(svpProfileOptionsTabController.index);
     });
+
     /// ==================> Fetch the Profile =================>
     fetchProviderProfile();
   }
   Future<void> handleLogOut() async {
     try {
+      LoggerUtils.debug('🚪 ===== LOGOUT STARTED =====');
 
+      // 1. Clear MessageScreenController data FIRST
+      if (Get.isRegistered<MessageScreenController>()) {
+        LoggerUtils.debug('Step 1: Clearing MessageScreenController...');
+        Get.find<MessageScreenController>().clearAllData();
+      }
+
+      // 2. Disconnect socket (also disables it)
+      LoggerUtils.debug('Step 2: Disconnecting socket...');
+      SocketServices().disconnect();
+
+      // 3. Clear storage
+      LoggerUtils.debug('Step 3: Clearing storage...');
       await SecureStorageService().clear();
-      Get.offAllNamed(Routes.onboardingScreen);
-    } catch (e) {
-      // loader.value = false;
 
+      // 4. Wait for cleanup
+      await Future.delayed(Duration(milliseconds: 300));
+
+      // 5. Verify cleanup
+      final token = await SecureStorageService().read(AppConstants.accessToken);
+      LoggerUtils.debug('Verification - Token: ${token ?? "NULL"}');
+      LoggerUtils.debug('Verification - Socket: ${SocketServices().socket}');
+
+      LoggerUtils.debug('✅ Logout complete');
+
+      // 6. Navigate
+      Get.offAllNamed(Routes.onboardingScreen);
+
+    } catch (e) {
       LoggerUtils.debug("Exception : ${e.toString()}");
-    } finally {
-      // clearTextFields();
-      // loader.value = false;
+      Get.offAllNamed(Routes.onboardingScreen);
     }
   }
-
-  /// ===================> Provider profile fetch ===================>
-  final Rxn<ProviderProfileModel> providerProfileModel = Rxn<ProviderProfileModel>();
+  // Future<void> handleLogOut() async {
+  //   try {
+  //     await SecureStorageService().clear();
+  //     SocketServices().reset();
+  //
+  //     Get.offAllNamed(Routes.onboardingScreen);
+  //   } catch (e) {
+  //     // loader.value = false;
+  //
+  //     LoggerUtils.debug("Exception : ${e.toString()}");
+  //   } finally {
+  //     // clearTextFields();
+  //     // loader.value = false;
+  //   }
+  // }
+   /// ===================> Provider profile fetch ===================>
+  final Rxn<ProviderProfileModel> providerProfileModel =
+      Rxn<ProviderProfileModel>();
 
   Future<void> fetchProviderProfile() async {
     try {
@@ -158,10 +198,11 @@ class SvpProfileScreenController extends GetxController
             providerProfileModel.value!.profileImage.imageUrl.contains(
               'amazonaws',
             )) {
-          profileImage.value = providerProfileModel.value!.profileImage.imageUrl;
+          profileImage.value =
+              providerProfileModel.value!.profileImage.imageUrl;
         } else {
           profileImage.value =
-          "${AppUrl.imageBaseUrl}${providerProfileModel.value!.profileImage.imageUrl}";
+              "${AppUrl.imageBaseUrl}${providerProfileModel.value!.profileImage.imageUrl}";
         }
         // LoggerUtils.debug(uerProfileModel.value?.email);
       } else {
@@ -178,6 +219,7 @@ class SvpProfileScreenController extends GetxController
       loader.value = false;
     }
   }
+
   ///----------------------------- Dispost the controllers function --------------------------
   @override
   void onClose() {

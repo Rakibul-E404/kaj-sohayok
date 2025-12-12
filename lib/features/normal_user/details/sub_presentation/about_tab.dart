@@ -186,6 +186,7 @@ class AboutTab extends StatelessWidget {
                           return InkWell(
                             onTap: () {
                               ///TODO : Add message here ============>
+
                               Get.find<MessageScreenController>().createMessage(
                                   participantId: detailsScreenController
                                           .serviceDetails

@@ -25,7 +25,15 @@ class _MessageScreenState extends State<MessageScreen> {
   MessageScreenController controller = Get.find<MessageScreenController>();
 
   @override
+  void initState() {
+    controller.messagingInitialize();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    controller.handleFetchChatList();
+
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -58,17 +66,19 @@ class _MessageScreenState extends State<MessageScreen> {
 
               ///Section : Message List
               Obx(
-                    () {
+                () {
                   // Use the filtered list instead of the full list
                   final filteredChats = controller.filteredChatLists;
 
                   // Show "No results" message if search is active but no results
-                  if (controller.searchText.value.isNotEmpty && filteredChats.isEmpty) {
+                  if (controller.searchText.value.isNotEmpty &&
+                      filteredChats.isEmpty) {
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: 40.h),
                       child: Text(
                         'No chats found',
-                        style: TextFontStyle.headline18w700c4d4d4dStyleSatoshi.copyWith(
+                        style: TextFontStyle.headline18w700c4d4d4dStyleSatoshi
+                            .copyWith(
                           color: Colors.grey,
                         ),
                       ),
@@ -83,28 +93,30 @@ class _MessageScreenState extends State<MessageScreen> {
                     separatorBuilder: (context, index) =>
                         UIHelper.verticalSpace(24.h),
                     itemBuilder: (context, index) {
-                      final ChatListResponseModel message = filteredChats[index];
+                      final ChatListResponseModel message =
+                          filteredChats[index];
                       return InkWell(
                         onTap: () async {
                           await controller.handleViewSingleProfileChat(
                               conversationId: message.conversations.firstOrNull
-                                  ?.conversationId ??
+                                      ?.conversationId ??
                                   '');
                           Get.to(() => PersonalInbox(),
                               arguments: {
                                 'receiverModel': message.userId,
                                 'conversationId': message.conversations
-                                    .firstOrNull?.conversationId ??
+                                        .firstOrNull?.conversationId ??
                                     ''
                               },
                               transition: Transition.rightToLeft);
                         },
                         child: MessageTile(
-                          imageUrl: message.userId?.profileImage?.imageUrl ?? '',
+                          imageUrl:
+                              message.userId?.profileImage?.imageUrl ?? '',
                           userName: message.userId?.name ?? '',
                           lastMessage:
-                          message.conversations.firstOrNull?.lastMessage ??
-                              '',
+                              message.conversations.firstOrNull?.lastMessage ??
+                                  '',
                           time: (formatIsoDate(
                               message.conversations.firstOrNull?.updatedAt ??
                                   '')),
