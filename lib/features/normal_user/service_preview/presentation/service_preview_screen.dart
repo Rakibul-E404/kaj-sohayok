@@ -33,6 +33,9 @@ class ServicesPreviewScreen extends StatelessWidget {
 
     // In your ServicesPreviewScreen:
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // Reset controller to clear previous values before setting new ones
+      controller.reset();
+
       controller.setProviderId(pid: providerID);
       controller.setBookingDateTime(bDateTime: bookingDateTime);
       controller.setAddress(addr: address);

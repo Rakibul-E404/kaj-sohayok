@@ -224,8 +224,8 @@ class LocationRepository {
   LocationRepository._internal();
 
   // Google Maps API key
-  static const String apiKey = 'AIzaSyBFi80uuJIWkkLCpodFa8oXmD8XD_h8LMc';
-  // static const String apiKey = 'AIzaSyDjwPmy5gPopQRKK5zCEa-_0u18e8Lmgi';
+  // static const String apiKey = 'AIzaSyBFi80uuJIWkkLCpodFa8oXmD8XD_h8LMc';
+  static const String apiKey = 'AIzaSyDjwPmy5gPopQRKK5zCEa-_0u18e8Lmgis';
 
   // Place auto-complete suggestions
   Future<List<dynamic>> placeAutoComplete(String query) async {
@@ -388,7 +388,7 @@ class PlaceAutocompleteWidget extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
   final Function(String placeId, String description, {bool isCurrentLocation})
-  onPlaceSelected;
+      onPlaceSelected;
   final bool showCurrentLocation;
   final String? currentLocationAddress;
   final Widget? prefixIcon;
@@ -542,15 +542,15 @@ class _PlaceAutocompleteWidgetState extends State<PlaceAutocompleteWidget> {
 
       setState(() {
         _predictions =
-        widget.showCurrentLocation && widget.currentLocationAddress != null
-            ? [
-          {
-            'place_id': 'current_location',
-            'description': widget.currentLocationAddress!,
-            'is_current_location': true,
-          }
-        ]
-            : [];
+            widget.showCurrentLocation && widget.currentLocationAddress != null
+                ? [
+                    {
+                      'place_id': 'current_location',
+                      'description': widget.currentLocationAddress!,
+                      'is_current_location': true,
+                    }
+                  ]
+                : [];
         _isLoading = false;
         _showSuggestions = _predictions.isNotEmpty;
 
@@ -623,14 +623,14 @@ class _PlaceAutocompleteWidgetState extends State<PlaceAutocompleteWidget> {
       if (mounted && !_isDisposed) {
         setState(() {
           _predictions = widget.showCurrentLocation &&
-              widget.currentLocationAddress != null
+                  widget.currentLocationAddress != null
               ? [
-            {
-              'place_id': 'current_location',
-              'description': widget.currentLocationAddress!,
-              'is_current_location': true,
-            }
-          ]
+                  {
+                    'place_id': 'current_location',
+                    'description': widget.currentLocationAddress!,
+                    'is_current_location': true,
+                  }
+                ]
               : [];
           _isLoading = false;
 
@@ -745,7 +745,7 @@ class _PlaceAutocompleteWidgetState extends State<PlaceAutocompleteWidget> {
                 ),
                 child: Padding(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   child: Row(
                     children: [
                       Icon(
@@ -899,28 +899,28 @@ class _PlaceAutocompleteWidgetState extends State<PlaceAutocompleteWidget> {
                 fillColor: Colors.white,
                 suffixIcon: _isLoading
                     ? Container(
-                  width: 20,
-                  height: 20,
-                  padding: const EdgeInsets.all(8),
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).primaryColor,
-                    ),
-                  ),
-                )
+                        width: 20,
+                        height: 20,
+                        padding: const EdgeInsets.all(8),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      )
                     : widget.controller.text.isNotEmpty
-                    ? IconButton(
-                  icon: const Icon(Icons.clear, size: 20),
-                  onPressed: () {
-                    widget.controller.clear();
-                    setState(() {
-                      _predictions = [];
-                      _showSuggestions = false;
-                    });
-                  },
-                )
-                    : null,
+                        ? IconButton(
+                            icon: const Icon(Icons.clear, size: 20),
+                            onPressed: () {
+                              widget.controller.clear();
+                              setState(() {
+                                _predictions = [];
+                                _showSuggestions = false;
+                              });
+                            },
+                          )
+                        : null,
               ),
         ),
         const SizedBox(height: 8),
@@ -944,7 +944,7 @@ class SearchLocationScreen extends StatefulWidget {
 
 class _SearchLocationScreenState extends State<SearchLocationScreen> {
   final Completer<GoogleMapController> _controller =
-  Completer<GoogleMapController>();
+      Completer<GoogleMapController>();
 
   // Default to Bangladesh coordinates (fallback)
   static const CameraPosition _kBangladesh = CameraPosition(
@@ -1106,11 +1106,15 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
         debugPrint('   SubLocality: ${place.subLocality}');
         debugPrint('   Locality: ${place.locality}');
         debugPrint('   Country: ${place.country}');
+        debugPrint('   Name: ${place.name}'); // This might contain plus codes
 
         String fullAddress =
-        "${place.street ?? ''}, ${place.subLocality ?? ''}, ${place.locality ?? ''}, ${place.country ?? ''}"
-            .replaceAll(", ,", ", ")
-            .replaceAll(RegExp(r', $'), '');
+            "${place.street ?? ''}, ${place.subLocality ?? ''}, ${place.locality ?? ''}, ${place.country ?? ''}"
+                .replaceAll(", ,", ", ")
+                .replaceAll(RegExp(r', $'), '');
+
+        // Remove Plus Code (Open Location Code) if present - typically looks like "XXXX+XX" format
+        fullAddress = _removePlusCodeFromAddress(fullAddress);
 
         debugPrint('📫 [GEOCODING] Formatted address: $fullAddress');
 
@@ -1123,16 +1127,38 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
         debugPrint('📭 [GEOCODING] No placemarks found');
         setState(() {
           _selectedAddress =
-          "Lat: ${position.latitude.toStringAsFixed(6)}, Lng: ${position.longitude.toStringAsFixed(6)}";
+              "Lat: ${position.latitude.toStringAsFixed(6)}, Lng: ${position.longitude.toStringAsFixed(6)}";
         });
       }
     } catch (e) {
       debugPrint('💥 [GEOCODING] Error getting address: $e');
       setState(() {
         _selectedAddress =
-        "Lat: ${position.latitude.toStringAsFixed(6)}, Lng: ${position.longitude.toStringAsFixed(6)}";
+            "Lat: ${position.latitude.toStringAsFixed(6)}, Lng: ${position.longitude.toStringAsFixed(6)}";
       });
     }
+  }
+
+  /// Removes Plus Codes (Open Location Codes) from the address string
+  /// Plus codes typically have the format of 4-8 alphanumeric characters followed by a plus sign and 2-4 more characters
+  /// Example: "QCJ3+FHV Shohid Mamun Hall Sarkari Titumir College, Dhaka, Bangladesh"
+  /// becomes: "Shohid Mamun Hall Sarkari Titumir College, Dhaka, Bangladesh"
+  String _removePlusCodeFromAddress(String address) {
+    // Regular expression to match Plus Code patterns (e.g., "XXXX+XX", "XXX+XXX")
+    // This pattern looks for groups of 2-8 alphanumeric characters followed by a '+' and 2-4 more alphanumeric characters
+    RegExp plusCodeRegex = RegExp(
+      r'\b[A-Z0-9]{2,8}\+[A-Z0-9]{2,8}\b\s*',
+      caseSensitive: false,
+    );
+
+    String cleanedAddress = address.replaceAll(plusCodeRegex, '');
+
+    // Clean up any extra spaces or commas that might result from the removal
+    cleanedAddress = cleanedAddress.replaceAll(RegExp(r',\s*,\s*'), ', ');
+    cleanedAddress = cleanedAddress.replaceAll(RegExp(r'^,\s*'), '');
+    cleanedAddress = cleanedAddress.replaceAll(RegExp(r',\s*$'), '');
+
+    return cleanedAddress.trim();
   }
 
   void _showLocationServicesDialog() {
@@ -1180,7 +1206,6 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
 
     try {
       debugPrint('🏠 [MAP] Getting address for tapped location...');
-      debugPrint('🏠 [MAP] Getting address for tapped location...');
       List<Placemark> placemarks = await placemarkFromCoordinates(
         position.latitude,
         position.longitude,
@@ -1188,9 +1213,12 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
       if (placemarks.isNotEmpty) {
         Placemark place = placemarks[0];
         String fullAddress =
-        "${place.street ?? ''}, ${place.subLocality ?? ''}, ${place.locality ?? ''}, ${place.country ?? ''}"
-            .replaceAll(", ,", ", ")
-            .replaceAll(RegExp(r', $'), '');
+            "${place.street ?? ''}, ${place.subLocality ?? ''}, ${place.locality ?? ''}, ${place.country ?? ''}"
+                .replaceAll(", ,", ", ")
+                .replaceAll(RegExp(r', $'), '');
+
+        // Remove Plus Code (Open Location Code) if present - typically looks like "XXXX+XX" format
+        fullAddress = _removePlusCodeFromAddress(fullAddress);
 
         addressText = fullAddress.isNotEmpty ? fullAddress : addressText;
         debugPrint('📫 [MAP] Address found: $addressText');
@@ -1312,10 +1340,11 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
           // Select the searched location
           _onMapTapped(location);
 
-          // Update address
+          // Update address - remove Plus Code if it's present in the description
+          String cleanedDescription = _removePlusCodeFromAddress(description);
           setState(() {
-            _selectedAddress = description;
-            debugPrint('📝 [SEARCH] Updated address to: $description');
+            _selectedAddress = cleanedDescription;
+            debugPrint('📝 [SEARCH] Updated address to: $cleanedDescription');
           });
         } catch (e) {
           debugPrint('❌ [SEARCH] Error moving camera: $e');
