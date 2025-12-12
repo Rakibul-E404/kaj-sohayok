@@ -125,6 +125,7 @@ class SvpProfileScreenController extends GetxController
     /// ==================> Fetch the Profile =================>
     fetchProviderProfile();
   }
+
   Future<void> handleLogOut() async {
     try {
       LoggerUtils.debug('🚪 ===== LOGOUT STARTED =====');
@@ -155,12 +156,12 @@ class SvpProfileScreenController extends GetxController
 
       // 6. Navigate
       Get.offAllNamed(Routes.onboardingScreen);
-
     } catch (e) {
       LoggerUtils.debug("Exception : ${e.toString()}");
       Get.offAllNamed(Routes.onboardingScreen);
     }
   }
+
   // Future<void> handleLogOut() async {
   //   try {
   //     await SecureStorageService().clear();
@@ -176,15 +177,15 @@ class SvpProfileScreenController extends GetxController
   //     // loader.value = false;
   //   }
   // }
-   /// ===================> Provider profile fetch ===================>
+  /// ===================> Provider profile fetch ===================>
   final Rxn<ProviderProfileModel> providerProfileModel =
       Rxn<ProviderProfileModel>();
 
   Future<void> fetchProviderProfile() async {
     try {
+      loader.value = true;
       final String token =
           await SecureStorageService().read(AppConstants.accessToken) ?? '';
-      loader.value = true;
       final NetworkResponse getResponse = await NetworkCaller().getRequest(
         AppUrl.fetchProfile,
         headers: <String, String>{'Authorization': 'Bearer $token'},
