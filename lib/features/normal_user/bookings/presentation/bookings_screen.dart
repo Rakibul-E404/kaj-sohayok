@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kaz_bd/features/normal_user/bookings/sub_presentation/work_completed/presentation/work_completed_tab.dart';
-import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 
@@ -11,7 +9,6 @@ import '../sub_presentation/in_progress/presentation/in_progress_tab.dart';
 import '../sub_presentation/payment_request/presentation/payment_request_tab.dart';
 import '../sub_presentation/pending/presentation/pending_tab.dart';
 import '../sub_presentation/services_canceled/presentation/services_canceled_tab.dart';
-import '../widgets/bookings_details_card_widget.dart';
 
 class BookingsScreen extends StatelessWidget {
   const BookingsScreen({super.key});
@@ -26,6 +23,7 @@ class BookingsScreen extends StatelessWidget {
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
         centerTitle: true,
+        automaticallyImplyLeading: false,
         backgroundColor: AppColors.scaffoldBackgroundColor,
       ),
       body: SafeArea(
@@ -47,7 +45,6 @@ class BookingsScreen extends StatelessWidget {
                     Tab(child: Text('Work Completed')),
                   ],
                 ),
-
                 Expanded(
                   child: TabBarView(
                     physics: NeverScrollableScrollPhysics(),

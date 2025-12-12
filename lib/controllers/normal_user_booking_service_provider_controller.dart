@@ -132,7 +132,7 @@ class NormalUserBookingServiceProviderController extends GetxController {
         // Check if there's an error message in the response
         final errorMessage = _extractErrorMessage(response.jsonResponse);
         _showSnackbar(
-          title: 'Connection Issue',
+          title: 'Provider Unavailable',
           message:
               errorMessage ?? 'Unable to check availability. Please try again',
           backgroundColor: AppColors.cee3333,
