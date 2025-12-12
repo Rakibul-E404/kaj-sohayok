@@ -60,7 +60,10 @@ class AppUrl {
 
   static String createConversation = '${baseUrl}v1/conversations/';
 
-  ///===> rakiubl added api:
+  ///
+  ///
+  ///
+  ///===> rakiubl added api:::::::::::::::::>
   static String pendingBookings =
       '${baseUrl}v1/service-bookings/paginate?status=pending';
   static String acceptedBookings =
@@ -116,12 +119,13 @@ class AppUrl {
     return '${baseUrl}v1/service-bookings/update-work-proof/$bookingId';
   }
 
-  static String addNewCost(String bookingId) {
-    return '${baseUrl}v1/additional-cost';
-  }
+  // static String additionalCost(String bookingId) {
+  //   return '${baseUrl}v1/additional-cost';
+  // }
+  static const String additionalCost = '${baseUrl}v1/additional-cost';
 
 
-  ///===> rakibul api add close
+  ///===> rakibul api add close::::::::::::::::>
   ///
   ///
   ///
