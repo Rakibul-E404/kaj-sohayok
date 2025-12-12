@@ -1,7 +1,9 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 import '../../../../../../constants/app_enums.dart';
+import '../../../../../../controllers/message_screen_controller.dart';
 import '../../../../../../custom_widgets/recent_job_request_status_widget.dart';
 import '../../../../../../routes/routes.dart';
 import '../../../../../../service/network_caller.dart';
@@ -55,7 +57,8 @@ class SvpAcceptedBookingsController extends GetxController {
             responseData['data'] != null &&
             responseData['data']['attributes'] != null &&
             responseData['data']['attributes']['results'] != null) {
-          jobRequests.assignAll(List<dynamic>.from(responseData['data']['attributes']['results']));
+          jobRequests.assignAll(List<dynamic>.from(
+              responseData['data']['attributes']['results']));
           isLoading.value = false;
         } else {
           hasError.value = true;
@@ -77,7 +80,8 @@ class SvpAcceptedBookingsController extends GetxController {
         }
       }
     } catch (e, stackTrace) {
-      log('Error fetching accepted bookings: $e', error: e, stackTrace: stackTrace);
+      log('Error fetching accepted bookings: $e',
+          error: e, stackTrace: stackTrace);
       hasError.value = true;
       errorMessage.value = 'Network error. Please check your connection.';
       isLoading.value = false;
@@ -101,8 +105,18 @@ class SvpAcceptedBookingsController extends GetxController {
     try {
       final dateTime = DateTime.parse(dateTimeString).toLocal();
       final months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
       ];
       final month = months[dateTime.month - 1];
       final day = dateTime.day;
@@ -124,7 +138,9 @@ class SvpAcceptedBookingsController extends GetxController {
 
   void navigateToJobDetails(Map<String, dynamic> jobRequest) {
     final bookingId = jobRequest['_ServiceBookingId'] as String? ?? '';
-    final userId = (jobRequest['userId'] as Map<String, dynamic>?)?['_userId'] as String? ?? '';
+    final userId = (jobRequest['userId'] as Map<String, dynamic>?)?['_userId']
+            as String? ??
+        '';
     log("Navigating to job details for booking ID: $bookingId");
 
     Get.toNamed(
@@ -182,7 +198,8 @@ class SvpAcceptedBookingsController extends GetxController {
 
           // Update the status in the local list
           if (index >= 0 && index < jobRequests.length) {
-            final updatedJobRequest = Map<String, dynamic>.from(jobRequests[index]);
+            final updatedJobRequest =
+                Map<String, dynamic>.from(jobRequests[index]);
             updatedJobRequest['status'] = 'inProgress';
             jobRequests[index] = updatedJobRequest;
           }
@@ -241,16 +258,15 @@ class SvpAcceptedBookingsController extends GetxController {
     final currentStatus = jobRequest['status'] as String? ?? '';
 
     // Check if work is already started
-    final isWorkStarted = currentStatus == 'inProgress' || currentStatus == 'completed';
+    final isWorkStarted =
+        currentStatus == 'inProgress' || currentStatus == 'completed';
 
     // Get loading state for this booking
     final isLoadingStartWork = processingStartWork[bookingId] ?? false;
 
     return RecentJobRequestStatusWidget(
       onTap: () => navigateToJobDetails(jobRequest),
-      startWorkOnTap: isWorkStarted
-          ? null
-          : () => startWork(bookingId, index),
+      startWorkOnTap: isWorkStarted ? null : () => startWork(bookingId, index),
       isJobRequestAccpted: true,
       userImage: getImageUrl(profileImage),
       userName: userName,
@@ -259,6 +275,12 @@ class SvpAcceptedBookingsController extends GetxController {
       // Add the new parameters here
       isStartWorkLoading: isLoadingStartWork,
       isWorkStarted: isWorkStarted,
+      messageOnTap: () {
+        Get.find<MessageScreenController>().createMessage(
+            participantId: userData['_userId'] ?? '',
+            name: userName,
+            imageUrl: getImageUrl(profileImage) ?? '');
+      },
     );
   }
 }

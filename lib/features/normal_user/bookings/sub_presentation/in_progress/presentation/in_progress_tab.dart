@@ -1,11 +1,13 @@
 import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 import '../../../../../../routes/routes.dart';
 import '../../../../../../gen/assets.gen.dart';
 import 'package:kaz_bd/constants/app_enums.dart';
 import '../../../../../../helpers/ui_helpers.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../../../utilities/app_url.dart';
 import '../in_progress_controller/in_progress_controller.dart';
 import '../../../../../../controllers/message_screen_controller.dart';
 import 'package:kaz_bd/features/normal_user/bookings/widgets/bookings_details_card_widget.dart';
@@ -108,7 +110,8 @@ class InProgressTab extends StatelessWidget {
             log('   Service Provider ID: "$serviceProviderId"');
             log('   Provider User ID: "$providerId"');
 
-            final serviceName = booking['providerDetailsId']?['serviceName'] as Map<String, dynamic>?;
+            final serviceName = booking['providerDetailsId']?['serviceName']
+                as Map<String, dynamic>?;
             final address = booking['address'] as Map<String, dynamic>?;
             final provider = booking['providerId'] as Map<String, dynamic>?;
 
@@ -118,7 +121,8 @@ class InProgressTab extends StatelessWidget {
             return BookingDetailsCardWidget(
               // ➤ CARD TAP → Navigate with ALL required parameters
               onTap: () {
-                _navigateToDetailsScreen(bookingId, serviceProviderId, providerId);
+                _navigateToDetailsScreen(
+                    bookingId, serviceProviderId, providerId);
               },
 
               isInProgressTab: true,
@@ -128,7 +132,9 @@ class InProgressTab extends StatelessWidget {
                 log("💬 [IN PROGRESS TAB] Message button tapped for booking: $bookingId");
 
                 // 🔴 ADDED: Use providerId for message (user ID)
-                final messageProviderId = providerId.isNotEmpty ? providerId : _getProviderUserId(booking);
+                final messageProviderId = providerId.isNotEmpty
+                    ? providerId
+                    : _getProviderUserId(booking);
 
                 // 🔴 ADDED: Debug logging
                 log('   📊 provider object: ${provider?.toString()}');
@@ -151,12 +157,12 @@ class InProgressTab extends StatelessWidget {
                 try {
                   // 🔴 ADDED: Check if MessageScreenController exists
                   final msgController = Get.find<MessageScreenController>();
-                  log('   ✅ Found MessageScreenController');
 
+                  LoggerUtils.info(imageUrl);
                   msgController.createMessage(
                     participantId: messageProviderId,
                     name: provider?['name'] ?? 'Unknown Provider',
-                    imageUrl: imageUrl ?? Assets.images.userImage.path,
+                    imageUrl: imageUrl ?? '',
                   );
 
                   log('   ✅ createMessage called successfully');
@@ -174,15 +180,18 @@ class InProgressTab extends StatelessWidget {
 
               ///Button OnTap -> View
               isInProgressTabViewOnTap: () {
-                _navigateToDetailsScreen(bookingId, serviceProviderId, providerId);
+                _navigateToDetailsScreen(
+                    bookingId, serviceProviderId, providerId);
               },
 
               // Data
               title: _getServiceName(serviceName),
               initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
               location: _getAddress(address),
-              dateTime: _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
-              serviceProviderProfileImage: imageUrl ?? Assets.images.userImage.path,
+              dateTime:
+                  _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
+              serviceProviderProfileImage:
+                  imageUrl ?? Assets.images.userImage.path,
               serviceProviderName: provider?['name'] ?? 'Unknown Provider',
               serviceProviderDesignation: 'Service Provider',
               isNetworkImage: isNetworkImage,
@@ -218,7 +227,8 @@ class InProgressTab extends StatelessWidget {
   // 🔴 FIXED: Extract Service Provider ID (_ServiceProviderId)
   static String _getServiceProviderId(Map<String, dynamic> booking) {
     // 1. Primary: providerDetailsId._ServiceProviderId
-    final providerDetails = booking['providerDetailsId'] as Map<String, dynamic>?;
+    final providerDetails =
+        booking['providerDetailsId'] as Map<String, dynamic>?;
     if (providerDetails?['_ServiceProviderId'] != null) {
       final id = providerDetails!['_ServiceProviderId'].toString();
       log('✅ [IN PROGRESS TAB] Service Provider ID from providerDetailsId._ServiceProviderId: $id');
@@ -250,7 +260,8 @@ class InProgressTab extends StatelessWidget {
     return '';
   }
 
-  static String? _getImageUrl(String bookingId, InProgressBookingsController controller) {
+  static String? _getImageUrl(
+      String bookingId, InProgressBookingsController controller) {
     final url = controller.getImageUrl(bookingId);
     if (url.isEmpty) return null;
 
@@ -261,7 +272,8 @@ class InProgressTab extends StatelessWidget {
     return controller.hasImage(bookingId) ? url : null;
   }
 
-  static bool _isNetworkImage(String bookingId, InProgressBookingsController controller) {
+  static bool _isNetworkImage(
+      String bookingId, InProgressBookingsController controller) {
     final url = controller.getImageUrl(bookingId);
     if (url.isEmpty) return false;
 
@@ -270,7 +282,8 @@ class InProgressTab extends StatelessWidget {
   }
 
   // 🔴 FIXED: Navigation with ALL required parameters for DetailsScreen
-  static void _navigateToDetailsScreen(String bookingId, String serviceProviderId, String providerId) {
+  static void _navigateToDetailsScreen(
+      String bookingId, String serviceProviderId, String providerId) {
     log('🔍 [IN PROGRESS TAB] Navigation to DetailsScreen → preparing arguments...');
     log('   ➤ bookingId = "$bookingId"');
     log('   ➤ serviceProviderId = "$serviceProviderId"');
@@ -299,8 +312,8 @@ class InProgressTab extends StatelessWidget {
       arguments: {
         "status": BookingStatusEnum.inProgress,
         "bookingId": bookingId,
-        "serviceProviderID": serviceProviderId,  // Required for service details
-        "providerID": providerId,                // Required for booking flow
+        "serviceProviderID": serviceProviderId, // Required for service details
+        "providerID": providerId, // Required for booking flow
       },
     );
   }

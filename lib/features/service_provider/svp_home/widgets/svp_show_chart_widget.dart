@@ -99,12 +99,12 @@ class IncomeChartCard extends StatelessWidget {
               final chartData = controller.chartData;
               final maxValue = controller.maxValue;
 
+              final  List<String> yAxisLabels = _generateYAxisLabels(maxValue);
               if (chartData.isEmpty) {
                 return const Center(child: Text('No chart data available'));
               }
 
               // Generate Y-axis labels based on maxValue
-              final yAxisLabels = _generateYAxisLabels(maxValue);
 
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.end,

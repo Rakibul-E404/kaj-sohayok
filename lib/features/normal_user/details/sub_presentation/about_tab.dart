@@ -25,6 +25,8 @@ class AboutTab extends StatelessWidget {
   Widget build(BuildContext context) {
     DetailsScreenController detailsScreenController =
         Get.find<DetailsScreenController>();
+     String? imageUrl;
+    String? fullImageUrl;
     return SingleChildScrollView(
       key: const PageStorageKey('about'),
       padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),
@@ -76,23 +78,23 @@ class AboutTab extends StatelessWidget {
                 children: [
                   ///Section : Service Provider Image
                   Obx(() {
-                    String? imageUrl;
+
                     if (detailsScreenController
                             .providerProfileImage?.isNotEmpty ==
                         true) {
                       imageUrl = detailsScreenController.providerProfileImage;
                     }
 
-                    if (imageUrl != null && imageUrl.isNotEmpty) {
-                      String fullImageUrl = imageUrl;
+                    if (imageUrl != null && imageUrl!.isNotEmpty) {
+                        fullImageUrl = imageUrl;
 
-                      if (!imageUrl.startsWith('http')) {
+                      if (!imageUrl!.startsWith('http')) {
                         fullImageUrl = '${AppUrl.imageBaseUrl}$imageUrl';
                       }
 
                       return ClipOval(
                         child: Image.network(
-                          fullImageUrl,
+                          fullImageUrl ?? '',
                           width: 40.w,
                           height: 40.h,
                           fit: BoxFit.cover,
@@ -196,8 +198,7 @@ class AboutTab extends StatelessWidget {
                                       '',
                                   name: detailsScreenController.providerName ??
                                       "",
-                                  imageUrl: detailsScreenController
-                                          .providerProfileImage ??
+                                  imageUrl: fullImageUrl ??
                                       '');
                             },
                             child: Container(

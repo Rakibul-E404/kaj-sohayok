@@ -47,8 +47,7 @@ class SvpHomeScreen extends StatelessWidget {
             children: [
               ///Section : AppLogo & Notification Section
               Obx(() {
-                if (controller.isHomeDataLoading.value &&
-                    controller.homeData.isEmpty) {
+                if (controller.isHomeDataLoading.value) {
                   return CustomShimmerEffect(height: 40.h, width: 1.sw);
                 }
 
@@ -69,8 +68,7 @@ class SvpHomeScreen extends StatelessWidget {
                   children: [
                     ///Section : Graph Chart
                     Obx(() {
-                      if (controller.isHomeDataLoading.value &&
-                          controller.homeData.isEmpty) {
+                      if (controller.isHomeDataLoading.value) {
                         return const Center(child: IncomeCardLoader());
                       }
 
@@ -80,19 +78,18 @@ class SvpHomeScreen extends StatelessWidget {
 
                     ///Section : Job Status Card
                     Obx(() {
-                      if (controller.isHomeDataLoading.value &&
-                          controller.homeData.isEmpty) {
+                      if (controller.isHomeDataLoading.value) {
                         return GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: 4,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 16.w,
-                                mainAxisSpacing: 16.h,
-                                childAspectRatio: 0.86,
-                              ),
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 16.w,
+                            mainAxisSpacing: 16.h,
+                            childAspectRatio: 0.86,
+                          ),
                           itemBuilder: (context, index) {
                             return JobStatusLoader();
                           },
@@ -100,23 +97,27 @@ class SvpHomeScreen extends StatelessWidget {
                       }
 
                       final stats = controller.stats;
-                      if (stats == null) {
+                      // if (stats == null)
+                      if (controller.isHomeDataLoading.value) {
                         return CustomShimmerEffect(height: 10.h, width: 15.w);
                       }
 
-                      final jobTypes = [
+                      final List<Map<String, Object>> jobTypes = [
                         {
                           'title': 'Pending',
-                          'totalJobs': stats.totalRequests ?? 0,
+                          'totalJobs': stats?.totalRequests ?? 0,
                         },
-                        {'title': 'Accepted', 'totalJobs': stats.accepted ?? 0},
+                        {
+                          'title': 'Accepted',
+                          'totalJobs': stats?.accepted ?? 0
+                        },
                         {
                           'title': 'In Progress',
-                          'totalJobs': stats.inProgress ?? 0,
+                          'totalJobs': stats?.inProgress ?? 0,
                         },
                         {
                           'title': 'Completed',
-                          'totalJobs': stats.completed ?? 0,
+                          'totalJobs': stats?.completed ?? 0,
                         },
                       ];
 
@@ -205,15 +206,11 @@ class SvpHomeScreen extends StatelessWidget {
                       final recentRequests = controller.recentJobRequests;
                       if (recentRequests.isEmpty) {
                         return Center(
-                          child: Lottie.asset(
-                            Assets.lottie.emptyScreen,
-                            fit: BoxFit.contain,
-                          ),
-                        );
+                            child: ThreeTimeLottie(
+                                lottieAssetPath: Assets.lottie.emptyScreen));
                       }
 
-                      if (controller.isHomeDataLoading.value ||
-                          controller.homeData.isEmpty) {
+                      if (controller.isHomeDataLoading.value) {
                         return RecentJobRequestLoader();
                       }
 
@@ -265,6 +262,58 @@ class SvpHomeScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ThreeTimeLottie extends StatefulWidget {
+  final String lottieAssetPath;
+
+  const ThreeTimeLottie({super.key, required this.lottieAssetPath});
+
+  @override
+  _ThreeTimeLottieState createState() => _ThreeTimeLottieState();
+}
+
+class _ThreeTimeLottieState extends State<ThreeTimeLottie>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  int playCount = 0; // Track how many times played
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(vsync: this);
+
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        playCount++;
+
+        if (playCount < 2) {
+          _controller.reset();
+          _controller.forward();
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Lottie.asset(
+      widget.lottieAssetPath,
+      controller: _controller,
+      fit: BoxFit.contain,
+      onLoaded: (composition) {
+        _controller.duration = composition.duration;
+        _controller.forward(); // start first play
+      },
     );
   }
 }

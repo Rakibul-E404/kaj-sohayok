@@ -25,6 +25,8 @@ class ProviderDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     GetNrmUserServiceProviderProfileInfoController svpProfileDetailsController =
         Get.find<GetNrmUserServiceProviderProfileInfoController>();
+    String? imageUrl;
+    String? fullImageUrl;
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
@@ -82,7 +84,7 @@ class ProviderDetailsScreen extends StatelessWidget {
                                   /// --- Service Image ---
                                   Obx(() {
                                     // Get the first gallery attachment from service details if available
-                                    String? imageUrl;
+
                                     if (svpProfileDetailsController
                                             .profileImageUrl.isNotEmpty ==
                                         true) {
@@ -92,10 +94,10 @@ class ProviderDetailsScreen extends StatelessWidget {
 
                                     // Show network image if URL is available, otherwise show placeholder
                                     if (imageUrl != null &&
-                                        imageUrl.isNotEmpty) {
+                                        imageUrl!.isNotEmpty) {
                                       // Make sure the URL is properly formatted
-                                      String fullImageUrl = imageUrl;
-                                      if (!imageUrl.startsWith('http')) {
+                                      fullImageUrl = imageUrl;
+                                      if (!imageUrl!.startsWith('http')) {
                                         // If it's a relative path, prepend the base URL
                                         fullImageUrl =
                                             '${AppUrl.imageBaseUrl}$imageUrl';
@@ -103,7 +105,7 @@ class ProviderDetailsScreen extends StatelessWidget {
 
                                       return ClipOval(
                                         child: CachedNetworkImage(
-                                          imageUrl: fullImageUrl,
+                                          imageUrl: fullImageUrl ?? '',
                                           height: 94.h,
                                           width: 94.w,
                                           fit: BoxFit.cover,
@@ -185,19 +187,18 @@ class ProviderDetailsScreen extends StatelessWidget {
                                       ///Section : Message
                                       InkWell(
                                         onTap: () {
-
                                           Get.find<MessageScreenController>()
                                               .createMessage(
                                                   participantId:
                                                       svpProfileDetailsController
-                                                          .serviceProviderId
-                                                          .value,
+                                                              .serviceProviderAttributes
+                                                              .value
+                                                              ?.id ??
+                                                          '',
                                                   name:
                                                       svpProfileDetailsController
                                                           .providerName,
-                                                  imageUrl:
-                                                      svpProfileDetailsController
-                                                          .profileImageUrl);
+                                                  imageUrl: fullImageUrl ?? '');
                                         },
                                         child: Container(
                                           padding: EdgeInsets.all(6.sp),
