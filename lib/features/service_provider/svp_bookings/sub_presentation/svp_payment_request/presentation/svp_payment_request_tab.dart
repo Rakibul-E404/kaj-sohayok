@@ -54,15 +54,6 @@ class SvpPaymentRequestTab extends StatelessWidget {
 }
 */
 
-
-
-
-
-
-
-
-
-
 ///
 ///
 ///
@@ -70,10 +61,6 @@ class SvpPaymentRequestTab extends StatelessWidget {
 ///
 ///
 ///
-
-
-
-
 
 // lib/.../svp_payment_request_tab.dart
 
@@ -98,7 +85,9 @@ class SvpPaymentRequestTab extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(top: UIHelper.kDefaulutPadding()),
-          child: Obx(() => _buildContent(controller)),
+          child: Obx(() => RefreshIndicator(
+              onRefresh: () => controller.fetchPaymentRequests(),
+              child: _buildContent(controller))),
         ),
       ),
     );
@@ -106,84 +95,110 @@ class SvpPaymentRequestTab extends StatelessWidget {
 
   Widget _buildContent(SvpPaymentRequestController controller) {
     if (controller.isLoading.value) {
-      return Center(
-        child: Padding(
-          padding: EdgeInsets.all(20.h),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(color: AppColors.c000e08),
-              UIHelper.verticalSpace(16.h),
-              Text(
-                'Loading payment requests...',
-                style: TextFontStyle.headline10w400c6c606cStyleSatoshi,
+      return ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          SizedBox(
+            height: 600,
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.all(20.h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(color: AppColors.c000e08),
+                    UIHelper.verticalSpace(16.h),
+                    Text(
+                      'Loading payment requests...',
+                      style: TextFontStyle.headline10w400c6c606cStyleSatoshi,
+                    ),
+                  ],
+                ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       );
     }
 
     if (controller.hasError.value) {
-      return Center(
-        child: Padding(
-          padding: EdgeInsets.all(20.h),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.error_outline, size: 50.h, color: Colors.red),
-              UIHelper.verticalSpace(16.h),
-              Text(
-                controller.errorMessage.value,
-                style: TextFontStyle.headline10w400c6c606cStyleSatoshi.copyWith(color: Colors.red),
-                textAlign: TextAlign.center,
-              ),
-              UIHelper.verticalSpace(16.h),
-              ElevatedButton(
-                onPressed: () => controller.fetchPaymentRequests(),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.c000e08,
-                  foregroundColor: Colors.white,
+      return ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          SizedBox(
+            height: 600,
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.all(20.h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error_outline, size: 50.h, color: Colors.red),
+                    UIHelper.verticalSpace(16.h),
+                    Text(
+                      controller.errorMessage.value,
+                      style: TextFontStyle.headline10w400c6c606cStyleSatoshi
+                          .copyWith(color: Colors.red),
+                      textAlign: TextAlign.center,
+                    ),
+                    UIHelper.verticalSpace(16.h),
+                    ElevatedButton(
+                      onPressed: () => controller.fetchPaymentRequests(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.c000e08,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text('Retry'),
+                    ),
+                  ],
                 ),
-                child: const Text('Retry'),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       );
     }
 
     if (controller.paymentRequests.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.payments, size: 60.h, color: Colors.grey),
-            UIHelper.verticalSpace(16.h),
-            Text(
-              'No payment requests',
-              style: TextFontStyle.headline10w500c000000StyleSatoshi.copyWith(color: Colors.grey),
+      return ListView(
+        controller: controller.scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          SizedBox(
+            height: 600,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.payments, size: 60.h, color: Colors.grey),
+                  UIHelper.verticalSpace(16.h),
+                  Text(
+                    'No payment requests',
+                    style: TextFontStyle.headline10w500c000000StyleSatoshi
+                        .copyWith(color: Colors.grey),
+                  ),
+                  UIHelper.verticalSpace(8.h),
+                  Text(
+                    'Payment requests will appear here',
+                    style: TextFontStyle.headline10w400c6c606cStyleSatoshi
+                        .copyWith(color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
-            UIHelper.verticalSpace(8.h),
-            Text(
-              'Payment requests will appear here',
-              style: TextFontStyle.headline10w400c6c606cStyleSatoshi.copyWith(color: Colors.grey),
-            ),
-          ],
-        ),
+          )
+        ],
       );
     }
 
-    return RefreshIndicator(
-      onRefresh: () => controller.fetchPaymentRequests(),
-      color: AppColors.c000e08,
-      child: ListView.separated(
-        itemCount: controller.paymentRequests.length,
-        separatorBuilder: (context, index) => UIHelper.verticalSpace(24.h),
-        itemBuilder: (context, index) {
-          return controller.buildPaymentRequestCard(index);
-        },
-      ),
+    return ListView.separated(
+      controller: controller.scrollController,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: controller.paymentRequests.length,
+      separatorBuilder: (context, index) => UIHelper.verticalSpace(24.h),
+      itemBuilder: (context, index) {
+        return controller.buildPaymentRequestCard(index);
+      },
     );
   }
 }
