@@ -30,7 +30,7 @@ class CalenderContainerWidget extends StatelessWidget {
           children: [
             ///Section : Calender Header Widget
             CalenderHeaderWidget(),
-            UIHelper.verticalSpace(20.h),
+            UIHelper.verticalSpace(10.h),
 
             ///Section : Calender Week Days Widget
             CalendarWeekDaysWidget(),
