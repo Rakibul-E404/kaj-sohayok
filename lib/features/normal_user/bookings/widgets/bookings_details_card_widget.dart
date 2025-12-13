@@ -48,7 +48,7 @@ class BookingDetailsCardWidget extends StatelessWidget {
   final bool isNetworkImage;
 
   const BookingDetailsCardWidget({
-    Key? key,
+    super.key,
     required this.title,
     required this.location,
     required this.dateTime,
@@ -74,7 +74,7 @@ class BookingDetailsCardWidget extends StatelessWidget {
     this.isWorkCompletedTabGiveReviewOnTap,
     this.isReviewGiven = false,
     this.isNetworkImage = false, // NEW: Default to false (asset image)
-  }) : super(key: key);
+  });
 
   // NEW: Method to build the profile image widget
   Widget _buildProfileImage() {
@@ -349,22 +349,8 @@ class BookingDetailsCardWidget extends StatelessWidget {
               ),
             )
                 :
-            // ///Section : Canceled Tab -> Button -> Cancel
-            // isCanceledTab
-            //     ? Align(
-            //   alignment: Alignment.centerRight,
-            //   child: CustomElevatedButton(
-            //     onTap: isCanceledTabCancelOnTap,
-            //     buttonTitle: "Cancel",
-            //     textStyle:
-            //     TextFontStyle.headline14w500ce73d3dStyleSatoshi,
-            //     buttonWidth: 108.w,
-            //     buttonColor: AppColors.cfce9e9,
-            //   ),
-            // )
-            //     :
             ///Section : Work Completed Tab -> Button -> Give a Review
-            isWorkCompletedTab && isReviewGiven
+            isWorkCompletedTab && !isReviewGiven
                 ? Align(
               alignment: Alignment.centerRight,
               child: CustomElevatedButton(
