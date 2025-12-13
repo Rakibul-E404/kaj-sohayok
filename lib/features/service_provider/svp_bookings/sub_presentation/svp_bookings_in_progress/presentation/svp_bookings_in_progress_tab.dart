@@ -32,7 +32,9 @@ class SvpBookingsInProgressTab extends StatelessWidget {
               }
             });
 
-            return _buildContent(controller);
+            return RefreshIndicator(
+                onRefresh: () => controller.fetchInProgressBookings(),
+                child: _buildContent(controller));
           }),
         ),
       ),
@@ -41,75 +43,100 @@ class SvpBookingsInProgressTab extends StatelessWidget {
 
   Widget _buildContent(SvpBookingsInProgressController controller) {
     if (controller.isLoading.value) {
-      return Center(
-        child: Padding(
-          padding: EdgeInsets.all(20.h),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(color: AppColors.c000e08),
-              UIHelper.verticalSpace(16.h),
-              Text(
-                'Loading in-progress bookings...',
-                style: TextFontStyle.headline10w400c6c606cStyleSatoshi,
+      return ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          SizedBox(
+            height: 600,
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.all(20.h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(color: AppColors.c000e08),
+                    UIHelper.verticalSpace(16.h),
+                    Text(
+                      'Loading in-progress bookings...',
+                      style: TextFontStyle.headline10w400c6c606cStyleSatoshi,
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
+            ),
+          )
+        ],
       );
     }
 
     if (controller.hasError.value) {
-      return Center(
-        child: Padding(
-          padding: EdgeInsets.all(20.h),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.error_outline, size: 50.h, color: Colors.red),
-              UIHelper.verticalSpace(16.h),
-              Text(
-                controller.errorMessage.value,
-                style: TextFontStyle.headline10w400c6c606cStyleSatoshi
-                    .copyWith(color: Colors.red),
-                textAlign: TextAlign.center,
-              ),
-              UIHelper.verticalSpace(16.h),
-              ElevatedButton(
-                onPressed: () => controller.fetchInProgressBookings(),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.c000e08,
-                  foregroundColor: Colors.white,
+      return ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          SizedBox(
+            height: 600,
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.all(20.h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error_outline, size: 50.h, color: Colors.red),
+                    UIHelper.verticalSpace(16.h),
+                    Text(
+                      controller.errorMessage.value,
+                      style: TextFontStyle.headline10w400c6c606cStyleSatoshi
+                          .copyWith(color: Colors.red),
+                      textAlign: TextAlign.center,
+                    ),
+                    UIHelper.verticalSpace(16.h),
+                    ElevatedButton(
+                      onPressed: () => controller.fetchInProgressBookings(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.c000e08,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text('Retry'),
+                    ),
+                  ],
                 ),
-                child: const Text('Retry'),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       );
     }
 
     if (controller.jobRequests.isEmpty) {
       print('📭 No bookings in progress - Empty state shown');
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.pending_actions, size: 60.h, color: Colors.grey),
-            UIHelper.verticalSpace(16.h),
-            Text(
-              'No bookings in progress',
-              style: TextFontStyle.headline10w500c000000StyleSatoshi
-                  .copyWith(color: Colors.grey),
+      return ListView(
+        controller: controller.scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          SizedBox(
+            height: 600,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.pending_actions, size: 60.h, color: Colors.grey),
+                  UIHelper.verticalSpace(16.h),
+                  Text(
+                    'No bookings in progress',
+                    style: TextFontStyle.headline10w500c000000StyleSatoshi
+                        .copyWith(color: Colors.grey),
+                  ),
+                  UIHelper.verticalSpace(8.h),
+                  Text(
+                    'Active jobs will appear here',
+                    style: TextFontStyle.headline10w400c6c606cStyleSatoshi
+                        .copyWith(color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
-            UIHelper.verticalSpace(8.h),
-            Text(
-              'Active jobs will appear here',
-              style: TextFontStyle.headline10w400c6c606cStyleSatoshi
-                  .copyWith(color: Colors.grey),
-            ),
-          ],
-        ),
+          ),
+        ],
       );
     }
 
