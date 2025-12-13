@@ -127,27 +127,6 @@ class SvpJobRequestTab extends StatefulWidget {
 
 class _SvpJobRequestTabState extends State<SvpJobRequestTab> {
   final controller = Get.put(SvpJobRequestTabController());
-  late ScrollController _scrollController;
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController = ScrollController();
-
-    // Listen to scroll events
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels <= 0) {
-        // At the top, auto-refresh
-        controller.fetchJobRequests();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -227,7 +206,7 @@ class _SvpJobRequestTabState extends State<SvpJobRequestTab> {
 
     if (controller.jobRequests.isEmpty) {
       return ListView(
-        controller: _scrollController,
+        controller: controller.scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         children: [
           SizedBox(
@@ -259,7 +238,7 @@ class _SvpJobRequestTabState extends State<SvpJobRequestTab> {
 
     // // Data is available
     return ListView.separated(
-      controller: _scrollController,
+      controller: controller.scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
       itemCount: controller.jobRequests.length,
       separatorBuilder: (context, index) => UIHelper.verticalSpace(16.h),
