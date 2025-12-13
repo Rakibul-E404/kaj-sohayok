@@ -148,14 +148,17 @@ class _SvpJobRequestTabState extends State<SvpJobRequestTab> {
       );
     }
 
-    // Data is available
+    // // Data is available
     return ListView.separated(
       controller: _scrollController,
+      physics: const AlwaysScrollableScrollPhysics(),
       itemCount: controller.jobRequests.length,
       separatorBuilder: (context, index) => UIHelper.verticalSpace(16.h),
       itemBuilder: (context, index) {
         return controller.buildRecentJobRequestWidget(index);
       },
     );
+
+
   }
 }
