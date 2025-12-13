@@ -248,12 +248,12 @@ class UserProfileScreenController extends GetxController
 
       // 6. Navigate
       Get.offAllNamed(Routes.onboardingScreen);
-
     } catch (e) {
       LoggerUtils.debug("Exception : ${e.toString()}");
       Get.offAllNamed(Routes.onboardingScreen);
     }
   }
+
   // Future<void> handleLogOut() async {
   //   try {
   //     loader.value = true;
@@ -276,9 +276,9 @@ class UserProfileScreenController extends GetxController
 
   Future<void> fetchUserProfile() async {
     try {
+      loader.value = true;
       final String token =
           await SecureStorageService().read(AppConstants.accessToken) ?? '';
-      loader.value = true;
       final NetworkResponse getResponse = await NetworkCaller().getRequest(
         AppUrl.fetchProfile,
         headers: <String, String>{'Authorization': 'Bearer $token'},

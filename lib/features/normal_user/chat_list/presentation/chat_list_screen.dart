@@ -85,46 +85,52 @@ class _MessageScreenState extends State<MessageScreen> {
                     );
                   }
 
-                  return ListView.separated(
-                    shrinkWrap: true,
-                    // reverse: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: filteredChats.length,
-                    separatorBuilder: (context, index) =>
-                        UIHelper.verticalSpace(24.h),
-                    itemBuilder: (context, index) {
-                      final ChatListResponseModel message =
-                          filteredChats[index];
-                      return InkWell(
-                        onTap: () async {
-                          await controller.handleViewSingleProfileChat(
-                              conversationId: message.conversations.firstOrNull
-                                      ?.conversationId ??
-                                  '');
-                          Get.to(() => PersonalInbox(),
-                              arguments: {
-                                'receiverModel': message.userId,
-                                'conversationId': message.conversations
-                                        .firstOrNull?.conversationId ??
-                                    ''
-                              },
-                              transition: Transition.rightToLeft);
-                        },
-                        child: MessageTile(
-                          imageUrl:
-                              message.userId?.profileImage?.imageUrl ?? '',
-                          userName: message.userId?.name ?? '',
-                          lastMessage:
-                              message.conversations.firstOrNull?.lastMessage ??
+                  return Obx(
+                    () => Visibility(
+                      visible: controller.chatLists.isNotEmpty,
+                      replacement: Text('No Conversation Found'),
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        // reverse: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: filteredChats.length,
+                        separatorBuilder: (context, index) =>
+                            UIHelper.verticalSpace(24.h),
+                        itemBuilder: (context, index) {
+                          final ChatListResponseModel message =
+                              filteredChats[index];
+                          return InkWell(
+                            onTap: () async {
+                              await controller.handleViewSingleProfileChat(
+                                  conversationId: message.conversations
+                                          .firstOrNull?.conversationId ??
+                                      '');
+                              Get.to(() => PersonalInbox(),
+                                  arguments: {
+                                    'receiverModel': message.userId,
+                                    'conversationId': message.conversations
+                                            .firstOrNull?.conversationId ??
+                                        ''
+                                  },
+                                  transition: Transition.rightToLeft);
+                            },
+                            child: MessageTile(
+                              imageUrl:
+                                  message.userId?.profileImage?.imageUrl ?? '',
+                              userName: message.userId?.name ?? '',
+                              lastMessage: message
+                                      .conversations.firstOrNull?.lastMessage ??
                                   '',
-                          time: (formatIsoDate(
-                              message.conversations.firstOrNull?.updatedAt ??
+                              time: (formatIsoDate(message
+                                      .conversations.firstOrNull?.updatedAt ??
                                   '')),
-                          isUnread: false,
-                          totalUnrededMessage: 0,
-                        ),
-                      );
-                    },
+                              isUnread: false,
+                              totalUnrededMessage: 0,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   );
                 },
               ),

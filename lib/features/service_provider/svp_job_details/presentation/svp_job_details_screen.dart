@@ -811,6 +811,7 @@ import 'package:kaz_bd/helpers/ui_helpers.dart';
 
 import '../../../../constants/app_constant_text.dart';
 import '../../../../constants/text_font_style.dart';
+import '../../../../controllers/message_screen_controller.dart';
 import '../../../../custom_widgets/custom_elevated_button.dart';
 import '../../../../custom_widgets/date_and_time_widget_tile.dart';
 import '../../../../custom_widgets/dotted_line_divider_widget.dart';
@@ -833,6 +834,7 @@ class SvpJobDetailsScreen extends StatefulWidget {
 class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
   late JobRequestStatusEnum? status;
   late String bookingId;
+  late String userId;
   late Map<String, dynamic> jobDetails;
   bool isLoading = true;
   bool hasError = false;
@@ -854,6 +856,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
     // Setting the accepted arguments initial value
     status = arguments?["status"] as JobRequestStatusEnum?;
     bookingId = arguments?["bookingId"] as String? ?? '';
+    userId = arguments?["userId"] as String? ?? '';
 
     // Initialize jobDetails with empty map
     jobDetails = {};
@@ -1569,7 +1572,10 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                                 UIHelper.horizontalSpace(12.w),
                                 CustomElevatedButton(
                                   onTap: () {
-                                    print("Message tapped");
+                                     Get.find<MessageScreenController>().createMessage(
+                                        participantId:userId,
+                                        name: getUserName(),
+                                        imageUrl: getUserProfileImage() ?? '');
                                     // Add message functionality here
                                   },
                                   buttonWidth: 100.w,

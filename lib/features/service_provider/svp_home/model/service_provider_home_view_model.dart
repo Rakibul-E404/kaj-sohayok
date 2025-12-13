@@ -20,7 +20,7 @@ class ServiceProviderHomeViewModel {
 
   factory ServiceProviderHomeViewModel.fromJson(Map<String, dynamic> json) =>
       ServiceProviderHomeViewModel(
-        code: json["code"],
+        code: (json["code"] as num?)?.toInt(),
         message: json["message"],
         data: json["data"] == null ? null : Data.fromJson(json["data"]),
         success: json["success"],
@@ -73,31 +73,28 @@ class Attributes {
   String toRawJson() => json.encode(toJson());
 
   factory Attributes.fromJson(Map<String, dynamic> json) => Attributes(
-    totalIncome: json["totalIncome"],
+    totalIncome: (json["totalIncome"] as num?)?.toInt(),
     type: json["type"],
     chartData: json["chartData"] == null
         ? []
         : List<ChartDatum>.from(
-            json["chartData"]!.map((x) => ChartDatum.fromJson(x)),
-          ),
+        json["chartData"].map((x) => ChartDatum.fromJson(x))),
     stats: json["stats"] == null ? null : Stats.fromJson(json["stats"]),
     recentJobRequests: json["recentJobRequests"] == null
         ? []
         : List<RecentJobRequest>.from(
-            json["recentJobRequests"]!.map((x) => RecentJobRequest.fromJson(x)),
-          ),
+        json["recentJobRequests"]
+            .map((x) => RecentJobRequest.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
     "totalIncome": totalIncome,
     "type": type,
-    "chartData": chartData == null
-        ? []
-        : List<dynamic>.from(chartData!.map((x) => x.toJson())),
+    "chartData":
+    List<dynamic>.from(chartData!.map((x) => x.toJson())),
     "stats": stats?.toJson(),
-    "recentJobRequests": recentJobRequests == null
-        ? []
-        : List<dynamic>.from(recentJobRequests!.map((x) => x.toJson())),
+    "recentJobRequests":
+    List<dynamic>.from(recentJobRequests!.map((x) => x.toJson())),
   };
 }
 
@@ -112,10 +109,15 @@ class ChartDatum {
 
   String toRawJson() => json.encode(toJson());
 
-  factory ChartDatum.fromJson(Map<String, dynamic> json) =>
-      ChartDatum(label: json["label"], income: json["income"]);
+  factory ChartDatum.fromJson(Map<String, dynamic> json) => ChartDatum(
+    label: json["label"],
+    income: (json["income"] as num?)?.toInt(),
+  );
 
-  Map<String, dynamic> toJson() => {"label": label, "income": income};
+  Map<String, dynamic> toJson() => {
+    "label": label,
+    "income": income,
+  };
 }
 
 class RecentJobRequest {
@@ -173,7 +175,8 @@ class RecentJobRequest {
   factory RecentJobRequest.fromJson(Map<String, dynamic> json) =>
       RecentJobRequest(
         id: json["_id"],
-        userId: json["userId"] == null ? null : UserId.fromJson(json["userId"]),
+        userId:
+        json["userId"] == null ? null : UserId.fromJson(json["userId"]),
         providerId: json["providerId"],
         providerDetailsId: json["providerDetailsId"],
         bookingDateTime: json["bookingDateTime"] == null
@@ -181,17 +184,16 @@ class RecentJobRequest {
             : DateTime.parse(json["bookingDateTime"]),
         bookingMonth: json["bookingMonth"],
         status: json["status"],
-        address: json["address"] == null
-            ? null
-            : Address.fromJson(json["address"]),
+        address:
+        json["address"] == null ? null : Address.fromJson(json["address"]),
         lat: json["lat"],
         long: json["long"],
         attachments: json["attachments"] == null
             ? []
-            : List<dynamic>.from(json["attachments"]!.map((x) => x)),
-        startPrice: json["startPrice"],
-        adminPercentageOfStartPrice: json["adminPercentageOfStartPrice"]
-            ?.toDouble(),
+            : List<dynamic>.from(json["attachments"]),
+        startPrice: (json["startPrice"] as num?)?.toInt(),
+        adminPercentageOfStartPrice:
+        (json["adminPercentageOfStartPrice"] as num?)?.toDouble(),
         paymentTransactionId: json["paymentTransactionId"],
         paymentMethod: json["paymentMethod"],
         paymentStatus: json["paymentStatus"],
@@ -203,7 +205,7 @@ class RecentJobRequest {
         updatedAt: json["updatedAt"] == null
             ? null
             : DateTime.parse(json["updatedAt"]),
-        v: json["__v"],
+        v: (json["__v"] as num?)?.toInt(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -217,9 +219,8 @@ class RecentJobRequest {
     "address": address?.toJson(),
     "lat": lat,
     "long": long,
-    "attachments": attachments == null
-        ? []
-        : List<dynamic>.from(attachments!.map((x) => x)),
+    "attachments":
+    List<dynamic>.from(attachments!.map((x) => x)),
     "startPrice": startPrice,
     "adminPercentageOfStartPrice": adminPercentageOfStartPrice,
     "paymentTransactionId": paymentTransactionId,
@@ -239,7 +240,8 @@ class Address {
 
   Address({this.en, this.bn});
 
-  factory Address.fromRawJson(String str) => Address.fromJson(json.decode(str));
+  factory Address.fromRawJson(String str) =>
+      Address.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
@@ -256,7 +258,8 @@ class UserId {
 
   UserId({this.id, this.name, this.profileImage});
 
-  factory UserId.fromRawJson(String str) => UserId.fromJson(json.decode(str));
+  factory UserId.fromRawJson(String str) =>
+      UserId.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
@@ -287,7 +290,10 @@ class ProfileImage {
   String toRawJson() => json.encode(toJson());
 
   factory ProfileImage.fromJson(Map<String, dynamic> json) =>
-      ProfileImage(imageUrl: json["imageUrl"], id: json["_id"]);
+      ProfileImage(
+        imageUrl: json["imageUrl"],
+        id: json["_id"],
+      );
 
   Map<String, dynamic> toJson() => {"imageUrl": imageUrl, "_id": id};
 }
@@ -300,15 +306,16 @@ class Stats {
 
   Stats({this.totalRequests, this.accepted, this.inProgress, this.completed});
 
-  factory Stats.fromRawJson(String str) => Stats.fromJson(json.decode(str));
+  factory Stats.fromRawJson(String str) =>
+      Stats.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
   factory Stats.fromJson(Map<String, dynamic> json) => Stats(
-    totalRequests: json["totalRequests"],
-    accepted: json["accepted"],
-    inProgress: json["inProgress"],
-    completed: json["completed"],
+    totalRequests: (json["totalRequests"] as num?)?.toInt(),
+    accepted: (json["accepted"] as num?)?.toInt(),
+    inProgress: (json["inProgress"] as num?)?.toInt(),
+    completed: (json["completed"] as num?)?.toInt(),
   );
 
   Map<String, dynamic> toJson() => {

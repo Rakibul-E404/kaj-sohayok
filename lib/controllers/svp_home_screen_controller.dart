@@ -168,6 +168,7 @@ import 'package:kaz_bd/service/network_caller.dart';
 import 'package:kaz_bd/service/network_response.dart';
 import 'package:kaz_bd/utilities/app_constants.dart';
 import 'package:kaz_bd/utilities/app_url.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 
 import '../features/service_provider/svp_home/model/service_provider_home_view_model.dart';
 import '../service/secured_storage.dart';
@@ -200,7 +201,8 @@ class SvpHomeScreenController extends GetxController {
           await SecureStorageService().read(AppConstants.accessToken) ?? '';
 
       final NetworkResponse response = await NetworkCaller().getRequest(
-        AppUrl.getServiceProviderHomeData(dataType: selectedPeriod.value), // Use dynamic data type
+        AppUrl.getServiceProviderHomeData(dataType: selectedPeriod.value),
+        // Use dynamic data type
         headers: token.isNotEmpty ? {'Authorization': 'Bearer $token'} : null,
       );
 
@@ -208,7 +210,6 @@ class SvpHomeScreenController extends GetxController {
         final result = ServiceProviderHomeViewModel.fromJson(
           response.jsonResponse!,
         );
-
         if (result.success == true && result.data?.attributes != null) {
           // Update selected period to match the API response
           if (result.data?.attributes?.type != null) {
@@ -234,6 +235,8 @@ class SvpHomeScreenController extends GetxController {
       hasError(true);
       errorMessage.value = 'Exception: $e';
       log('Exception in getServiceProviderHomeData: $e');
+      LoggerUtils.debug('Check Imtiaz Bhai issue');
+      LoggerUtils.debug('Exception in getServiceProviderHomeData: $e');
     } finally {
       isHomeDataLoading(false); // Changed to match error
     }
