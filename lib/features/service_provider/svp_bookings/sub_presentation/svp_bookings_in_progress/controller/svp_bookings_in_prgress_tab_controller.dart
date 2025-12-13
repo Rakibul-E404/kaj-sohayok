@@ -13,6 +13,8 @@ import '../../../../../../utilities/app_constants.dart';
 import '../../../../../../utilities/app_url.dart';
 
 class SvpBookingsInProgressController extends GetxController {
+  late ScrollController scrollController;
+
   final jobRequests = <dynamic>[].obs;
   final isLoading = true.obs;
   final hasError = false.obs;
@@ -25,6 +27,16 @@ class SvpBookingsInProgressController extends GetxController {
   void onInit() {
     super.onInit();
     print('🚀 SvpBookingsInProgressController initialized');
+
+    scrollController = ScrollController();
+
+    // Listen to scroll events
+    scrollController.addListener(() {
+      if (scrollController.position.pixels <= 0) {
+        // At the top, auto-refresh
+        fetchInProgressBookings();
+      }
+    });
 
     // Set up listener to print booking IDs whenever jobRequests changes
     setupBookingIdPrinter();
@@ -67,8 +79,11 @@ class SvpBookingsInProgressController extends GetxController {
       for (int i = 0; i < bookings.length; i++) {
         final booking = bookings[i];
         final bookingId = booking['_ServiceBookingId'] as String? ?? 'N/A';
-        final serviceName = booking['serviceName']?['en'] as String? ?? 'Unknown Service';
-        final userName = (booking['userId'] as Map<String, dynamic>?)?['name'] as String? ?? 'Unknown User';
+        final serviceName =
+            booking['serviceName']?['en'] as String? ?? 'Unknown Service';
+        final userName =
+            (booking['userId'] as Map<String, dynamic>?)?['name'] as String? ??
+                'Unknown User';
 
         print('${i + 1}. Booking ID: $bookingId');
         print('   Service: $serviceName');
@@ -115,8 +130,8 @@ class SvpBookingsInProgressController extends GetxController {
             responseData['data'] != null &&
             responseData['data']['attributes'] != null &&
             responseData['data']['attributes']['results'] != null) {
-
-          final results = List<dynamic>.from(responseData['data']['attributes']['results']);
+          final results =
+              List<dynamic>.from(responseData['data']['attributes']['results']);
 
           print('✅ API Success - Received ${results.length} booking(s)');
 
@@ -152,7 +167,8 @@ class SvpBookingsInProgressController extends GetxController {
       }
     } catch (e, stackTrace) {
       print('💥 Exception in fetchInProgressBookings: $e');
-      log('Error fetching in-progress bookings: $e', error: e, stackTrace: stackTrace);
+      log('Error fetching in-progress bookings: $e',
+          error: e, stackTrace: stackTrace);
       hasError.value = true;
       errorMessage.value = 'Network error. Please check your connection.';
       isLoading.value = false;
@@ -162,7 +178,9 @@ class SvpBookingsInProgressController extends GetxController {
   // Method to navigate to job details screen
   void navigateToJobDetails(Map<String, dynamic> jobRequest) {
     final bookingId = jobRequest['_ServiceBookingId'] as String? ?? '';
-    final userId = (jobRequest['userId'] as Map<String, dynamic>?)?['_userId'] as String? ?? '';
+    final userId = (jobRequest['userId'] as Map<String, dynamic>?)?['_userId']
+            as String? ??
+        '';
 
     print('📍 Navigating to job details for booking ID: $bookingId');
 
@@ -192,8 +210,18 @@ class SvpBookingsInProgressController extends GetxController {
     try {
       final dateTime = DateTime.parse(dateTimeString).toLocal();
       final months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
       ];
       final month = months[dateTime.month - 1];
       final day = dateTime.day;
@@ -268,7 +296,8 @@ class SvpBookingsInProgressController extends GetxController {
             },
           );
         } else {
-          final errorMsg = responseData['message'] ?? 'Failed to load work form data';
+          final errorMsg =
+              responseData['message'] ?? 'Failed to load work form data';
           Get.snackbar(
             'Error',
             errorMsg,
@@ -297,7 +326,8 @@ class SvpBookingsInProgressController extends GetxController {
     } catch (e, stackTrace) {
       isFetchingFormData.value = false;
       print('💥 Error fetching work form data: $e');
-      log('Error fetching work form data: $e', error: e, stackTrace: stackTrace);
+      log('Error fetching work form data: $e',
+          error: e, stackTrace: stackTrace);
       Get.snackbar(
         'Network Error',
         'Failed to load work form. Please check your connection.',
@@ -333,5 +363,11 @@ class SvpBookingsInProgressController extends GetxController {
       location: address,
       dateTime: formatDateTime(bookingDateTime),
     );
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 }

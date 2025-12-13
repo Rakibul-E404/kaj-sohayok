@@ -12,6 +12,7 @@ import '../../../../../../utilities/app_url.dart';
 import '../widgets/svp_payment_request_tab_card.dart';
 
 class SvpPaymentRequestController extends GetxController {
+  late ScrollController scrollController;
   final paymentRequests = <dynamic>[].obs;
   final isLoading = true.obs;
   final hasError = false.obs;
@@ -22,6 +23,17 @@ class SvpPaymentRequestController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
+    scrollController = ScrollController();
+
+    // Listen to scroll events
+    scrollController.addListener(() {
+      if (scrollController.position.pixels <= 0) {
+        // At the top, auto-refresh
+        fetchPaymentRequests();
+      }
+    });
+
     fetchPaymentRequests();
   }
 
@@ -54,7 +66,8 @@ class SvpPaymentRequestController extends GetxController {
             responseData['data'] != null &&
             responseData['data']['attributes'] != null &&
             responseData['data']['attributes']['results'] != null) {
-          paymentRequests.assignAll(List<dynamic>.from(responseData['data']['attributes']['results']));
+          paymentRequests.assignAll(List<dynamic>.from(
+              responseData['data']['attributes']['results']));
           isLoading.value = false;
         } else {
           hasError.value = true;
@@ -76,7 +89,8 @@ class SvpPaymentRequestController extends GetxController {
         }
       }
     } catch (e, stackTrace) {
-      log('Error fetching payment requests: $e', error: e, stackTrace: stackTrace);
+      log('Error fetching payment requests: $e',
+          error: e, stackTrace: stackTrace);
       hasError.value = true;
       errorMessage.value = 'Network error. Please check your connection.';
       isLoading.value = false;
@@ -99,8 +113,18 @@ class SvpPaymentRequestController extends GetxController {
     try {
       final dateTime = DateTime.parse(dateTimeString).toLocal();
       final months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
       ];
       final month = months[dateTime.month - 1];
       final day = dateTime.day;
@@ -149,5 +173,11 @@ class SvpPaymentRequestController extends GetxController {
       location: address,
       dateTime: formatDateTime(bookingDateTime),
     );
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 }

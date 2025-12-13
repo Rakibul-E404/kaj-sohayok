@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kaz_bd/features/normal_user/bookings/sub_presentation/work_completed/presentation/work_completed_tab.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
@@ -69,6 +70,7 @@ class BookingsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                UIHelper.verticalSpace(100.h),
               ],
             ),
           ),

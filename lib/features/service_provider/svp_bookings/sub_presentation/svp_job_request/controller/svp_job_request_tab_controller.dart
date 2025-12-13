@@ -12,6 +12,8 @@ import '../../../../../../utilities/app_constants.dart';
 import '../../../../../../utilities/app_url.dart';
 
 class SvpJobRequestTabController extends GetxController {
+  late ScrollController scrollController;
+
   // Reactive state variables
   final jobRequests = <dynamic>[].obs;
   final isLoading = true.obs;
@@ -23,7 +25,18 @@ class SvpJobRequestTabController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
+    scrollController = ScrollController();
+
+    // Listen to scroll events
+    scrollController.addListener(() {
+      if (scrollController.position.pixels <= 0) {
+        // At the top, auto-refresh
+        fetchJobRequests();
+      }
+    });
     log('SvpJobRequestTabController initialized - fetching job requests');
+
     fetchJobRequests();
   }
 
@@ -69,8 +82,8 @@ class SvpJobRequestTabController extends GetxController {
             responseData['data'] != null &&
             responseData['data']['attributes'] != null &&
             responseData['data']['attributes']['results'] != null) {
-
-          final results = List<dynamic>.from(responseData['data']['attributes']['results']);
+          final results =
+              List<dynamic>.from(responseData['data']['attributes']['results']);
           log('Found ${results.length} job requests');
 
           // Log each job request for debugging
@@ -136,7 +149,8 @@ class SvpJobRequestTabController extends GetxController {
     }
 
     // Otherwise, construct full URL using base path
-    final cleanPath = imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
+    final cleanPath =
+        imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
     final fullUrl = '${AppUrl.imageBaseUrl}/$cleanPath';
     log('getImageUrl: Constructed URL - $fullUrl');
     return fullUrl;
@@ -160,8 +174,18 @@ class SvpJobRequestTabController extends GetxController {
 
   String _getMonthName(int month) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
     ];
     return months[month - 1];
   }
@@ -182,7 +206,8 @@ class SvpJobRequestTabController extends GetxController {
   Future<void> cancelJobRequest(String bookingId, String userName) async {
     try {
       log('cancelJobRequest called for Booking ID: $bookingId, User: $userName');
-      Get.dialog(const Center(child: CircularProgressIndicator()), barrierDismissible: false);
+      Get.dialog(const Center(child: CircularProgressIndicator()),
+          barrierDismissible: false);
 
       final token = await SecureStorageService().read(AppConstants.accessToken);
       if (token == null) {
@@ -268,7 +293,8 @@ class SvpJobRequestTabController extends GetxController {
         // If we get JSON error, try a different body format
         if (errorMsg.contains('JSON') || errorMsg.contains('body')) {
           log('JSON parsing error. Trying alternative body formats...');
-          await tryAlternativeCancelBodyFormats(cancelUrl, headers, bookingId, userName);
+          await tryAlternativeCancelBodyFormats(
+              cancelUrl, headers, bookingId, userName);
           return;
         }
 
@@ -283,12 +309,8 @@ class SvpJobRequestTabController extends GetxController {
     }
   }
 
-  Future<void> tryAlternativeCancelBodyFormats(
-      String cancelUrl,
-      Map<String, String> headers,
-      String bookingId,
-      String userName
-      ) async {
+  Future<void> tryAlternativeCancelBodyFormats(String cancelUrl,
+      Map<String, String> headers, String bookingId, String userName) async {
     log('Trying alternative body formats for PUT cancel request');
 
     // List of different body formats to try as Maps
@@ -331,7 +353,8 @@ class SvpJobRequestTabController extends GetxController {
     }
 
     // If all formats failed
-    Get.snackbar('Error', 'Failed to cancel job request - Server configuration issue',
+    Get.snackbar(
+        'Error', 'Failed to cancel job request - Server configuration issue',
         backgroundColor: Colors.red, colorText: Colors.white);
     log('All body format attempts failed for booking ID: $bookingId');
   }
@@ -339,7 +362,8 @@ class SvpJobRequestTabController extends GetxController {
   Future<void> acceptJobRequest(String bookingId, String userName) async {
     try {
       log('acceptJobRequest called for Booking ID: $bookingId, User: $userName');
-      Get.dialog(const Center(child: CircularProgressIndicator()), barrierDismissible: false);
+      Get.dialog(const Center(child: CircularProgressIndicator()),
+          barrierDismissible: false);
 
       final token = await SecureStorageService().read(AppConstants.accessToken);
       if (token == null) {
@@ -425,7 +449,8 @@ class SvpJobRequestTabController extends GetxController {
         // If we still get JSON error, try a different body format
         if (errorMsg.contains('JSON') || errorMsg.contains('body')) {
           log('JSON parsing error still occurring. Trying alternative body formats...');
-          await tryAlternativeBodyFormats(acceptUrl, headers, bookingId, userName);
+          await tryAlternativeBodyFormats(
+              acceptUrl, headers, bookingId, userName);
           return;
         }
 
@@ -440,12 +465,8 @@ class SvpJobRequestTabController extends GetxController {
     }
   }
 
-  Future<void> tryAlternativeBodyFormats(
-      String acceptUrl,
-      Map<String, String> headers,
-      String bookingId,
-      String userName
-      ) async {
+  Future<void> tryAlternativeBodyFormats(String acceptUrl,
+      Map<String, String> headers, String bookingId, String userName) async {
     log('Trying alternative body formats for PUT request');
 
     // List of different body formats to try as Maps
@@ -488,7 +509,8 @@ class SvpJobRequestTabController extends GetxController {
     }
 
     // If all formats failed
-    Get.snackbar('Error', 'Failed to accept job request - Server configuration issue',
+    Get.snackbar(
+        'Error', 'Failed to accept job request - Server configuration issue',
         backgroundColor: Colors.red, colorText: Colors.white);
     log('All body format attempts failed for booking ID: $bookingId');
   }
@@ -543,10 +565,10 @@ class SvpJobRequestTabController extends GetxController {
       dateTime: formatDateTime(bookingDateTime),
     );
   }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
 }
-
-
-
-
-
-

@@ -13,6 +13,8 @@ import '../../../../../../utilities/app_constants.dart';
 import '../../../../../../utilities/app_url.dart';
 
 class SvpWorkCompletedController extends GetxController {
+  late ScrollController scrollController;
+
   final completedBookings = <dynamic>[].obs;
   final isLoading = true.obs;
   final hasError = false.obs;
@@ -23,6 +25,17 @@ class SvpWorkCompletedController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
+    scrollController = ScrollController();
+
+    // Listen to scroll events
+    scrollController.addListener(() {
+      if (scrollController.position.pixels <= 0) {
+        // At the top, auto-refresh
+        fetchCompletedBookings();
+      }
+    });
+
     fetchCompletedBookings();
   }
 
@@ -55,7 +68,8 @@ class SvpWorkCompletedController extends GetxController {
             responseData['data'] != null &&
             responseData['data']['attributes'] != null &&
             responseData['data']['attributes']['results'] != null) {
-          completedBookings.assignAll(List<dynamic>.from(responseData['data']['attributes']['results']));
+          completedBookings.assignAll(List<dynamic>.from(
+              responseData['data']['attributes']['results']));
           isLoading.value = false;
         } else {
           hasError.value = true;
@@ -77,7 +91,8 @@ class SvpWorkCompletedController extends GetxController {
         }
       }
     } catch (e, stackTrace) {
-      log('Error fetching completed bookings: $e', error: e, stackTrace: stackTrace);
+      log('Error fetching completed bookings: $e',
+          error: e, stackTrace: stackTrace);
       hasError.value = true;
       errorMessage.value = 'Network error. Please check your connection.';
       isLoading.value = false;
@@ -100,8 +115,18 @@ class SvpWorkCompletedController extends GetxController {
     try {
       final dateTime = DateTime.parse(dateTimeString).toLocal();
       final months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
       ];
       final month = months[dateTime.month - 1];
       final day = dateTime.day;
@@ -123,7 +148,9 @@ class SvpWorkCompletedController extends GetxController {
 
   void navigateToCompletedDetails(Map<String, dynamic> booking) {
     final bookingId = booking['_ServiceBookingId'] as String? ?? '';
-    final userId = (booking['userId'] as Map<String, dynamic>?)?['_userId'] as String? ?? '';
+    final userId =
+        (booking['userId'] as Map<String, dynamic>?)?['_userId'] as String? ??
+            '';
     log("Navigating to completed work details for booking: $bookingId");
 
     Get.toNamed(
@@ -153,5 +180,11 @@ class SvpWorkCompletedController extends GetxController {
       location: address,
       dateTime: formatDateTime(bookingDateTime),
     );
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 }
