@@ -107,52 +107,47 @@ class SvpBookingsInProgressTab extends StatelessWidget {
       );
     }
 
-    if (controller.jobRequests.isEmpty) {
-      print('📭 No bookings in progress - Empty state shown');
-      return ListView(
-        controller: controller.scrollController,
-        physics: const AlwaysScrollableScrollPhysics(),
-        children: [
-          SizedBox(
-            height: 600,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.pending_actions, size: 60.h, color: Colors.grey),
-                  UIHelper.verticalSpace(16.h),
-                  Text(
-                    'No bookings in progress',
-                    style: TextFontStyle.headline10w500c000000StyleSatoshi
-                        .copyWith(color: Colors.grey),
-                  ),
-                  UIHelper.verticalSpace(8.h),
-                  Text(
-                    'Active jobs will appear here',
-                    style: TextFontStyle.headline10w400c6c606cStyleSatoshi
-                        .copyWith(color: Colors.grey),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      );
-    }
+    // if (controller.jobRequests.isEmpty) {
+    //   print('📭 No bookings in progress - Empty state shown');
+    //   return ListView(
+    //     controller: controller.scrollController,
+    //     physics: const AlwaysScrollableScrollPhysics(),
+    //     children: [
+    //       SizedBox(
+    //         height: 600,
+    //         child: Center(
+    //           child: Column(
+    //             mainAxisAlignment: MainAxisAlignment.center,
+    //             children: [
+    //               Icon(Icons.pending_actions, size: 60.h, color: Colors.grey),
+    //               UIHelper.verticalSpace(16.h),
+    //               Text(
+    //                 'No bookings in progress',
+    //                 style: TextFontStyle.headline10w500c000000StyleSatoshi
+    //                     .copyWith(color: Colors.grey),
+    //               ),
+    //               UIHelper.verticalSpace(8.h),
+    //               Text(
+    //                 'Active jobs will appear here',
+    //                 style: TextFontStyle.headline10w400c6c606cStyleSatoshi
+    //                     .copyWith(color: Colors.grey),
+    //               ),
+    //             ],
+    //           ),
+    //         ),
+    //       ),
+    //     ],
+    //   );
+    // }
 
-    return RefreshIndicator(
-      onRefresh: () {
-        print('🔄 Manual refresh triggered');
-        return controller.fetchInProgressBookings();
+    return ListView.separated(
+      controller: controller.scrollController,
+      physics: const AlwaysScrollableScrollPhysics(),
+      itemCount: controller.jobRequests.length,
+      separatorBuilder: (context, index) => UIHelper.verticalSpace(24.h),
+      itemBuilder: (context, index) {
+        return controller.buildInProgressBookingWidget(index);
       },
-      color: AppColors.c000e08,
-      child: ListView.separated(
-        itemCount: controller.jobRequests.length,
-        separatorBuilder: (context, index) => UIHelper.verticalSpace(24.h),
-        itemBuilder: (context, index) {
-          return controller.buildInProgressBookingWidget(index);
-        },
-      ),
     );
   }
 }

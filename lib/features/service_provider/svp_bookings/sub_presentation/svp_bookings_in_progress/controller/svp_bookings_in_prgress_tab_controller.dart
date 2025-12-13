@@ -13,7 +13,7 @@ import '../../../../../../utilities/app_constants.dart';
 import '../../../../../../utilities/app_url.dart';
 
 class SvpBookingsInProgressController extends GetxController {
-  late ScrollController _scrollController;
+  late ScrollController scrollController;
 
   final jobRequests = <dynamic>[].obs;
   final isLoading = true.obs;
@@ -28,11 +28,11 @@ class SvpBookingsInProgressController extends GetxController {
     super.onInit();
     print('🚀 SvpBookingsInProgressController initialized');
 
-    _scrollController = ScrollController();
+    scrollController = ScrollController();
 
     // Listen to scroll events
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels <= 0) {
+    scrollController.addListener(() {
+      if (scrollController.position.pixels <= 0) {
         // At the top, auto-refresh
         fetchInProgressBookings();
       }
@@ -367,7 +367,7 @@ class SvpBookingsInProgressController extends GetxController {
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 }
