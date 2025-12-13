@@ -11,6 +11,8 @@ import '../../../../../../utilities/app_url.dart';
 import '../widgets/svp_bookings_canceled_card.dart';
 
 class SvpBookingsCanceledController extends GetxController {
+  late ScrollController scrollController;
+
   final canceledBookings = <dynamic>[].obs;
   final isLoading = true.obs;
   final hasError = false.obs;
@@ -21,6 +23,17 @@ class SvpBookingsCanceledController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
+    scrollController = ScrollController();
+
+    // Listen to scroll events
+    scrollController.addListener(() {
+      if (scrollController.position.pixels <= 0) {
+        // At the top, auto-refresh
+        fetchCanceledBookings();
+      }
+    });
+
     fetchCanceledBookings();
   }
 
@@ -53,7 +66,8 @@ class SvpBookingsCanceledController extends GetxController {
             responseData['data'] != null &&
             responseData['data']['attributes'] != null &&
             responseData['data']['attributes']['results'] != null) {
-          canceledBookings.assignAll(List<dynamic>.from(responseData['data']['attributes']['results']));
+          canceledBookings.assignAll(List<dynamic>.from(
+              responseData['data']['attributes']['results']));
           isLoading.value = false;
         } else {
           hasError.value = true;
@@ -75,7 +89,8 @@ class SvpBookingsCanceledController extends GetxController {
         }
       }
     } catch (e, stackTrace) {
-      log('Error fetching canceled bookings: $e', error: e, stackTrace: stackTrace);
+      log('Error fetching canceled bookings: $e',
+          error: e, stackTrace: stackTrace);
       hasError.value = true;
       errorMessage.value = 'Network error. Please check your connection.';
       isLoading.value = false;
@@ -98,8 +113,18 @@ class SvpBookingsCanceledController extends GetxController {
     try {
       final dateTime = DateTime.parse(dateTimeString).toLocal();
       final months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
       ];
       final month = months[dateTime.month - 1];
       final day = dateTime.day;
@@ -138,5 +163,11 @@ class SvpBookingsCanceledController extends GetxController {
       location: address,
       dateTime: formatDateTime(bookingDateTime),
     );
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 }
