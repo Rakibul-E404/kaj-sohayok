@@ -10,6 +10,8 @@ import '../../../../../../utilities/app_constants.dart';
 import '../../../../../../utilities/app_url.dart';
 
 class PendingBookingsController extends GetxController {
+  late ScrollController scrollController;
+
   final RxList<dynamic> pendingBookings = <dynamic>[].obs;
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
@@ -17,6 +19,23 @@ class PendingBookingsController extends GetxController {
   final RxMap<String, bool> imageLoadStatus = <String, bool>{}.obs;
   final RxBool isCancelling = false.obs;
   final RxString cancelErrorMessage = ''.obs;
+
+  @override
+  void onInit() {
+    scrollController = ScrollController();
+
+    // Listen to scroll events
+    scrollController.addListener(() {
+      if (scrollController.position.pixels <= 0) {
+        // At the top, auto-refresh
+        getPendingBookings();
+      }
+    });
+
+    log('🎯 [PENDING CONTROLLER] Controller initialized');
+    getPendingBookings();
+    super.onInit();
+  }
 
   Future<void> getPendingBookings() async {
     try {
@@ -28,7 +47,8 @@ class PendingBookingsController extends GetxController {
       log('🔑 [PENDING CONTROLLER] Token retrieved: ${token != null ? 'Yes' : 'No'}');
 
       if (token == null) {
-        errorMessage.value = 'Authentication token not found. Please login again.';
+        errorMessage.value =
+            'Authentication token not found. Please login again.';
         isLoading.value = false;
         log('❌ [PENDING CONTROLLER] No token found');
         return;
@@ -53,7 +73,8 @@ class PendingBookingsController extends GetxController {
         log('📋 [PENDING CONTROLLER] Full API Response Data: ${response.jsonResponse}');
 
         if (response.jsonResponse!['success'] == true) {
-          List<dynamic> results = response.jsonResponse!['data']['attributes']['results'];
+          List<dynamic> results =
+              response.jsonResponse!['data']['attributes']['results'];
           log('✅ [PENDING CONTROLLER] Found ${results.length} pending bookings');
 
           // Log the structure of first booking for debugging
@@ -76,7 +97,8 @@ class PendingBookingsController extends GetxController {
           // Process image URLs for all bookings
           await _processBookingImages(results);
         } else {
-          String apiMessage = response.jsonResponse!['message'] ?? 'Failed to load bookings';
+          String apiMessage =
+              response.jsonResponse!['message'] ?? 'Failed to load bookings';
           errorMessage.value = apiMessage;
           log('❌ [PENDING CONTROLLER] API returned error: $apiMessage');
         }
@@ -86,7 +108,8 @@ class PendingBookingsController extends GetxController {
         log('❌ [PENDING CONTROLLER] Network error: $error');
       }
     } catch (e) {
-      errorMessage.value = 'Connection error: Please check your internet connection';
+      errorMessage.value =
+          'Connection error: Please check your internet connection';
       log('❌ [PENDING CONTROLLER] Exception in getPendingBookings: $e');
     } finally {
       isLoading.value = false;
@@ -104,7 +127,8 @@ class PendingBookingsController extends GetxController {
       final token = await SecureStorageService().read(AppConstants.accessToken);
 
       if (token == null) {
-        cancelErrorMessage.value = 'Authentication token not found. Please login again.';
+        cancelErrorMessage.value =
+            'Authentication token not found. Please login again.';
         isCancelling.value = false;
         log('❌ [PENDING CONTROLLER] No token found for cancellation');
         return false;
@@ -116,15 +140,14 @@ class PendingBookingsController extends GetxController {
       };
 
       // Construct the cancel URL
-      String cancelUrl = '${AppUrl.baseUrl}v1/service-bookings/update-status/$bookingId/status/cancel';
+      String cancelUrl =
+          '${AppUrl.baseUrl}v1/service-bookings/update-status/$bookingId/status/cancel';
       log('🌐 [PENDING CONTROLLER] Making PUT call to: $cancelUrl');
 
       NetworkResponse response = await NetworkCaller().putRequest(
         cancelUrl,
         headers: headers,
-        body: {
-          "status": "cancel"
-        },
+        body: {"status": "cancel"},
       );
 
       log('📥 [PENDING CONTROLLER] Cancel API Response - Status Code: ${response.statusCode}');
@@ -137,7 +160,8 @@ class PendingBookingsController extends GetxController {
           log('✅ [PENDING CONTROLLER] Booking $bookingId cancelled successfully');
 
           // Remove the cancelled booking from the list
-          pendingBookings.removeWhere((booking) => booking['_ServiceBookingId'] == bookingId);
+          pendingBookings.removeWhere(
+              (booking) => booking['_ServiceBookingId'] == bookingId);
 
           // Show success message
           Get.back();
@@ -152,7 +176,8 @@ class PendingBookingsController extends GetxController {
           LoggerUtils.debug("Booking cancelled successfully");
           return true;
         } else {
-          String apiMessage = response.jsonResponse!['message'] ?? 'Failed to cancel booking';
+          String apiMessage =
+              response.jsonResponse!['message'] ?? 'Failed to cancel booking';
           cancelErrorMessage.value = apiMessage;
           log('❌ [PENDING CONTROLLER] Cancel API returned error: $apiMessage');
 
@@ -167,7 +192,8 @@ class PendingBookingsController extends GetxController {
           return false;
         }
       } else {
-        String error = 'Failed to cancel booking. Status: ${response.statusCode}';
+        String error =
+            'Failed to cancel booking. Status: ${response.statusCode}';
         if (response.jsonResponse != null) {
           if (response.jsonResponse!['message'] != null) {
             error = response.jsonResponse!['message'];
@@ -191,7 +217,8 @@ class PendingBookingsController extends GetxController {
         return false;
       }
     } catch (e) {
-      cancelErrorMessage.value = 'Connection error: Please check your internet connection';
+      cancelErrorMessage.value =
+          'Connection error: Please check your internet connection';
       log('❌ [PENDING CONTROLLER] Exception in cancelBooking: $e');
 
       Get.snackbar(
@@ -253,12 +280,14 @@ class PendingBookingsController extends GetxController {
       return imageUrl;
     } else {
       // Remove any leading slash to avoid double slashes in URL
-      String cleanImageUrl = imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
+      String cleanImageUrl =
+          imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
       return '${AppUrl.imageBaseUrl}/$cleanImageUrl';
     }
   }
 
-  Future<void> _verifyImageAccessibility(String bookingId, String imageUrl) async {
+  Future<void> _verifyImageAccessibility(
+      String bookingId, String imageUrl) async {
     try {
       final token = await SecureStorageService().read(AppConstants.accessToken);
 
@@ -295,9 +324,8 @@ class PendingBookingsController extends GetxController {
   }
 
   @override
-  void onInit() {
-    log('🎯 [PENDING CONTROLLER] Controller initialized');
-    getPendingBookings();
-    super.onInit();
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 }
