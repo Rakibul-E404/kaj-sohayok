@@ -13,6 +13,7 @@ import '../../../../../../utilities/app_constants.dart';
 import '../../../../../../utilities/app_url.dart';
 
 class SvpAcceptedBookingsController extends GetxController {
+  late ScrollController scrollController;
   final jobRequests = <dynamic>[].obs;
   final isLoading = true.obs;
   final hasError = false.obs;
@@ -24,7 +25,24 @@ class SvpAcceptedBookingsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
+    scrollController = ScrollController();
+
+    // Listen to scroll events
+    scrollController.addListener(() {
+      if (scrollController.position.pixels <= 0) {
+        // At the top, auto-refresh
+        fetchAcceptedBookings();
+      }
+    });
+
     fetchAcceptedBookings();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   Future<void> fetchAcceptedBookings() async {

@@ -11,7 +11,8 @@ class SvpBookingsInProgressTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('🎯 SvpBookingsInProgressTab - Tab Opened at ${DateTime.now().toLocal()}');
+    print(
+        '🎯 SvpBookingsInProgressTab - Tab Opened at ${DateTime.now().toLocal()}');
 
     final controller = Get.put(SvpBookingsInProgressController());
 
@@ -26,7 +27,8 @@ class SvpBookingsInProgressTab extends StatelessWidget {
               if (!controller.isLoading.value &&
                   !controller.hasError.value &&
                   controller.jobRequests.isNotEmpty) {
-                print('📊 Tab Data Loaded - ${controller.jobRequests.length} booking(s) available');
+                print(
+                    '📊 Tab Data Loaded - ${controller.jobRequests.length} booking(s) available');
               }
             });
 
@@ -68,7 +70,8 @@ class SvpBookingsInProgressTab extends StatelessWidget {
               UIHelper.verticalSpace(16.h),
               Text(
                 controller.errorMessage.value,
-                style: TextFontStyle.headline10w400c6c606cStyleSatoshi.copyWith(color: Colors.red),
+                style: TextFontStyle.headline10w400c6c606cStyleSatoshi
+                    .copyWith(color: Colors.red),
                 textAlign: TextAlign.center,
               ),
               UIHelper.verticalSpace(16.h),
@@ -96,12 +99,14 @@ class SvpBookingsInProgressTab extends StatelessWidget {
             UIHelper.verticalSpace(16.h),
             Text(
               'No bookings in progress',
-              style: TextFontStyle.headline10w500c000000StyleSatoshi.copyWith(color: Colors.grey),
+              style: TextFontStyle.headline10w500c000000StyleSatoshi
+                  .copyWith(color: Colors.grey),
             ),
             UIHelper.verticalSpace(8.h),
             Text(
               'Active jobs will appear here',
-              style: TextFontStyle.headline10w400c6c606cStyleSatoshi.copyWith(color: Colors.grey),
+              style: TextFontStyle.headline10w400c6c606cStyleSatoshi
+                  .copyWith(color: Colors.grey),
             ),
           ],
         ),
@@ -124,6 +129,3 @@ class SvpBookingsInProgressTab extends StatelessWidget {
     );
   }
 }
-
-
-

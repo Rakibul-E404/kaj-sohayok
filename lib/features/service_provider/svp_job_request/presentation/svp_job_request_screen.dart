@@ -116,17 +116,6 @@ class SvpJobRequestScreen extends StatelessWidget {
   }
 }*/
 
-
-
-
-
-
-
-
-
-
-
-
 ///
 ///
 ///
@@ -134,9 +123,6 @@ class SvpJobRequestScreen extends StatelessWidget {
 ///
 ///
 ///
-
-
-
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -205,7 +191,8 @@ class SvpJobRequestScreen extends StatelessWidget {
               UIHelper.verticalSpace(16.h),
               Text(
                 controller.errorMessage.value,
-                style: TextFontStyle.headline10w400c6c606cStyleSatoshi.copyWith(color: Colors.red),
+                style: TextFontStyle.headline10w400c6c606cStyleSatoshi
+                    .copyWith(color: Colors.red),
                 textAlign: TextAlign.center,
               ),
               UIHelper.verticalSpace(16.h),
@@ -232,12 +219,14 @@ class SvpJobRequestScreen extends StatelessWidget {
             UIHelper.verticalSpace(16.h),
             Text(
               'No job requests available',
-              style: TextFontStyle.headline10w500c000000StyleSatoshi.copyWith(color: Colors.grey),
+              style: TextFontStyle.headline10w500c000000StyleSatoshi
+                  .copyWith(color: Colors.grey),
             ),
             UIHelper.verticalSpace(8.h),
             Text(
               'New job requests will appear here',
-              style: TextFontStyle.headline10w400c6c606cStyleSatoshi.copyWith(color: Colors.grey),
+              style: TextFontStyle.headline10w400c6c606cStyleSatoshi
+                  .copyWith(color: Colors.grey),
             ),
           ],
         ),
@@ -257,6 +246,3 @@ class SvpJobRequestScreen extends StatelessWidget {
     );
   }
 }
-
-
-
