@@ -224,8 +224,8 @@ class LocationRepository {
   LocationRepository._internal();
 
   // Google Maps API key
-  static const String apiKey = 'AIzaSyBFi80uuJIWkkLCpodFa8oXmD8XD_h8LMc';
-  // static const String apiKey = 'AIzaSyDjwPmy5gPopQRKK5zCEa-_0u18e8Lmgi';
+  // static const String apiKey = 'AIzaSyBFi80uuJIWkkLCpodFa8oXmD8XD_h8LMc';
+  static const String apiKey = 'AIzaSyDjwPmy5gPopQRKK5zCEa-_0u18e8Lmgi';
 
   // Place auto-complete suggestions
   Future<List<dynamic>> placeAutoComplete(String query) async {
