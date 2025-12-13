@@ -36,6 +36,8 @@ class BookingsScreen extends StatelessWidget {
               children: [
                 TabBar(
                   isScrollable: true, // Make tabs scrollable
+                  padding: EdgeInsets.zero,
+                  tabAlignment: TabAlignment.start,
                   tabs: [
                     Tab(child: Text('Pending')),
                     Tab(child: Text('Accepted Booking')),

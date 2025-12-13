@@ -37,6 +37,7 @@ class SvpBookingsScreen extends StatelessWidget {
                 TabBar(
                   isScrollable: true, // Make tabs scrollable
                   padding: EdgeInsets.zero,
+                  tabAlignment: TabAlignment.start,
                   tabs: [
                     Tab(child: Text('Job Request')),
                     Tab(child: Text('Accepted Booking')),
