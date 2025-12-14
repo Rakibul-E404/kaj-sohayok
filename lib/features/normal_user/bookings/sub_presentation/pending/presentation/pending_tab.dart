@@ -24,168 +24,146 @@ class _PendingTabState extends State<PendingTab> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () => controller.getPendingBookings(),
-      child: Obx(() => _buildContent()),
-    );
-  }
+      child: SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(),
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.8,
+          child: Obx(() {
+            if (controller.isLoading.value) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    UIHelper.verticalSpace(16.h),
+                    Text(
+                      'Loading bookings...',
+                      style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                    ),
+                  ],
+                ),
+              );
+            }
 
-  Widget _buildContent() {
-    if (controller.isLoading.value) {
-      return ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        children: [
-          SizedBox(
-            height: 600,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(),
-                  UIHelper.verticalSpace(16.h),
-                  Text(
-                    'Loading bookings...',
-                    style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+            if (controller.errorMessage.isNotEmpty) {
+              return Center(
+                child: Padding(
+                  padding: EdgeInsets.all(20.sp),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error_outline,
+                        size: 64.sp,
+                        color: Colors.red,
+                      ),
+                      UIHelper.verticalSpace(16.h),
+                      Text(
+                        controller.errorMessage.value,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: Colors.red,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      UIHelper.verticalSpace(20.h),
+                      ElevatedButton(
+                        onPressed: () => controller.getPendingBookings(),
+                        child: const Text('Retry'),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-          )
-        ],
-      );
-    }
+                ),
+              );
+            }
 
-    if (controller.errorMessage.isNotEmpty) {
-      return ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        children: [
-          SizedBox(
-            height: 600,
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.all(20.sp),
+            if (controller.pendingBookings.isEmpty) {
+              return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.error_outline,
+                      Icons.event_note_outlined,
                       size: 64.sp,
-                      color: Colors.red,
+                      color: Colors.grey,
                     ),
                     UIHelper.verticalSpace(16.h),
                     Text(
-                      controller.errorMessage.value,
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: Colors.red,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    UIHelper.verticalSpace(20.h),
-                    ElevatedButton(
-                      onPressed: () => controller.getPendingBookings(),
-                      child: const Text('Retry'),
+                      'No pending bookings found',
+                      style: TextStyle(fontSize: 16.sp, color: Colors.grey),
                     ),
                   ],
                 ),
-              ),
-            ),
-          ),
-        ],
-      );
-    }
+              );
+            }
 
-    if (controller.pendingBookings.isEmpty) {
-      return ListView(
-        controller: controller.scrollController,
-        physics: const AlwaysScrollableScrollPhysics(),
-        children: [
-          SizedBox(
-            height: 600,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.event_note_outlined,
-                    size: 64.sp,
-                    color: Colors.grey,
-                  ),
-                  UIHelper.verticalSpace(16.h),
-                  Text(
-                    'No pending bookings found',
-                    style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
-      );
-    }
+            return ListView.separated(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.only(top: 16.sp),
+              itemCount: controller.pendingBookings.length,
+              separatorBuilder: (context, index) => UIHelper.verticalSpace(16.h),
+              itemBuilder: (context, index) {
+                final booking = controller.pendingBookings[index];
+                final bookingId = booking['_ServiceBookingId']?.toString() ?? '';
 
-    // Data is available
-    return ListView.separated(
-      padding: EdgeInsets.only(top: 16.sp),
-      controller: controller.scrollController,
-      physics: const AlwaysScrollableScrollPhysics(),
-      itemCount: controller.pendingBookings.length,
-      separatorBuilder: (context, index) => UIHelper.verticalSpace(16.h),
-      itemBuilder: (context, index) {
-        final booking = controller.pendingBookings[index];
-        final bookingId = booking['_ServiceBookingId']?.toString() ?? '';
+                // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
+                final serviceProviderId = _getServiceProviderId(booking);
+                final providerId = _getProviderUserId(booking);
 
-        // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
-        final serviceProviderId = _getServiceProviderId(booking);
-        final providerId = _getProviderUserId(booking);
+                // 🔍 DEBUG: Log what IDs are extracted for this card
+                log('🧾 [PENDING TAB] Card #$index →');
+                log('   Booking ID: "$bookingId"');
+                log('   Service Provider ID: "$serviceProviderId"');
+                log('   Provider User ID: "$providerId"');
 
-        // 🔍 DEBUG: Log what IDs are extracted for this card
-        log('🧾 [PENDING TAB] Card #$index →');
-        log('   Booking ID: "$bookingId"');
-        log('   Service Provider ID: "$serviceProviderId"');
-        log('   Provider User ID: "$providerId"');
+                final serviceName = booking['providerDetailsId']?['serviceName']
+                    as Map<String, dynamic>?;
+                final address = booking['address'] as Map<String, dynamic>?;
+                final provider = booking['providerId'] as Map<String, dynamic>?;
 
-        final serviceName = booking['providerDetailsId']?['serviceName']
-            as Map<String, dynamic>?;
-        final address = booking['address'] as Map<String, dynamic>?;
-        final provider = booking['providerId'] as Map<String, dynamic>?;
+                final imageUrl = _getImageUrl(bookingId, controller);
+                final isNetworkImage = _isNetworkImage(bookingId, controller);
 
-        final imageUrl = _getImageUrl(bookingId, controller);
-        final isNetworkImage = _isNetworkImage(bookingId, controller);
+                return BookingDetailsCardWidget(
+                  // ➤ CARD TAP → Navigate with ALL required parameters
+                  onTap: () {
+                    _navigateToDetailsScreen(
+                        bookingId, serviceProviderId, providerId);
+                  },
 
-        return BookingDetailsCardWidget(
-          // ➤ CARD TAP → Navigate with ALL required parameters
-          onTap: () {
-            _navigateToDetailsScreen(
-                bookingId, serviceProviderId, providerId);
-          },
+                  // Cancel action
+                  isPendingTab: true,
+                  isPendingTabCancelOnTap: () {
+                    showCancelBookingBottomSheet(
+                      bookingId: bookingId,
+                      onCancelConfirmed: () async {
+                        final success = await controller.cancelBooking(bookingId);
+                        if (success) {
+                          log('✅ [PENDING TAB] Booking $bookingId cancelled successfully');
+                        }
+                      },
+                    );
+                  },
 
-          // Cancel action
-          isPendingTab: true,
-          isPendingTabCancelOnTap: () {
-            showCancelBookingBottomSheet(
-              bookingId: bookingId,
-              onCancelConfirmed: () async {
-                final success = await controller.cancelBooking(bookingId);
-                if (success) {
-                  log('✅ [PENDING TAB] Booking $bookingId cancelled successfully');
-                }
+                  // Data
+                  title: _getServiceName(serviceName),
+                  initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
+                  location: _getAddress(address),
+                  dateTime:
+                      _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
+                  serviceProviderProfileImage:
+                      imageUrl ?? Assets.images.userImage.path,
+                  serviceProviderName: provider?['name'] ?? 'Unknown Provider',
+                  serviceProviderDesignation: 'Service Provider',
+                  isNetworkImage: isNetworkImage,
+                );
               },
             );
-          },
-
-          // Data
-          title: _getServiceName(serviceName),
-          initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
-          location: _getAddress(address),
-          dateTime:
-              _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
-          serviceProviderProfileImage:
-              imageUrl ?? Assets.images.userImage.path,
-          serviceProviderName: provider?['name'] ?? 'Unknown Provider',
-          serviceProviderDesignation: 'Service Provider',
-          isNetworkImage: isNetworkImage,
-        );
-      },
+          }),
+        ),
+      ),
     );
   }
 
