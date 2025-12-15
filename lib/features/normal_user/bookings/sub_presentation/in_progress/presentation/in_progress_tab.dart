@@ -1,16 +1,17 @@
 import 'dart:developer';
-import 'package:get/get.dart';
+
 import 'package:flutter/material.dart';
-import 'package:kaz_bd/utilities/logger_util.dart';
-import '../../../../../../routes/routes.dart';
-import '../../../../../../gen/assets.gen.dart';
-import 'package:kaz_bd/constants/app_enums.dart';
-import '../../../../../../helpers/ui_helpers.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../../../utilities/app_url.dart';
-import '../in_progress_controller/in_progress_controller.dart';
-import '../../../../../../controllers/message_screen_controller.dart';
+import 'package:get/get.dart';
+import 'package:kaz_bd/constants/app_enums.dart';
 import 'package:kaz_bd/features/normal_user/bookings/widgets/bookings_details_card_widget.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
+
+import '../../../../../../controllers/message_screen_controller.dart';
+import '../../../../../../gen/assets.gen.dart';
+import '../../../../../../helpers/ui_helpers.dart';
+import '../../../../../../routes/routes.dart';
+import '../in_progress_controller/in_progress_controller.dart';
 
 class InProgressTab extends StatelessWidget {
   const InProgressTab({super.key});
@@ -24,7 +25,7 @@ class InProgressTab extends StatelessWidget {
       onRefresh: () => controller.getInProgressBookings(),
       child: SingleChildScrollView(
         physics: AlwaysScrollableScrollPhysics(),
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.8,
           child: Obx(() {
             if (controller.isLoading.value) {
@@ -101,10 +102,12 @@ class InProgressTab extends StatelessWidget {
               physics: NeverScrollableScrollPhysics(),
               padding: EdgeInsets.only(top: 16.sp),
               itemCount: controller.inProgressBookings.length,
-              separatorBuilder: (context, index) => UIHelper.verticalSpace(16.h),
+              separatorBuilder: (context, index) =>
+                  UIHelper.verticalSpace(16.h),
               itemBuilder: (context, index) {
                 final booking = controller.inProgressBookings[index];
-                final bookingId = booking['_ServiceBookingId']?.toString() ?? '';
+                final bookingId =
+                    booking['_ServiceBookingId']?.toString() ?? '';
 
                 // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
                 final serviceProviderId = _getServiceProviderId(booking);
@@ -194,8 +197,8 @@ class InProgressTab extends StatelessWidget {
                   title: _getServiceName(serviceName),
                   initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
                   location: _getAddress(address),
-                  dateTime:
-                      _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
+                  dateTime: _formatDateTime(
+                      booking['bookingDateTime']?.toString() ?? ''),
                   serviceProviderProfileImage:
                       imageUrl ?? Assets.images.userImage.path,
                   serviceProviderName: provider?['name'] ?? 'Unknown Provider',

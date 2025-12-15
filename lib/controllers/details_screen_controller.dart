@@ -11,6 +11,7 @@ import '../features/normal_user/details/model/get_specific_service_model.dart';
 
 class DetailsScreenController extends GetxController {
   RxBool isLoading = false.obs;
+  RxBool serviceImageNotAvailable = false.obs;
 
   // Rx variables to store the service details
   Rx<Result?> serviceDetails = Rx<Result?>(null);
@@ -81,7 +82,7 @@ class DetailsScreenController extends GetxController {
 
       // Build the API URL
       final String apiUrl =
-      AppUrl.getSpecificServiceDetails(svpId: serviceProviderId.value);
+          AppUrl.getSpecificServiceDetails(svpId: serviceProviderId.value);
       log('🌐 API URL: $apiUrl');
       log('📤 Making GET request...');
 
@@ -116,7 +117,7 @@ class DetailsScreenController extends GetxController {
             log('🔄 Parsing response data...');
 
             final dataMap =
-            response.jsonResponse!['data'] as Map<String, dynamic>;
+                response.jsonResponse!['data'] as Map<String, dynamic>;
             final attributesMap = dataMap['attributes'] as Map<String, dynamic>;
             final resultData = attributesMap['result'] as Map<String, dynamic>?;
 
@@ -147,7 +148,7 @@ class DetailsScreenController extends GetxController {
 
               // Parse rating summary (fullResult)
               final fullResultList =
-              attributesMap['fullResult'] as List<dynamic>?;
+                  attributesMap['fullResult'] as List<dynamic>?;
               if (fullResultList != null) {
                 final parsedFullResults = <FullResult>[];
                 for (final item in fullResultList) {
@@ -268,7 +269,7 @@ class DetailsScreenController extends GetxController {
       final userIdData = reviewData['userId'] as Map<String, dynamic>?;
       if (userIdData != null) {
         final profileImageData =
-        userIdData['profileImage'] as Map<String, dynamic>?;
+            userIdData['profileImage'] as Map<String, dynamic>?;
         if (profileImageData != null) {
           String? imageUrl = profileImageData['imageUrl'] as String?;
           if (imageUrl != null && imageUrl.isNotEmpty) {
@@ -310,9 +311,9 @@ class DetailsScreenController extends GetxController {
       startPrice: data['startPrice'] as int?,
       rating: data['rating'] as int?,
       attachmentsForGallery:
-      _parseAttachmentsForGallery(data['attachmentsForGallery']),
+          _parseAttachmentsForGallery(data['attachmentsForGallery']),
       attachmentsForCoverPhoto:
-      data['attachmentsForCoverPhoto'] as List<dynamic>?,
+          data['attachmentsForCoverPhoto'] as List<dynamic>?,
       yearsOfExperience: data['yearsOfExperience'] as int?,
       serviceProviderId: data['_ServiceProviderId'] as String?,
     );
