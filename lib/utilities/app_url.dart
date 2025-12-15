@@ -79,6 +79,8 @@ class AppUrl {
 
   static String jobRequests =
       '${baseUrl}v1/service-bookings/paginate/for-provider?status=pending';
+  static String workReview =
+      '${baseUrl}v1/reviews/';
 
   static String workCompletedDetailsApi(String bookingId) {
     return '${baseUrl}v1/service-bookings/with-costs-summary/${bookingId}';
