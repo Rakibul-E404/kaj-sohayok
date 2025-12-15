@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:kaz_bd/utilities/logger_util.dart';
 import '../../../../../../constants/app_enums.dart';
 import '../../../../../../controllers/message_screen_controller.dart';
+import '../../../../../../controllers/svp_home_screen_controller.dart';
 import '../../../../../../custom_widgets/recent_job_request_status_widget.dart';
 import '../../../../../../routes/routes.dart';
 import '../../../../../../service/network_caller.dart';
@@ -13,6 +14,8 @@ import '../../../../../../utilities/app_constants.dart';
 import '../../../../../../utilities/app_url.dart';
 
 class SvpAcceptedBookingsController extends GetxController {
+  final SvpHomeScreenController controller =
+      Get.find<SvpHomeScreenController>();
   late ScrollController scrollController;
   final jobRequests = <dynamic>[].obs;
   final isLoading = true.obs;
@@ -69,6 +72,7 @@ class SvpAcceptedBookingsController extends GetxController {
       log('Accepted Bookings API Response: ${response.statusCode}');
 
       if (response.isSuccess && response.jsonResponse != null) {
+        controller.getServiceProviderHomeData();
         final responseData = response.jsonResponse!;
 
         if (responseData['success'] == true &&
@@ -283,7 +287,9 @@ class SvpAcceptedBookingsController extends GetxController {
     final isLoadingStartWork = processingStartWork[bookingId] ?? false;
 
     return RecentJobRequestStatusWidget(
-      onTap: () => navigateToJobDetails(jobRequest),
+      onTap: () {
+        navigateToJobDetails(jobRequest);
+      },
       startWorkOnTap: isWorkStarted ? null : () => startWork(bookingId, index),
       isJobRequestAccpted: true,
       userImage: getImageUrl(profileImage),

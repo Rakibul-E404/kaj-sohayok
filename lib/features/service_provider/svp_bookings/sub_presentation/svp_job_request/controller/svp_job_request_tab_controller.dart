@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../constants/app_enums.dart';
+import '../../../../../../controllers/svp_home_screen_controller.dart';
 import '../../../../../../custom_widgets/recent_job_request_status_widget.dart';
 import '../../../../../../routes/routes.dart';
 import '../../../../../../service/network_caller.dart';
@@ -12,6 +13,8 @@ import '../../../../../../utilities/app_constants.dart';
 import '../../../../../../utilities/app_url.dart';
 
 class SvpJobRequestTabController extends GetxController {
+  final SvpHomeScreenController controller =
+      Get.find<SvpHomeScreenController>();
   late ScrollController scrollController;
 
   // Reactive state variables
@@ -249,6 +252,8 @@ class SvpJobRequestTabController extends GetxController {
           body: requestBody,
         );
         log('PUT request made with body: {} (as Map)');
+        controller.getServiceProviderHomeData();
+        log("🤖------------On Cancel Button Tapp -> controller.getServiceProviderHomeData(); is called!");
       } catch (e) {
         log('Error with body parameter as Map: $e - trying with null body');
         // Try alternative approach without body
@@ -405,6 +410,8 @@ class SvpJobRequestTabController extends GetxController {
           body: requestBody,
         );
         log('PUT request made with body: {} (as Map)');
+        controller.getServiceProviderHomeData();
+        log("🤖------------On Accept Button Tapp -> controller.getServiceProviderHomeData(); is called!");
       } catch (e) {
         log('Error with body parameter as Map: $e - trying with null body');
         // Try alternative approach without body
