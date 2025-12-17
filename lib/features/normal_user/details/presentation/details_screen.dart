@@ -143,7 +143,7 @@ class _DetailsScreenState extends State<DetailsScreen>
         centerTitle: true,
         backgroundColor: AppColors.scaffoldBackgroundColor,
         title: Text(
-          "Details",
+          'deails'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
       ),
@@ -226,7 +226,7 @@ class _DetailsScreenState extends State<DetailsScreen>
                           );
                         } else {
                           return Text(
-                            detailsController?.serviceName ?? 'Service Name',
+                            detailsController?.serviceName ?? 'service_name'.tr,
                             style:
                                 TextFontStyle.headline18w700c000000StyleSatoshi,
                           );
@@ -282,7 +282,7 @@ class _DetailsScreenState extends State<DetailsScreen>
                           style:
                               TextFontStyle.headline12w500c6a6a6aStyleSatoshi,
                           children: [
-                            const TextSpan(text: "Start from "),
+                            TextSpan(text: "${'start_from'.tr} "),
                             TextSpan(
                               text:
                                   "${AppText.bdTkSign}${detailsController?.startPrice ?? 0}",
@@ -302,7 +302,7 @@ class _DetailsScreenState extends State<DetailsScreen>
                       return CustomShimmerEffect(height: 60.h, width: 1.sw);
                     } else {
                       return Text(
-                        detailsController?.serviceBio ?? 'Loading bio...',
+                        detailsController?.serviceBio ?? 'loading_bio'.tr,
                         style: TextFontStyle.headline14w500c4d4d4dStyleSatoshi,
                       );
                     }
@@ -332,10 +332,10 @@ class _DetailsScreenState extends State<DetailsScreen>
                   dividerColor: AppColors.c778beb,
                   indicatorSize: TabBarIndicatorSize.tab,
                   indicatorWeight: 4.h,
-                  tabs: const [
-                    Tab(text: "About"),
-                    Tab(text: "Gallery"),
-                    Tab(text: "Reviews"),
+                  tabs: [
+                    Tab(text: 'about'.tr),
+                    Tab(text: 'gallery'.tr),
+                    Tab(text: 'reviews'.tr),
                   ],
                 ),
               ),

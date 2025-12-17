@@ -96,4 +96,21 @@ Map<String, String> englishLanguage = {
 
   ///----------> All Popular Providers
   'all_popular_providers': 'All Popular Providers',
+  'no_popular_providers_available': 'No Popular Providers Available',
+  'failed_to_get_service_category_name':
+      'Failed to Get The Service Category Name',
+  'search': 'Search',
+  'services': 'Services',
+  'service': 'Service',
+  'provider': 'Provider',
+  'start_from': 'Start from',
+  'book_now': 'Book Now',
+
+  ///----------> Details Screen
+  'deails': 'Details',
+  'service_name': 'Service Name',
+  'loading_bio': 'Loading bio...',
+  'about': 'About',
+  'gallery': 'Gallery',
+  'reviews': 'Reviews',
 };

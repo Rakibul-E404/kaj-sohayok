@@ -98,4 +98,20 @@ Map<String, String> banglaLanguage = {
 
   ///----------> All Popular Providers
   'all_popular_providers': 'সমস্ত জনপ্রিয় প্রদানকারী',
+  'no_popular_providers_available': 'কোনও জনপ্রিয় প্রদানকারী উপলব্ধ নেই',
+  'failed_to_get_service_category_name': 'পরিষেবা বিভাগের নাম পেতে ব্যর্থ',
+  'search': 'অনুসন্ধান করুন',
+  'services': 'সেবা',
+  'service': 'সেবা',
+  'provider': 'প্রদানকারী',
+  'start_from': 'প্রাথমিক বাজেট',
+  'book_now': 'এখন বুক করুন',
+
+  ///----------> Details Screen
+  'deails': 'বিস্তারিত',
+  'service_name': 'পরিষেবার নাম',
+  'loading_bio': 'বায়ো লোড হচ্ছে...',
+  'about': 'সম্পর্কে',
+  'gallery': 'গ্যালারি',
+  'reviews': 'রিভিউ',
 };
