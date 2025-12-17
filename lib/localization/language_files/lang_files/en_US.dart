@@ -93,4 +93,7 @@ Map<String, String> englishLanguage = {
   'all_categories': 'All Categories',
   'no_categories_found': 'No categories found.',
   'category': 'Category',
+
+  ///----------> All Popular Providers
+  'all_popular_providers': 'All Popular Providers',
 };

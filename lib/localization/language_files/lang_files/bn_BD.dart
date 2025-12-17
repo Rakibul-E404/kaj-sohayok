@@ -95,4 +95,7 @@ Map<String, String> banglaLanguage = {
   'all_categories': 'সমস্ত বিভাগ',
   'no_categories_found': 'কোন বিভাগ পাওয়া যায়নি.',
   'category': 'শ্রেণী',
+
+  ///----------> All Popular Providers
+  'all_popular_providers': 'সমস্ত জনপ্রিয় প্রদানকারী',
 };

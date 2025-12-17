@@ -39,7 +39,7 @@ class AllCategoriesScreen extends StatelessWidget {
               itemCount: controller.categories.length,
               itemBuilder: (context, index) {
                 final category = controller.categories[index];
-                final String categoryName = category.name?.en ?? 'Category';
+                final String categoryName = category.name?.en ?? 'category'.tr;
                 final String? imageUrl = (category.attachments != null &&
                         category.attachments!.isNotEmpty)
                     ? category.attachments![0].attachment
