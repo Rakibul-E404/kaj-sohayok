@@ -114,4 +114,13 @@ Map<String, String> banglaLanguage = {
   'about': 'সম্পর্কে',
   'gallery': 'গ্যালারি',
   'reviews': 'রিভিউ',
+
+  ///----------> Details Screen to Service Provider Profile Details Screen
+  'profile_details': 'প্রোফাইল বিস্তারিত',
+  'profile_information': 'প্রোফাইল তথ্য',
+  'occupation': 'পেশা',
+  'years_of_experience': 'অভিজ্ঞতার বছর',
+  'name': 'নাম',
+  'phone_number': 'ফোন নম্বর',
+  'location': 'অবস্থান',
 };

@@ -124,13 +124,13 @@ class AppList {
   ];
 
   static List<ProfileTileModel> profileTileList = [
-    ProfileTileModel(title: "Occupation", data: "AC-Repair"),
-    ProfileTileModel(title: "Years of Experience", data: "4 Years"),
-    ProfileTileModel(title: "Name", data: "Ripon Mia"),
-    ProfileTileModel(title: "Phone Number", data: "1233333333"),
-    ProfileTileModel(title: "Location", data: "Rangpur Bangladesh"),
-    ProfileTileModel(title: "Date of Birth", data: "11-11-2025"),
-    ProfileTileModel(title: "Gender", data: "Male"),
+    ProfileTileModel(title: 'occupation'.tr, data: "AC-Repair"),
+    ProfileTileModel(title: 'years_of_experience'.tr, data: "4 Years"),
+    ProfileTileModel(title: 'name'.tr, data: "Ripon Mia"),
+    ProfileTileModel(title: 'phone_number'.tr, data: "1233333333"),
+    ProfileTileModel(title: 'location'.tr, data: "Rangpur Bangladesh"),
+    ProfileTileModel(title: 'date_of_birth'.tr, data: "11-11-2025"),
+    ProfileTileModel(title: 'gender'.tr, data: "Male"),
   ];
 
   static List<SettingsOptionsModel> settingsOptionsList = [

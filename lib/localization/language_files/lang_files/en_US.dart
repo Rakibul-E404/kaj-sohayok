@@ -113,4 +113,13 @@ Map<String, String> englishLanguage = {
   'about': 'About',
   'gallery': 'Gallery',
   'reviews': 'Reviews',
+
+  ///----------> Details Screen to Service Provider Profile Details Screen
+  'profile_details': 'Profile Details',
+  'profile_information': 'Profile information',
+  'occupation': 'Occupation',
+  'years_of_experience': 'Years of Experience',
+  'name': 'Name',
+  'phone_number': 'Phone Number',
+  'location': 'Location',
 };
