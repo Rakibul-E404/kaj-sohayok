@@ -189,4 +189,27 @@ Map<String, String> banglaLanguage = {
   'order_has_been_successfully_placed':
       'আপনার অর্ডার সফলভাবে দেওয়া হয়েছে।\nআমাদের লজিস্টিক টিম আপনার সাথে যোগাযোগ করবে।',
   'for_any_help': 'শীঘ্রই।\nযেকোন সাহায্যের জন্য দয়া করে ',
+  'go_to_home_page': 'হোম পেজে যান',
+
+  ///----------> Bookings Screen
+  'my_bookings': 'আমার বুকিং',
+  'pending': 'বিচারাধীন',
+  'accepted_booking': 'গৃহীত বুকিং',
+  'in_progress': 'চলমান',
+  'payment_request': 'পেমেন্ট অনুরোধ',
+  'canceled': 'বাতিল',
+  'work_completed': 'কাজ শেষ',
+
+  ///----------> Pending Tab Screen
+  'loading_bookings': 'বুকিং লোড হচ্ছে...',
+  'no_pending_bookings_found': 'কোন মুলতুবি বুকিং পাওয়া যায়নি',
+  'navigation_error': 'নেভিগেশন ত্রুটি',
+  'service_provider_details_unavilable': 'পরিষেবা প্রদানকারীর বিবরণ অনুপলব্ধ৷',
+  'services_provider': 'পরিষেবা প্রদানকারী',
+  'view': 'দেখুন',
+  'message': 'বার্তা',
+  'pay': 'প্রদান করা',
+  'give_a_review': 'একটি পর্যালোচনা দিন',
+
+  ///----------> Pending Tab Screen
 };

@@ -138,7 +138,7 @@ class BookingDetailsCardWidget extends StatelessWidget {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: "Start from ${AppText.bdTkSign}",
+                        text: "${'start_from'.tr} ${AppText.bdTkSign}",
                         style: TextFontStyle.headline12w500c6a6a6aStyleSatoshi,
                       ),
                       TextSpan(
@@ -268,7 +268,7 @@ class BookingDetailsCardWidget extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: CustomElevatedButton(
                       onTap: isPendingTabCancelOnTap,
-                      buttonTitle: "Cancel",
+                      buttonTitle: 'cancel'.tr,
                       textStyle:
                           TextFontStyle.headline14w500ce73d3dStyleSatoshi,
                       buttonWidth: 108.w,
@@ -284,13 +284,13 @@ class BookingDetailsCardWidget extends StatelessWidget {
                         children: [
                           CustomElevatedButton(
                             onTap: isAcceptedBookingTabViewOnTap,
-                            buttonTitle: "View",
+                            buttonTitle: 'view'.tr,
                             buttonWidth: 108.w,
                           ),
                           UIHelper.horizontalSpace(12.w),
                           CustomElevatedButton(
                             onTap: isAcceptedBookingTabMessageOnTap,
-                            buttonTitle: "Message",
+                            buttonTitle: 'message'.tr,
                             textStyle:
                                 TextFontStyle.headline14w500c111111StyleSatoshi,
                             buttonWidth: 108.w,
@@ -310,13 +310,13 @@ class BookingDetailsCardWidget extends StatelessWidget {
                             children: [
                               CustomElevatedButton(
                                 onTap: isInProgressTabViewOnTap,
-                                buttonTitle: "View",
+                                buttonTitle: 'view'.tr,
                                 buttonWidth: 108.w,
                               ),
                               UIHelper.horizontalSpace(12.w),
                               CustomElevatedButton(
                                 onTap: isInProgressTabMessageOnTap,
-                                buttonTitle: "Message",
+                                buttonTitle: 'message'.tr,
                                 textStyle: TextFontStyle
                                     .headline14w500c111111StyleSatoshi,
                                 buttonWidth: 108.w,
@@ -338,13 +338,13 @@ class BookingDetailsCardWidget extends StatelessWidget {
                                   children: [
                                     CustomElevatedButton(
                                       onTap: isPaymentRequestTabViewOnTap,
-                                      buttonTitle: "View",
+                                      buttonTitle: 'view'.tr,
                                       buttonWidth: 108.w,
                                     ),
                                     UIHelper.horizontalSpace(12.w),
                                     CustomElevatedButton(
                                       onTap: isPaymentRequestTabPayOnTap,
-                                      buttonTitle: "Pay",
+                                      buttonTitle: 'pay'.tr,
                                       textStyle: TextFontStyle
                                           .headline14w500c111111StyleSatoshi,
                                       buttonWidth: 108.w,
@@ -364,7 +364,7 @@ class BookingDetailsCardWidget extends StatelessWidget {
                                     alignment: Alignment.centerRight,
                                     child: CustomElevatedButton(
                                       onTap: isWorkCompletedTabGiveReviewOnTap,
-                                      buttonTitle: "Give a Review",
+                                      buttonTitle: 'give_a_review'.tr,
                                       textStyle: TextFontStyle
                                           .headline14w500cFFFFFFStyleSatoshi,
                                       buttonWidth: 110.w,

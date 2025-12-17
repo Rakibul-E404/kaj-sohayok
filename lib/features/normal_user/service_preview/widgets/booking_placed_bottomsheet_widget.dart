@@ -79,7 +79,7 @@ class BookingPlacedBottomSheet extends StatelessWidget {
               log("Go back to home page! button tapped...");
               Get.toNamed(Routes.navigationScreen); // 👈 Close bottom sheet
             },
-            buttonTitle: "Go To Home Page",
+            buttonTitle: 'go_to_home_page'.tr,
           ),
           UIHelper.verticalSpace(20.h),
         ],

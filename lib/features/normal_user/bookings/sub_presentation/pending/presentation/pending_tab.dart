@@ -37,7 +37,7 @@ class _PendingTabState extends State<PendingTab> {
                     CircularProgressIndicator(),
                     UIHelper.verticalSpace(16.h),
                     Text(
-                      'Loading bookings...',
+                      'loading_bookings'.tr,
                       style: TextStyle(fontSize: 16.sp, color: Colors.grey),
                     ),
                   ],
@@ -70,7 +70,7 @@ class _PendingTabState extends State<PendingTab> {
                       UIHelper.verticalSpace(20.h),
                       ElevatedButton(
                         onPressed: () => controller.getPendingBookings(),
-                        child: const Text('Retry'),
+                        child: Text('retry'.tr),
                       ),
                     ],
                   ),
@@ -90,7 +90,7 @@ class _PendingTabState extends State<PendingTab> {
                     ),
                     UIHelper.verticalSpace(16.h),
                     Text(
-                      'No pending bookings found',
+                      'no_pending_bookings_found'.tr,
                       style: TextStyle(fontSize: 16.sp, color: Colors.grey),
                     ),
                   ],
@@ -103,10 +103,12 @@ class _PendingTabState extends State<PendingTab> {
               physics: NeverScrollableScrollPhysics(),
               padding: EdgeInsets.only(top: 16.sp),
               itemCount: controller.pendingBookings.length,
-              separatorBuilder: (context, index) => UIHelper.verticalSpace(16.h),
+              separatorBuilder: (context, index) =>
+                  UIHelper.verticalSpace(16.h),
               itemBuilder: (context, index) {
                 final booking = controller.pendingBookings[index];
-                final bookingId = booking['_ServiceBookingId']?.toString() ?? '';
+                final bookingId =
+                    booking['_ServiceBookingId']?.toString() ?? '';
 
                 // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
                 final serviceProviderId = _getServiceProviderId(booking);
@@ -139,7 +141,8 @@ class _PendingTabState extends State<PendingTab> {
                     showCancelBookingBottomSheet(
                       bookingId: bookingId,
                       onCancelConfirmed: () async {
-                        final success = await controller.cancelBooking(bookingId);
+                        final success =
+                            await controller.cancelBooking(bookingId);
                         if (success) {
                           log('✅ [PENDING TAB] Booking $bookingId cancelled successfully');
                         }
@@ -151,12 +154,12 @@ class _PendingTabState extends State<PendingTab> {
                   title: _getServiceName(serviceName),
                   initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
                   location: _getAddress(address),
-                  dateTime:
-                      _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
+                  dateTime: _formatDateTime(
+                      booking['bookingDateTime']?.toString() ?? ''),
                   serviceProviderProfileImage:
                       imageUrl ?? Assets.images.userImage.path,
                   serviceProviderName: provider?['name'] ?? 'Unknown Provider',
-                  serviceProviderDesignation: 'Service Provider',
+                  serviceProviderDesignation: 'services_provider'.tr,
                   isNetworkImage: isNetworkImage,
                 );
               },
@@ -250,8 +253,8 @@ class _PendingTabState extends State<PendingTab> {
     if (serviceProviderId.isEmpty) {
       log('❌ [PENDING TAB] Navigation ABORTED: serviceProviderId is empty!');
       Get.snackbar(
-        'Navigation Error',
-        'Service provider details unavailable',
+        'navigation_error'.tr,
+        'service_provider_details_unavilable'.tr,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,

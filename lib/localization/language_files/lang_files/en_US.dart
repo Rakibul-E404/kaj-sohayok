@@ -184,5 +184,26 @@ Map<String, String> englishLanguage = {
   'booking_placed': 'Booking Placed',
   'order_has_been_successfully_placed':
       'Your order has been successfully placed.\nOur logistic team will contact you',
-  'for_any_help': ' soon.\nFor any help please '
+  'for_any_help': ' soon.\nFor any help please ',
+  'go_to_home_page': 'Go To Home Page',
+
+  ///----------> Bookings Screen
+  'my_bookings': 'My Bookings',
+  'pending': 'Pending',
+  'accepted_booking': 'Accepted Booking',
+  'in_progress': 'In Progress',
+  'payment_request': 'Payment Request',
+  'canceled': 'Canceled',
+  'work_completed': 'Work Completed',
+
+  ///----------> Pending Tab Screen
+  'loading_bookings': 'Loading bookings...',
+  'no_pending_bookings_found': 'No pending bookings found',
+  'navigation_error': 'Navigation Error',
+  'service_provider_details_unavilable': 'Service provider details unavailable',
+  'services_provider': 'Service Provider',
+  'view': 'View',
+  'message': 'Message',
+  'pay': 'Pay',
+  'give_a_review': 'Give a Review',
 };
