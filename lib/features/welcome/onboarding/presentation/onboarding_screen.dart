@@ -1,16 +1,11 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:get/get.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/custom_widgets/select_language_widget.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
-import 'package:get/get.dart';
-import 'package:kaz_bd/routes/routes.dart';
 import 'package:kaz_bd/service/socket_service.dart';
 
 import '../../../../controllers/onboarding_controller.dart';
