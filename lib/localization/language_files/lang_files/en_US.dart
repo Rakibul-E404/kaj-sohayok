@@ -72,4 +72,20 @@ Map<String, String> englishLanguage = {
   'verify_email': 'Verify Email',
   'didn\'t_receive_code': 'Didn’t receive code? ',
   'resend_code': 'Resend Code',
+
+  ///----------> Normal User
+  ///----------> Home Screen
+  'stay_tuned': 'Stay Tuned for Updates!',
+  'special_offers_comming_soon': 'Special offers coming soon',
+  'select_category': 'Select Category',
+  'see_all': 'See all',
+  'popular_provider': 'Popular Provider',
+  'no_provider_available': 'No providers are available',
+
+  ///----------> Notification Screen
+  'notification': 'Notification',
+  'no_notification_yet': 'No Notifications Yet',
+  'no_notification_right_now':
+      'You have no notifications right now.\n Come back later.',
+  'minutes_ago': 'minutes ago'
 };

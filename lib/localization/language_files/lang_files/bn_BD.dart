@@ -74,4 +74,20 @@ Map<String, String> banglaLanguage = {
   'verify_email': 'ইমেল যাচাই করুন',
   'didn\'t_receive_code': 'কোড পাননি? ',
   'resend_code': 'কোড আবার পাঠান',
+
+  ///----------> Normal User
+  ///----------> Home Screen
+  'stay_tuned': 'আপডেটের জন্য সাথেই থাকুন!',
+  'special_offers_comming_soon': 'বিশেষ অফার শীঘ্রই আসছে',
+  'select_category': 'বিভাগ নির্বাচন করুন',
+  'see_all': 'সব দেখুন',
+  'popular_provider': 'জনপ্রিয় প্রদানকারী',
+  'no_provider_available': 'কোন প্রদানকারী উপলব্ধ নেই',
+
+  ///----------> Notification Screen
+  'notification': 'বিজ্ঞপ্তি',
+  'no_notification_yet': 'এখনও কোন বিজ্ঞপ্তি নেই',
+  'no_notification_right_now':
+      'আপনার কাছে এখন কোনও বিজ্ঞপ্তি নেই।\n পরে আবার আসুন।',
+  'minutes_ago': 'মিনিট আগে',
 };
