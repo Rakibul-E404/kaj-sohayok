@@ -18,8 +18,8 @@ class GenderSelectionWidget extends StatelessWidget {
         return InputDecorator(
           decoration: InputDecoration(
             contentPadding: EdgeInsets.all(10.sp),
-            labelText: "Gender",
-            hintText: "Select gender",
+            labelText: 'gender'.tr,
+            hintText: 'select_gender'.tr,
             prefixIcon: Padding(
               padding: EdgeInsets.only(
                 left: 12.w,
@@ -54,7 +54,7 @@ class GenderSelectionWidget extends StatelessWidget {
             () => DropdownButtonHideUnderline(
               child: DropdownButton2<String>(
                 isExpanded: true,
-                hint: Text("Select gender"),
+                hint: Text('select_gender'.tr),
                 value: controller.userSelectedGender.value.isEmpty
                     ? null
                     : controller.userSelectedGender.value,

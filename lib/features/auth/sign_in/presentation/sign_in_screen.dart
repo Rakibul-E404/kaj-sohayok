@@ -104,19 +104,19 @@ class SignInScreen extends StatelessWidget {
                   UIHelper.verticalSpace(24.h),
 
                   ///Section : Forgot Password
-                  InkWell(
-                    onTap: () {
-                      log("Forgot Password button Taped!");
-                      Get.toNamed(
-                        Routes.forgotPasswordScreen,
-                        arguments: {
-                          'email':
-                              signInScreenController.emailTEController.text,
-                        },
-                      );
-                    },
-                    child: Align(
-                      alignment: Alignment.centerRight,
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: InkWell(
+                      onTap: () {
+                        log("Forgot Password button Taped!");
+                        Get.toNamed(
+                          Routes.forgotPasswordScreen,
+                          arguments: {
+                            'email':
+                                signInScreenController.emailTEController.text,
+                          },
+                        );
+                      },
                       child: Text(
                         'forgot_password'.tr,
                         style: TextFontStyle.headline14w500c4d4d4dStyleSatoshi

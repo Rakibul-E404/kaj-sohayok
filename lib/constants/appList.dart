@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:kaz_bd/features/normal_user/provider_profile_details/model/profile_tile_model.dart';
 import 'package:kaz_bd/features/service_provider/svp_job_details/model/user_info_model.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
@@ -6,7 +7,6 @@ import 'package:kaz_bd/gen/assets.gen.dart';
 import '../features/normal_user/chat_inbox/model/chat_message_model.dart';
 import '../features/normal_user/home/models/category_mode.dart';
 import '../features/normal_user/chat_list/model/message_model.dart';
-import '../features/normal_user/chat_list/presentation/chat_list_screen.dart';
 import '../features/common_screens/notification/model/notification_model.dart';
 import '../features/normal_user/user_profile/models/settings_options_model.dart';
 import '../features/normal_user/work_completed_details/model/additional_cost_model.dart';
@@ -14,7 +14,7 @@ import '../features/service_provider/svp_home/model/chart_data_model.dart';
 import '../features/service_provider/svp_home/model/svp_card_model.dart';
 
 class AppList {
-  static final List<String> genderList = ["Male", "Female"];
+  static final List<String> genderList = ['male'.tr, 'female'.tr];
 
   static List<NotificationModel> notificationList = [
     NotificationModel(title: "Your Password Updated Successfully!", time: 10),

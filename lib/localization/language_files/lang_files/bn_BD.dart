@@ -26,4 +26,26 @@ Map<String, String> banglaLanguage = {
   'sign_in': 'সাইন ইন করুন',
   'don\'t_have_account': 'অ্যাকাউন্ট নেই?',
   'sign_up': 'সাইন আপ করুন',
+
+  ///----------> Sign Up Screen
+  'sign_up_your_account': 'আপনার অ্যাকাউন্ট সাইন আপ করুন',
+  'fill_your_details': 'অনুগ্রহ করে আপনার বিবরণ পূরণ করুন।',
+  'user_name': 'ব্যবহারকারীর নাম',
+  'enter_user_name': 'ব্যবহারকারীর নাম লিখুন',
+  'please_enter_user_name': 'আপনার ব্যবহারকারীর নাম লিখুন',
+  'your_number': 'আপনার নম্বর',
+  'enter_your_number': 'আপনার নম্বর লিখুন',
+  'please_enter_phone_number': 'আপনার ফোন নম্বরটি লিখুন।',
+  'date_of_birth': 'জন্ম তারিখ',
+  'date_hint': 'মাস/দিন/বছর',
+  'enter_your_date_of_birth': 'আপনার জন্ম তারিখ লিখুন।',
+  'agree_to_accept_terms_and_conditions':
+      'একটি অ্যাকাউন্ট তৈরি করে, আমি শর্তাবলী এবং গোপনীয়তা নীতিতে সম্মত।',
+  'already_have_an_account': 'ইতিমধ্যে অ্যাকাউন্ট আছে?',
+  'or': 'বা',
+  'sign_up_with_google': 'Google এর সাথে সাইন আপ করুন',
+  'gender': 'লিঙ্গ',
+  'select_gender': 'লিঙ্গ নির্বাচন করুন',
+  'male': 'পুরুষ',
+  'female': 'মহিলা'
 };
