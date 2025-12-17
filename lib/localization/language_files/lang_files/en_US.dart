@@ -213,4 +213,37 @@ Map<String, String> englishLanguage = {
   'unknown_provider': 'Unknown Provider',
   'unknown_location': 'Unknown Location',
   'unknown_service': 'Unknown Service',
+
+  ///----------> InProgress Booking Tab Screen
+  'loading_inprogress_bookings': 'Loading in-progress bookings...',
+  'no_in_progress_bookings_found': 'No in-progress bookings found',
+  'cannot_send_message':
+      'Cannot send message: Provider information not available',
+  'messaging_service_not_available': 'Messaging service not available',
+
+  ///----------> Payment Request Booking Tab Screen
+  'loading_requested_bookings': 'Loading payment request bookings...',
+  'no_payments_request_bookings_found': 'No payment request bookings found',
+  'proceed_to_payment': 'Proceed to Payment',
+  'you_will_be_redirected_to_ssl_commerce':
+      'You will be redirected to SSLCommerz in your browser to complete your payment.',
+  'open_in_browser': 'Open in Browser',
+  'preparing_payment': 'Preparing payment...',
+  'payment_page_opened': 'Payment Page Opened',
+  'complete_your_payment_and_return_to_app':
+      'Complete your payment in the browser and return to this app',
+  'refresh': 'Refresh',
+  'unable_to_open_browser': 'Unable to Open Browser',
+  'could_not_open_the_payment_page_automatically':
+      'Could not open the payment page automatically.',
+  'please_manually_copy_and_open_the_link':
+      'Please manually copy and open this URL in your browser:',
+  'copied': 'Copied',
+  'copied_to_clip_board': 'URL copied to clipboard',
+  'close': 'Close',
+  'try_again': 'Try Again',
+  'payment_in_progress': 'Payment in Progress',
+  'tap_to_refresh': 'Tap here to refresh after completing payment',
+  'refreshing': 'Refreshing',
+  'checking_for_payment_updates': 'Checking for payment updates...',
 };

@@ -217,4 +217,37 @@ Map<String, String> banglaLanguage = {
   'unknown_provider': 'অজানা প্রদানকারী',
   'unknown_location': 'অজানা অবস্থান',
   'unknown_service': 'অজানা পরিষেবা',
+
+  ///----------> InProgress Booking Tab Screen
+  'loading_inprogress_bookings': 'চলমান বুকিং লোড হচ্ছে...',
+  'no_in_progress_bookings_found': 'কোনও চলমান বুকিং পাওয়া যায়নি',
+  'cannot_send_message': 'বার্তা পাঠানো যাচ্ছে না: সরবরাহকারীর তথ্য উপলব্ধ নেই',
+  'messaging_service_not_available': 'মেসেজিং পরিষেবা উপলব্ধ নেই',
+
+  ///----------> Payment Request Booking Tab Screen
+  'loading_requested_bookings': 'পেমেন্ট অনুরোধ বুকিং লোড হচ্ছে...',
+  'no_payments_request_bookings_found':
+      'কোনও পেমেন্ট অনুরোধ বুকিং পাওয়া যায়নি',
+  'proceed_to_payment': 'পেমেন্ট করতে এগিয়ে যান',
+  'you_will_be_redirected_to_ssl_commerce':
+      'আপনার পেমেন্ট সম্পূর্ণ করার জন্য আপনাকে আপনার ব্রাউজারে SSLCommerz-এ পুনঃনির্দেশিত করা হবে।',
+  'open_in_browser': 'ব্রাউজারে খুলুন',
+  'preparing_payment': 'অর্থপ্রদানের প্রস্তুতি চলছে...',
+  'payment_page_opened': 'পেমেন্ট পৃষ্ঠা খোলা হয়েছে',
+  'complete_your_payment_and_return_to_app':
+      'ব্রাউজারে আপনার পেমেন্ট সম্পূর্ণ করুন এবং এই অ্যাপে ফিরে যান।',
+  'refresh': 'রিফ্রেশ',
+  'unable_to_open_browser': 'ব্রাউজার খুলতে অক্ষম',
+  'could_not_open_the_payment_page_automatically':
+      'পেমেন্ট পৃষ্ঠাটি স্বয়ংক্রিয়ভাবে খুলতে পারেনি।',
+  'please_manually_copy_and_open_the_link':
+      'অনুগ্রহ করে ম্যানুয়ালি এই URL টি কপি করুন এবং আপনার ব্রাউজারে খুলুন:',
+  'copied': 'কপি করা হয়েছে',
+  'copied_to_clip_board': 'ক্লিপবোর্ডে URL কপি করা হয়েছে',
+  'close': 'বন্ধ',
+  'try_again': 'আবার চেষ্টা করুন',
+  'payment_in_progress': 'পেমেন্ট চলছে',
+  'tap_to_refresh': 'পেমেন্ট সম্পূর্ণ করার পরে রিফ্রেশ করতে এখানে ট্যাপ করুন',
+  'refreshing': 'রিফ্রেশিং',
+  'checking_for_payment_updates': 'পেমেন্ট আপডেটের জন্য চেক করা হচ্ছে...',
 };
