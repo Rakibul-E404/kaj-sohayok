@@ -66,4 +66,12 @@ Map<String, String> banglaLanguage = {
   'please_confirm_your_password': 'আপনার পাসওয়ার্ড নিশ্চিত করুন পাসওয়ার্ড',
   'password_do_not_match': 'পাসওয়ার্ড মিলছে না !!!',
   'save_password': 'পাসওয়ার্ড সংরক্ষণ করুন',
+
+  ///----------> Verify OTP
+  'verify_otp': 'OTP যাচাই করুন',
+  'check_your_number_and_enter_the_code':
+      'আপনার ফোন নম্বরটি পরীক্ষা করুন এবং কোডটি লিখুন।',
+  'verify_email': 'ইমেল যাচাই করুন',
+  'didn\'t_receive_code': 'কোড পাননি? ',
+  'resend_code': 'কোড আবার পাঠান',
 };

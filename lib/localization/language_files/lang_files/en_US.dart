@@ -64,4 +64,12 @@ Map<String, String> englishLanguage = {
   'please_confirm_your_password': 'Please confirm your password Password',
   'password_do_not_match': 'Passwords do not match !!!',
   'save_password': 'Save Password',
+
+  ///----------> Verify OTP
+  'verify_otp': 'Verify OTP',
+  'check_your_number_and_enter_the_code':
+      'Please check your phone number and enter the code',
+  'verify_email': 'Verify Email',
+  'didn\'t_receive_code': 'Didn’t receive code? ',
+  'resend_code': 'Resend Code',
 };
