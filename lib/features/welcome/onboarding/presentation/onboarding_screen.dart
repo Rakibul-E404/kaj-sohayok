@@ -55,7 +55,6 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.cFFFFFF,
-
       body: SafeArea(
         child: Container(
           width: 1.sw,
@@ -106,7 +105,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                   children: [
                     ///Section : Text -> Your home's Best Friend
                     Text(
-                      "Your Home's Best Friend",
+                      // "Your Home's Best Friend",
+                      'your_home_best_friend'.tr,
                       style: TextFontStyle.headline26w700cFFFFFFStyleSatoshi,
                     ),
                     UIHelper.verticalSpace(16.h),
