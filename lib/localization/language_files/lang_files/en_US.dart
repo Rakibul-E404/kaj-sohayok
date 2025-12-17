@@ -206,4 +206,11 @@ Map<String, String> englishLanguage = {
   'message': 'Message',
   'pay': 'Pay',
   'give_a_review': 'Give a Review',
+
+  ///----------> Accepted Booking Tab Screen
+  'loading_accepted_bookings': 'Loading accepted bookings...',
+  'no_accepted_bookings_found': 'No accepted bookings found',
+  'unknown_provider': 'Unknown Provider',
+  'unknown_location': 'Unknown Location',
+  'unknown_service': 'Unknown Service',
 };

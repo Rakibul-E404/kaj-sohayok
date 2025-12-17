@@ -211,5 +211,10 @@ Map<String, String> banglaLanguage = {
   'pay': 'প্রদান করা',
   'give_a_review': 'একটি পর্যালোচনা দিন',
 
-  ///----------> Pending Tab Screen
+  ///----------> Accepted Booking Tab Screen
+  'loading_accepted_bookings': 'গৃহীত বুকিং লোড হচ্ছে...',
+  'no_accepted_bookings_found': 'কোন গৃহীত বুকিং পাওয়া যায়নি',
+  'unknown_provider': 'অজানা প্রদানকারী',
+  'unknown_location': 'অজানা অবস্থান',
+  'unknown_service': 'অজানা পরিষেবা',
 };

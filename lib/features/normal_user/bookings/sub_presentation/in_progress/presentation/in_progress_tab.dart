@@ -36,7 +36,7 @@ class InProgressTab extends StatelessWidget {
                     CircularProgressIndicator(),
                     UIHelper.verticalSpace(16.h),
                     Text(
-                      'Loading in-progress bookings...',
+                      'loading_inprogress_bookings'.tr,
                       style: TextStyle(fontSize: 16.sp, color: Colors.grey),
                     ),
                   ],
@@ -69,7 +69,7 @@ class InProgressTab extends StatelessWidget {
                       UIHelper.verticalSpace(20.h),
                       ElevatedButton(
                         onPressed: () => controller.getInProgressBookings(),
-                        child: const Text('Retry'),
+                        child: Text('retry'.tr),
                       ),
                     ],
                   ),
@@ -89,7 +89,7 @@ class InProgressTab extends StatelessWidget {
                     ),
                     UIHelper.verticalSpace(16.h),
                     Text(
-                      'No in-progress bookings found',
+                      'no_in_progress_bookings_found'.tr,
                       style: TextStyle(fontSize: 16.sp, color: Colors.grey),
                     ),
                   ],
@@ -154,8 +154,8 @@ class InProgressTab extends StatelessWidget {
                     if (messageProviderId.isEmpty) {
                       log('❌ [IN PROGRESS TAB] Cannot send message: Provider ID is empty');
                       Get.snackbar(
-                        'Error',
-                        'Cannot send message: Provider information not available',
+                        'error'.tr,
+                        'cannot_send_message'.tr,
                         snackPosition: SnackPosition.BOTTOM,
                         backgroundColor: Colors.red,
                         colorText: Colors.white,
@@ -170,7 +170,7 @@ class InProgressTab extends StatelessWidget {
                       LoggerUtils.info(imageUrl);
                       msgController.createMessage(
                         participantId: messageProviderId,
-                        name: provider?['name'] ?? 'Unknown Provider',
+                        name: provider?['name'] ?? 'unknown_provider'.tr,
                         imageUrl: imageUrl ?? '',
                       );
 
@@ -178,8 +178,8 @@ class InProgressTab extends StatelessWidget {
                     } catch (e) {
                       log('❌ [IN PROGRESS TAB] Error with MessageScreenController: $e');
                       Get.snackbar(
-                        'Error',
-                        'Messaging service not available',
+                        'error'.tr,
+                        'messaging_service_not_available'.tr,
                         snackPosition: SnackPosition.BOTTOM,
                         backgroundColor: Colors.red,
                         colorText: Colors.white,
@@ -202,7 +202,7 @@ class InProgressTab extends StatelessWidget {
                   serviceProviderProfileImage:
                       imageUrl ?? Assets.images.userImage.path,
                   serviceProviderName: provider?['name'] ?? 'Unknown Provider',
-                  serviceProviderDesignation: 'Service Provider',
+                  serviceProviderDesignation: 'services_provider'.tr,
                   isNetworkImage: isNetworkImage,
                 );
               },
@@ -226,13 +226,13 @@ class InProgressTab extends StatelessWidget {
   }
 
   static String _getServiceName(Map<String, dynamic>? serviceName) {
-    if (serviceName == null) return 'Unknown Service';
-    return serviceName['en'] ?? serviceName['bn'] ?? 'Unknown Service';
+    if (serviceName == null) return 'unknown_service'.tr;
+    return serviceName['en'] ?? serviceName['bn'] ?? 'unknown_service'.tr;
   }
 
   static String _getAddress(Map<String, dynamic>? address) {
-    if (address == null) return 'Unknown Location';
-    return address['en'] ?? address['bn'] ?? 'Unknown Location';
+    if (address == null) return 'unknown_location'.tr;
+    return address['en'] ?? address['bn'] ?? 'unknown_location'.tr;
   }
 
   // 🔴 FIXED: Extract Service Provider ID (_ServiceProviderId)
@@ -303,8 +303,8 @@ class InProgressTab extends StatelessWidget {
     if (serviceProviderId.isEmpty) {
       log('❌ [IN PROGRESS TAB] Navigation ABORTED: serviceProviderId is empty!');
       Get.snackbar(
-        'Navigation Error',
-        'Service provider details unavailable',
+        'navigation_error'.tr,
+        'service_provider_details_unavilable'.tr,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
