@@ -114,6 +114,8 @@ Map<String, String> banglaLanguage = {
   'about': 'সম্পর্কে',
   'gallery': 'গ্যালারি',
   'reviews': 'রিভিউ',
+  'service_description': 'পরিষেবার বিবরণ',
+  'service_provider': 'সেবা প্রদানকারী',
 
   ///----------> Details Screen to Service Provider Profile Details Screen
   'profile_details': 'প্রোফাইল বিস্তারিত',
@@ -123,4 +125,58 @@ Map<String, String> banglaLanguage = {
   'name': 'নাম',
   'phone_number': 'ফোন নম্বর',
   'location': 'অবস্থান',
+
+  ///----------> Booking Date Screen
+  'booking_date': 'বুকিং তারিখ',
+  'invalid_selection': 'অবৈধ নির্বাচন',
+  'select_future_date_time':
+      'অনুগ্রহ করে ভবিষ্যতের একটি তারিখ এবং সময় নির্বাচন করুন।',
+  'error': 'ত্রুটি',
+  'provider_id_missing':
+      'প্রোভাইডার আইডি অনুপস্থিত। উপলব্ধতা পরীক্ষা করা যাচ্ছে না।',
+  'check_availy_and_proceed': 'উপলব্ধতা পরীক্ষা করুন এবং এগিয়ে যান',
+  'selected_time': 'নির্বাচিত সময়',
+
+  ///----------> Search Location
+  'location_service_disabled': 'অবস্থান পরিষেবা নিষ্ক্রিয়',
+  'please_enable_location_service':
+      'লোকেশন পরিষেবাগুলি বন্ধ করা আছে। চালিয়ে যেতে আপনার ডিভাইস সেটিংসে লোকেশন পরিষেবাগুলি সক্ষম করুন।',
+  'cancel': 'বাতিল করুন',
+  'settings': 'সেটিংস',
+  'location_permission_required': 'অবস্থান অনুমতি প্রয়োজন',
+  'app_needs_location_permission':
+      'লোকেশন-ভিত্তিক পরিষেবা প্রদানের জন্য এই অ্যাপটির লোকেশনের অনুমতি প্রয়োজন। চালিয়ে যেতে দয়া করে লোকেশনের অনুমতি দিন।',
+  'retry': 'আবার চেষ্টা করুন',
+  'location_permission_permanently_denied':
+      'অবস্থানের অনুমতি স্থায়ীভাবে অস্বীকার করা হয়েছে',
+  'permission_permanently_denied':
+      'অবস্থানের অনুমতি স্থায়ীভাবে অস্বীকার করা হয়েছে। অবস্থান বৈশিষ্ট্যগুলি ব্যবহার করতে অনুগ্রহ করে অ্যাপ সেটিংসে এটি ম্যানুয়ালি সক্ষম করুন।',
+  'app_settings': 'অ্যাপ সেটিংস',
+  'location_error': 'অবস্থান ত্রুটি',
+  'error_occured_while_accessing_location':
+      'লোকেশন অ্যাক্সেস করার সময় একটি ত্রুটি ঘটেছে:',
+  'ok': 'ঠিক আছে',
+  'no_results_found': 'কোন ফলাফল পাওয়া যায়নি',
+  'current': 'বর্তমান',
+  'searching_location': 'অবস্থান অনুসন্ধান করা হচ্ছে...',
+  'getting_your_current_location': 'আপনার বর্তমান অবস্থান জানা যাচ্ছে...',
+  'location_services_disabled': 'অবস্থান পরিষেবাগুলি অক্ষম করা হয়েছে৷',
+  'location_permission_dennied': 'অবস্থানের অনুমতি অস্বীকার করা হয়েছে৷',
+  'location_permission_permanently_dennied':
+      'অবস্থানের অনুমতিগুলি স্থায়ীভাবে অস্বীকার করা হয়েছে৷',
+  'your_current_location': 'আপনার বর্তমান অবস্থান',
+  'unable_to_get_your_location': 'আপনার অবস্থান পাওয়া যায়নি:',
+  'enable_location_services_to_use_this_feature':
+      'এই বৈশিষ্ট্যটি ব্যবহার করার জন্য অনুগ্রহ করে অবস্থান পরিষেবাগুলি সক্ষম করুন।',
+  'open_seetings': 'সেটিংস খুলুন',
+  'selected_location': 'নির্বাচিত অবস্থান',
+  'tap_to_select': 'নির্বাচন করতে আলতো চাপুন',
+  'long_press_on_the_map':
+      'এই অবস্থানটি নির্বাচন করতে মানচিত্রে দীর্ঘক্ষণ টিপুন',
+  'select_location': 'অবস্থান নির্বাচন করুন',
+  'toggle_search_bar': 'অনুসন্ধান বার টগল করুন',
+  'goto_my_current_location': 'আমার বর্তমান অবস্থানে যান',
+  'search_for_a_location': 'একটি অবস্থান অনুসন্ধান করুন...',
+  'confirm_location': 'অবস্থান নিশ্চিত করুন',
+  'getting_your_location': 'আপনার অবস্থান জানা হচ্ছে...',
 };

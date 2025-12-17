@@ -113,6 +113,8 @@ Map<String, String> englishLanguage = {
   'about': 'About',
   'gallery': 'Gallery',
   'reviews': 'Reviews',
+  'service_description': 'Services Description',
+  'service_provider': 'Services Provider',
 
   ///----------> Details Screen to Service Provider Profile Details Screen
   'profile_details': 'Profile Details',
@@ -122,4 +124,55 @@ Map<String, String> englishLanguage = {
   'name': 'Name',
   'phone_number': 'Phone Number',
   'location': 'Location',
+
+  ///----------> Booking Date Screen
+  'booking_date': 'Booking Date',
+  'invalid_selection': 'Invalid Selection',
+  'select_future_date_time': 'Please select a future date and time',
+  'error': 'Error',
+  'provider_id_missing': 'Provider ID is missing. Cannot check availability.',
+  'check_availy_and_proceed': 'Check Availability & Proceed',
+  'selected_time': 'Selected Time',
+
+  ///----------> Search Location
+  'location_service_disabled': 'Location Services Disabled',
+  'please_enable_location_service':
+      'Location services are disabled. Please enable location services in your device settings to continue.',
+  'cancel': 'Cancel',
+  'settings': 'Settings',
+  'location_permission_required': 'Location Permission Required',
+  'app_needs_location_permission':
+      'This app needs location permission to provide location-based services. Please grant location permission to continue.',
+  'retry': 'Retry',
+  'location_permission_permanently_denied':
+      'Location Permission Permanently Denied',
+  'permission_permanently_denied':
+      'Location permission has been permanently denied. Please enable it manually in app settings to use location features.',
+  'app_settings': 'App Settings',
+  'location_error': 'Location Error',
+  'error_occured_while_accessing_location':
+      'An error occurred while accessing location:',
+  'ok': 'OK',
+  'no_results_found': 'No results found',
+  'current': 'Current',
+  'searching_location': 'Searching locations...',
+  'getting_your_current_location': 'Getting your current location...',
+  'location_services_disabled': 'Location services are disabled',
+  'location_permission_dennied': 'Location permissions denied',
+  'location_permission_permanently_dennied':
+      'Location permissions permanently denied',
+  'your_current_location': 'Your Current Location',
+  'unable_to_get_your_location': 'Unable to get your location:',
+  'enable_location_services_to_use_this_feature':
+      'Please enable location services to use this feature.',
+  'open_seetings': 'Open Settings',
+  'selected_location': 'Selected Location',
+  'tap_to_select': 'Tap to Select',
+  'long_press_on_the_map': 'Long press on the map to select this location',
+  'select_location': 'Select Location',
+  'toggle_search_bar': 'Toggle search bar',
+  'goto_my_current_location': 'Go to my current location',
+  'search_for_a_location': 'Search for a location...',
+  'confirm_location': 'Confirm Location',
+  'getting_your_location': 'Getting your location...',
 };

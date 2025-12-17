@@ -91,7 +91,6 @@ class AppUrl {
       '${baseUrl}v1/service-bookings/paginate/for-provider?status=completed';
   // static String paymentRequests = '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
 
-
   // static String jobRequests = '${baseUrl}v1/service-bookings/paginate/for-provider?status=pending';
   // static String providerAcceptedBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=accepted';
   // static String providerInProgressBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=inProgress';
@@ -102,15 +101,19 @@ class AppUrl {
   static String providerJobRequestAcceptButton(String bookingId) {
     return '${baseUrl}v1/service-bookings/update-status/$bookingId/status/accept';
   }
+
   static String providerJobRequestCancelButton(String bookingId) {
     return '${baseUrl}v1/service-bookings/update-status/$bookingId/status/cancel-by-provider';
   }
+
   static String providerStartWorkButton(String bookingId) {
     return '${baseUrl}v1/service-bookings/update-status/$bookingId/status/inProgress';
   }
+
   static String providerJobDetailsApi(String bookingId) {
     return '${baseUrl}v1/service-bookings/user-details/$bookingId';
   }
+
   static String providerWorkSubmitForm(String bookingId) {
     return '${baseUrl}v1/service-bookings/with-costs-summary/$bookingId';
   }
@@ -121,19 +124,17 @@ class AppUrl {
 
   static const String additionalCost = '${baseUrl}v1/additional-cost';
 
-
   ///===> rakibul api add close::::::::::::::::>
   ///
   ///
   ///
-
 
   ///
   ///
   ///-------------///Imtiaz Chowdhury Start///------------------
   static String getNormalUserHomeData = '${baseUrl}v1/users/home-page';
   static String getNormalUserAllCategory =
-      '${baseUrl}v1/service-categories/paginate?page=1&limit=2000';
+      '${baseUrl}v1/service-categories/paginate?page=1&limit=2000&isDeleted=false&isVisible=true';
 
   static String getSpecificServiceByCategory({
     required String categoryId,
