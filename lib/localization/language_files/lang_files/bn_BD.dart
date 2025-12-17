@@ -179,4 +179,14 @@ Map<String, String> banglaLanguage = {
   'search_for_a_location': 'একটি অবস্থান অনুসন্ধান করুন...',
   'confirm_location': 'অবস্থান নিশ্চিত করুন',
   'getting_your_location': 'আপনার অবস্থান জানা হচ্ছে...',
+
+  ///----------> Searvice Preview
+  'service_preview': 'পরিষেবার পূর্বরূপ',
+  'date_time': 'তারিখ/সময়',
+  'confirming_your_order': 'আপনার অর্ডার নিশ্চিতকরণ চলছে',
+  'confirm_booking': 'বুকিং নিশ্চিত করুন',
+  'booking_placed': 'বুকিং করা হয়েছে',
+  'order_has_been_successfully_placed':
+      'আপনার অর্ডার সফলভাবে দেওয়া হয়েছে।\nআমাদের লজিস্টিক টিম আপনার সাথে যোগাযোগ করবে।',
+  'for_any_help': 'শীঘ্রই।\nযেকোন সাহায্যের জন্য দয়া করে ',
 };

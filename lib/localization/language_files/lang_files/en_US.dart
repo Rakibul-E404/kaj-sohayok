@@ -175,4 +175,14 @@ Map<String, String> englishLanguage = {
   'search_for_a_location': 'Search for a location...',
   'confirm_location': 'Confirm Location',
   'getting_your_location': 'Getting your location...',
+
+  ///----------> Searvice Preview
+  'service_preview': 'Services Preview',
+  'date_time': 'Date/Time',
+  'confirming_your_order': 'Confirming Your Order',
+  'confirm_booking': 'Confirm Booking',
+  'booking_placed': 'Booking Placed',
+  'order_has_been_successfully_placed':
+      'Your order has been successfully placed.\nOur logistic team will contact you',
+  'for_any_help': ' soon.\nFor any help please '
 };
