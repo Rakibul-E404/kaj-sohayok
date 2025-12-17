@@ -112,7 +112,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     UIHelper.verticalSpace(16.h),
 
                     Text(
-                      "Get all your home services in one place: AC repair, plumbing, cleaning, electrical, and painting — just a tap away.",
+                      'get_your_home_services_done'.tr,
                       style: TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
                     ),
                     UIHelper.verticalSpace(16.h),
@@ -122,7 +122,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                       onTap: () {
                         onboardingController.checkAuthNavigate();
                       },
-                      buttonTitle: "Get Started",
+                      buttonTitle: 'get_started'.tr,
                     ),
                   ],
                 ),
