@@ -16,7 +16,7 @@ class AllCategoriesScreen extends StatelessWidget {
         Get.find<NormalUserAllCategoryScreenController>();
 
     return Scaffold(
-      appBar: const ReusableAppBar(title: 'All Categories'),
+      appBar: ReusableAppBar(title: 'all_categories'.tr),
       body: GetBuilder<NormalUserAllCategoryScreenController>(
         builder: (controller) {
           return Obx(() {
@@ -25,7 +25,7 @@ class AllCategoriesScreen extends StatelessWidget {
             }
 
             if (controller.categories.isEmpty) {
-              return const Center(child: Text('No categories found.'));
+              return Center(child: Text('no_categories_found'.tr));
             }
 
             return GridView.builder(
@@ -40,8 +40,7 @@ class AllCategoriesScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final category = controller.categories[index];
                 final String categoryName = category.name?.en ?? 'Category';
-                final String? imageUrl =
-                    (category.attachments != null &&
+                final String? imageUrl = (category.attachments != null &&
                         category.attachments!.isNotEmpty)
                     ? category.attachments![0].attachment
                     : null;
