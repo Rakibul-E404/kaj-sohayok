@@ -47,5 +47,23 @@ Map<String, String> banglaLanguage = {
   'gender': 'লিঙ্গ',
   'select_gender': 'লিঙ্গ নির্বাচন করুন',
   'male': 'পুরুষ',
-  'female': 'মহিলা'
+  'female': 'মহিলা',
+
+  ///----------> Forgot Password Screen
+  'password_forgot': 'পাসওয়ার্ড ভুলে গেছি',
+  'enter_your_email_to_reset_password':
+      'পাসওয়ার্ড রিসেট করতে আপনার ইমেইল লিখুন।',
+  'send_otp': 'OTP পাঠান',
+
+  ///----------> Set New Password
+  'set_new_password': 'নতুন পাসওয়ার্ড সেট করুন',
+  'please_enter_password_and_confirm_password':
+      'অনুগ্রহ করে আপনার পাসওয়ার্ড লিখুন এবং পাসওয়ার্ড নিশ্চিত করুন।',
+  'please_enter_your_new_password':
+      'অনুগ্রহ করে আপনার নতুন পাসওয়ার্ডটি লিখুন।',
+  'confirm_pass': 'পাসওয়ার্ড নিশ্চিত করুন',
+  'enter_confirm_password': 'কনফার্ম পাসওয়ার্ড দিন',
+  'please_confirm_your_password': 'আপনার পাসওয়ার্ড নিশ্চিত করুন পাসওয়ার্ড',
+  'password_do_not_match': 'পাসওয়ার্ড মিলছে না !!!',
+  'save_password': 'পাসওয়ার্ড সংরক্ষণ করুন',
 };

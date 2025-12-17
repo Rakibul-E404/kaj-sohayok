@@ -1,16 +1,12 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
-import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/custom_widgets/custom_text_form_field.dart';
+import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/helpers/waiting_widget.dart';
-import 'package:kaz_bd/routes/routes.dart';
 
 import '../../../../controllers/forget_password_controller.dart';
 import '../../../../gen/assets.gen.dart';
@@ -61,27 +57,27 @@ class ForgotPasswordScreen extends StatelessWidget {
 
                 ///Section : text -> Forgot Password
                 Text(
-                  "Forgot Password",
+                  'password_forgot'.tr,
                   style: TextFontStyle.headline10w700c000000StyleSatoshi,
                 ),
                 UIHelper.verticalSpace(14.h),
 
                 ///Section : Text -> Please Enter your phone...
                 Text(
-                  "Please enter your phone email to reset password.",
+                  'enter_your_email_to_reset_password'.tr,
                   style: TextFontStyle.headline12w400c000000StyleSatoshi,
                 ),
                 UIHelper.verticalSpace(32.h),
 
                 ///Section : Email Form field
                 CustomFormField(
-                  labelText: "Your Email",
-                  hintText: "Enter Your Email",
+                  labelText: 'your_email'.tr,
+                  hintText: 'enter_your_email'.tr,
                   prefixIcon: Icon(Icons.mail, color: AppColors.c858c94),
                   controller: forgetPasswordController.emailTEController,
                   validator: (String? value) {
                     if (value?.isEmpty ?? true) {
-                      return 'Please Enter Your Email';
+                      return 'please_enter_your_email'.tr;
                     }
                     return null;
                   },
@@ -97,7 +93,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                       onTap: () {
                         forgetPasswordController.handleForgetPassword();
                       },
-                      buttonTitle: "Send OTP",
+                      buttonTitle: 'send_otp'.tr,
                     ),
                   ),
                 ),

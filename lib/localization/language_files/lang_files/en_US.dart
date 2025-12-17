@@ -47,4 +47,21 @@ Map<String, String> englishLanguage = {
   'select_gender': 'Select gender',
   'male': 'Male',
   'female': 'Female',
+
+  ///----------> Forgot Password Screen
+  'password_forgot': 'Forgot Password',
+  'enter_your_email_to_reset_password':
+      'Please enter your email to reset password.',
+  'send_otp': 'Send OTP',
+
+  ///----------> Set New Password
+  'set_new_password': 'Set New Password',
+  'please_enter_password_and_confirm_password':
+      'Please Enter Your Password & Confirm Password.',
+  'please_enter_your_new_password': 'Please Enter Your new Password.',
+  'confirm_pass': 'Confirm Password',
+  'enter_confirm_password': 'Enter Confirm Password',
+  'please_confirm_your_password': 'Please confirm your password Password',
+  'password_do_not_match': 'Passwords do not match !!!',
+  'save_password': 'Save Password',
 };
