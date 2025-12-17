@@ -45,7 +45,7 @@ class _SeeAllPopularProvidersScreenState
         automaticallyImplyLeading: true,
         centerTitle: true,
         title: Text(
-          "Popular Provider",
+          'popular_provider'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
       ),

@@ -90,4 +90,9 @@ Map<String, String> banglaLanguage = {
   'no_notification_right_now':
       'আপনার কাছে এখন কোনও বিজ্ঞপ্তি নেই।\n পরে আবার আসুন।',
   'minutes_ago': 'মিনিট আগে',
+
+  ///----------> All Categories Screen
+  'all_categories': 'সমস্ত বিভাগ',
+  'no_categories_found': 'কোন বিভাগ পাওয়া যায়নি.',
+  'category': 'শ্রেণী',
 };

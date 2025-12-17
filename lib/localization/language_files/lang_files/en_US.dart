@@ -87,5 +87,10 @@ Map<String, String> englishLanguage = {
   'no_notification_yet': 'No Notifications Yet',
   'no_notification_right_now':
       'You have no notifications right now.\n Come back later.',
-  'minutes_ago': 'minutes ago'
+  'minutes_ago': 'minutes ago',
+
+  ///----------> All Categories
+  'all_categories': 'All Categories',
+  'no_categories_found': 'No categories found.',
+  'category': 'Category',
 };
