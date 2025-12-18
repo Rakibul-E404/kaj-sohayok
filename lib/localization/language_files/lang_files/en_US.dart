@@ -246,4 +246,10 @@ Map<String, String> englishLanguage = {
   'tap_to_refresh': 'Tap here to refresh after completing payment',
   'refreshing': 'Refreshing',
   'checking_for_payment_updates': 'Checking for payment updates...',
+
+  ///----------> Canceled Booking Tab Screen
+  'loading_canceled_booking': 'Loading canceled bookings...',
+  'no_canceled_bookings_found': 'No canceled bookings found',
+  'failed_to_load_bookings': 'Failed to load bookings',
+  'something_went_wrong': 'Something went wrong',
 };

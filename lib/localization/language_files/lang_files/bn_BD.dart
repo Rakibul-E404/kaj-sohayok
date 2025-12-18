@@ -250,4 +250,10 @@ Map<String, String> banglaLanguage = {
   'tap_to_refresh': 'পেমেন্ট সম্পূর্ণ করার পরে রিফ্রেশ করতে এখানে ট্যাপ করুন',
   'refreshing': 'রিফ্রেশিং',
   'checking_for_payment_updates': 'পেমেন্ট আপডেটের জন্য চেক করা হচ্ছে...',
+
+  ///----------> Canceled Booking Tab Screen
+  'loading_canceled_booking': 'বাতিল বুকিং লোড হচ্ছে...',
+  'no_canceled_bookings_found': 'কোন বাতিল বুকিং পাওয়া যায়নি',
+  'failed_to_load_bookings': 'বুকিং লোড করা যায়নি',
+  'something_went_wrong': 'কিছু ভুল হয়েছে',
 };

@@ -32,7 +32,7 @@ class ServicesCanceledTab extends StatelessWidget {
                     CircularProgressIndicator(),
                     UIHelper.verticalSpace(16.h),
                     Text(
-                      'Loading canceled bookings...',
+                      'loading_canceled_booking'.tr,
                       style: TextStyle(fontSize: 16.sp, color: Colors.grey),
                     ),
                   ],
@@ -65,7 +65,7 @@ class ServicesCanceledTab extends StatelessWidget {
                       UIHelper.verticalSpace(20.h),
                       ElevatedButton(
                         onPressed: () => controller.getCanceledBookings(),
-                        child: const Text('Retry'),
+                        child: Text('retry'.tr),
                       ),
                     ],
                   ),
@@ -85,7 +85,7 @@ class ServicesCanceledTab extends StatelessWidget {
                     ),
                     UIHelper.verticalSpace(16.h),
                     Text(
-                      'No canceled bookings found',
+                      'no_canceled_bookings_found'.tr,
                       style: TextStyle(fontSize: 16.sp, color: Colors.grey),
                     ),
                   ],
@@ -98,10 +98,12 @@ class ServicesCanceledTab extends StatelessWidget {
               physics: NeverScrollableScrollPhysics(),
               padding: EdgeInsets.only(top: 16.sp),
               itemCount: controller.canceledBookings.length,
-              separatorBuilder: (context, index) => UIHelper.verticalSpace(16.h),
+              separatorBuilder: (context, index) =>
+                  UIHelper.verticalSpace(16.h),
               itemBuilder: (context, index) {
                 final booking = controller.canceledBookings[index];
-                final bookingId = booking['_ServiceBookingId']?.toString() ?? '';
+                final bookingId =
+                    booking['_ServiceBookingId']?.toString() ?? '';
 
                 // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
                 final serviceProviderId = _getServiceProviderId(booking);
@@ -113,7 +115,8 @@ class ServicesCanceledTab extends StatelessWidget {
                 log('   Service Provider ID: "$serviceProviderId"');
                 log('   Provider User ID: "$providerId"');
 
-                final serviceName = booking['providerDetailsId']?['serviceName'] as Map<String, dynamic>?;
+                final serviceName = booking['providerDetailsId']?['serviceName']
+                    as Map<String, dynamic>?;
                 final address = booking['address'] as Map<String, dynamic>?;
                 final provider = booking['providerId'] as Map<String, dynamic>?;
 
@@ -123,7 +126,8 @@ class ServicesCanceledTab extends StatelessWidget {
                 return BookingDetailsCardWidget(
                   // ➤ CARD TAP → Navigate with ALL required parameters
                   onTap: () {
-                    _navigateToDetailsScreen(bookingId, serviceProviderId, providerId);
+                    _navigateToDetailsScreen(
+                        bookingId, serviceProviderId, providerId);
                   },
 
                   isCanceledTab: true,
@@ -138,10 +142,12 @@ class ServicesCanceledTab extends StatelessWidget {
                   title: _getServiceName(serviceName),
                   initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
                   location: _getAddress(address),
-                  dateTime: _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
-                  serviceProviderProfileImage: imageUrl ?? Assets.images.userImage.path,
+                  dateTime: _formatDateTime(
+                      booking['bookingDateTime']?.toString() ?? ''),
+                  serviceProviderProfileImage:
+                      imageUrl ?? Assets.images.userImage.path,
                   serviceProviderName: provider?['name'] ?? 'Unknown Provider',
-                  serviceProviderDesignation: 'Service Provider',
+                  serviceProviderDesignation: 'services_provider'.tr,
                   isNetworkImage: isNetworkImage,
                 );
               },
@@ -165,19 +171,20 @@ class ServicesCanceledTab extends StatelessWidget {
   }
 
   static String _getServiceName(Map<String, dynamic>? serviceName) {
-    if (serviceName == null) return 'Unknown Service';
-    return serviceName['en'] ?? serviceName['bn'] ?? 'Unknown Service';
+    if (serviceName == null) return 'unknown_service'.tr;
+    return serviceName['en'] ?? serviceName['bn'] ?? 'unknown_service'.tr;
   }
 
   static String _getAddress(Map<String, dynamic>? address) {
-    if (address == null) return 'Unknown Location';
-    return address['en'] ?? address['bn'] ?? 'Unknown Location';
+    if (address == null) return 'unknown_location'.tr;
+    return address['en'] ?? address['bn'] ?? 'unknown_location'.tr;
   }
 
   // 🔴 FIXED: Extract Service Provider ID (_ServiceProviderId)
   static String _getServiceProviderId(Map<String, dynamic> booking) {
     // 1. Primary: providerDetailsId._ServiceProviderId
-    final providerDetails = booking['providerDetailsId'] as Map<String, dynamic>?;
+    final providerDetails =
+        booking['providerDetailsId'] as Map<String, dynamic>?;
     if (providerDetails?['_ServiceProviderId'] != null) {
       final id = providerDetails!['_ServiceProviderId'].toString();
       log('✅ [CANCELED TAB] Service Provider ID from providerDetailsId._ServiceProviderId: $id');
@@ -209,7 +216,8 @@ class ServicesCanceledTab extends StatelessWidget {
     return '';
   }
 
-  static String? _getImageUrl(String bookingId, CanceledBookingsController controller) {
+  static String? _getImageUrl(
+      String bookingId, CanceledBookingsController controller) {
     final url = controller.getImageUrl(bookingId);
     if (url.isEmpty) return null;
 
@@ -220,7 +228,8 @@ class ServicesCanceledTab extends StatelessWidget {
     return controller.hasImage(bookingId) ? url : null;
   }
 
-  static bool _isNetworkImage(String bookingId, CanceledBookingsController controller) {
+  static bool _isNetworkImage(
+      String bookingId, CanceledBookingsController controller) {
     final url = controller.getImageUrl(bookingId);
     if (url.isEmpty) return false;
 
@@ -229,7 +238,8 @@ class ServicesCanceledTab extends StatelessWidget {
   }
 
   // 🔴 FIXED: Navigation with ALL required parameters for DetailsScreen
-  static void _navigateToDetailsScreen(String bookingId, String serviceProviderId, String providerId) {
+  static void _navigateToDetailsScreen(
+      String bookingId, String serviceProviderId, String providerId) {
     log('🔍 [CANCELED TAB] Navigation to DetailsScreen → preparing arguments...');
     log('   ➤ bookingId = "$bookingId"');
     log('   ➤ serviceProviderId = "$serviceProviderId"');
@@ -238,8 +248,8 @@ class ServicesCanceledTab extends StatelessWidget {
     if (serviceProviderId.isEmpty) {
       log('❌ [CANCELED TAB] Navigation ABORTED: serviceProviderId is empty!');
       Get.snackbar(
-        'Navigation Error',
-        'Service provider details unavailable',
+        'navigation_error'.tr,
+        'service_provider_details_unavilable'.tr,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -258,8 +268,8 @@ class ServicesCanceledTab extends StatelessWidget {
       arguments: {
         "status": BookingStatusEnum.canceled,
         "bookingId": bookingId,
-        "serviceProviderID": serviceProviderId,  // Required for service details
-        "providerID": providerId,                // Required for booking flow
+        "serviceProviderID": serviceProviderId, // Required for service details
+        "providerID": providerId, // Required for booking flow
       },
     );
   }

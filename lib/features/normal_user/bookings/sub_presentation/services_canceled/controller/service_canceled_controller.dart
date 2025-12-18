@@ -24,7 +24,8 @@ class CanceledBookingsController extends GetxController {
       log('🔑 [CANCELED CONTROLLER] Token retrieved: ${token != null ? 'Yes' : 'No'}');
 
       if (token == null) {
-        errorMessage.value = 'Authentication token not found. Please login again.';
+        errorMessage.value =
+            'Authentication token not found. Please login again.';
         isLoading.value = false;
         log('❌ [CANCELED CONTROLLER] No token found');
         return;
@@ -49,7 +50,8 @@ class CanceledBookingsController extends GetxController {
         log('📋 [CANCELED CONTROLLER] Full API Response Data: ${response.jsonResponse}');
 
         if (response.jsonResponse!['success'] == true) {
-          List<dynamic> results = response.jsonResponse!['data']['attributes']['results'];
+          List<dynamic> results =
+              response.jsonResponse!['data']['attributes']['results'];
           log('✅ [CANCELED CONTROLLER] Found ${results.length} canceled bookings');
 
           // Log the structure of first booking for debugging
@@ -77,17 +79,19 @@ class CanceledBookingsController extends GetxController {
           // Process image URLs for all bookings
           await _processBookingImages(results);
         } else {
-          String apiMessage = response.jsonResponse!['message'] ?? 'Failed to load bookings';
+          String apiMessage =
+              response.jsonResponse!['message'] ?? 'failed_to_load_bookings'.tr;
           errorMessage.value = apiMessage;
           log('❌ [CANCELED CONTROLLER] API returned error: $apiMessage');
         }
       } else {
-        String error = response.errorMessage ?? 'Something went wrong';
+        String error = response.errorMessage ?? 'something_went_wrong'.tr;
         errorMessage.value = error;
         log('❌ [CANCELED CONTROLLER] Network error: $error');
       }
     } catch (e) {
-      errorMessage.value = 'Connection error: Please check your internet connection';
+      errorMessage.value =
+          'Connection error: Please check your internet connection';
       log('❌ [CANCELED CONTROLLER] Exception in getCanceledBookings: $e');
     } finally {
       isLoading.value = false;
@@ -155,7 +159,8 @@ class CanceledBookingsController extends GetxController {
     return fullUrl;
   }
 
-  Future<void> _verifyImageAccessibility(String bookingId, String imageUrl) async {
+  Future<void> _verifyImageAccessibility(
+      String bookingId, String imageUrl) async {
     try {
       log('🔍 [CANCELED CONTROLLER] Verifying image accessibility for: $imageUrl');
 
@@ -202,4 +207,3 @@ class CanceledBookingsController extends GetxController {
     super.onInit();
   }
 }
-
