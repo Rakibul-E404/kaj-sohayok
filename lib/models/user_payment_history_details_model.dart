@@ -9,6 +9,11 @@ class UserPaymentHistoryDetailsModel {
     this.review,
   });
 
+  // Helper getters to extract IDs from serviceBooking
+  String get serviceProviderID => serviceBooking?.providerDetailsId?.toString() ?? '';
+  String get providerID => serviceBooking?.providerId?.userId ?? '';
+  String get bookingId => serviceBooking?.serviceBookingId ?? '';
+
   // fromJson method
   factory UserPaymentHistoryDetailsModel.fromJson(Map<String, dynamic> json) {
     return UserPaymentHistoryDetailsModel(
@@ -22,7 +27,7 @@ class UserPaymentHistoryDetailsModel {
     );
   }
 
-  // fromMap method
+  // fromMap method - USE THIS FOR YOUR API RESPONSE
   factory UserPaymentHistoryDetailsModel.fromMap(Map<String, dynamic> map) {
     return UserPaymentHistoryDetailsModel(
       serviceBooking: map['serviceBooking'] != null
@@ -270,19 +275,19 @@ class ProfileImage {
 class Attachment {
   final String? attachment;
   final String? attachmentId;
-  final String? attachmentType;  // Added the attachmentType field
+  final String? attachmentType;
 
   Attachment({
     this.attachment,
     this.attachmentId,
-    this.attachmentType, // Include the attachmentType in the constructor
+    this.attachmentType,
   });
 
   factory Attachment.fromJson(Map<String, dynamic> json) {
     return Attachment(
       attachment: json['attachment'],
       attachmentId: json['_attachmentId'],
-      attachmentType: json['attachmentType'],  // Parse attachmentType from JSON
+      attachmentType: json['attachmentType'],
     );
   }
 
@@ -290,7 +295,7 @@ class Attachment {
     return Attachment(
       attachment: map['attachment'],
       attachmentId: map['_attachmentId'],
-      attachmentType: map['attachmentType'],  // Parse attachmentType from Map
+      attachmentType: map['attachmentType'],
     );
   }
 
@@ -298,7 +303,7 @@ class Attachment {
     return {
       'attachment': attachment,
       '_attachmentId': attachmentId,
-      'attachmentType': attachmentType,  // Add attachmentType to the JSON
+      'attachmentType': attachmentType,
     };
   }
 }

@@ -95,6 +95,7 @@ dependencies:
   firebase_auth: ^5.5.3
   #socket-IO
   socket_io_client: ^3.1.2
+  chewie: ^1.13.0
   #for calling :
 #  zego_uikit_prebuilt_call: ^4.13.0
 #  zego_uikit_signaling_plugin: ^2.8.0
