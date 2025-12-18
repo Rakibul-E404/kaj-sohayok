@@ -28,7 +28,7 @@ class UserEditProfileScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: AppColors.scaffoldBackgroundColor,
         title: Text(
-          "Edit Profile",
+          'edit_profile'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
       ),
@@ -68,25 +68,25 @@ class UserEditProfileScreen extends StatelessWidget {
                         child: ClipOval(
                           child: hasImage
                               ? (isNetworkImage
-                                    ? CachedNetworkImage(
-                                        imageUrl: imagePath,
-                                        fit: BoxFit.cover,
-                                        placeholder: (context, url) => Center(
-                                          child: CircularProgressIndicator(
-                                            color: AppColors.c778beb,
-                                          ),
+                                  ? CachedNetworkImage(
+                                      imageUrl: imagePath,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) => Center(
+                                        child: CircularProgressIndicator(
+                                          color: AppColors.c778beb,
                                         ),
-                                        errorWidget: (context, url, error) =>
-                                            Icon(
-                                              Icons.person,
-                                              size: 60.sp,
-                                              color: Colors.grey[400],
-                                            ),
-                                      )
-                                    : Image.file(
-                                        File(imagePath),
-                                        fit: BoxFit.cover,
-                                      ))
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(
+                                        Icons.person,
+                                        size: 60.sp,
+                                        color: Colors.grey[400],
+                                      ),
+                                    )
+                                  : Image.file(
+                                      File(imagePath),
+                                      fit: BoxFit.cover,
+                                    ))
                               : Container(
                                   color: Colors.grey[200],
                                   child: Icon(
@@ -152,19 +152,20 @@ class UserEditProfileScreen extends StatelessWidget {
                     ],
                   ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       /// Name Form Field
                       EditProfileFormFieldWidget(
-                        lableText: "Name",
-                        hintText: "Enter Your Name",
+                        lableText: 'name'.tr,
+                        hintText: 'enter_your_name'.tr,
                         controller: controller.nameController,
                       ),
                       UIHelper.verticalSpace(16.h),
 
                       /// Phone Number Form Field
                       EditProfileFormFieldWidget(
-                        lableText: "Phone Number",
-                        hintText: "Enter Your Phone Number",
+                        lableText: 'phone_number'.tr,
+                        hintText: 'enter_your_phone_number'.tr,
                         controller: controller.phoneNumberController,
                         keyboardType: TextInputType.phone,
                       ),
@@ -172,8 +173,8 @@ class UserEditProfileScreen extends StatelessWidget {
 
                       /// Location Form Field
                       EditProfileFormFieldWidget(
-                        lableText: "Location",
-                        hintText: "Enter Your Location",
+                        lableText: 'location'.tr,
+                        hintText: 'enter_your_location'.tr,
                         controller: controller.locationController,
                       ),
                       UIHelper.verticalSpace(16.h),
@@ -186,11 +187,11 @@ class UserEditProfileScreen extends StatelessWidget {
                             context: context,
                             initialDate:
                                 controller.dateOfBirthController.text.isEmpty
-                                ? DateTime.now()
-                                : _parseDate(
-                                        controller.dateOfBirthController.text,
-                                      ) ??
-                                      DateTime.now(),
+                                    ? DateTime.now()
+                                    : _parseDate(
+                                          controller.dateOfBirthController.text,
+                                        ) ??
+                                        DateTime.now(),
                             firstDate: DateTime(1900),
                             lastDate: DateTime.now(),
                             builder: (context, child) {
@@ -215,8 +216,8 @@ class UserEditProfileScreen extends StatelessWidget {
                         },
                         child: AbsorbPointer(
                           child: EditProfileFormFieldWidget(
-                            lableText: "Date of Birth",
-                            hintText: "Select Date of Birth",
+                            lableText: 'date_of_birth'.tr,
+                            hintText: 'select_date_of_birth'.tr,
                             controller: controller.dateOfBirthController,
                             suffixIcon: Icon(
                               Icons.calendar_today,
@@ -231,7 +232,8 @@ class UserEditProfileScreen extends StatelessWidget {
                       /// Gender Form Field
                       // Text('Gender'),
                       Text(
-                        'Gender',
+                        'gender'.tr,
+                        textAlign: TextAlign.start,
                         style: TextStyle(
                           fontSize: 14.sp,
                           color: Colors.black87,
@@ -245,10 +247,11 @@ class UserEditProfileScreen extends StatelessWidget {
                             : controller.genderController.text.toLowerCase(),
                         // Convert to lowercase to match
                         items: [
-                          DropdownMenuItem(value: 'male', child: Text('Male')),
+                          DropdownMenuItem(
+                              value: 'male', child: Text('male'.tr)),
                           DropdownMenuItem(
                             value: 'female',
-                            child: Text('Female'),
+                            child: Text('female'.tr),
                           ),
                         ],
                         onChanged: (String? newValue) {
@@ -258,7 +261,7 @@ class UserEditProfileScreen extends StatelessWidget {
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please select gender type';
+                            return 'please_select_your_gender_type'.tr;
                           }
                           return null;
                         },
@@ -304,8 +307,8 @@ class UserEditProfileScreen extends StatelessWidget {
                             controller.updateProfile();
                           },
                     buttonTitle: controller.isLoading.value
-                        ? "Updating..."
-                        : "Update Profile",
+                        ? 'updating'.tr
+                        : 'update_profile'.tr,
                   ),
                 ),
               ],

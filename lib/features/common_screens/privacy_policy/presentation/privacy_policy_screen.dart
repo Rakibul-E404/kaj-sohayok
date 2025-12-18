@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:kaz_bd/constants/app_constant_text.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
@@ -19,7 +18,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          "Privacy policy",
+          'privacy_policy_screen'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
         centerTitle: true,

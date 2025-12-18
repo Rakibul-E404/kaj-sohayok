@@ -349,4 +349,29 @@ Map<String, String> englishLanguage = {
   ///--------------> Payment History Tab
 
   'no_payment_history_available': 'No Payment History Available',
+
+  ///--------------> Change Password Screen
+
+  'old_password': 'Old Password',
+  'please_enter_old_password': 'Please Enter Old Password !!',
+  'new_password': 'New Password',
+  'please_enter_new_password': 'Please Enter New Password !!',
+  'confirm_password': 'Confirm Password',
+  'please_confirm_password': 'Please confirm password !!',
+
+  ///-------------> Privacy Policy Screen
+  'privacy_policy_screen': 'Privacy policy',
+
+  ///-------------> Terms And Conditions Screen
+  'terms_and_conditions': 'Terms & Conditions',
+
+  ///----------------> Edit Profile
+  'edit_profile': 'Edit Profile',
+  'enter_your_name': 'Enter Your Name',
+  'enter_your_phone_number': 'Enter Your Phone Number',
+  'enter_your_location': 'Enter Your Location',
+  'select_date_of_birth': 'Select Date of Birth',
+  'please_select_your_gender_type': 'Please select gender type',
+  'updating': 'Updating...',
+  'update_profile': 'Update Profile',
 };

@@ -349,4 +349,28 @@ Map<String, String> banglaLanguage = {
 
   ///--------------> Payment History Tab
   'no_payment_history_available': 'কোনও পেমেন্ট ইতিহাস উপলব্ধ নেই',
+
+  ///--------------> Change Password Screen
+  'old_password': 'পুরানো পাসওয়ার্ড',
+  'please_enter_old_password': 'পুরাতন পাসওয়ার্ড দিন !!',
+  'new_password': 'নতুন পাসওয়ার্ড',
+  'please_enter_new_password': 'অনুগ্রহ করে নতুন পাসওয়ার্ড দিন !!',
+  'confirm_password': 'পাসওয়ার্ড নিশ্চিত করুন',
+  'please_confirm_password': 'পাসওয়ার্ড নিশ্চিত করুন!!',
+
+  ///--------------> Privacy Policy Screen
+  'privacy_policy_screen': 'গোপনীয়তা নীতি',
+
+  ///-------------> Terms And Conditions Screen
+  'terms_and_conditions': 'শর্তাবলী',
+
+  ///------------> About Us Screen
+  'edit_profile': 'প্রোফাইল সম্পাদনা করুন',
+  'enter_your_name': 'আপনার নাম লিখুন',
+  'enter_your_phone_number': 'আপনার ফোন নম্বর লিখুন',
+  'enter_your_location': 'আপনার অবস্থান লিখুন',
+  'select_date_of_birth': 'জন্ম তারিখ নির্বাচন করুন',
+  'please_select_your_gender_type': 'অনুগ্রহ করে লিঙ্গ প্রকার নির্বাচন করুন',
+  'updating': 'আপডেট হচ্ছে...',
+  'update_profile': 'প্রোফাইল আপডেট করুন'
 };
