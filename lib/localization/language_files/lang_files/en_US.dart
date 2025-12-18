@@ -1,3 +1,5 @@
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
+
 Map<String, String> englishLanguage = {
   ///----------> Onboarding Screen
   'your_home_best_friend': 'Your Home\'s Best Friend',
@@ -279,5 +281,46 @@ Map<String, String> englishLanguage = {
   'failed_to_submit_review': 'Failed to submit review',
   'an_error_occured': 'An error occurred:',
   'submiting': 'Submitting...',
-  'submit_review': 'Submit Review'
+  'submit_review': 'Submit Review',
+
+  ///----------> Details Of Completed Booking Tab Screen
+  'loading_video': 'Loading video...',
+  'no_image_available': 'No image available',
+  'failed_to_load_image': 'Failed to load image',
+  'proof_of_work': 'Proof of Work',
+  'no_proof_of_work_provided': 'No proof of work provided',
+  'service_provider_did_not_upload_image':
+      'The service provider did not upload any images or videos',
+  'proof_of_work_image': 'Proof of Work - Image',
+  'proof_of_work_video': 'Proof of Work - Video',
+  'cannot_send_message_provider_info_not_available':
+      'Cannot send message: Provider information not available',
+  'complete_details': 'Complete Details',
+  'loading_details': 'Loading details...',
+  'no_details_found': 'No details found',
+  'additional_cost': 'Additional Cost',
+  'work_complete_information': 'Work Complete Information',
+  'completation_date': 'Completion Date',
+  'duration_time': 'Duration Time',
+  'mins': 'mins',
+  'working_address': 'Working Address',
+  'booking_order_date': 'Booking Order Date',
+  'info': 'Info',
+  'read_only_additional_costs_cannot_be_modified':
+      'This is a read-only view. Additional costs cannot be modified.',
+
+  'add_additional_cost': 'Add Additional Cost',
+  'payment_summery': 'Payment Summary',
+  'initial_cost': 'Initial Cost',
+  'addd_additional_cost': 'Add Additional Cost',
+  'enter_cost_title': 'Enter cost title',
+  'please_enter_cost_title': 'Please enter cost title',
+  'enter_cost_amount': 'Enter cost amount',
+  'please_enter_cost_amount': 'Please enter cost amount',
+  'please_enter_valid_amount': 'Please enter a valid amount',
+  'success': 'Success',
+  'additional_cost_added': 'Additional cost added',
+  'save': 'Save',
+  'total_payment': 'Total Payment',
+  'transaction_id': 'Transaction ID',
 };

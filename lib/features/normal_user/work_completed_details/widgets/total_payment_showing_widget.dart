@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import '../../../../constants/app_constant_text.dart';
 import '../../../../constants/text_font_style.dart';
@@ -19,7 +20,6 @@ class TotalPaymentShowingWidget extends StatelessWidget {
         color: AppColors.cf1f3fd,
         border: Border.all(color: AppColors.ce6e6e6),
         borderRadius: BorderRadius.circular(8.r),
-
         boxShadow: [
           BoxShadow(
             color: AppColors.ca4b1f2.withAlpha(80),
@@ -33,7 +33,7 @@ class TotalPaymentShowingWidget extends StatelessWidget {
         children: [
           ///Section : Text-> Total Payment
           Text(
-            "Total Payment",
+            'total_payment'.tr,
             style: TextFontStyle.headline16w700c202020StyleSatoshi,
           ),
 

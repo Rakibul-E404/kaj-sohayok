@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/utils.dart';
 
 import '../../../../constants/app_constant_text.dart';
 import '../../../../constants/text_font_style.dart';
@@ -23,7 +24,7 @@ class InitialCostWIdget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "Initial Cost",
+            'initial_cost'.tr,
             style: TextFontStyle.headline16w700c4d4d4dStyleSatoshi,
           ),
           Spacer(),
@@ -31,7 +32,7 @@ class InitialCostWIdget extends StatelessWidget {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: "Start from ${AppText.bdTkSign}",
+                  text: "${'start_from'.tr} ${AppText.bdTkSign}",
                   style: TextFontStyle.headline12w500c6a6a6aStyleSatoshi,
                 ),
                 TextSpan(
