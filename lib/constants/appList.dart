@@ -136,22 +136,24 @@ class AppList {
   static List<SettingsOptionsModel> settingsOptionsList = [
     SettingsOptionsModel(
       icon: Assets.icons.keyIcon,
-      optionName: "Change Password",
+      optionName: 'change_password'.tr,
     ),
     SettingsOptionsModel(
       icon: Assets.icons.privacyPolicyIcon,
-      optionName: "Privacy policy",
+      optionName: 'privacy_policy'.tr,
     ),
     SettingsOptionsModel(
       icon: Assets.icons.termsConditionsIcon,
-      optionName: "Terms & conditions",
+      optionName: 'terms_and_condition'.tr,
     ),
     SettingsOptionsModel(
       icon: Assets.icons.aboutUsIcon,
-      optionName: "About us",
+      optionName: 'about_us'.tr,
     ),
-    SettingsOptionsModel(icon: Assets.icons.helpIcon, optionName: "Contact Us"),
-    SettingsOptionsModel(icon: Assets.icons.logOutIcon, optionName: "Logout"),
+    SettingsOptionsModel(
+        icon: Assets.icons.helpIcon, optionName: 'contact_us'.tr),
+    SettingsOptionsModel(
+        icon: Assets.icons.logOutIcon, optionName: 'logout'.tr),
   ];
 
   static List<ProfileTileModel> userProfileList = [

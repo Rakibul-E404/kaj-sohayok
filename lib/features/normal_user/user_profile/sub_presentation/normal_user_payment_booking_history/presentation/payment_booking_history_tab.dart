@@ -25,7 +25,7 @@ class PaymentBookingHistoryTab extends StatelessWidget {
         visible: userPaymentHistoryController.userPaymentHistories.isNotEmpty,
         replacement: Center(
             child: Text(
-          'No Payment History Available',
+          'no_payment_history_available'.tr,
           style: TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
         )),
         child: ListView.separated(
@@ -49,7 +49,7 @@ class PaymentBookingHistoryTab extends StatelessWidget {
               serviceProviderProfileImage:
                   "${AppUrl.imageBaseUrl}${singlePayment.providerId?.profileImage?.imageUrl}",
               serviceProviderName: "${singlePayment.providerId?.name ?? ''} ",
-              serviceProviderDesignation: "Service Provider",
+              serviceProviderDesignation: 'services_provider'.tr,
             );
           },
         ),

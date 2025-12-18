@@ -36,7 +36,6 @@ class ProfileTab extends StatelessWidget {
             Card(
               child: Container(
                 width: 1.sw,
-
                 decoration: BoxDecoration(
                   color: AppColors.cFFFFFF,
                   borderRadius: BorderRadius.circular(16.r),
@@ -53,7 +52,6 @@ class ProfileTab extends StatelessWidget {
                   children: [
                     Container(
                       width: 1.sw,
-
                       padding: EdgeInsets.symmetric(
                         horizontal: 16.w,
                         vertical: 10.h,
@@ -64,16 +62,14 @@ class ProfileTab extends StatelessWidget {
                           top: Radius.circular(16.r),
                         ),
                       ),
-
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Profile information",
+                            'profile_information'.tr,
                             style:
                                 TextFontStyle.headline16w700c000000StyleSatoshi,
                           ),
-
                           InkWell(
                             onTap: () {
                               Get.toNamed(Routes.editProfileScreen);
@@ -84,38 +80,37 @@ class ProfileTab extends StatelessWidget {
                       ),
                     ),
                     UIHelper.verticalSpace(10.h),
-
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10.w),
                       child: Obx(() {
                         List<ProfileTileModel> userProfileList = [
                           ProfileTileModel(
-                            title: "Name",
+                            title: 'name'.tr,
                             data:
                                 "${userProfileScreenController.userProfileModel.value?.name ?? ''} ",
                           ),
                           ProfileTileModel(
-                            title: "Email",
+                            title: 'email'.tr,
                             data:
                                 "${userProfileScreenController.userProfileModel.value?.email ?? ''} ",
                           ),
                           ProfileTileModel(
-                            title: "Phone number",
+                            title: 'phone_number'.tr,
                             data:
                                 "${userProfileScreenController.userProfileModel.value?.phoneNumber ?? '0000'} ",
                           ),
                           ProfileTileModel(
-                            title: "Address",
+                            title: 'address'.tr,
                             data:
                                 "${userProfileScreenController.userProfileModel.value?.location.en ?? ''} ",
                           ),
                           ProfileTileModel(
-                            title: "Date of Birth",
+                            title: 'date_of_birth'.tr,
                             data:
                                 "${formatDateTime(userProfileScreenController.userProfileModel.value?.dob) ?? ''} ",
                           ),
                           ProfileTileModel(
-                            title: "Gender",
+                            title: 'gender'.tr,
                             data:
                                 "${userProfileScreenController.userProfileModel.value?.gender.toUpperCase() ?? ''} ",
                           ),

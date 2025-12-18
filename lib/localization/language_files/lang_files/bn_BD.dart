@@ -324,4 +324,29 @@ Map<String, String> banglaLanguage = {
   'save': 'সংরক্ষণ করুন',
   'total_payment': 'মোট পেমেন্ট',
   'transaction_id': 'লেনদেন আইডি',
+
+  ///----------> User Profile Screen
+  //////
+  ///
+  ///----------> Profile Tab
+  'my_profile': 'আমার প্রোফাইল',
+  'profile': 'প্রোফাইল',
+  'setting': 'সেটিং',
+  'payment_history': 'পেমেন্ট ইতিহাস',
+  'email': 'ইমেইল',
+  'address': 'ঠিকানা',
+
+  ///----------> Settings Tab
+  'logout': 'লগআউট',
+  'are_you_sure_you_want_to_logout': 'তুমি কি নিশ্চিত যে তুমি লগ আউট করতে চাও?',
+  'no': 'না',
+  'yes': 'হ্যাঁ',
+  'change_password': 'পাসওয়ার্ড পরিবর্তন করুন',
+  'privacy_policy': 'গোপনীয়তা নীতি',
+  'terms_and_condition': 'শর্তাবলী',
+  'about_us': 'আমাদের সম্পর্কে',
+  'contact_us': 'আমাদের সাথে যোগাযোগ করুন',
+
+  ///--------------> Payment History Tab
+  'no_payment_history_available': 'কোনও পেমেন্ট ইতিহাস উপলব্ধ নেই',
 };

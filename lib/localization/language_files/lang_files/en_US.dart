@@ -323,4 +323,30 @@ Map<String, String> englishLanguage = {
   'save': 'Save',
   'total_payment': 'Total Payment',
   'transaction_id': 'Transaction ID',
+
+  ///----------> User Profile Screen
+  ///
+  ///
+  ///----------> Profile Tab
+  'my_profile': 'My Profile',
+  'profile': 'Profile',
+  'setting': 'Setting',
+  'payment_history': 'Payment History',
+  'email': 'Email',
+  'address': 'Address',
+
+  ///----------> Settings Tab
+  'logout': 'Logout',
+  'are_you_sure_you_want_to_logout': 'Are you sure you want to log out ?',
+  'no': 'No',
+  'yes': 'Yes',
+  'change_password': 'Change Password',
+  'privacy_policy': 'Privacy policy',
+  'terms_and_condition': 'Terms & conditions',
+  'about_us': 'About us',
+  'contact_us': 'Contact Us',
+
+  ///--------------> Payment History Tab
+
+  'no_payment_history_available': 'No Payment History Available',
 };
