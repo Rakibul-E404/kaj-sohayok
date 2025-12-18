@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -20,7 +19,6 @@ import 'show_feedback_thanks_bottomsheet.dart';
 
 // Remove the local ReviewData class and import from work_completed_tab.dart
 import '../presentation/work_completed_tab.dart';
-
 
 void showReviewGivingAlertDialog() {
   double rating = 0.0;
@@ -81,7 +79,7 @@ void showReviewGivingAlertDialog() {
 
               /// Title
               Text(
-                "Rate the service",
+                'rate_the_service'.tr,
                 style: TextFontStyle.headline10w400c999999StyleSatoshi,
               ),
               UIHelper.verticalSpace(12.h),
@@ -125,7 +123,7 @@ void showReviewGivingAlertDialog() {
                   expands: true,
                   style: TextFontStyle.headline14w500c000000StyleSatoshi,
                   decoration: InputDecoration(
-                    hintText: "Add a Comment...",
+                    hintText: 'add_a_comment'.tr,
                     hintStyle: TextFontStyle.headline12w700cb4b4b4StyleSatoshi,
                     border: InputBorder.none,
                   ),
@@ -139,127 +137,133 @@ void showReviewGivingAlertDialog() {
                   onTap: isSubmitting.value
                       ? null
                       : () async {
-                    // Validate inputs
-                    if (rating == 0) {
-                      Get.snackbar(
-                        'Error',
-                        'Please select a rating',
-                        backgroundColor: Colors.red,
-                        colorText: Colors.white,
-                      );
-                      return;
-                    }
+                          // Validate inputs
+                          if (rating == 0) {
+                            Get.snackbar(
+                              'error'.tr,
+                              'please_select_a_rating'.tr,
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                            return;
+                          }
 
-                    if (reviewData == null || reviewData.bookingId.isEmpty) {
-                      Get.snackbar(
-                        'Error',
-                        'Booking information not found',
-                        backgroundColor: Colors.red,
-                        colorText: Colors.white,
-                      );
-                      return;
-                    }
+                          if (reviewData == null ||
+                              reviewData.bookingId.isEmpty) {
+                            Get.snackbar(
+                              'error'.tr,
+                              'booking_information_not_found'.tr,
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                            return;
+                          }
 
-                    isSubmitting.value = true;
+                          isSubmitting.value = true;
 
-                    try {
-                      log(
-                        "📝 [REVIEW] Submitting review for booking: ${reviewData.bookingId}",
-                      );
-                      log("⭐ [REVIEW] Rating: $rating");
-                      log("💬 [REVIEW] Comment: ${commentController.text}");
+                          try {
+                            log(
+                              "📝 [REVIEW] Submitting review for booking: ${reviewData.bookingId}",
+                            );
+                            log("⭐ [REVIEW] Rating: $rating");
+                            log("💬 [REVIEW] Comment: ${commentController.text}");
 
-                      // Prepare review data
-                      final reviewRequestData = {
-                        "review": commentController.text.isNotEmpty
-                            ? commentController.text
-                            : "New review for service booking id ${reviewData.bookingId}",
-                        "rating": rating.toInt().toString(),
-                        "serviceBookingId": reviewData.bookingId,
-                      };
+                            // Prepare review data
+                            final reviewRequestData = {
+                              "review": commentController.text.isNotEmpty
+                                  ? commentController.text
+                                  : "New review for service booking id ${reviewData.bookingId}",
+                              "rating": rating.toInt().toString(),
+                              "serviceBookingId": reviewData.bookingId,
+                            };
 
-                      log('📤 [REVIEW] Request data: $reviewRequestData');
+                            log('📤 [REVIEW] Request data: $reviewRequestData');
 
-                      // Get authentication token
-                      final token = await SecureStorageService().read(AppConstants.accessToken);
+                            // Get authentication token
+                            final token = await SecureStorageService()
+                                .read(AppConstants.accessToken);
 
-                      if (token == null) {
-                        Get.snackbar(
-                          'Error',
-                          'Authentication token not found',
-                          backgroundColor: Colors.red,
-                          colorText: Colors.white,
-                        );
-                        isSubmitting.value = false;
-                        return;
-                      }
+                            if (token == null) {
+                              Get.snackbar(
+                                'error'.tr,
+                                'auth_token_not_found_login_again'.tr,
+                                backgroundColor: Colors.red,
+                                colorText: Colors.white,
+                              );
+                              isSubmitting.value = false;
+                              return;
+                            }
 
-                      // Prepare headers
-                      final Map<String, String> headers = {
-                        'Authorization': 'Bearer $token',
-                        'Content-Type': 'application/json',
-                      };
+                            // Prepare headers
+                            final Map<String, String> headers = {
+                              'Authorization': 'Bearer $token',
+                              'Content-Type': 'application/json',
+                            };
 
-                      log('🌐 [REVIEW] Making API call to: ${AppUrl.workReview}');
+                            log('🌐 [REVIEW] Making API call to: ${AppUrl.workReview}');
 
-                      // Make API call
-                      NetworkResponse response = await NetworkCaller().postRequest(
-                        AppUrl.workReview,
-                        headers: headers,
-                        body: reviewRequestData,
-                      );
+                            // Make API call
+                            NetworkResponse response =
+                                await NetworkCaller().postRequest(
+                              AppUrl.workReview,
+                              headers: headers,
+                              body: reviewRequestData,
+                            );
 
-                      log('📥 [REVIEW] API Response Status Code: ${response.statusCode}');
-                      log('📊 [REVIEW] API Response: ${response.jsonResponse}');
+                            log('📥 [REVIEW] API Response Status Code: ${response.statusCode}');
+                            log('📊 [REVIEW] API Response: ${response.jsonResponse}');
 
-                      if (response.isSuccess && response.jsonResponse != null) {
-                        final json = response.jsonResponse!;
-                        final success = json['success'] == true;
-                        final statusCode = json['code'] ?? 0;
+                            if (response.isSuccess &&
+                                response.jsonResponse != null) {
+                              final json = response.jsonResponse!;
+                              final success = json['success'] == true;
+                              final statusCode = json['code'] ?? 0;
 
-                        if (success && statusCode == 200) {
-                          log('✅ [REVIEW] Review submitted successfully');
+                              if (success && statusCode == 200) {
+                                log('✅ [REVIEW] Review submitted successfully');
 
-                          // Close the dialog
-                          Get.back();
+                                // Close the dialog
+                                Get.back();
 
-                          // Show success feedback
-                          showFeedBackThanksBottomSheet();
-
-                        } else {
-                          String errorMessage = json['message'] ?? 'Failed to submit review';
-                          log('❌ [REVIEW] API error: $errorMessage');
-                          Get.snackbar(
-                            'Error',
-                            errorMessage,
-                            backgroundColor: Colors.red,
-                            colorText: Colors.white,
-                          );
-                        }
-                      } else {
-                        String error = response.errorMessage ?? 'Something went wrong';
-                        log('❌ [REVIEW] Network error: $error');
-                        Get.snackbar(
-                          'Error',
-                          'Failed to submit review: $error',
-                          backgroundColor: Colors.red,
-                          colorText: Colors.white,
-                        );
-                      }
-                    } catch (e, stackTrace) {
-                      log('❌ [REVIEW] Exception: $e');
-                      log('❌ [REVIEW] Stack trace: $stackTrace');
-                      Get.snackbar(
-                        'Error',
-                        'An error occurred: ${e.toString()}',
-                        backgroundColor: Colors.red,
-                        colorText: Colors.white,
-                      );
-                    } finally {
-                      isSubmitting.value = false;
-                    }
-                  },
-                  buttonTitle: isSubmitting.value ? "Submitting..." : "Submit Review",
+                                // Show success feedback
+                                showFeedBackThanksBottomSheet();
+                              } else {
+                                String errorMessage = json['message'] ??
+                                    'failed_to_submit_review'.tr;
+                                log('❌ [REVIEW] API error: $errorMessage');
+                                Get.snackbar(
+                                  'error'.tr,
+                                  errorMessage,
+                                  backgroundColor: Colors.red,
+                                  colorText: Colors.white,
+                                );
+                              }
+                            } else {
+                              String error = response.errorMessage ??
+                                  'Something went wrong';
+                              log('❌ [REVIEW] Network error: $error');
+                              Get.snackbar(
+                                'error'.tr,
+                                '${'failed_to_submit_review'.tr}: $error',
+                                backgroundColor: Colors.red,
+                                colorText: Colors.white,
+                              );
+                            }
+                          } catch (e, stackTrace) {
+                            log('❌ [REVIEW] Exception: $e');
+                            log('❌ [REVIEW] Stack trace: $stackTrace');
+                            Get.snackbar(
+                              'error'.tr,
+                              '${'an_error_occured'.tr} ${e.toString()}',
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                          } finally {
+                            isSubmitting.value = false;
+                          }
+                        },
+                  buttonTitle:
+                      isSubmitting.value ? 'submiting'.tr : 'submit_review'.tr,
                 );
               }),
             ],
@@ -269,5 +273,3 @@ void showReviewGivingAlertDialog() {
     },
   );
 }
-
-

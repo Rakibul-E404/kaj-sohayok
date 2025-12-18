@@ -269,4 +269,19 @@ Map<String, String> banglaLanguage = {
   'your_payment_successfull_processed':
       'আপনার পেমেন্ট সফলভাবে প্রক্রিয়া করা হয়েছে।',
   'home': 'বাড়ি',
+  'cannot_load_service_details_bookings_id_is_missing':
+      'পরিষেবার বিবরণ লোড করা যাচ্ছে না। বুকিং আইডি অনুপস্থিত।',
+  'failed_to_open_details': 'বিস্তারিত খুলতে ব্যর্থ:',
+  'thanks_for_giving_feedback': 'আপনার মতামত দেওয়ার জন্য ধন্যবাদ।',
+  'your_feedback_means_a_lot':
+      'আপনার প্রতিক্রিয়া পরিষেবার রেটিং এবং উন্নতির জন্য অনেক গুরুত্বপূর্ণ।',
+  'done': 'সম্পন্ন',
+  'rate_the_service': 'সেবা রেট',
+  'add_a_comment': 'একটি মন্তব্য যোগ করুন...',
+  'please_select_a_rating': 'একটি রেটিং নির্বাচন করুন',
+  'booking_information_not_found': 'বুকিং তথ্য পাওয়া যায়নি',
+  'failed_to_submit_review': 'পর্যালোচনা জমা দিতে ব্যর্থ হয়েছে',
+  'an_error_occured': 'একটি ত্রুটি ঘটেছে:',
+  'submiting': 'জমা দেওয়া হচ্ছে...',
+  'submit_review': 'পর্যালোচনা জমা দিন',
 };

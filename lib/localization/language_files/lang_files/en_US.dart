@@ -265,4 +265,19 @@ Map<String, String> englishLanguage = {
   'your_payment_successfull_processed':
       'Your Payment has been successfully processed',
   'home': 'Home',
+  'cannot_load_service_details_bookings_id_is_missing':
+      'Cannot load service details. Booking ID is missing.',
+  'failed_to_open_details': 'Failed to open details:',
+  'thanks_for_giving_feedback': 'Thanks for giving your feedback',
+  'your_feedback_means_a_lot':
+      'Your feedback means a lot for the retting and improvement for services',
+  'done': 'Done',
+  'rate_the_service': 'Rate the service',
+  'add_a_comment': 'Add a Comment...',
+  'please_select_a_rating': 'Please select a rating',
+  'booking_information_not_found': 'Booking information not found',
+  'failed_to_submit_review': 'Failed to submit review',
+  'an_error_occured': 'An error occurred:',
+  'submiting': 'Submitting...',
+  'submit_review': 'Submit Review'
 };

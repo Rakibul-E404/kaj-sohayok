@@ -47,14 +47,14 @@ void showPaymentSuccessfullBottomSheet() {
 
           ///Section : Text -> payment successful !
           Text(
-            "Payment Successful !",
+            'payment_successfull'.tr,
             style: TextFontStyle.headline18w700c1b1b1bStyleSatoshi,
           ),
           UIHelper.verticalSpace(10.h),
 
           ///Section : Text -> Your Payment  has been successfully processed
           Text(
-            "Your Payment  has been successfully processed",
+            'your_payment_successfull_processed'.tr,
             textAlign: TextAlign.center,
             style: TextFontStyle.headline14w400c494949StyleSatoshi,
           ),
@@ -72,7 +72,7 @@ void showPaymentSuccessfullBottomSheet() {
                   Get.toNamed(Routes.navigationScreen);
                 },
                 buttonWidth: 136.w,
-                buttonTitle: "Home",
+                buttonTitle: 'home'.tr,
                 textStyle: TextFontStyle.headline14w500c111111StyleSatoshi,
                 isButtonBorderUsed: true,
                 buttonBorderWidth: 1.5.sp,
@@ -88,7 +88,7 @@ void showPaymentSuccessfullBottomSheet() {
                   showReviewGivingAlertDialog();
                 },
                 buttonWidth: 136.w,
-                buttonTitle: "Give a Review",
+                buttonTitle: 'give_a_review'.tr,
               ),
             ],
           ),

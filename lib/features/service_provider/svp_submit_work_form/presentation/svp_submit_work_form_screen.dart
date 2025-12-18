@@ -830,20 +830,6 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
   }
 }*/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ///
 ///
 ///
@@ -852,9 +838,6 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
 ///
 ///
 ///
-
-
-
 
 import 'dart:developer';
 import 'dart:io';
@@ -879,11 +862,13 @@ class SvpSubmitWorkFormScreen extends StatefulWidget {
   const SvpSubmitWorkFormScreen({super.key});
 
   @override
-  State<SvpSubmitWorkFormScreen> createState() => _SvpSubmitWorkFormScreenState();
+  State<SvpSubmitWorkFormScreen> createState() =>
+      _SvpSubmitWorkFormScreenState();
 }
 
 class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
-  final SvpSubmitWorkFormScreenController controller = Get.put(SvpSubmitWorkFormScreenController());
+  final SvpSubmitWorkFormScreenController controller =
+      Get.put(SvpSubmitWorkFormScreenController());
   final RxBool isMediaCompleted = false.obs;
 
   // Video player controllers for preview
@@ -960,7 +945,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                         child: CachedNetworkImage(
                           imageUrl: imageUrl,
                           fit: BoxFit.contain,
-                          placeholder: (context, url) =>  SizedBox(
+                          placeholder: (context, url) => SizedBox(
                             width: 200.w,
                             height: 200.h,
                             child: Center(
@@ -1017,7 +1002,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
   void _showVideoDialog(String videoUrl, String? title) {
     try {
       // Initialize video player
-      _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(videoUrl));
+      _videoPlayerController =
+          VideoPlayerController.networkUrl(Uri.parse(videoUrl));
       _chewieController = ChewieController(
         videoPlayerController: _videoPlayerController,
         autoPlay: true,
@@ -1270,7 +1256,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
   }
 
   Future<void> _uploadMediaFiles() async {
-    if (controller.bookingId.value == null || controller.bookingId.value!.isEmpty) {
+    if (controller.bookingId.value == null ||
+        controller.bookingId.value!.isEmpty) {
       Get.snackbar(
         "Error",
         "Booking ID not found",
@@ -1366,9 +1353,11 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Obx(() => Text(
-          controller.isLoadingWorkDetails.value ? "Loading..." : "Submit Work Form",
-          style: TextFontStyle.headline18w700c000000StyleSatoshi,
-        )),
+              controller.isLoadingWorkDetails.value
+                  ? "Loading..."
+                  : "Submit Work Form",
+              style: TextFontStyle.headline18w700c000000StyleSatoshi,
+            )),
         centerTitle: true,
         backgroundColor: AppColors.scaffoldBackgroundColor,
         elevation: 0,
@@ -1495,19 +1484,27 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                       .map((entry) {
                                     final index = entry.key;
                                     final attachment = entry.value;
-                                    final mediaUrl = controller.getImageUrl(attachment.url);
-                                    final isVideo = attachment.url.toLowerCase().contains('.mp4') ||
-                                        attachment.url.toLowerCase().contains('.mov') ||
-                                        attachment.url.toLowerCase().contains('.avi') ||
-                                        attachment.url.toLowerCase().contains('.mkv');
+                                    final mediaUrl =
+                                        controller.getImageUrl(attachment.url);
+                                    final isVideo = attachment.url
+                                            .toLowerCase()
+                                            .contains('.mp4') ||
+                                        attachment.url
+                                            .toLowerCase()
+                                            .contains('.mov') ||
+                                        attachment.url
+                                            .toLowerCase()
+                                            .contains('.avi') ||
+                                        attachment.url
+                                            .toLowerCase()
+                                            .contains('.mkv');
 
                                     return GestureDetector(
                                       onTap: () {
                                         _showMediaInDialog(
                                             mediaUrl,
                                             "Proof File ${index + 1}",
-                                            isVideo ? 'video' : 'image'
-                                        );
+                                            isVideo ? 'video' : 'image');
                                       },
                                       child: Stack(
                                         children: [
@@ -1522,44 +1519,54 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                             ),
                                             child: isVideo
                                                 ? Container(
-                                              color: Colors.black.withOpacity(0.8),
-                                              child: Center(
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    Icon(Icons.videocam, color: Colors.white, size: 24.h),
-                                                    SizedBox(height: 4.h),
-                                                    Text(
-                                                      'Video',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 10.sp,
+                                                    color: Colors.black
+                                                        .withOpacity(0.8),
+                                                    child: Center(
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Icon(Icons.videocam,
+                                                              color:
+                                                                  Colors.white,
+                                                              size: 24.h),
+                                                          SizedBox(height: 4.h),
+                                                          Text(
+                                                            'Video',
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 10.sp,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
-                                                  ],
-                                                ),
-                                              ),
-                                            )
+                                                  )
                                                 : ClipRRect(
-                                              borderRadius: BorderRadius.circular(8.r),
-                                              child: CachedNetworkImage(
-                                                imageUrl: mediaUrl,
-                                                fit: BoxFit.cover,
-                                                placeholder: (context, url) =>
-                                                    Center(
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                          strokeWidth: 2),
-                                                ),
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        Center(
-                                                  child: Icon(Icons.error,
-                                                      color: Colors.red,
-                                                      size: 24),
-                                                ),
-                                              ),
-                                            ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.r),
+                                                    child: CachedNetworkImage(
+                                                      imageUrl: mediaUrl,
+                                                      fit: BoxFit.cover,
+                                                      placeholder:
+                                                          (context, url) =>
+                                                              Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                                strokeWidth: 2),
+                                                      ),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          Center(
+                                                        child: Icon(Icons.error,
+                                                            color: Colors.red,
+                                                            size: 24),
+                                                      ),
+                                                    ),
+                                                  ),
                                           ),
                                           Positioned(
                                             bottom: 4,
@@ -1578,15 +1585,20 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   isVideo
-                                                      ? Icon(Icons.videocam, color: Colors.white, size: 10)
-                                                      : Icon(Icons.image, color: Colors.white, size: 10),
+                                                      ? Icon(Icons.videocam,
+                                                          color: Colors.white,
+                                                          size: 10)
+                                                      : Icon(Icons.image,
+                                                          color: Colors.white,
+                                                          size: 10),
                                                   SizedBox(width: 2.w),
                                                   Text(
                                                     '${index + 1}',
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 10.sp,
-                                                      fontWeight: FontWeight.w600,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                     ),
                                                   ),
                                                 ],
@@ -1624,7 +1636,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                       children: [
                         Text(
                           "Add New Proof Files",
-                          style: TextFontStyle.headline16w700c202020StyleSatoshi,
+                          style:
+                              TextFontStyle.headline16w700c202020StyleSatoshi,
                         ),
                         UIHelper.verticalSpace(12.h),
                         Container(
@@ -1644,18 +1657,24 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                       shrinkWrap: true,
                                       physics: NeverScrollableScrollPhysics(),
                                       itemCount: controller.mediaFiles.length,
-                                      separatorBuilder: (context, index) => Divider(height: 16.h),
+                                      separatorBuilder: (context, index) =>
+                                          Divider(height: 16.h),
                                       itemBuilder: (context, index) {
-                                        final mediaFile = controller.mediaFiles[index];
-                                        final isVideo = _isVideoFile(mediaFile.path);
-                                        final isImage = _isImageFile(mediaFile.path);
+                                        final mediaFile =
+                                            controller.mediaFiles[index];
+                                        final isVideo =
+                                            _isVideoFile(mediaFile.path);
+                                        final isImage =
+                                            _isImageFile(mediaFile.path);
 
                                         return Container(
                                           padding: EdgeInsets.all(12.w),
                                           decoration: BoxDecoration(
                                             color: Colors.grey.shade50,
-                                            borderRadius: BorderRadius.circular(8.r),
-                                            border: Border.all(color: Colors.grey.shade200),
+                                            borderRadius:
+                                                BorderRadius.circular(8.r),
+                                            border: Border.all(
+                                                color: Colors.grey.shade200),
                                           ),
                                           child: Row(
                                             children: [
@@ -1663,60 +1682,85 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                               SizedBox(width: 12.w),
                                               Expanded(
                                                 child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      mediaFile.path.split('/').last,
+                                                      mediaFile.path
+                                                          .split('/')
+                                                          .last,
                                                       style: TextStyle(
                                                         fontSize: 14.sp,
-                                                        fontWeight: FontWeight.w500,
+                                                        fontWeight:
+                                                            FontWeight.w500,
                                                         color: Colors.black,
                                                       ),
                                                       maxLines: 1,
-                                                      overflow: TextOverflow.ellipsis,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                     ),
                                                     SizedBox(height: 4.h),
                                                     Row(
                                                       children: [
                                                         Text(
-                                                          isVideo ? 'Video' :
-                                                          isImage ? 'Image' : 'File',
+                                                          isVideo
+                                                              ? 'Video'
+                                                              : isImage
+                                                                  ? 'Image'
+                                                                  : 'File',
                                                           style: TextStyle(
                                                             fontSize: 12.sp,
-                                                            color: Colors.grey.shade600,
+                                                            color: Colors
+                                                                .grey.shade600,
                                                           ),
                                                         ),
                                                         SizedBox(width: 8.w),
                                                         if (isVideo || isImage)
                                                           GestureDetector(
                                                             onTap: () {
-                                                              final file = File(mediaFile.path);
+                                                              final file = File(
+                                                                  mediaFile
+                                                                      .path);
                                                               if (isVideo) {
-                                                                _showLocalVideoDialog(file, "Preview Video");
+                                                                _showLocalVideoDialog(
+                                                                    file,
+                                                                    "Preview Video");
                                                               } else if (isImage) {
                                                                 // For local images, you might need to use Image.file
                                                                 // Or convert to base64/network URL
                                                                 Get.snackbar(
                                                                   "Preview",
                                                                   "Image preview for local files would need implementation",
-                                                                  backgroundColor: Colors.blue,
-                                                                  colorText: Colors.white,
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .blue,
+                                                                  colorText:
+                                                                      Colors
+                                                                          .white,
                                                                 );
                                                               }
                                                             },
                                                             child: Row(
                                                               children: [
-                                                                Icon(Icons.remove_red_eye,
-                                                                    color: Colors.blue,
-                                                                    size: 14
-                                                                ),
-                                                                SizedBox(width: 4.w),
+                                                                Icon(
+                                                                    Icons
+                                                                        .remove_red_eye,
+                                                                    color: Colors
+                                                                        .blue,
+                                                                    size: 14),
+                                                                SizedBox(
+                                                                    width: 4.w),
                                                                 Text(
                                                                   'Preview',
-                                                                  style: TextStyle(
-                                                                    fontSize: 11.sp,
-                                                                    color: Colors.blue,
-                                                                    fontWeight: FontWeight.w500,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        11.sp,
+                                                                    color: Colors
+                                                                        .blue,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
                                                                   ),
                                                                 ),
                                                               ],
@@ -1728,9 +1772,11 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                                 ),
                                               ),
                                               IconButton(
-                                                icon: Icon(Icons.delete, color: Colors.red),
+                                                icon: Icon(Icons.delete,
+                                                    color: Colors.red),
                                                 onPressed: () async {
-                                                  await controller.removeMediaFile(index);
+                                                  await controller
+                                                      .removeMediaFile(index);
                                                 },
                                               ),
                                             ],
@@ -1759,9 +1805,11 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                   },
                                   borderRadius: BorderRadius.circular(12.r),
                                   child: Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 20.h, horizontal: 16.w),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Icon(
                                           Icons.add,
@@ -1771,7 +1819,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                         UIHelper.horizontalSpace(10.w),
                                         Text(
                                           "Add New Files",
-                                          style: TextFontStyle.headline12w700c000e08StyleSatoshi,
+                                          style: TextFontStyle
+                                              .headline12w700c000e08StyleSatoshi,
                                         ),
                                       ],
                                     ),
@@ -2143,18 +2192,4 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
       ),
     );
   }
-
-<<<<<<< HEAD
-  @override
-  void dispose() {
-    super.dispose();
-  }
-=======
-  // @override
-  // void dispose() {
-  //   _videoPlayerController.dispose();
-  //   _chewieController.dispose();
-  //   super.dispose();
-  // }
->>>>>>> dev
 }

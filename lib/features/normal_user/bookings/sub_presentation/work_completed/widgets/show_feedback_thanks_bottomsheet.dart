@@ -44,14 +44,14 @@ void showFeedBackThanksBottomSheet() {
 
           ///Section : Text -> payment successful !
           Text(
-            "Thanks for giving your feedback",
+            'thanks_for_giving_feedback'.tr,
             style: TextFontStyle.headline18w700c1b1b1bStyleSatoshi,
           ),
           UIHelper.verticalSpace(10.h),
 
           ///Section : Text -> Your Payment  has been successfully processed
           Text(
-            "Your feedback means a lot for the retting and improvement for services",
+            'your_feedback_means_a_lot'.tr,
             textAlign: TextAlign.center,
             style: TextFontStyle.headline14w400c494949StyleSatoshi,
           ),
@@ -63,7 +63,7 @@ void showFeedBackThanksBottomSheet() {
               Get.back(); // close bottom sheet
               Get.offAllNamed(Routes.navigationScreen);
             },
-            buttonTitle: "Done",
+            buttonTitle: 'done'.tr,
           ),
         ],
       ),
