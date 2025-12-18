@@ -234,7 +234,7 @@ class WorkCompletedTab extends StatelessWidget {
               CircularProgressIndicator(),
               UIHelper.verticalSpace(16.h),
               Text(
-                'Loading work completed bookings...',
+                'Loading work completed bookings....',
                 style: TextStyle(fontSize: 16.sp, color: Colors.grey),
               ),
             ],
