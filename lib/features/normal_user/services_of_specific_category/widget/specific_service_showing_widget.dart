@@ -1,6 +1,7 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:kaz_bd/constants/app_constant_text.dart';
 
 import '../../../../constants/text_font_style.dart';
@@ -83,7 +84,7 @@ class SpecificServiceShowingWidget extends StatelessWidget {
                   text: TextSpan(
                     style: TextFontStyle.headline12w500c6a6a6aStyleSatoshi,
                     children: [
-                      const TextSpan(text: "Start from "),
+                      TextSpan(text: "${'start_from'.tr} "),
                       TextSpan(
                         text: "${AppText.bdTkSign}$initialPayablePrice",
                         style: TextFontStyle.headline16w700c778bebStyleSatoshi,
@@ -148,7 +149,7 @@ class SpecificServiceShowingWidget extends StatelessWidget {
                 ///Section : Button -> Book Now
                 CustomElevatedButton(
                   onTap: goToBookingsOnTap,
-                  buttonTitle: "Book Now",
+                  buttonTitle: 'book_now'.tr,
                   textStyle: TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
                   buttonWidth: 109.w,
                   buttonHeight: 32.h,

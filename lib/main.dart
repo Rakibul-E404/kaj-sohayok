@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:kaz_bd/constants/app_constant_text.dart';
 import 'package:kaz_bd/helpers/di.dart';
+import 'package:kaz_bd/localization/presentation/languages.dart';
 import 'package:kaz_bd/routes/routes.dart';
+import 'package:kaz_bd/utilities/set_initial_value.dart';
 
 import 'bindings/controllers_binding.dart';
 
@@ -14,6 +17,7 @@ void main() async {
   await diSetup();
   // cameras = await availableCameras();
   await GetStorage.init();
+  setInitialLanguagePreference();
   runApp(MyApp());
 }
 
@@ -31,6 +35,12 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           // home: WorkCompletedDetailsScreen(),
           debugShowCheckedModeBanner: false,
+          translations: Languages(),
+          locale: appData.read(kKeyEnglish)
+              ? Locale('en', 'US')
+              : appData.read(kKeyBangla)
+                  ? Locale('bn', 'BD')
+                  : Locale('en', 'US'),
 
           initialRoute: Routes.onboardingScreen,
           // initialRoute: Routes.joinAsServiceProviderScreen,

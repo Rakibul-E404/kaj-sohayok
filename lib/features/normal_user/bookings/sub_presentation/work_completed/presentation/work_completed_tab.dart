@@ -1,4 +1,3 @@
-
 /**
 import 'dart:developer';
 import 'package:flutter/material.dart';
@@ -198,19 +197,6 @@ class WorkCompletedTab extends StatelessWidget {
   }
 }*/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 ///
 ///
 ///
@@ -218,14 +204,6 @@ class WorkCompletedTab extends StatelessWidget {
 ///
 ///
 ///
-
-
-
-
-
-
-
-
 
 import 'dart:developer';
 import 'package:get/get.dart';
@@ -256,7 +234,7 @@ class WorkCompletedTab extends StatelessWidget {
               CircularProgressIndicator(),
               UIHelper.verticalSpace(16.h),
               Text(
-                'Loading work completed bookings...',
+                'Loading work completed bookings....',
                 style: TextStyle(fontSize: 16.sp, color: Colors.grey),
               ),
             ],
@@ -337,7 +315,8 @@ class WorkCompletedTab extends StatelessWidget {
             log('   Service Provider ID: "$serviceProviderId"');
             log('   Provider User ID: "$providerId"');
 
-            final serviceName = booking['providerDetailsId']?['serviceName'] as Map<String, dynamic>?;
+            final serviceName = booking['providerDetailsId']?['serviceName']
+                as Map<String, dynamic>?;
             final address = booking['address'] as Map<String, dynamic>?;
             final provider = booking['providerId'] as Map<String, dynamic>?;
             final hasReview = booking['hasReview'] ?? false;
@@ -349,7 +328,8 @@ class WorkCompletedTab extends StatelessWidget {
             return BookingDetailsCardWidget(
               // ➤ CARD TAP → Navigate with ALL required parameters
               onTap: () {
-                _navigateToDetailsScreen(bookingId, serviceProviderId, providerId);
+                _navigateToDetailsScreen(
+                    bookingId, serviceProviderId, providerId);
               },
 
               isWorkCompletedTab: true,
@@ -368,8 +348,10 @@ class WorkCompletedTab extends StatelessWidget {
               title: _getServiceName(serviceName),
               initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
               location: _getAddress(address),
-              dateTime: _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
-              serviceProviderProfileImage: imageUrl ?? Assets.images.userImage.path,
+              dateTime:
+                  _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
+              serviceProviderProfileImage:
+                  imageUrl ?? Assets.images.userImage.path,
               serviceProviderName: provider?['name'] ?? 'Unknown Provider',
               serviceProviderDesignation: 'Service Provider',
               isNetworkImage: isNetworkImage,
@@ -405,7 +387,8 @@ class WorkCompletedTab extends StatelessWidget {
   // 🔴 FIXED: Extract Service Provider ID (_ServiceProviderId)
   static String _getServiceProviderId(Map<String, dynamic> booking) {
     // 1. Primary: providerDetailsId._ServiceProviderId
-    final providerDetails = booking['providerDetailsId'] as Map<String, dynamic>?;
+    final providerDetails =
+        booking['providerDetailsId'] as Map<String, dynamic>?;
     if (providerDetails?['_ServiceProviderId'] != null) {
       final id = providerDetails!['_ServiceProviderId'].toString();
       log('✅ [WORK COMPLETED TAB] Service Provider ID from providerDetailsId._ServiceProviderId: $id');
@@ -437,7 +420,8 @@ class WorkCompletedTab extends StatelessWidget {
     return '';
   }
 
-  static String? _getImageUrl(String bookingId, WorkCompletedBookingsController controller) {
+  static String? _getImageUrl(
+      String bookingId, WorkCompletedBookingsController controller) {
     final url = controller.getImageUrl(bookingId);
     if (url.isEmpty) return null;
 
@@ -448,7 +432,8 @@ class WorkCompletedTab extends StatelessWidget {
     return controller.hasImage(bookingId) ? url : null;
   }
 
-  static bool _isNetworkImage(String bookingId, WorkCompletedBookingsController controller) {
+  static bool _isNetworkImage(
+      String bookingId, WorkCompletedBookingsController controller) {
     final url = controller.getImageUrl(bookingId);
     if (url.isEmpty) return false;
 
@@ -456,12 +441,14 @@ class WorkCompletedTab extends StatelessWidget {
     return controller.hasImage(bookingId);
   }
 
-  static bool _isReviewGiven(String bookingId, WorkCompletedBookingsController controller) {
+  static bool _isReviewGiven(
+      String bookingId, WorkCompletedBookingsController controller) {
     return controller.isReviewGiven(bookingId);
   }
 
   // 🔴 FIXED: Navigation with ALL required parameters for DetailsScreen
-  static void _navigateToDetailsScreen(String bookingId, String serviceProviderId, String providerId) {
+  static void _navigateToDetailsScreen(
+      String bookingId, String serviceProviderId, String providerId) {
     log('🔍 [WORK COMPLETED TAB] Navigation to DetailsScreen → preparing arguments...');
     log('   ➤ bookingId = "$bookingId"');
     log('   ➤ serviceProviderId = "$serviceProviderId"');
@@ -490,14 +477,15 @@ class WorkCompletedTab extends StatelessWidget {
       arguments: {
         "status": BookingStatusEnum.workCompleted,
         "bookingId": bookingId,
-        "serviceProviderID": serviceProviderId,  // Required for service details
-        "providerID": providerId,                // Required for user identification
+        "serviceProviderID": serviceProviderId, // Required for service details
+        "providerID": providerId, // Required for user identification
       },
     );
   }
 
   // FIXED: Handle review button - check dialog function signature
-  static void _handleReviewButton(String bookingId, String serviceProviderId, String providerId) {
+  static void _handleReviewButton(
+      String bookingId, String serviceProviderId, String providerId) {
     try {
       log('⭐ [WORK COMPLETED TAB] Starting review process for booking: $bookingId');
 
@@ -506,15 +494,16 @@ class WorkCompletedTab extends StatelessWidget {
       // Option 2: If dialog doesn't accept parameters, store IDs somewhere accessible
 
       // Store IDs in GetX for the dialog to access later if needed
-      Get.put<ReviewData>(ReviewData(
-        bookingId: bookingId,
-        serviceProviderId: serviceProviderId,
-        providerId: providerId,
-      ), tag: 'reviewData');
+      Get.put<ReviewData>(
+          ReviewData(
+            bookingId: bookingId,
+            serviceProviderId: serviceProviderId,
+            providerId: providerId,
+          ),
+          tag: 'reviewData');
 
       // Call the dialog - adjust based on its actual signature
       showReviewGivingAlertDialog();
-
     } catch (e) {
       log('❌ [WORK COMPLETED TAB] Error showing review dialog: $e');
       Get.snackbar(
@@ -539,5 +528,3 @@ class ReviewData {
     required this.providerId,
   });
 }
-
-

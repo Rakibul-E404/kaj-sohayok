@@ -21,7 +21,11 @@ class DateAndAddressWidgetTile extends StatelessWidget {
       children: [
         Icon(icon, color: AppColors.c92a2ef, size: 24.sp),
         UIHelper.horizontalSpace(4.w),
-        Text(title, style: TextFontStyle.headline12w500c4d4d4dStyleSatoshi),
+        Expanded(
+            child: Text(title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextFontStyle.headline12w500c4d4d4dStyleSatoshi)),
       ],
     );
   }

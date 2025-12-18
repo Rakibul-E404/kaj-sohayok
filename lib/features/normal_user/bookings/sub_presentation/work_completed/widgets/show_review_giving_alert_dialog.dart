@@ -10,7 +10,6 @@ import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 
 import '../../../../../../custom_widgets/custom_elevated_button.dart';
-import 'payment_successfull_bottom_sheet.dart';
 import 'show_feedback_thanks_bottomsheet.dart';
 
 void showReviewGivingAlertDialog() {

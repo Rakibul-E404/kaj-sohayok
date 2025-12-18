@@ -59,14 +59,14 @@ class VerifyOtpScreen extends StatelessWidget {
 
                 ///Section : text -> Forgot Password
                 Text(
-                  "Verify OTP",
+                  'verify_otp'.tr,
                   style: TextFontStyle.headline24w700c000000StyleSatoshi,
                 ),
                 UIHelper.verticalSpace(14.h),
 
                 ///Section : text -> Please check your phone number and enter the code
                 Text(
-                  "Please check your phone number and enter the code",
+                  'check_your_number_and_enter_the_code'.tr,
                   style: TextFontStyle.headline12w400c414141StyleSatoshi,
                 ),
                 UIHelper.verticalSpace(32.h),
@@ -87,7 +87,7 @@ class VerifyOtpScreen extends StatelessWidget {
                     replacement: WaitingWidget(),
                     child: CustomElevatedButton(
                       onTap: () {
-                         if (forForgetPassword == false) {
+                        if (forForgetPassword == false) {
                           otpValidationController.handleSendOtpSignUp(
                             email: email ?? '',
                           );
@@ -101,7 +101,7 @@ class VerifyOtpScreen extends StatelessWidget {
                           );
                         }
                       },
-                      buttonTitle: "Verify Email",
+                      buttonTitle: 'verify_email'.tr,
                     ),
                   ),
                 ),

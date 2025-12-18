@@ -97,7 +97,7 @@ class HomeScreen extends StatelessWidget {
                       SizedBox(height: 8.h),
                       Flexible(
                         child: Text(
-                          'Stay Tuned for Updates!',
+                          'stay_tuned'.tr,
                           style:
                               TextFontStyle.headline16w700cFFFFFFStyleSatoshi,
                         ),
@@ -105,7 +105,7 @@ class HomeScreen extends StatelessWidget {
                       SizedBox(height: 4.h),
                       Flexible(
                         child: Text(
-                          'Special offers coming soon',
+                          'special_offers_comming_soon'.tr,
                           style:
                               TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
                         ),
@@ -126,8 +126,8 @@ class HomeScreen extends StatelessWidget {
 
                   ///Section : Select Category
                   SectionDeclarationWidget(
-                    sectionTitle: "Select Category",
-                    textButtonName: "See all",
+                    sectionTitle: 'select_category'.tr,
+                    textButtonName: 'see_all'.tr,
                     onTap: () {
                       log("See all button taped at Select Category section!");
                       Get.toNamed(Routes.allCategoriesScreen);
@@ -141,8 +141,8 @@ class HomeScreen extends StatelessWidget {
 
                   ///Section : Popular Provider
                   SectionDeclarationWidget(
-                    sectionTitle: "Popular Provider",
-                    textButtonName: "See all",
+                    sectionTitle: 'popular_provider'.tr,
+                    textButtonName: 'see_all'.tr,
                     onTap: () {
                       log("See all button taped at Popular Provider section!");
                       Get.toNamed(Routes.normalUserSeePopularProviderScreen);
@@ -174,7 +174,7 @@ class HomeScreen extends StatelessWidget {
                           height: 100.h,
                           width: 1.sw,
                           child: Text(
-                            "No providers available",
+                            'no_provider_available'.tr,
                             style:
                                 TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
                           ),

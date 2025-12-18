@@ -119,21 +119,21 @@ class LocationPermissionService {
   void _showLocationServiceDialog() {
     Get.dialog(
       AlertDialog(
-        title: const Text('Location Services Disabled'),
-        content: const Text(
-          'Location services are disabled. Please enable location services in your device settings to continue.',
+        title: Text('location_service_disabled'.tr),
+        content: Text(
+          'please_enable_location_service'.tr,
         ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Cancel'),
+            child: Text('cancel'.tr),
           ),
           TextButton(
             onPressed: () {
               Get.back();
               Geolocator.openLocationSettings();
             },
-            child: const Text('Settings'),
+            child: Text('settings'.tr),
           ),
         ],
       ),
@@ -145,22 +145,21 @@ class LocationPermissionService {
   void _showPermissionDeniedDialog(String? customMessage) {
     Get.dialog(
       AlertDialog(
-        title: const Text('Location Permission Required'),
+        title: Text('location_permission_required'.tr),
         content: Text(
-          customMessage ??
-              'This app needs location permission to provide location-based services. Please grant location permission to continue.',
+          customMessage ?? 'app_needs_location_permission'.tr,
         ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Cancel'),
+            child: Text('cancel'.tr),
           ),
           TextButton(
             onPressed: () async {
               Get.back();
               await requestPermission();
             },
-            child: const Text('Retry'),
+            child: Text('retry'.tr),
           ),
         ],
       ),
@@ -172,21 +171,21 @@ class LocationPermissionService {
   void _showPermissionPermanentlyDeniedDialog() {
     Get.dialog(
       AlertDialog(
-        title: const Text('Location Permission Permanently Denied'),
-        content: const Text(
-          'Location permission has been permanently denied. Please enable it manually in app settings to use location features.',
+        title: Text('location_permission_permanently_denied'.tr),
+        content: Text(
+          'permission_permanently_denied'.tr,
         ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Cancel'),
+            child: Text('cancel'.tr),
           ),
           TextButton(
             onPressed: () {
               Get.back();
               Geolocator.openAppSettings();
             },
-            child: const Text('App Settings'),
+            child: Text('app_settings'.tr),
           ),
         ],
       ),
@@ -198,12 +197,12 @@ class LocationPermissionService {
   void _showErrorDialog(String error) {
     Get.dialog(
       AlertDialog(
-        title: const Text('Location Error'),
-        content: Text('An error occurred while accessing location: $error'),
+        title: Text('location_error'.tr),
+        content: Text('${'error_occured_while_accessing_location'.tr} $error'),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('OK'),
+            child: Text('ok'.tr),
           ),
         ],
       ),
@@ -224,8 +223,8 @@ class LocationRepository {
   LocationRepository._internal();
 
   // Google Maps API key
-  // static const String apiKey = 'AIzaSyBFi80uuJIWkkLCpodFa8oXmD8XD_h8LMc';
-  static const String apiKey = 'AIzaSyDjwPmy5gPopQRKK5zCEa-_0u18e8Lmgi';
+  static const String apiKey = 'AIzaSyDByTL-51tHLFMJgUTyHe0nT3-qhD2i9Mc';
+  // static const String apiKey = 'AIzaSyDjwPmy5gPopQRKK5zCEa-_0u18e8Lmgi';
 
   // Place auto-complete suggestions
   Future<List<dynamic>> placeAutoComplete(String query) async {
@@ -692,8 +691,8 @@ class _PlaceAutocompleteWidgetState extends State<PlaceAutocompleteWidget> {
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: Colors.grey[300]!),
           ),
-          child: const Text(
-            'No results found',
+          child: Text(
+            'no_results_found'.tr,
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey,
@@ -781,9 +780,9 @@ class _PlaceAutocompleteWidgetState extends State<PlaceAutocompleteWidget> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            'Current',
+                            'current'.tr,
                             style: TextStyle(
-                              fontSize: 10,
+                              fontSize: 10.sp,
                               fontWeight: FontWeight.w500,
                               color: Colors.blue,
                             ),
@@ -829,8 +828,8 @@ class _PlaceAutocompleteWidgetState extends State<PlaceAutocompleteWidget> {
               ),
             ),
             const SizedBox(width: 12),
-            const Text(
-              'Searching locations...',
+            Text(
+              'searching_location'.tr,
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.grey,
@@ -953,7 +952,7 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
   );
 
   Set<Marker> _markers = <Marker>{};
-  String _selectedAddress = "Getting your current location...";
+  String _selectedAddress = 'getting_your_current_location'.tr;
   bool _isLoadingLocation = true;
   LatLng? _currentUserLocation; // Just for showing where user is
   LatLng? _selectedLocation; // For the actual booking selection
@@ -1004,7 +1003,7 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
         if (permission == LocationPermission.denied) {
           debugPrint('❌ [LOCATION] Location permission denied by user');
           setState(() {
-            _selectedAddress = "Location permissions denied";
+            _selectedAddress = 'location_permission_dennied'.tr;
             _isLoadingLocation = false;
           });
           return;
@@ -1014,7 +1013,7 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
       if (permission == LocationPermission.deniedForever) {
         debugPrint('❌ [LOCATION] Location permission permanently denied');
         setState(() {
-          _selectedAddress = "Location permissions permanently denied";
+          _selectedAddress = 'location_permission_permanently_dennied'.tr;
           _isLoadingLocation = false;
         });
         return;
@@ -1046,7 +1045,7 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
               BitmapDescriptor.hueBlue,
             ),
             infoWindow: InfoWindow(
-              title: 'Your Current Location',
+              title: 'your_current_location'.tr,
               snippet: _selectedAddress,
             ),
           ),
@@ -1063,7 +1062,8 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
       debugPrint("📝 [LOCATION] Stack trace: ${StackTrace.current}");
 
       setState(() {
-        _selectedAddress = "Unable to get your location: ${e.toString()}";
+        _selectedAddress =
+            "${'unable_to_get_your_location'.tr} ${e.toString()}";
         _isLoadingLocation = false;
       });
     }
@@ -1167,14 +1167,14 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Location Services Disabled"),
-        content: const Text(
-          "Please enable location services to use this feature.",
+        title: Text('location_service_disabled'.tr),
+        content: Text(
+          'enable_location_services_to_use_this_feature'.tr,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Cancel"),
+            child: Text('cancel'.tr),
           ),
           TextButton(
             onPressed: () {
@@ -1182,7 +1182,7 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
               Navigator.pop(context);
               Geolocator.openLocationSettings();
             },
-            child: const Text("Open Settings"),
+            child: Text('open_seetings'.tr),
           ),
         ],
       ),
@@ -1245,7 +1245,7 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
             BitmapDescriptor.hueRed, // RED for selected location
           ),
           infoWindow: InfoWindow(
-            title: 'Selected Location',
+            title: 'selected_location'.tr,
             snippet: addressText, // Address shows here in InfoWindow
           ),
         ),
@@ -1275,8 +1275,8 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
 
         // Show a message that they need to tap to select
         Get.snackbar(
-          'Tap to Select',
-          'Long press on the map to select this location',
+          'tap_to_select'.tr,
+          'long_press_on_the_map'.tr,
           backgroundColor: Colors.blue,
           colorText: Colors.white,
           duration: const Duration(seconds: 2),
@@ -1419,7 +1419,7 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Select Location",
+          'select_location'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
         centerTitle: true,
@@ -1434,12 +1434,12 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
               });
             },
             icon: Icon(_showSearchBar ? Icons.search_off : Icons.search),
-            tooltip: "Toggle search bar",
+            tooltip: 'toggle_search_bar'.tr,
           ),
           IconButton(
             onPressed: _goToCurrentLocation,
             icon: const Icon(Icons.my_location),
-            tooltip: "Go to my current location",
+            tooltip: 'goto_my_current_location'.tr,
           ),
         ],
       ),
@@ -1452,7 +1452,7 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
               color: Colors.white,
               child: PlaceAutocompleteWidget(
                 controller: _searchController,
-                hintText: "Search for a location...",
+                hintText: 'search_for_a_location'.tr,
                 onPlaceSelected: _onPlaceSelected,
                 showCurrentLocation: true,
                 currentLocationAddress: _selectedAddress,
@@ -1561,7 +1561,7 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
                           ),
                         ),
                         child: Text(
-                          "Confirm Location",
+                          'confirm_location'.tr,
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -1592,7 +1592,7 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              "Getting your location...",
+                              'getting_your_location'.tr,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,

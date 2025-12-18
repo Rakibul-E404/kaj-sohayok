@@ -45,7 +45,7 @@ class _SeeAllPopularProvidersScreenState
         automaticallyImplyLeading: true,
         centerTitle: true,
         title: Text(
-          "Popular Provider",
+          'all_popular_providers'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
       ),
@@ -86,7 +86,7 @@ class _SeeAllPopularProvidersScreenState
                         ),
                         UIHelper.verticalSpace(16.h),
                         Text(
-                          'No Popular Providers Available',
+                          'no_popular_providers_available'.tr,
                           style: TextStyle(
                             fontSize: 16.sp,
                             color: AppColors.c6a6a6a,

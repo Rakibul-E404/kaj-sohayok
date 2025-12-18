@@ -10,145 +10,164 @@ import '../../../../../../routes/routes.dart';
 import '../controller/pending_controller.dart';
 import '../widget/show_cancel_booking_bottom_sheet.dart';
 
-class PendingTab extends StatelessWidget {
+class PendingTab extends StatefulWidget {
   const PendingTab({super.key});
 
   @override
+  State<PendingTab> createState() => _PendingTabState();
+}
+
+class _PendingTabState extends State<PendingTab> {
+  final controller = Get.put(PendingBookingsController());
+
+  @override
   Widget build(BuildContext context) {
-    // ✅ Initialize controller (GetX singleton)
-    final controller = Get.put(PendingBookingsController());
-
-    return Obx(() {
-      if (controller.isLoading.value) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(),
-              UIHelper.verticalSpace(16.h),
-              Text(
-                'Loading bookings...',
-                style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-              ),
-            ],
-          ),
-        );
-      }
-
-      if (controller.errorMessage.isNotEmpty) {
-        return Center(
-          child: Padding(
-            padding: EdgeInsets.all(20.sp),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.error_outline,
-                  size: 64.sp,
-                  color: Colors.red,
+    return RefreshIndicator(
+      onRefresh: () => controller.getPendingBookings(),
+      child: SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(),
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.8,
+          child: Obx(() {
+            if (controller.isLoading.value) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    UIHelper.verticalSpace(16.h),
+                    Text(
+                      'loading_bookings'.tr,
+                      style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                    ),
+                  ],
                 ),
-                UIHelper.verticalSpace(16.h),
-                Text(
-                  controller.errorMessage.value,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    color: Colors.red,
-                    fontWeight: FontWeight.w500,
+              );
+            }
+
+            if (controller.errorMessage.isNotEmpty) {
+              return Center(
+                child: Padding(
+                  padding: EdgeInsets.all(20.sp),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error_outline,
+                        size: 64.sp,
+                        color: Colors.red,
+                      ),
+                      UIHelper.verticalSpace(16.h),
+                      Text(
+                        controller.errorMessage.value,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: Colors.red,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      UIHelper.verticalSpace(20.h),
+                      ElevatedButton(
+                        onPressed: () => controller.getPendingBookings(),
+                        child: Text('retry'.tr),
+                      ),
+                    ],
                   ),
-                  textAlign: TextAlign.center,
                 ),
-                UIHelper.verticalSpace(20.h),
-                ElevatedButton(
-                  onPressed: () => controller.getPendingBookings(),
-                  child: const Text('Retry'),
+              );
+            }
+
+            if (controller.pendingBookings.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.event_note_outlined,
+                      size: 64.sp,
+                      color: Colors.grey,
+                    ),
+                    UIHelper.verticalSpace(16.h),
+                    Text(
+                      'no_pending_bookings_found'.tr,
+                      style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        );
-      }
+              );
+            }
 
-      if (controller.pendingBookings.isEmpty) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.event_note_outlined,
-                size: 64.sp,
-                color: Colors.grey,
-              ),
-              UIHelper.verticalSpace(16.h),
-              Text(
-                'No pending bookings found',
-                style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-              ),
-            ],
-          ),
-        );
-      }
+            return ListView.separated(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.only(top: 16.sp),
+              itemCount: controller.pendingBookings.length,
+              separatorBuilder: (context, index) =>
+                  UIHelper.verticalSpace(16.h),
+              itemBuilder: (context, index) {
+                final booking = controller.pendingBookings[index];
+                final bookingId =
+                    booking['_ServiceBookingId']?.toString() ?? '';
 
-      return RefreshIndicator(
-        onRefresh: () => controller.getPendingBookings(),
-        child: ListView.separated(
-          padding: EdgeInsets.only(top: 16.sp),
-          itemCount: controller.pendingBookings.length,
-          separatorBuilder: (context, index) => UIHelper.verticalSpace(16.h),
-          itemBuilder: (context, index) {
-            final booking = controller.pendingBookings[index];
-            final bookingId = booking['_ServiceBookingId']?.toString() ?? '';
+                // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
+                final serviceProviderId = _getServiceProviderId(booking);
+                final providerId = _getProviderUserId(booking);
 
-            // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
-            final serviceProviderId = _getServiceProviderId(booking);
-            final providerId = _getProviderUserId(booking);
+                // 🔍 DEBUG: Log what IDs are extracted for this card
+                log('🧾 [PENDING TAB] Card #$index →');
+                log('   Booking ID: "$bookingId"');
+                log('   Service Provider ID: "$serviceProviderId"');
+                log('   Provider User ID: "$providerId"');
 
-            // 🔍 DEBUG: Log what IDs are extracted for this card
-            log('🧾 [PENDING TAB] Card #$index →');
-            log('   Booking ID: "$bookingId"');
-            log('   Service Provider ID: "$serviceProviderId"');
-            log('   Provider User ID: "$providerId"');
+                final serviceName = booking['providerDetailsId']?['serviceName']
+                    as Map<String, dynamic>?;
+                final address = booking['address'] as Map<String, dynamic>?;
+                final provider = booking['providerId'] as Map<String, dynamic>?;
 
-            final serviceName = booking['providerDetailsId']?['serviceName'] as Map<String, dynamic>?;
-            final address = booking['address'] as Map<String, dynamic>?;
-            final provider = booking['providerId'] as Map<String, dynamic>?;
+                final imageUrl = _getImageUrl(bookingId, controller);
+                final isNetworkImage = _isNetworkImage(bookingId, controller);
 
-            final imageUrl = _getImageUrl(bookingId, controller);
-            final isNetworkImage = _isNetworkImage(bookingId, controller);
-
-            return BookingDetailsCardWidget(
-              // ➤ CARD TAP → Navigate with ALL required parameters
-              onTap: () {
-                _navigateToDetailsScreen(bookingId, serviceProviderId, providerId);
-              },
-
-              // Cancel action
-              isPendingTab: true,
-              isPendingTabCancelOnTap: () {
-                showCancelBookingBottomSheet(
-                  bookingId: bookingId,
-                  onCancelConfirmed: () async {
-                    final success = await controller.cancelBooking(bookingId);
-                    if (success) {
-                      log('✅ [PENDING TAB] Booking $bookingId cancelled successfully');
-                    }
+                return BookingDetailsCardWidget(
+                  // ➤ CARD TAP → Navigate with ALL required parameters
+                  onTap: () {
+                    _navigateToDetailsScreen(
+                        bookingId, serviceProviderId, providerId);
                   },
+
+                  // Cancel action
+                  isPendingTab: true,
+                  isPendingTabCancelOnTap: () {
+                    showCancelBookingBottomSheet(
+                      bookingId: bookingId,
+                      onCancelConfirmed: () async {
+                        final success =
+                            await controller.cancelBooking(bookingId);
+                        if (success) {
+                          log('✅ [PENDING TAB] Booking $bookingId cancelled successfully');
+                        }
+                      },
+                    );
+                  },
+
+                  // Data
+                  title: _getServiceName(serviceName),
+                  initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
+                  location: _getAddress(address),
+                  dateTime: _formatDateTime(
+                      booking['bookingDateTime']?.toString() ?? ''),
+                  serviceProviderProfileImage:
+                      imageUrl ?? Assets.images.userImage.path,
+                  serviceProviderName: provider?['name'] ?? 'Unknown Provider',
+                  serviceProviderDesignation: 'services_provider'.tr,
+                  isNetworkImage: isNetworkImage,
                 );
               },
-
-              // Data
-              title: _getServiceName(serviceName),
-              initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
-              location: _getAddress(address),
-              dateTime: _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
-              serviceProviderProfileImage: imageUrl ?? Assets.images.userImage.path,
-              serviceProviderName: provider?['name'] ?? 'Unknown Provider',
-              serviceProviderDesignation: 'Service Provider',
-              isNetworkImage: isNetworkImage,
             );
-          },
+          }),
         ),
-      );
-    });
+      ),
+    );
   }
 
   // ─── HELPER METHODS ───────────────────────────────────────────────
@@ -176,7 +195,8 @@ class PendingTab extends StatelessWidget {
   // 🔴 FIXED: Extract Service Provider ID (_ServiceProviderId)
   static String _getServiceProviderId(Map<String, dynamic> booking) {
     // Primary: providerDetailsId._ServiceProviderId
-    final providerDetails = booking['providerDetailsId'] as Map<String, dynamic>?;
+    final providerDetails =
+        booking['providerDetailsId'] as Map<String, dynamic>?;
     if (providerDetails?['_ServiceProviderId'] != null) {
       final id = providerDetails!['_ServiceProviderId'].toString();
       log('✅ [PENDING TAB] Service Provider ID from providerDetailsId._ServiceProviderId: $id');
@@ -201,7 +221,8 @@ class PendingTab extends StatelessWidget {
     return '';
   }
 
-  static String? _getImageUrl(String bookingId, PendingBookingsController controller) {
+  static String? _getImageUrl(
+      String bookingId, PendingBookingsController controller) {
     final url = controller.getImageUrl(bookingId);
     if (url.isEmpty) return null;
 
@@ -212,7 +233,8 @@ class PendingTab extends StatelessWidget {
     return controller.hasImage(bookingId) ? url : null;
   }
 
-  static bool _isNetworkImage(String bookingId, PendingBookingsController controller) {
+  static bool _isNetworkImage(
+      String bookingId, PendingBookingsController controller) {
     final url = controller.getImageUrl(bookingId);
     if (url.isEmpty) return false;
 
@@ -221,7 +243,8 @@ class PendingTab extends StatelessWidget {
   }
 
   // 🔴 FIXED: Navigation with ALL required parameters for DetailsScreen
-  static void _navigateToDetailsScreen(String bookingId, String serviceProviderId, String providerId) {
+  static void _navigateToDetailsScreen(
+      String bookingId, String serviceProviderId, String providerId) {
     log('🔍 [PENDING TAB] Navigation to DetailsScreen → preparing arguments...');
     log('   ➤ bookingId = "$bookingId"');
     log('   ➤ serviceProviderId = "$serviceProviderId"');
@@ -230,8 +253,8 @@ class PendingTab extends StatelessWidget {
     if (serviceProviderId.isEmpty) {
       log('❌ [PENDING TAB] Navigation ABORTED: serviceProviderId is empty!');
       Get.snackbar(
-        'Navigation Error',
-        'Service provider details unavailable',
+        'navigation_error'.tr,
+        'service_provider_details_unavilable'.tr,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -250,8 +273,8 @@ class PendingTab extends StatelessWidget {
       arguments: {
         "status": BookingStatusEnum.pending,
         "bookingId": bookingId,
-        "serviceProviderID": serviceProviderId,  // Required for service details
-        "providerID": providerId,                // Required for booking flow
+        "serviceProviderID": serviceProviderId, // Required for service details
+        "providerID": providerId, // Required for booking flow
       },
     );
   }
