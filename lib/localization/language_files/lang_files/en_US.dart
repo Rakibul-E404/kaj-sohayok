@@ -252,4 +252,17 @@ Map<String, String> englishLanguage = {
   'no_canceled_bookings_found': 'No canceled bookings found',
   'failed_to_load_bookings': 'Failed to load bookings',
   'something_went_wrong': 'Something went wrong',
+
+  ///----------> Work Completed Booking Tab Screen
+  'loading_work_completed_bookings': 'Loading work completed bookings...',
+  'no_works_completed_bookings_found': 'No work completed bookings found',
+  'failed_to_open_review_dialog': 'Failed to open review dialog',
+  'auth_token_not_found_login_again':
+      'Authentication token not found. Please login again.',
+  'connection_error_check_your_internet':
+      'Connection error: Please check your internet connection',
+  'payment_successfull': 'Payment Successful !',
+  'your_payment_successfull_processed':
+      'Your Payment has been successfully processed',
+  'home': 'Home',
 };

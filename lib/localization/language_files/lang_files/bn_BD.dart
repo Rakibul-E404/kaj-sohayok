@@ -256,4 +256,17 @@ Map<String, String> banglaLanguage = {
   'no_canceled_bookings_found': 'কোন বাতিল বুকিং পাওয়া যায়নি',
   'failed_to_load_bookings': 'বুকিং লোড করা যায়নি',
   'something_went_wrong': 'কিছু ভুল হয়েছে',
+
+  ///----------> Work Completed Booking Tab Screen
+  'loading_work_completed_bookings': 'কাজ সম্পন্ন বুকিং লোড হচ্ছে...',
+  'no_works_completed_bookings_found': 'কোনও বুকিং সম্পন্ন কাজ পাওয়া যায়নি।',
+  'failed_to_open_review_dialog': 'পর্যালোচনা ডায়ালগ খুলতে ব্যর্থ হয়েছে',
+  'auth_token_not_found_login_again':
+      'প্রমাণীকরণ টোকেন পাওয়া যায়নি। অনুগ্রহ করে আবার লগইন করুন।',
+  'connection_error_check_your_internet':
+      'সংযোগ ত্রুটি: অনুগ্রহ করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন।',
+  'payment_successfull': 'পেমেন্ট সফল !',
+  'your_payment_successfull_processed':
+      'আপনার পেমেন্ট সফলভাবে প্রক্রিয়া করা হয়েছে।',
+  'home': 'বাড়ি',
 };
