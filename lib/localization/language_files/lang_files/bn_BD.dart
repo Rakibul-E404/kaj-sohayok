@@ -372,5 +372,13 @@ Map<String, String> banglaLanguage = {
   'select_date_of_birth': 'জন্ম তারিখ নির্বাচন করুন',
   'please_select_your_gender_type': 'অনুগ্রহ করে লিঙ্গ প্রকার নির্বাচন করুন',
   'updating': 'আপডেট হচ্ছে...',
-  'update_profile': 'প্রোফাইল আপডেট করুন'
+  'update_profile': 'প্রোফাইল আপডেট করুন',
+
+  ///----------------> Chat
+  'chat': 'চ্যাট',
+  'no_chats_found': 'কোন চ্যাট পাওয়া যায়নি',
+  'no_conversation_found': 'কোনও কথোপকথন পাওয়া যায়নি',
+  'active_now': 'এখন সক্রিয়',
+  'audio_call': 'অ্যাডিও কল..',
+  'audio_call_button_taped': 'অডিও কল বোতামটি টেপ করা হয়েছে!',
 };

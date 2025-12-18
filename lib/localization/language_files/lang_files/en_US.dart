@@ -374,4 +374,12 @@ Map<String, String> englishLanguage = {
   'please_select_your_gender_type': 'Please select gender type',
   'updating': 'Updating...',
   'update_profile': 'Update Profile',
+
+  ///-----------> Chat
+  'chat': 'Chat',
+  'no_chats_found': 'No chats found',
+  'no_conversation_found': 'No Conversation Found',
+  'active_now': 'Active Now',
+  'audio_call': 'Adio Call..',
+  'audio_call_button_taped': 'Audio Call button has been taped!',
 };
