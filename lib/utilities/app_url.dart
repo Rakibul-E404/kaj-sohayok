@@ -122,6 +122,10 @@ class AppUrl {
     return '${baseUrl}v1/service-bookings/update-work-proof/$bookingId';
   }
 
+  static String providerRequestPayment(String bookingId) {
+    return '${baseUrl}v1/service-bookings/update-status/$bookingId/status/paymentRequest';
+  }
+
   static const String additionalCost = '${baseUrl}v1/additional-cost';
 
   ///===> rakibul api add close::::::::::::::::>

@@ -1,4 +1,5 @@
 /**
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -26,7 +27,7 @@ class SvpSubmitWorkFormScreenController extends GetxController {
 
   // Rx variables
   RxBool isLoading = false.obs;
-  Rx<String?> bookingId = Rx<String?>(null);
+  RxString bookingId = RxString('');
   RxBool isLoadingWorkDetails = false.obs;
   RxBool isPaymentRequestLoading = false.obs;
   RxBool isUploadingMedia = false.obs;
@@ -41,30 +42,68 @@ class SvpSubmitWorkFormScreenController extends GetxController {
   // Combined media files
   RxList<MediaFile> mediaFiles = <MediaFile>[].obs;
 
+  // Private variable to store booking ID safely
+  String _storedBookingId = '';
+
   @override
   void onInit() {
     super.onInit();
 
-    log("Controller initialized", name: "SVPSubmitWorkForm");
+    log("🎯 Controller initialized", name: "SVPSubmitWorkForm");
 
+    // First extract booking ID from arguments
+    _extractBookingIdFromArguments();
+
+    // Then parse form data if available
     final args = Get.arguments;
-
     if (args != null && args is Map) {
-      bookingId.value = args['bookingId']?.toString();
-
       if (args['formData'] != null) {
+        log("📝 Parsing form data...");
         _parseFormData(args['formData']);
       } else if (args['serviceBooking'] != null) {
+        log("📝 Parsing service booking data...");
         _parseServiceBookingData(args['serviceBooking'], args['additionalCosts']);
-      } else if (bookingId.value != null && bookingId.value!.isNotEmpty) {
+      } else if (bookingId.value.isNotEmpty) {
+        log("📡 Loading work details from API...");
         loadWorkDetails();
       } else {
-        Get.snackbar("Error", "No booking data available",
-            backgroundColor: Colors.red, colorText: Colors.white);
+        log("⚠️ No booking data available");
+        Get.snackbar("Info", "No booking data available",
+            backgroundColor: Colors.orange, colorText: Colors.white);
       }
     } else {
-      Get.snackbar("Error", "No booking information provided",
-          backgroundColor: Colors.red, colorText: Colors.white);
+      log("⚠️ No arguments provided");
+      Get.snackbar("Info", "No booking information provided",
+          backgroundColor: Colors.orange, colorText: Colors.white);
+    }
+  }
+
+  void _extractBookingIdFromArguments() {
+    final args = Get.arguments;
+
+    if (args != null) {
+      log("📦 Arguments type: ${args.runtimeType}");
+      log("📦 Arguments content: $args");
+
+      if (args is Map) {
+        final bookingIdFromArgs = args['bookingId']?.toString();
+        if (bookingIdFromArgs != null && bookingIdFromArgs.isNotEmpty) {
+          bookingId.value = bookingIdFromArgs;
+          _storedBookingId = bookingIdFromArgs;
+          log("✅ Booking ID stored from map: ${bookingId.value}");
+        } else {
+          log("❌ No bookingId found in map arguments");
+        }
+      } else if (args is String) {
+        // Handle case where bookingId is passed directly as a string
+        bookingId.value = args;
+        _storedBookingId = args;
+        log("✅ Booking ID stored directly as string: ${bookingId.value}");
+      } else {
+        log("❌ Arguments type not recognized: ${args.runtimeType}");
+      }
+    } else {
+      log("❌ No arguments found");
     }
   }
 
@@ -174,40 +213,135 @@ class SvpSubmitWorkFormScreenController extends GetxController {
   }
 
   Future<void> loadWorkDetails() async {
-    if (bookingId.value == null || bookingId.value!.isEmpty) return;
+    // Use the stored booking ID if the observable is empty
+    String idToUse = bookingId.value.isNotEmpty ? bookingId.value : _storedBookingId;
+
+    if (idToUse.isEmpty) {
+      log("❌ No booking ID available for loading work details");
+      Get.snackbar("Info", "Booking information not found",
+          backgroundColor: Colors.orange, colorText: Colors.white, duration: Duration(seconds: 2));
+      return;
+    }
+
+    log("📡 Loading work details for Booking ID: $idToUse");
+
+    // Log the exact URL being called
+    final apiUrl = AppUrl.providerWorkSubmitForm(idToUse);
+    log("🌐 API URL: $apiUrl");
 
     isLoadingWorkDetails.value = true;
+
     try {
+      // 🔥 CRITICAL FIX: Get authentication token
+      final token = await SecureStorageService().read(AppConstants.accessToken);
+
+      if (token == null || token.isEmpty) {
+        log("❌ No auth token found for API call");
+        Get.snackbar("Error", "Session expired. Please log in again.",
+            backgroundColor: Colors.red, colorText: Colors.white, duration: Duration(seconds: 2));
+        isLoadingWorkDetails.value = false;
+        return;
+      }
+
+      log("🔑 Auth token found, length: ${token.length} characters");
+
+      // 🔥 CRITICAL FIX: Prepare headers with authentication
+      final headers = {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
+
+      log("📤 Making authenticated API request...");
+
+      // Call network caller with headers
       final NetworkResponse response = await _networkCaller.getRequest(
-        AppUrl.providerWorkSubmitForm(bookingId.value!),
+        apiUrl,
+        headers: headers, // Pass headers to network caller
       );
+
+      log("📥 API Response Status: ${response.statusCode}");
+      log("📥 API Response Success: ${response.isSuccess}");
 
       if (response.isSuccess && response.jsonResponse != null) {
         final responseData = response.jsonResponse!;
+        log("✅ Work details response received from API");
+        log("📊 Response code: ${responseData['code']}");
+
         if (responseData['code'] == 200 &&
             responseData['data'] != null &&
             responseData['data']['attributes'] != null) {
           final attributes = responseData['data']['attributes'];
-          _parseServiceBookingData(
-            attributes['serviceBooking'],
-            attributes['additionalCosts'],
-          );
+
+          log("📊 Attributes loaded successfully");
+
+          // Check if serviceBooking exists
+          if (attributes['serviceBooking'] != null) {
+            final serviceBooking = attributes['serviceBooking'];
+
+            _parseServiceBookingData(
+              serviceBooking,
+              attributes['additionalCosts'],
+            );
+            log("✅ Work details loaded successfully from API");
+
+            // Show success message
+            Get.snackbar(
+                "Success",
+                "Work details refreshed",
+                backgroundColor: Colors.green,
+                colorText: Colors.white,
+                duration: Duration(seconds: 1)
+            );
+          } else {
+            log("⚠️ No serviceBooking data in API response");
+            Get.snackbar("Info", "No work details found in API response",
+                backgroundColor: Colors.orange, colorText: Colors.white, duration: Duration(seconds: 2));
+          }
         } else {
-          Get.snackbar("Error", "Unexpected response format",
-              backgroundColor: Colors.red, colorText: Colors.white);
+          final errorMessage = responseData['message']?.toString() ?? "Unexpected response format";
+          log("⚠️ API Error in response data: $errorMessage");
+          Get.snackbar("Info", errorMessage,
+              backgroundColor: Colors.orange, colorText: Colors.white, duration: Duration(seconds: 2));
         }
       } else {
-        Get.snackbar("Error", response.errorMessage ?? "Failed to load work details",
-            backgroundColor: Colors.red, colorText: Colors.white);
+        log("❌ API Request Failed");
+        log("❌ Status Code: ${response.statusCode}");
+        log("❌ Error Message: ${response.errorMessage}");
+
+        // Handle specific error codes
+        if (response.statusCode == 401) {
+          Get.snackbar("Session Expired", "Please log in again",
+              backgroundColor: Colors.red, colorText: Colors.white, duration: Duration(seconds: 3));
+        } else if (response.statusCode == 404) {
+          Get.snackbar("Not Found", "Booking details not found",
+              backgroundColor: Colors.orange, colorText: Colors.white, duration: Duration(seconds: 2));
+        } else {
+          Get.snackbar("Error", "Could not refresh data. Please try again.",
+              backgroundColor: Colors.red, colorText: Colors.white, duration: Duration(seconds: 2));
+        }
       }
     } catch (e, stackTrace) {
-      log("LOAD ERROR: $e", error: e, stackTrace: stackTrace);
-      Get.snackbar("Error", "Failed to load work details: $e",
-          backgroundColor: Colors.red, colorText: Colors.white);
+      log("❌ LOAD ERROR: $e", error: e, stackTrace: stackTrace);
+
+      // Handle specific exceptions
+      if (e is SocketException) {
+        Get.snackbar("No Internet", "Please check your connection",
+            backgroundColor: Colors.red, colorText: Colors.white, duration: Duration(seconds: 2));
+      } else if (e is TimeoutException) {
+        Get.snackbar("Timeout", "Request took too long. Please try again.",
+            backgroundColor: Colors.orange, colorText: Colors.white, duration: Duration(seconds: 2));
+      } else {
+        Get.snackbar("Error", "Network error. Please try again.",
+            backgroundColor: Colors.red, colorText: Colors.white, duration: Duration(seconds: 2));
+      }
     } finally {
       isLoadingWorkDetails.value = false;
     }
   }
+
+  // Getter for stored booking ID
+  String get storedBookingId => _storedBookingId;
 
   // ================== MEDIA HANDLING ==================
 
@@ -241,32 +375,23 @@ class SvpSubmitWorkFormScreenController extends GetxController {
 
   Future<void> pickMediaFromGallery() async {
     try {
-      final List<XFile> files = await _picker.pickMultiImage(
-        maxWidth: 1024, maxHeight: 1024, imageQuality: 85,
+      // Use pickMultipleMedia to get both images and videos
+      final List<XFile> selectedFiles = await _picker.pickMultipleMedia(
+        imageQuality: 85,
+        maxWidth: 1024,
+        maxHeight: 1024,
       );
 
-      // Also pick videos
-      final XFile? videoFile = await _picker.pickVideo(
-        source: ImageSource.gallery,
-      );
-
-      final List<XFile> allFiles = [];
-      if (files.isNotEmpty) {
-        allFiles.addAll(files);
-      }
-      if (videoFile != null) {
-        allFiles.add(videoFile);
-      }
-
-      if (allFiles.isNotEmpty) {
-        for (var file in allFiles) {
+      if (selectedFiles.isNotEmpty) {
+        for (var file in selectedFiles) {
           final isVideo = _isVideoFile(file.path);
           mediaFiles.add(MediaFile(path: file.path, isVideo: isVideo));
         }
-        Get.snackbar("Success", "${allFiles.length} file(s) added",
+        Get.snackbar("Success", "${selectedFiles.length} file(s) added",
             backgroundColor: Colors.green, colorText: Colors.white);
       }
     } catch (e) {
+      log("Error picking files from gallery: $e");
       Get.snackbar("Error", "Failed to pick files: $e",
           backgroundColor: Colors.red, colorText: Colors.white);
     }
@@ -376,6 +501,27 @@ class SvpSubmitWorkFormScreenController extends GetxController {
     }
   }
 
+  // Clear media files after successful upload
+  void clearMediaFilesAfterUpload() {
+    // Clear all media files
+    for (var mediaFile in mediaFiles) {
+      if (mediaFile.isVideo && mediaFile.videoController != null) {
+        mediaFile.videoController!.dispose();
+      }
+    }
+    mediaFiles.clear();
+
+    update();
+    log("✅ Media files cleared after successful upload");
+  }
+
+  // Refresh after upload to get updated attachments
+  Future<void> refreshAfterUpload() async {
+    log("🔄 Refreshing after upload...");
+    await loadWorkDetails();
+    log("✅ Refresh completed after upload");
+  }
+
   Future<void> clearAllMediaFiles() async {
     for (var mediaFile in mediaFiles) {
       if (mediaFile.isVideo && mediaFile.videoController != null) {
@@ -397,12 +543,10 @@ class SvpSubmitWorkFormScreenController extends GetxController {
 
   // ================== CUSTOM FILE UPLOAD USING HTTP DIRECTLY ==================
 
-  /// Upload multiple files using direct HTTP multipart request
-  /// This matches exactly what Postman is doing
   Future<NetworkResponse> uploadMultipleMediaFiles({
     required String bookingId,
     required List<File> files,
-    List<String>? fileTypes, // Optional parameter to specify file types
+    List<String>? fileTypes,
   }) async {
     try {
       isUploadingMedia.value = true;
@@ -467,13 +611,11 @@ class SvpSubmitWorkFormScreenController extends GetxController {
           contentType = MediaType('application', 'octet-stream');
         }
 
-        // Add file with field name "attachments" (as shown in Postman)
+        // Add file with field name "attachments"
         final multipartFile = await http.MultipartFile.fromPath(
-          'attachments', // This is the exact field name from Postman
+          'attachments',
           file.path,
           contentType: contentType,
-          // You can add filename if needed
-          // filename: 'file_${DateTime.now().millisecondsSinceEpoch}_$i.${file.path.split('.').last}',
         );
 
         request.files.add(multipartFile);
@@ -560,7 +702,9 @@ class SvpSubmitWorkFormScreenController extends GetxController {
   }
 
   Future<bool> addAdditionalCost(String name, double price) async {
-    if (bookingId.value == null || bookingId.value!.isEmpty) {
+    String idToUse = bookingId.value.isNotEmpty ? bookingId.value : _storedBookingId;
+
+    if (idToUse.isEmpty) {
       Get.snackbar("Error", "No booking ID found",
           backgroundColor: Colors.red, colorText: Colors.white);
       return false;
@@ -576,7 +720,7 @@ class SvpSubmitWorkFormScreenController extends GetxController {
       }
 
       final costBody = {
-        'serviceBookingId': bookingId.value!,
+        'serviceBookingId': idToUse,
         'costName': name,
         'price': price.toString(),
       };
@@ -624,7 +768,9 @@ class SvpSubmitWorkFormScreenController extends GetxController {
   // ================== SUBMISSION LOGIC ==================
 
   Future<void> requestPayment() async {
-    if (bookingId.value == null || bookingId.value!.isEmpty) {
+    String idToUse = bookingId.value.isNotEmpty ? bookingId.value : _storedBookingId;
+
+    if (idToUse.isEmpty) {
       Get.snackbar("Error", "No booking ID found",
           backgroundColor: Colors.red, colorText: Colors.white);
       return;
@@ -649,25 +795,44 @@ class SvpSubmitWorkFormScreenController extends GetxController {
     isPaymentRequestLoading.value = true;
 
     try {
+      final token = await SecureStorageService().read(AppConstants.accessToken);
+      if (token == null || token.isEmpty) {
+        Get.snackbar("Error", "Session expired. Please log in again.",
+            backgroundColor: Colors.red, colorText: Colors.white);
+        return;
+      }
+
       final workCompletionBody = {
-        'serviceBookingId': bookingId.value!,
+        'serviceBookingId': idToUse,
         'completionDate': completionDateController.text,
         'durationTime': durationTimeController.text,
         'status': 'completed',
       };
 
-      log("Submitting work completion data...");
+      log("Submitting work completion data: $workCompletionBody");
 
-      Get.snackbar(
-        "Success",
-        "Payment request submitted successfully!",
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-        duration: Duration(seconds: 3),
+      final response = await _networkCaller.postRequest(
+        AppUrl.workCompletedDetailsApi(bookingId as String),
+        body: workCompletionBody,
+        headers: {'Authorization': 'Bearer $token'},
       );
 
-      await Future.delayed(Duration(seconds: 2));
-      Get.back(result: true);
+      if (response.isSuccess) {
+        Get.snackbar(
+          "Success",
+          "Payment request submitted successfully!",
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          duration: Duration(seconds: 3),
+        );
+
+        await Future.delayed(Duration(seconds: 2));
+        Get.back(result: true);
+      } else {
+        final errorMsg = response.errorMessage ?? "Failed to submit payment request";
+        Get.snackbar("Error", errorMsg,
+            backgroundColor: Colors.red, colorText: Colors.white);
+      }
     } catch (e, stackTrace) {
       log("❌ Submission error: $e", error: e, stackTrace: stackTrace);
       Get.snackbar("Error", "Failed to submit: $e",
@@ -707,9 +872,6 @@ class ApiAttachment {
   String toString() => 'ApiAttachment(url: $url, type: $type, id: $id)';
 }
 
-
-
-
 */
 
 
@@ -721,24 +883,15 @@ class ApiAttachment {
 
 
 
-///
-///
-///
-///
-///
-///
-/// todo::::: show the iamge and the video into one place
-///
-///
-///
-///
-///
-///
-///
 
 
 
 
+
+
+
+
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -766,7 +919,7 @@ class SvpSubmitWorkFormScreenController extends GetxController {
 
   // Rx variables
   RxBool isLoading = false.obs;
-  Rx<String?> bookingId = Rx<String?>(null);
+  RxString bookingId = RxString('');
   RxBool isLoadingWorkDetails = false.obs;
   RxBool isPaymentRequestLoading = false.obs;
   RxBool isUploadingMedia = false.obs;
@@ -781,30 +934,68 @@ class SvpSubmitWorkFormScreenController extends GetxController {
   // Combined media files
   RxList<MediaFile> mediaFiles = <MediaFile>[].obs;
 
+  // Private variable to store booking ID safely
+  String _storedBookingId = '';
+
   @override
   void onInit() {
     super.onInit();
 
-    log("Controller initialized", name: "SVPSubmitWorkForm");
+    log("🎯 Controller initialized", name: "SVPSubmitWorkForm");
 
+    // First extract booking ID from arguments
+    _extractBookingIdFromArguments();
+
+    // Then parse form data if available
     final args = Get.arguments;
-
     if (args != null && args is Map) {
-      bookingId.value = args['bookingId']?.toString();
-
       if (args['formData'] != null) {
+        log("📝 Parsing form data...");
         _parseFormData(args['formData']);
       } else if (args['serviceBooking'] != null) {
+        log("📝 Parsing service booking data...");
         _parseServiceBookingData(args['serviceBooking'], args['additionalCosts']);
-      } else if (bookingId.value != null && bookingId.value!.isNotEmpty) {
+      } else if (bookingId.value.isNotEmpty) {
+        log("📡 Loading work details from API...");
         loadWorkDetails();
       } else {
-        Get.snackbar("Error", "No booking data available",
-            backgroundColor: Colors.red, colorText: Colors.white);
+        log("⚠️ No booking data available");
+        Get.snackbar("Info", "No booking data available",
+            backgroundColor: Colors.orange, colorText: Colors.white);
       }
     } else {
-      Get.snackbar("Error", "No booking information provided",
-          backgroundColor: Colors.red, colorText: Colors.white);
+      log("⚠️ No arguments provided");
+      Get.snackbar("Info", "No booking information provided",
+          backgroundColor: Colors.orange, colorText: Colors.white);
+    }
+  }
+
+  void _extractBookingIdFromArguments() {
+    final args = Get.arguments;
+
+    if (args != null) {
+      log("📦 Arguments type: ${args.runtimeType}");
+      log("📦 Arguments content: $args");
+
+      if (args is Map) {
+        final bookingIdFromArgs = args['bookingId']?.toString();
+        if (bookingIdFromArgs != null && bookingIdFromArgs.isNotEmpty) {
+          bookingId.value = bookingIdFromArgs;
+          _storedBookingId = bookingIdFromArgs;
+          log("✅ Booking ID stored from map: ${bookingId.value}");
+        } else {
+          log("❌ No bookingId found in map arguments");
+        }
+      } else if (args is String) {
+        // Handle case where bookingId is passed directly as a string
+        bookingId.value = args;
+        _storedBookingId = args;
+        log("✅ Booking ID stored directly as string: ${bookingId.value}");
+      } else {
+        log("❌ Arguments type not recognized: ${args.runtimeType}");
+      }
+    } else {
+      log("❌ No arguments found");
     }
   }
 
@@ -914,40 +1105,135 @@ class SvpSubmitWorkFormScreenController extends GetxController {
   }
 
   Future<void> loadWorkDetails() async {
-    if (bookingId.value == null || bookingId.value!.isEmpty) return;
+    // Use the stored booking ID if the observable is empty
+    String idToUse = bookingId.value.isNotEmpty ? bookingId.value : _storedBookingId;
+
+    if (idToUse.isEmpty) {
+      log("❌ No booking ID available for loading work details");
+      Get.snackbar("Info", "Booking information not found",
+          backgroundColor: Colors.orange, colorText: Colors.white, duration: Duration(seconds: 2));
+      return;
+    }
+
+    log("📡 Loading work details for Booking ID: $idToUse");
+
+    // Log the exact URL being called
+    final apiUrl = AppUrl.providerWorkSubmitForm(idToUse);
+    log("🌐 API URL: $apiUrl");
 
     isLoadingWorkDetails.value = true;
+
     try {
+      // 🔥 CRITICAL FIX: Get authentication token
+      final token = await SecureStorageService().read(AppConstants.accessToken);
+
+      if (token == null || token.isEmpty) {
+        log("❌ No auth token found for API call");
+        Get.snackbar("Error", "Session expired. Please log in again.",
+            backgroundColor: Colors.red, colorText: Colors.white, duration: Duration(seconds: 2));
+        isLoadingWorkDetails.value = false;
+        return;
+      }
+
+      log("🔑 Auth token found, length: ${token.length} characters");
+
+      // 🔥 CRITICAL FIX: Prepare headers with authentication
+      final headers = {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
+
+      log("📤 Making authenticated API request...");
+
+      // Call network caller with headers
       final NetworkResponse response = await _networkCaller.getRequest(
-        AppUrl.providerWorkSubmitForm(bookingId.value!),
+        apiUrl,
+        headers: headers, // Pass headers to network caller
       );
+
+      log("📥 API Response Status: ${response.statusCode}");
+      log("📥 API Response Success: ${response.isSuccess}");
 
       if (response.isSuccess && response.jsonResponse != null) {
         final responseData = response.jsonResponse!;
+        log("✅ Work details response received from API");
+        log("📊 Response code: ${responseData['code']}");
+
         if (responseData['code'] == 200 &&
             responseData['data'] != null &&
             responseData['data']['attributes'] != null) {
           final attributes = responseData['data']['attributes'];
-          _parseServiceBookingData(
-            attributes['serviceBooking'],
-            attributes['additionalCosts'],
-          );
+
+          log("📊 Attributes loaded successfully");
+
+          // Check if serviceBooking exists
+          if (attributes['serviceBooking'] != null) {
+            final serviceBooking = attributes['serviceBooking'];
+
+            _parseServiceBookingData(
+              serviceBooking,
+              attributes['additionalCosts'],
+            );
+            log("✅ Work details loaded successfully from API");
+
+            // Show success message
+            Get.snackbar(
+                "Success",
+                "Work details refreshed",
+                backgroundColor: Colors.green,
+                colorText: Colors.white,
+                duration: Duration(seconds: 1)
+            );
+          } else {
+            log("⚠️ No serviceBooking data in API response");
+            Get.snackbar("Info", "No work details found in API response",
+                backgroundColor: Colors.orange, colorText: Colors.white, duration: Duration(seconds: 2));
+          }
         } else {
-          Get.snackbar("Error", "Unexpected response format",
-              backgroundColor: Colors.red, colorText: Colors.white);
+          final errorMessage = responseData['message']?.toString() ?? "Unexpected response format";
+          log("⚠️ API Error in response data: $errorMessage");
+          Get.snackbar("Info", errorMessage,
+              backgroundColor: Colors.orange, colorText: Colors.white, duration: Duration(seconds: 2));
         }
       } else {
-        Get.snackbar("Error", response.errorMessage ?? "Failed to load work details",
-            backgroundColor: Colors.red, colorText: Colors.white);
+        log("❌ API Request Failed");
+        log("❌ Status Code: ${response.statusCode}");
+        log("❌ Error Message: ${response.errorMessage}");
+
+        // Handle specific error codes
+        if (response.statusCode == 401) {
+          Get.snackbar("Session Expired", "Please log in again",
+              backgroundColor: Colors.red, colorText: Colors.white, duration: Duration(seconds: 3));
+        } else if (response.statusCode == 404) {
+          Get.snackbar("Not Found", "Booking details not found",
+              backgroundColor: Colors.orange, colorText: Colors.white, duration: Duration(seconds: 2));
+        } else {
+          Get.snackbar("Error", "Could not refresh data. Please try again.",
+              backgroundColor: Colors.red, colorText: Colors.white, duration: Duration(seconds: 2));
+        }
       }
     } catch (e, stackTrace) {
-      log("LOAD ERROR: $e", error: e, stackTrace: stackTrace);
-      Get.snackbar("Error", "Failed to load work details: $e",
-          backgroundColor: Colors.red, colorText: Colors.white);
+      log("❌ LOAD ERROR: $e", error: e, stackTrace: stackTrace);
+
+      // Handle specific exceptions
+      if (e is SocketException) {
+        Get.snackbar("No Internet", "Please check your connection",
+            backgroundColor: Colors.red, colorText: Colors.white, duration: Duration(seconds: 2));
+      } else if (e is TimeoutException) {
+        Get.snackbar("Timeout", "Request took too long. Please try again.",
+            backgroundColor: Colors.orange, colorText: Colors.white, duration: Duration(seconds: 2));
+      } else {
+        Get.snackbar("Error", "Network error. Please try again.",
+            backgroundColor: Colors.red, colorText: Colors.white, duration: Duration(seconds: 2));
+      }
     } finally {
       isLoadingWorkDetails.value = false;
     }
   }
+
+  // Getter for stored booking ID
+  String get storedBookingId => _storedBookingId;
 
   // ================== MEDIA HANDLING ==================
 
@@ -979,205 +1265,29 @@ class SvpSubmitWorkFormScreenController extends GetxController {
         fileName.endsWith('.bmp');
   }
 
-  // Update the pickMediaFromGallery method in your controller
-
   Future<void> pickMediaFromGallery() async {
     try {
-      // Use image_picker's pickMultipleMedia method which supports both images and videos
-      final List<XFile>? pickedFiles = await _picker.pickMultipleMedia(
+      // Use pickMultipleMedia to get both images and videos
+      final List<XFile> selectedFiles = await _picker.pickMultipleMedia(
+        imageQuality: 85,
         maxWidth: 1024,
         maxHeight: 1024,
-        imageQuality: 85,
       );
 
-      if (pickedFiles != null && pickedFiles.isNotEmpty) {
-        for (var file in pickedFiles) {
-          // Check if file is video based on MIME type or extension
-          final isVideo = _isVideoFile(file.path);
-
-          mediaFiles.add(MediaFile(path: file.path, isVideo: isVideo));
-
-          log("Added file: ${file.path}, isVideo: $isVideo");
-        }
-
-        Get.snackbar("Success", "${pickedFiles.length} file(s) added",
-            backgroundColor: Colors.green,
-            colorText: Colors.white,
-            duration: Duration(seconds: 2));
-
-        update(); // Trigger UI rebuild
-      }
-    } on Exception catch (e) {
-      log("Error picking media: $e");
-      Get.snackbar("Error", "Failed to pick files: ${e.toString()}",
-          backgroundColor: Colors.red,
-          colorText: Colors.white);
-    }
-  }
-  // Add this method to your controller
-// ================== MEDIA HANDLING ==================
-
-  Future<void> pickMultipleMediaFromGallery() async {
-    try {
-      // For mixed media selection, we need to use the new API
-      final List<XFile>? pickedFiles = await _picker.pickMultipleMedia(
-        // image_picker 0.8.5+ uses this for both images and videos
-      );
-
-      if (pickedFiles != null && pickedFiles.isNotEmpty) {
-        for (var file in pickedFiles) {
+      if (selectedFiles.isNotEmpty) {
+        for (var file in selectedFiles) {
           final isVideo = _isVideoFile(file.path);
           mediaFiles.add(MediaFile(path: file.path, isVideo: isVideo));
-
-          log("Added file: ${file.path}, isVideo: $isVideo");
         }
-
-        Get.snackbar("Success", "${pickedFiles.length} file(s) added",
-            backgroundColor: Colors.green, colorText: Colors.white,
-            duration: Duration(seconds: 2));
-
-        update(); // Trigger UI rebuild
+        Get.snackbar("Success", "${selectedFiles.length} file(s) added",
+            backgroundColor: Colors.green, colorText: Colors.white);
       }
-    } on Exception catch (e) {
-      log("Error picking media: $e");
-      Get.snackbar("Error", "Failed to pick files: ${e.toString()}",
+    } catch (e) {
+      log("Error picking files from gallery: $e");
+      Get.snackbar("Error", "Failed to pick files: $e",
           backgroundColor: Colors.red, colorText: Colors.white);
     }
   }
-
-// Alternatively, if you want separate selection for images and videos:
-  Future<void> pickMixedMediaFromGallery() async {
-    try {
-      // First pick images using pickMultiImage
-      final List<XFile>? imageFiles = await _picker.pickMultiImage(
-        maxWidth: 1024,
-        maxHeight: 1024,
-        imageQuality: 85,
-      );
-
-      // For videos, we need to use a different approach
-      // Since pickVideo only returns a single file, we might need to handle it differently
-      // Let's create a custom method that allows multiple video selection
-
-      // Combine all files
-      final List<XFile> allFiles = [];
-
-      if (imageFiles != null && imageFiles.isNotEmpty) {
-        allFiles.addAll(imageFiles);
-      }
-
-      if (allFiles.isNotEmpty) {
-        for (var file in allFiles) {
-          final isVideo = _isVideoFile(file.path);
-          mediaFiles.add(MediaFile(path: file.path, isVideo: isVideo));
-
-          log("Added file: ${file.path}, isVideo: $isVideo");
-        }
-
-        Get.snackbar("Success", "${allFiles.length} file(s) added",
-            backgroundColor: Colors.green, colorText: Colors.white,
-            duration: Duration(seconds: 2));
-
-        update();
-      }
-    } on Exception catch (e) {
-      log("Error picking mixed media: $e");
-      Get.snackbar("Error", "Failed to pick files: ${e.toString()}",
-          backgroundColor: Colors.red, colorText: Colors.white);
-    }
-  }
-
-// New method to pick videos (if you want separate video selection)
-  Future<void> pickVideosFromGallery() async {
-    try {
-      // Note: image_picker doesn't have a direct method for multiple videos
-      // We can use pickFiles with type filtering if available in your version
-      final XFile? videoFile = await _picker.pickVideo(
-        source: ImageSource.gallery,
-        maxDuration: Duration(minutes: 10),
-      );
-
-      if (videoFile != null) {
-        mediaFiles.add(MediaFile(path: videoFile.path, isVideo: true));
-
-        Get.snackbar("Success", "Video added",
-            backgroundColor: Colors.green, colorText: Colors.white,
-            duration: Duration(seconds: 2));
-
-        update();
-      }
-    } on Exception catch (e) {
-      log("Error picking video: $e");
-      Get.snackbar("Error", "Failed to pick video: ${e.toString()}",
-          backgroundColor: Colors.red, colorText: Colors.white);
-    }
-  }
-
-// Updated showMediaSourceDialog with correct API calls
-  void showMediaSourceDialog() {
-    Get.dialog(
-      Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Container(
-          padding: EdgeInsets.all(16),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("Add Proof Files", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-              SizedBox(height: 16),
-              ListTile(
-                leading: Icon(Icons.camera_alt, color: Colors.blue),
-                title: Text("Take Photo"),
-                onTap: () {
-                  Get.back();
-                  pickPhotoFromCamera();
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.videocam, color: Colors.red),
-                title: Text("Record Video"),
-                onTap: () {
-                  Get.back();
-                  pickVideoFromCamera();
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.photo_library, color: Colors.green),
-                title: Text("Choose Images"),
-                subtitle: Text("Multiple images"),
-                onTap: () {
-                  Get.back();
-                  pickMediaFromGallery(); // This picks images only
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.video_library, color: Colors.purple),
-                title: Text("Choose Video"),
-                subtitle: Text("Single video"),
-                onTap: () {
-                  Get.back();
-                  pickVideosFromGallery();
-                },
-              ),
-              SizedBox(height: 8),
-              Text(
-                "Supported formats: JPG, PNG, MP4, MOV",
-                style: TextStyle(fontSize: 12, color: Colors.grey),
-              ),
-              SizedBox(height: 16),
-              TextButton(
-                  onPressed: Get.back,
-                  child: Text("Cancel", style: TextStyle(color: Colors.red))
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-
 
   Future<void> pickPhotoFromCamera() async {
     try {
@@ -1211,7 +1321,59 @@ class SvpSubmitWorkFormScreenController extends GetxController {
     }
   }
 
-
+  void showMediaSourceDialog() {
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Container(
+          padding: EdgeInsets.all(16),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text("Add Proof Files", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+              SizedBox(height: 16),
+              ListTile(
+                leading: Icon(Icons.camera_alt, color: Colors.blue),
+                title: Text("Take Photo"),
+                onTap: () {
+                  Get.back();
+                  pickPhotoFromCamera();
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.videocam, color: Colors.red),
+                title: Text("Record Video"),
+                onTap: () {
+                  Get.back();
+                  pickVideoFromCamera();
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.photo_library, color: Colors.green),
+                title: Text("Choose from Gallery"),
+                subtitle: Text("Images & Videos"),
+                onTap: () {
+                  Get.back();
+                  pickMediaFromGallery();
+                },
+              ),
+              SizedBox(height: 8),
+              Text(
+                "Supported formats: JPG, PNG, MP4, MOV",
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+              SizedBox(height: 16),
+              TextButton(
+                  onPressed: Get.back,
+                  child: Text("Cancel", style: TextStyle(color: Colors.red))
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   Future<void> removeMediaFile(int index) async {
     if (index >= 0 && index < mediaFiles.length) {
@@ -1229,6 +1391,27 @@ class SvpSubmitWorkFormScreenController extends GetxController {
       apiAttachments.removeAt(index);
       update();
     }
+  }
+
+  // Clear media files after successful upload
+  void clearMediaFilesAfterUpload() {
+    // Clear all media files
+    for (var mediaFile in mediaFiles) {
+      if (mediaFile.isVideo && mediaFile.videoController != null) {
+        mediaFile.videoController!.dispose();
+      }
+    }
+    mediaFiles.clear();
+
+    update();
+    log("✅ Media files cleared after successful upload");
+  }
+
+  // Refresh after upload to get updated attachments
+  Future<void> refreshAfterUpload() async {
+    log("🔄 Refreshing after upload...");
+    await loadWorkDetails();
+    log("✅ Refresh completed after upload");
   }
 
   Future<void> clearAllMediaFiles() async {
@@ -1252,12 +1435,10 @@ class SvpSubmitWorkFormScreenController extends GetxController {
 
   // ================== CUSTOM FILE UPLOAD USING HTTP DIRECTLY ==================
 
-  /// Upload multiple files using direct HTTP multipart request
-  /// This matches exactly what Postman is doing
   Future<NetworkResponse> uploadMultipleMediaFiles({
     required String bookingId,
     required List<File> files,
-    List<String>? fileTypes, // Optional parameter to specify file types
+    List<String>? fileTypes,
   }) async {
     try {
       isUploadingMedia.value = true;
@@ -1322,13 +1503,11 @@ class SvpSubmitWorkFormScreenController extends GetxController {
           contentType = MediaType('application', 'octet-stream');
         }
 
-        // Add file with field name "attachments" (as shown in Postman)
+        // Add file with field name "attachments"
         final multipartFile = await http.MultipartFile.fromPath(
-          'attachments', // This is the exact field name from Postman
+          'attachments',
           file.path,
           contentType: contentType,
-          // You can add filename if needed
-          // filename: 'file_${DateTime.now().millisecondsSinceEpoch}_$i.${file.path.split('.').last}',
         );
 
         request.files.add(multipartFile);
@@ -1415,7 +1594,9 @@ class SvpSubmitWorkFormScreenController extends GetxController {
   }
 
   Future<bool> addAdditionalCost(String name, double price) async {
-    if (bookingId.value == null || bookingId.value!.isEmpty) {
+    String idToUse = bookingId.value.isNotEmpty ? bookingId.value : _storedBookingId;
+
+    if (idToUse.isEmpty) {
       Get.snackbar("Error", "No booking ID found",
           backgroundColor: Colors.red, colorText: Colors.white);
       return false;
@@ -1431,7 +1612,7 @@ class SvpSubmitWorkFormScreenController extends GetxController {
       }
 
       final costBody = {
-        'serviceBookingId': bookingId.value!,
+        'serviceBookingId': idToUse,
         'costName': name,
         'price': price.toString(),
       };
@@ -1479,7 +1660,9 @@ class SvpSubmitWorkFormScreenController extends GetxController {
   // ================== SUBMISSION LOGIC ==================
 
   Future<void> requestPayment() async {
-    if (bookingId.value == null || bookingId.value!.isEmpty) {
+    String idToUse = bookingId.value.isNotEmpty ? bookingId.value : _storedBookingId;
+
+    if (idToUse.isEmpty) {
       Get.snackbar("Error", "No booking ID found",
           backgroundColor: Colors.red, colorText: Colors.white);
       return;
@@ -1504,25 +1687,40 @@ class SvpSubmitWorkFormScreenController extends GetxController {
     isPaymentRequestLoading.value = true;
 
     try {
-      final workCompletionBody = {
-        'serviceBookingId': bookingId.value!,
-        'completionDate': completionDateController.text,
-        'durationTime': durationTimeController.text,
-        'status': 'completed',
-      };
+      final token = await SecureStorageService().read(AppConstants.accessToken);
+      if (token == null || token.isEmpty) {
+        Get.snackbar("Error", "Session expired. Please log in again.",
+            backgroundColor: Colors.red, colorText: Colors.white);
+        return;
+      }
 
-      log("Submitting work completion data...");
+      // ✅ NEW: Use PUT to AppUrl.providerRequestPayment
+      final requestUrl = AppUrl.providerRequestPayment(idToUse);
+      log("🌐 PUT Request URL: $requestUrl");
+      // Optional: For dev ONLY – you can paste this in browser (but PUT won't work in browser)
+      // In real app, we just log it
 
-      Get.snackbar(
-        "Success",
-        "Payment request submitted successfully!",
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-        duration: Duration(seconds: 3),
+      final response = await _networkCaller.putRequest(
+        requestUrl,
+        headers: {'Authorization': 'Bearer $token'},
       );
 
-      await Future.delayed(Duration(seconds: 2));
-      Get.back(result: true);
+      if (response.isSuccess) {
+        Get.snackbar(
+          "Success",
+          "Payment request submitted successfully!",
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          duration: Duration(seconds: 3),
+        );
+
+        await Future.delayed(Duration(seconds: 2));
+        Get.back(result: true);
+      } else {
+        final errorMsg = response.errorMessage ?? "Failed to submit payment request";
+        Get.snackbar("Error", errorMsg,
+            backgroundColor: Colors.red, colorText: Colors.white);
+      }
     } catch (e, stackTrace) {
       log("❌ Submission error: $e", error: e, stackTrace: stackTrace);
       Get.snackbar("Error", "Failed to submit: $e",
@@ -1561,8 +1759,3 @@ class ApiAttachment {
   @override
   String toString() => 'ApiAttachment(url: $url, type: $type, id: $id)';
 }
-
-
-
-
-
