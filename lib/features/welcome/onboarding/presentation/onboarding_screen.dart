@@ -1,16 +1,11 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:get/get.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/custom_widgets/select_language_widget.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
-import 'package:get/get.dart';
-import 'package:kaz_bd/routes/routes.dart';
 import 'package:kaz_bd/service/socket_service.dart';
 
 import '../../../../controllers/onboarding_controller.dart';
@@ -55,7 +50,6 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.cFFFFFF,
-
       body: SafeArea(
         child: Container(
           width: 1.sw,
@@ -106,13 +100,14 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                   children: [
                     ///Section : Text -> Your home's Best Friend
                     Text(
-                      "Your Home's Best Friend",
+                      // "Your Home's Best Friend",
+                      'your_home_best_friend'.tr,
                       style: TextFontStyle.headline26w700cFFFFFFStyleSatoshi,
                     ),
                     UIHelper.verticalSpace(16.h),
 
                     Text(
-                      "Get all your home services in one place: AC repair, plumbing, cleaning, electrical, and painting — just a tap away.",
+                      'get_your_home_services_done'.tr,
                       style: TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
                     ),
                     UIHelper.verticalSpace(16.h),
@@ -122,7 +117,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                       onTap: () {
                         onboardingController.checkAuthNavigate();
                       },
-                      buttonTitle: "Get Started",
+                      buttonTitle: 'get_started'.tr,
                     ),
                   ],
                 ),

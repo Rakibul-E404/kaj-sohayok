@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/constants/appList.dart';
+import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/custom_widgets/custom_shimmer_effect.dart';
 import 'package:kaz_bd/features/normal_user/details/widget/image_preview_widget.dart';
 import 'package:kaz_bd/utilities/app_url.dart';
@@ -64,6 +65,17 @@ class _GalleryTabState extends State<GalleryTab> {
                   // var data = AppList.imageList[index];
                   return CustomShimmerEffect(height: 0.2.sh, width: 0.2.sw);
                 },
+              );
+            } else if (detailsScreenController.galleryImages.isEmpty) {
+              return Container(
+                width: 1.sw,
+                height: 0.3.sh,
+                alignment: Alignment.center,
+                child: Text(
+                  "No Images Available At Gallery!",
+                  textAlign: TextAlign.center,
+                  style: TextFontStyle.headline12w500c000000StyleSatoshi,
+                ),
               );
             } else {
               return GridView.builder(

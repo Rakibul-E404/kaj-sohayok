@@ -52,7 +52,6 @@ class CustomPinInput extends StatelessWidget {
           onCompleted: controller.onCompleted,
         ),
         UIHelper.verticalSpace(32.h),
-
         Obx(() {
           final seconds = controller.secondsRemaining.value;
           return controller.isOtpExpired.value
@@ -60,7 +59,7 @@ class CustomPinInput extends StatelessWidget {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: "Didn’t receive code? ",
+                        text: 'didn\'t_receive_code'.tr,
                         style: TextFontStyle.headline14w500c606060StyleSatoshi,
                       ),
                       WidgetSpan(
@@ -70,7 +69,7 @@ class CustomPinInput extends StatelessWidget {
                             resend();
                           },
                           child: Text(
-                            "Resend Code",
+                            'resend_code'.tr,
                             style: TextFontStyle
                                 .headline14w500c000000StyleSatoshi
                                 .copyWith(color: AppColors.cea464a),

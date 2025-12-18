@@ -59,14 +59,14 @@ class SignInScreen extends StatelessWidget {
 
                   ///Section : Text -> sign in your account
                   Text(
-                    "Sign In Your Account",
+                    'sign_in_to_account'.tr,
                     style: TextFontStyle.headline24w700c000000StyleSatoshi,
                   ),
                   UIHelper.verticalSpace(14.h),
 
                   ///Section : Text -> welcome Back! Please enter your details.
                   Text(
-                    "welcome Back! Please Enter Your Details.",
+                    'welcome_back'.tr,
                     style: TextFontStyle.headline12w400c414141StyleSatoshi,
                   ),
                   UIHelper.verticalSpace(32.h),
@@ -74,13 +74,13 @@ class SignInScreen extends StatelessWidget {
                   ///Section : Email Form Field
                   CustomFormField(
                     controller: signInScreenController.emailTEController,
-                    labelText: "Your Email",
-                    hintText: "Enter Your Email",
+                    labelText: 'your_email'.tr,
+                    hintText: 'enter_your_email'.tr,
                     // hintTextStyle: ,
                     prefixIcon: Icon(Icons.mail, color: AppColors.c858c94),
                     validator: (String? value) {
                       if (value?.isEmpty ?? true) {
-                        return 'Please Enter your Email';
+                        return 'please_enter_your_email'.tr;
                       }
                       return null;
                     },
@@ -90,13 +90,13 @@ class SignInScreen extends StatelessWidget {
                   ///Section : Password Form Field
                   CustomFormField(
                     controller: signInScreenController.passwordTEController,
-                    labelText: "Password",
-                    hintText: "Enter Password",
+                    labelText: 'password'.tr,
+                    hintText: 'enter_password'.tr,
                     // hintTextStyle: ,
                     prefixIcon: Icon(Icons.lock, color: AppColors.c858c94),
                     validator: (String? value) {
                       if (value?.isEmpty ?? true) {
-                        return 'Please Enter Your password';
+                        return 'please_enter_password'.tr;
                       }
                       return null;
                     },
@@ -104,21 +104,21 @@ class SignInScreen extends StatelessWidget {
                   UIHelper.verticalSpace(24.h),
 
                   ///Section : Forgot Password
-                  InkWell(
-                    onTap: () {
-                      log("Forgot Password button Taped!");
-                      Get.toNamed(
-                        Routes.forgotPasswordScreen,
-                        arguments: {
-                          'email':
-                              signInScreenController.emailTEController.text,
-                        },
-                      );
-                    },
-                    child: Align(
-                      alignment: Alignment.centerRight,
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: InkWell(
+                      onTap: () {
+                        log("Forgot Password button Taped!");
+                        Get.toNamed(
+                          Routes.forgotPasswordScreen,
+                          arguments: {
+                            'email':
+                                signInScreenController.emailTEController.text,
+                          },
+                        );
+                      },
                       child: Text(
-                        "Forgot Password?",
+                        'forgot_password'.tr,
                         style: TextFontStyle.headline14w500c4d4d4dStyleSatoshi
                             .copyWith(decoration: TextDecoration.underline),
                       ),
@@ -135,7 +135,7 @@ class SignInScreen extends StatelessWidget {
                         onTap: () {
                           signInScreenController.handleSignIn();
                         },
-                        buttonTitle: "Sign in",
+                        buttonTitle: 'sign_in'.tr,
                       ),
                     ),
                   ),
@@ -147,7 +147,7 @@ class SignInScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Don’t have an account?",
+                        'don\'t_have_account'.tr,
                         style: TextFontStyle.headline14w500c606060StyleSatoshi,
                       ),
                       UIHelper.horizontalSpace(10.w),
@@ -157,7 +157,7 @@ class SignInScreen extends StatelessWidget {
                           Get.toNamed(Routes.chooseRoleScreen);
                         },
                         child: Text(
-                          "Sign up",
+                          'sign_up'.tr,
                           style:
                               TextFontStyle.headline14w700c000000StyleSatoshi,
                         ),

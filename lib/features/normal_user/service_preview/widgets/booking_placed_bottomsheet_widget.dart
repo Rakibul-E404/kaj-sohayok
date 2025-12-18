@@ -49,7 +49,7 @@ class BookingPlacedBottomSheet extends StatelessWidget {
 
           /// Section: Title
           Text(
-            'Booking Placed Done',
+            'booking_placed'.tr,
             style: TextFontStyle.headline18w700c000000StyleSatoshi,
           ),
           UIHelper.verticalSpace(10.h),
@@ -61,8 +61,7 @@ class BookingPlacedBottomSheet extends StatelessWidget {
               children: [
                 TextSpan(
                   text:
-                      "Your order has been successfully placed.\nOur logistic team will contact you"
-                      " soon.\nFor any help please ",
+                      '${'order_has_been_successfully_placed'.tr} ${'for_any_help'.tr}',
                   style: TextFontStyle.headline14w500c4d4d4dStyleSatoshi,
                 ),
                 TextSpan(
@@ -80,7 +79,7 @@ class BookingPlacedBottomSheet extends StatelessWidget {
               log("Go back to home page! button tapped...");
               Get.toNamed(Routes.navigationScreen); // 👈 Close bottom sheet
             },
-            buttonTitle: "Go To Home Page",
+            buttonTitle: 'go_to_home_page'.tr,
           ),
           UIHelper.verticalSpace(20.h),
         ],

@@ -37,7 +37,8 @@ class WorkCompletedBookingsController extends GetxController {
       log('🔑 [WORK COMPLETED CONTROLLER] Token retrieved: ${token != null ? 'Yes' : 'No'}');
 
       if (token == null) {
-        errorMessage.value = 'Authentication token not found. Please login again.';
+        errorMessage.value =
+            'Authentication token not found. Please login again.';
         isLoading.value = false;
         log('❌ [WORK COMPLETED CONTROLLER] No token found');
         return;
@@ -62,7 +63,8 @@ class WorkCompletedBookingsController extends GetxController {
         log('📋 [WORK COMPLETED CONTROLLER] Full API Response Data: ${response.jsonResponse}');
 
         if (response.jsonResponse!['success'] == true) {
-          List<dynamic> results = response.jsonResponse!['data']['attributes']['results'];
+          List<dynamic> results =
+              response.jsonResponse!['data']['attributes']['results'];
           log('✅ [WORK COMPLETED CONTROLLER] Found ${results.length} work completed bookings');
 
           // Log the structure of first booking for debugging
@@ -99,7 +101,8 @@ class WorkCompletedBookingsController extends GetxController {
           _processReviewStatus(results);
 
         } else {
-          String apiMessage = response.jsonResponse!['message'] ?? 'Failed to load bookings';
+          String apiMessage =
+              response.jsonResponse!['message'] ?? 'Failed to load bookings';
           errorMessage.value = apiMessage;
           log('❌ [WORK COMPLETED CONTROLLER] API returned error: $apiMessage');
         }
@@ -109,7 +112,8 @@ class WorkCompletedBookingsController extends GetxController {
         log('❌ [WORK COMPLETED CONTROLLER] Network error: $error');
       }
     } catch (e) {
-      errorMessage.value = 'Connection error: Please check your internet connection';
+      errorMessage.value =
+          'Connection error: Please check your internet connection';
       log('❌ [WORK COMPLETED CONTROLLER] Exception in getWorkCompletedBookings: $e');
     } finally {
       isLoading.value = false;

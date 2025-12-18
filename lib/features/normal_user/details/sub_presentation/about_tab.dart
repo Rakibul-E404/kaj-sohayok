@@ -25,7 +25,7 @@ class AboutTab extends StatelessWidget {
   Widget build(BuildContext context) {
     DetailsScreenController detailsScreenController =
         Get.find<DetailsScreenController>();
-     String? imageUrl;
+    String? imageUrl;
     String? fullImageUrl;
     return SingleChildScrollView(
       key: const PageStorageKey('about'),
@@ -38,7 +38,7 @@ class AboutTab extends StatelessWidget {
               return CustomShimmerEffect(height: 10.h, width: 0.4.sw);
             } else {
               return Text(
-                "Services Description",
+                'service_description'.tr,
                 style: TextFontStyle.headline16w500c000000StyleSatoshi,
               );
             }
@@ -78,7 +78,6 @@ class AboutTab extends StatelessWidget {
                 children: [
                   ///Section : Service Provider Image
                   Obx(() {
-
                     if (detailsScreenController
                             .providerProfileImage?.isNotEmpty ==
                         true) {
@@ -86,7 +85,7 @@ class AboutTab extends StatelessWidget {
                     }
 
                     if (imageUrl != null && imageUrl!.isNotEmpty) {
-                        fullImageUrl = imageUrl;
+                      fullImageUrl = imageUrl;
 
                       if (!imageUrl!.startsWith('http')) {
                         fullImageUrl = '${AppUrl.imageBaseUrl}$imageUrl';
@@ -161,7 +160,7 @@ class AboutTab extends StatelessWidget {
                           );
                         } else {
                           return Text(
-                            "Services Provider",
+                            'service_provider'.tr,
                             style:
                                 TextFontStyle.headline10w500c4d4d4dStyleSatoshi,
                           );
@@ -198,8 +197,7 @@ class AboutTab extends StatelessWidget {
                                       '',
                                   name: detailsScreenController.providerName ??
                                       "",
-                                  imageUrl: fullImageUrl ??
-                                      '');
+                                  imageUrl: fullImageUrl ?? '');
                             },
                             child: Container(
                               padding: EdgeInsets.all(6.sp),

@@ -9,6 +9,7 @@ import 'package:kaz_bd/features/normal_user/details/sub_presentation/about_tab.d
 import 'package:kaz_bd/features/normal_user/details/sub_presentation/gallery_tab.dart';
 import 'package:kaz_bd/features/normal_user/details/sub_presentation/reviews_tab.dart';
 import 'package:kaz_bd/custom_widgets/tab_showing_widget.dart';
+import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import '../../../../constants/text_font_style.dart';
@@ -142,7 +143,7 @@ class _DetailsScreenState extends State<DetailsScreen>
         centerTitle: true,
         backgroundColor: AppColors.scaffoldBackgroundColor,
         title: Text(
-          "Details",
+          'deails'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
       ),
@@ -160,6 +161,11 @@ class _DetailsScreenState extends State<DetailsScreen>
                     if (detailsController?.galleryImages.isNotEmpty == true) {
                       imageUrl =
                           detailsController?.galleryImages.first.attachment;
+                    } else {
+                      detailsController?.galleryImages.isEmpty == true
+                          ? detailsController?.serviceImageNotAvailable.value =
+                              true
+                          : false;
                     }
 
                     if (imageUrl != null && imageUrl.isNotEmpty) {
@@ -190,6 +196,15 @@ class _DetailsScreenState extends State<DetailsScreen>
                           },
                         ),
                       );
+                    } else if (detailsController
+                                ?.serviceImageNotAvailable.value ==
+                            true &&
+                        detailsController?.isLoading.value == false) {
+                      return Image.asset(
+                        Assets.images.errorImage.path,
+                        width: 1.sw,
+                        height: 220.h,
+                      );
                     } else {
                       return ClipRRect(
                         borderRadius: BorderRadius.circular(24.r),
@@ -211,7 +226,7 @@ class _DetailsScreenState extends State<DetailsScreen>
                           );
                         } else {
                           return Text(
-                            detailsController?.serviceName ?? 'Service Name',
+                            detailsController?.serviceName ?? 'service_name'.tr,
                             style:
                                 TextFontStyle.headline18w700c000000StyleSatoshi,
                           );
@@ -267,7 +282,7 @@ class _DetailsScreenState extends State<DetailsScreen>
                           style:
                               TextFontStyle.headline12w500c6a6a6aStyleSatoshi,
                           children: [
-                            const TextSpan(text: "Start from "),
+                            TextSpan(text: "${'start_from'.tr} "),
                             TextSpan(
                               text:
                                   "${AppText.bdTkSign}${detailsController?.startPrice ?? 0}",
@@ -287,7 +302,7 @@ class _DetailsScreenState extends State<DetailsScreen>
                       return CustomShimmerEffect(height: 60.h, width: 1.sw);
                     } else {
                       return Text(
-                        detailsController?.serviceBio ?? 'Loading bio...',
+                        detailsController?.serviceBio ?? 'loading_bio'.tr,
                         style: TextFontStyle.headline14w500c4d4d4dStyleSatoshi,
                       );
                     }
@@ -317,10 +332,10 @@ class _DetailsScreenState extends State<DetailsScreen>
                   dividerColor: AppColors.c778beb,
                   indicatorSize: TabBarIndicatorSize.tab,
                   indicatorWeight: 4.h,
-                  tabs: const [
-                    Tab(text: "About"),
-                    Tab(text: "Gallery"),
-                    Tab(text: "Reviews"),
+                  tabs: [
+                    Tab(text: 'about'.tr),
+                    Tab(text: 'gallery'.tr),
+                    Tab(text: 'reviews'.tr),
                   ],
                 ),
               ),

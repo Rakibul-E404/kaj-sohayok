@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -7,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:kaz_bd/features/normal_user/booking_date/presentation/widgets/calender_container_widget.dart';
 import 'package:kaz_bd/features/normal_user/booking_date/presentation/widgets/time_picker_widget.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
-import 'package:kaz_bd/utilities/logger_util.dart';
 
 import '../../../../constants/text_font_style.dart';
 import '../../../../controllers/calender_controller.dart';
@@ -45,7 +43,7 @@ class BookingDateScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         automaticallyImplyLeading: true,
         title: Text(
-          "Booking Date",
+          'booking_date'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
       ),
@@ -64,8 +62,8 @@ class BookingDateScreen extends StatelessWidget {
                   // Validate if date/time is in future
                   if (!controller.isFutureDateTime) {
                     Get.snackbar(
-                      'Invalid Selection',
-                      'Please select a future date and time',
+                      'invalid_selection'.tr,
+                      'select_future_date_time'.tr,
                       backgroundColor: Colors.orange,
                       colorText: Colors.white,
                     );
@@ -76,8 +74,8 @@ class BookingDateScreen extends StatelessWidget {
                   final currentProviderId = bookingController.providerID.value;
                   if (currentProviderId.isEmpty) {
                     Get.snackbar(
-                      'Error',
-                      'Provider ID is missing. Cannot check availability.',
+                      'error'.tr,
+                      'provider_id_missing'.tr,
                       backgroundColor: AppColors.cee3333,
                       colorText: AppColors.cFFFFFF,
                     );
@@ -116,7 +114,7 @@ class BookingDateScreen extends StatelessWidget {
                     );
                   }
                 },
-                buttonTitle: "Check Availability & Proceed",
+                buttonTitle: 'check_availy_and_proceed'.tr,
                 textStyle: TextFontStyle.headline16w700cFFFFFFStyleSatoshi,
                 buttonColor: AppColors.c778beb,
                 borderRadius: 12.r,
@@ -128,12 +126,3 @@ class BookingDateScreen extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-
-
-
-

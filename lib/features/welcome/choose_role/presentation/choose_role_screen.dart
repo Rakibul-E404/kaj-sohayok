@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
@@ -11,7 +10,6 @@ import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/routes/routes.dart';
 import 'package:kaz_bd/service/get_storage.dart';
 
-import '../../../../service/secured_storage.dart';
 import '../../../../utilities/app_constants.dart';
 import '../../../../utilities/enum.dart';
 import '../widgets/role_selecting_card.dart';
@@ -38,7 +36,7 @@ class ChooseRoleScreen extends StatelessWidget {
                       Get.toNamed(Routes.signInScreen);
                     },
                     child: Text(
-                      "Skip",
+                      'skip'.tr,
                       style: TextFontStyle.headline20w700c4d4d4dStyleSatoshi
                           .copyWith(decoration: TextDecoration.underline),
                     ),
@@ -48,14 +46,14 @@ class ChooseRoleScreen extends StatelessWidget {
 
                 ///Section -> Text : Choose your role below
                 Text(
-                  "Choose Your Role Below",
+                  'choose_role'.tr,
                   style: TextFontStyle.headline24w700c202020StyleSatoshi,
                 ),
                 UIHelper.verticalSpace(14.h),
 
                 ///Section : Text -> please select an one option to start your journey
                 Text(
-                  "Please Select An One Option To Start Your Journey",
+                  'select_an_option'.tr,
                   style: TextFontStyle.headline12w700c4d4d4dStyleSatoshi,
                 ),
                 UIHelper.verticalSpace(28.h),
@@ -89,7 +87,7 @@ class ChooseRoleScreen extends StatelessWidget {
                   },
                   showBorder: true,
                   userTypeIcon: Assets.icons.personIconWhiteBackground,
-                  cardTitle: "Join As a User",
+                  cardTitle: 'join_as_user'.tr,
                   userType: appUserType.buyer,
                 ),
                 UIHelper.verticalSpace(16.h),
@@ -105,7 +103,7 @@ class ChooseRoleScreen extends StatelessWidget {
                     Get.toNamed(Routes.joinAsServiceProviderScreen);
                   },
                   userTypeIcon: Assets.icons.serviceProviderLogo,
-                  cardTitle: "Join As a Srvices Provider",
+                  cardTitle: 'join_as_provider'.tr,
                   userType: appUserType.seller,
                 ),
                 UIHelper.verticalSpace(16.h),

@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:kaz_bd/constants/appList.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/features/common_screens/notification/widget/no_notification_widget.dart';
@@ -21,13 +21,12 @@ class NotificationScreen extends StatelessWidget {
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          "Notification",
+          'notification'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
         centerTitle: true,
         backgroundColor: AppColors.scaffoldBackgroundColor,
       ),
-
       body: Padding(
         padding: EdgeInsetsGeometry.all(UIHelper.kDefaulutPadding()),
         child: AppList.notificationList.isEmpty

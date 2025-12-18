@@ -62,7 +62,7 @@ class _ServicesOfSpecificCategoryScreenState
 
     final categoryId = arguments?['categoryId'] ?? '';
     final categoryName =
-        arguments?['categoryName'] ?? 'Failed to Get The Category Name';
+        arguments?['categoryName'] ?? 'failed_to_get_service_category_name'.tr;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       itemsOfCategory?.setCategoryData(id: categoryId, name: categoryName);
@@ -91,7 +91,7 @@ class _ServicesOfSpecificCategoryScreenState
               showVerticalDivider: false,
               controller: _searchController,
               prefixIcon: SvgPicture.asset(Assets.icons.searchIcon),
-              hintText: "Search $categoryName Services",
+              hintText: "${'search'.tr} $categoryName ${'services'.tr}",
               onFieldSubmitted: (value) {
                 itemsOfCategory?.performSearch(value);
               },
@@ -162,9 +162,9 @@ class _ServicesOfSpecificCategoryScreenState
 
                       // Extract service data from the model
                       final String serviceName =
-                          service.serviceName?.en ?? 'Service';
+                          service.serviceName?.en ?? 'service'.tr;
                       final String providerName =
-                          service.providerId?.name ?? 'Provider';
+                          service.providerId?.name ?? 'provider'.tr;
                       final double rating = (service.rating ?? 0).toDouble();
                       final double price = (service.startPrice ?? 0).toDouble();
 
