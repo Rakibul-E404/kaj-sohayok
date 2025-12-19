@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
@@ -920,55 +919,73 @@ class SvpSubmitWorkFormScreenController extends GetxController {
     }
   }
 
-  // ================== SUBMISSION LOGIC ==================
+  /// ================== SUBMISSION LOGIC ==================
 
   Future<void> requestPayment() async {
     String idToUse = bookingId.value.isNotEmpty ? bookingId.value : _storedBookingId;
 
+    // Validate booking ID
     if (idToUse.isEmpty) {
       Get.snackbar("Error", "No booking ID found",
           backgroundColor: Colors.red, colorText: Colors.white);
       return;
     }
 
+    // Validate completion date
     if (completionDateController.text.isEmpty) {
       Get.snackbar("Warning", "Please select completion date");
       return;
     }
 
-    if (durationTimeController.text.isEmpty) {
-      Get.snackbar("Warning", "Please enter duration time");
+    // Validate duration (must be non-empty and numeric)
+    final durationText = durationTimeController.text.trim();
+    if (durationText.isEmpty) {
+      Get.snackbar("Warning", "Duration is required. Please select a valid completion date.");
       return;
     }
 
-    final duration = double.tryParse(durationTimeController.text);
-    if (duration == null) {
-      Get.snackbar("Warning", "Please enter a valid number for duration");
+    final duration = double.tryParse(durationText);
+    if (duration == null || duration <= 0) {
+      Get.snackbar("Warning", "Please enter a valid duration (must be > 0).");
       return;
     }
+
+    // Ensure completionDate is in ISO 8601 format (UTC)
+    // Your current completionDateController.text is in "MM-dd-yyyy"
+    // So we need to convert it to "yyyy-MM-ddT00:00:00Z"
+
+    DateTime? selectedDate;
+    try {
+      // Parse the displayed date (e.g., "12-04-2025")
+      selectedDate = DateFormat('MM-dd-yyyy').parseStrict(completionDateController.text);
+    } catch (e) {
+      Get.snackbar("Error", "Invalid date format");
+      return;
+    }
+
+    // Convert to ISO UTC midnight (as per your example: "2025-12-04T00:00:00Z")
+    final completionDateIso = '${selectedDate.toUtc().toIso8601String().split('T')[0]}T00:00:00Z';
 
     isPaymentRequestLoading.value = true;
 
     try {
       final token = await SecureStorageService().read(AppConstants.accessToken);
       if (token == null || token.isEmpty) {
-        Get.snackbar("Error", "Session expired. Please log in again.",
+        Get.snackbar("Auth Error", "Session expired. Please log in again.",
             backgroundColor: Colors.red, colorText: Colors.white);
         return;
       }
 
-      final workCompletionBody = {
-        'serviceBookingId': idToUse,
-        'completionDate': completionDateController.text,
-        'durationTime': durationTimeController.text,
-        'status': 'completed',
+      final body = {
+        'completionDate': completionDateIso,
+        'duration': duration.toInt().toString(), // API expects string "10", not number
       };
 
-      log("Submitting work completion data: $workCompletionBody");
+      log("📤 Requesting payment with body: $body");
 
-      final response = await _networkCaller.postRequest(
-        AppUrl.workCompletedDetailsApi(bookingId as String),
-        body: workCompletionBody,
+      final response = await _networkCaller.putRequest(
+        AppUrl.providerRequestPayment(idToUse),
+        body: body,
         headers: {'Authorization': 'Bearer $token'},
       );
 
@@ -984,20 +1001,23 @@ class SvpSubmitWorkFormScreenController extends GetxController {
         await Future.delayed(Duration(seconds: 2));
         Get.back(result: true);
       } else {
-        final errorMsg = response.errorMessage ?? "Failed to submit payment request";
+        String errorMsg = response.errorMessage ?? "Failed to submit payment request";
+        if (response.jsonResponse?['message'] != null) {
+          errorMsg = response.jsonResponse!['message'].toString();
+        }
         Get.snackbar("Error", errorMsg,
             backgroundColor: Colors.red, colorText: Colors.white);
       }
     } catch (e, stackTrace) {
-      log("❌ Submission error: $e", error: e, stackTrace: stackTrace);
-      Get.snackbar("Error", "Failed to submit: $e",
+      log("❌ Payment request error: $e", error: e, stackTrace: stackTrace);
+      Get.snackbar("Error", "Failed to submit: ${e.toString()}",
           backgroundColor: Colors.red, colorText: Colors.white);
     } finally {
       isPaymentRequestLoading.value = false;
     }
   }
 
-  // ================== LIFECYCLE ==================
+  /// ================== LIFECYCLE ==================
 
   @override
   void onClose() {

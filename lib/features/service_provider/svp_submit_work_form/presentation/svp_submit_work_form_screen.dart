@@ -113,7 +113,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                         borderRadius: BorderRadius.circular(12.r),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
+                            color: Colors.black.withValues(alpha: 0.3),
                             blurRadius: 20,
                             spreadRadius: 5,
                           ),
@@ -174,7 +174,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
           ],
         ),
       ),
-      barrierColor: Colors.black.withOpacity(0.7),
+      barrierColor: Colors.black.withValues(alpha: 0.7),
     );
   }
 
@@ -220,7 +220,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    errorMessage ?? 'Unknown error',
+                    errorMessage,
                     style: TextStyle(color: Colors.grey),
                     textAlign: TextAlign.center,
                   ),
@@ -905,7 +905,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                             ),
                                             child: isVideo
                                                 ? Container(
-                                              color: Colors.black.withOpacity(0.8),
+                                              color: Colors.black.withValues(alpha: 0.8),
                                               child: Center(
                                                 child: Column(
                                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -943,7 +943,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                             child: Container(
                                               padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
                                               decoration: BoxDecoration(
-                                                color: Colors.black.withOpacity(0.6),
+                                                color: Colors.black.withValues(alpha: 0.6),
                                                 borderRadius: BorderRadius.circular(4.r),
                                               ),
                                               child: Row(
