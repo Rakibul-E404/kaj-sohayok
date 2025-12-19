@@ -738,36 +738,98 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   ),
                   UIHelper.verticalSpace(16.h),
 
-                  /// Section: Completion Date
-                  InkWell(
-                    onTap: () async {
-                      final DateTime? picked = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2100),
-                      );
-                      if (picked != null) {
-                        final formatted = DateFormat('MM-dd-yyyy').format(picked);
-                        controller.completionDateController.text = formatted;
-                      }
-                    },
-                    child: MoreInfoWidgetTile(
-                      title: "Completion Date",
-                      hintText: "Select Date",
-                      isEnabled: false,
-                      controller: controller.completionDateController,
-                    ),
+                  /// Section: Completion Date with auto-duration calculation
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InkWell(
+                        onTap: () async {
+                          final DateTime? picked = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2100),
+                            selectableDayPredicate: (DateTime date) {
+                              // Optional: You can add custom logic here
+                              return true;
+                            },
+                          );
+                          if (picked != null) {
+                            // Use controller's method to handle date selection and auto-calculate duration
+                            controller.onCompletionDateSelected(picked);
+                          }
+                        },
+                        child: MoreInfoWidgetTile(
+                          title: "Completion Date",
+                          hintText: "Select Date",
+                          isEnabled: false,
+                          controller: controller.completionDateController,
+                        ),
+                      ),
+                      if (controller.bookingDate.value != null)
+                        Padding(
+                          padding: EdgeInsets.only(top: 4.h, left: 4.w),
+                          child: Text(
+                            "Booking date: ${DateFormat('MMM dd, yyyy').format(controller.bookingDate.value!)}",
+                            style: TextStyle(
+                              fontSize: 11.sp,
+                              color: Colors.grey.shade600,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                   UIHelper.verticalSpace(16.h),
 
-                  /// Section: Duration Time
-                  MoreInfoWidgetTile(
-                    title: "Duration Time",
-                    hintText: "Type Day's In Numbers",
-                    keyboardType: TextInputType.number,
-                    controller: controller.durationTimeController,
-                  ),
+                  /// Section: Duration Time (Auto-calculated)
+                  /// Section: Duration Time (Auto-calculated)
+                  Obx(() {
+                    return Row(
+                      children: [
+                        Expanded(
+                          child: MoreInfoWidgetTile(
+                            title: "Duration Time",
+                            hintText: controller.isDateSelected.value
+                                ? "Auto-calculated duration"
+                                : "Will be calculated automatically",
+                            keyboardType: TextInputType.number,
+                            controller: controller.durationTimeController,
+                            isEnabled: false, // Make it read-only
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        // Show recalculate button when date is selected
+                        if (controller.isDateSelected.value && controller.durationTimeController.text.isNotEmpty)
+                          IconButton(
+                            icon: Icon(Icons.calculate, color: AppColors.c000e08),
+                            onPressed: controller.recalculateDuration,
+                            tooltip: "Recalculate duration",
+                          ),
+                        // Show clear button INSTANTLY when date is selected
+                        if (controller.isDateSelected.value)
+                          IconButton(
+                            icon: Icon(Icons.clear, color: Colors.red),
+                            onPressed: () {
+                              controller.clearDateAndDuration();
+                            },
+                            tooltip: "Clear date and duration",
+                          ),
+                      ],
+                    );
+                  }),
+                  if (controller.durationTimeController.text.isNotEmpty)
+                    Padding(
+                      padding: EdgeInsets.only(top: 4.h, left: 4.w),
+                      child: Text(
+                        "Calculated based on selected completion date",
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          color: Colors.green.shade600,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ),
                   UIHelper.verticalSpace(24.h),
 
                   /// Section: Existing API Attachments
@@ -1352,13 +1414,13 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
     }
 
     if (controller.durationTimeController.text.isEmpty) {
-      Get.snackbar("Warning", "Please enter duration time");
+      Get.snackbar("Warning", "Duration time is not calculated. Please select completion date.");
       return;
     }
 
     final duration = double.tryParse(controller.durationTimeController.text);
     if (duration == null) {
-      Get.snackbar("Warning", "Please enter a valid number for duration");
+      Get.snackbar("Warning", "Please select completion date to calculate duration");
       return;
     }
 
@@ -1443,37 +1505,33 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
 
   Widget _buildDetailRow(String label, String value, {bool isBold = false}) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 2.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 2,
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 13.sp,
-                color: Colors.grey.shade700,
+        padding: EdgeInsets.symmetric(vertical: 2.h),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  color: Colors.grey.shade700,
+                ),
               ),
             ),
-          ),
-          Expanded(
-            flex: 3,
-            child: Text(
-              value,
-              style: TextStyle(
-                fontSize: 13.sp,
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                color: Colors.black,
+            Expanded(
+              flex: 3,
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                  color: Colors.black,
+                ),
               ),
             ),
-          ),
-        ],
-      ),
+          ],
+        )
     );
   }
 }
-
-
-
-
