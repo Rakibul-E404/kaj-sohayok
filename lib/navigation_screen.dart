@@ -203,6 +203,7 @@ class NavigationScreen extends StatefulWidget {
 
 class _NavigationScreenState extends State<NavigationScreen>
     with TickerProviderStateMixin {
+
   int _selectedIndex = 0;
   late PageController _pageController;
   late AnimationController _backgroundAnimationController;

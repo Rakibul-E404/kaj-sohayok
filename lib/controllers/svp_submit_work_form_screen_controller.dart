@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:kaz_bd/features/service_provider/svp_bookings/sub_presentation/svp_bookings_in_progress/controller/svp_bookings_in_prgress_tab_controller.dart';
 import 'package:mime/mime.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
 import '../features/normal_user/work_completed_details/model/additional_cost_model.dart';
-import '../features/service_provider/svp_bookings/presentation/svp_bookings_screen.dart';
 import '../features/service_provider/svp_submit_work_form/model/media_file.dart';
 import '../service/network_caller.dart';
 import '../service/network_response.dart';
@@ -68,7 +68,8 @@ class SvpSubmitWorkFormScreenController extends GetxController {
         _parseFormData(args['formData']);
       } else if (args['serviceBooking'] != null) {
         log("📝 Parsing service booking data...");
-        _parseServiceBookingData(args['serviceBooking'], args['additionalCosts']);
+        _parseServiceBookingData(
+            args['serviceBooking'], args['additionalCosts']);
       } else if (bookingId.value.isNotEmpty) {
         log("📡 Loading work details from API...");
         loadWorkDetails();
@@ -127,7 +128,8 @@ class SvpSubmitWorkFormScreenController extends GetxController {
     }
   }
 
-  void _parseServiceBookingData(dynamic serviceBookingData, dynamic additionalCostsData) {
+  void _parseServiceBookingData(
+      dynamic serviceBookingData, dynamic additionalCostsData) {
     try {
       if (serviceBookingData == null) {
         Get.snackbar("Error", "No service booking data found",
@@ -146,18 +148,21 @@ class SvpSubmitWorkFormScreenController extends GetxController {
       // Booking date time - store as DateTime object
       if (serviceBookingData['bookingDateTime'] != null) {
         try {
-          final bookingDateString = serviceBookingData['bookingDateTime'].toString();
+          final bookingDateString =
+              serviceBookingData['bookingDateTime'].toString();
           bookingDate.value = DateTime.parse(bookingDateString);
 
           // Format for display
           final parsedDate = bookingDate.value!;
-          bookingDateTime.value = '${parsedDate.day}-${parsedDate.month}-${parsedDate.year} ${parsedDate.hour}:${parsedDate.minute}';
+          bookingDateTime.value =
+              '${parsedDate.day}-${parsedDate.month}-${parsedDate.year} ${parsedDate.hour}:${parsedDate.minute}';
 
           log("📅 Booking date stored: ${bookingDate.value}");
           log("📅 Booking date display: ${bookingDateTime.value}");
         } catch (e) {
           log("❌ Error parsing booking date: $e");
-          bookingDateTime.value = serviceBookingData['bookingDateTime'].toString();
+          bookingDateTime.value =
+              serviceBookingData['bookingDateTime'].toString();
           bookingDate.value = null;
         }
       } else {
@@ -166,7 +171,9 @@ class SvpSubmitWorkFormScreenController extends GetxController {
       }
 
       // Initial cost
-      initialCost.value = double.tryParse(serviceBookingData['startPrice']?.toString() ?? '0') ?? 0.0;
+      initialCost.value = double.tryParse(
+              serviceBookingData['startPrice']?.toString() ?? '0') ??
+          0.0;
 
       // Attachments
       apiAttachments.clear();
@@ -177,7 +184,8 @@ class SvpSubmitWorkFormScreenController extends GetxController {
           if (attachment is Map<String, dynamic>) {
             final url = attachment['attachment']?.toString() ?? '';
             final type = attachment['attachmentType']?.toString() ?? 'image';
-            final id = attachment['_attachmentId']?.toString() ?? 'attachment_$i';
+            final id =
+                attachment['_attachmentId']?.toString() ?? 'attachment_$i';
 
             // Check if it's a video
             bool isVideo = false;
@@ -192,10 +200,7 @@ class SvpSubmitWorkFormScreenController extends GetxController {
 
             if (url.isNotEmpty) {
               apiAttachments.add(ApiAttachment(
-                  url: url,
-                  type: isVideo ? 'video' : 'image',
-                  id: id
-              ));
+                  url: url, type: isVideo ? 'video' : 'image', id: id));
             }
           }
         }
@@ -214,8 +219,10 @@ class SvpSubmitWorkFormScreenController extends GetxController {
               costName = rawName.toString();
             }
 
-            final costPrice = double.tryParse(cost['price']?.toString() ?? '0') ?? 0.0;
-            additionalCosts.add(AdditionalCostModel(title: costName, price: costPrice));
+            final costPrice =
+                double.tryParse(cost['price']?.toString() ?? '0') ?? 0.0;
+            additionalCosts
+                .add(AdditionalCostModel(title: costName, price: costPrice));
           }
         }
       }
@@ -283,8 +290,10 @@ class SvpSubmitWorkFormScreenController extends GetxController {
 
     // Check if completion date is after booking date
     if (selectedDate.isBefore(bookingDate.value!)) {
-      final bookingDateFormatted = DateFormat('MMM dd, yyyy').format(bookingDate.value!);
-      final selectedDateFormatted = DateFormat('MMM dd, yyyy').format(selectedDate);
+      final bookingDateFormatted =
+          DateFormat('MMM dd, yyyy').format(bookingDate.value!);
+      final selectedDateFormatted =
+          DateFormat('MMM dd, yyyy').format(selectedDate);
 
       Get.snackbar(
         "Invalid Date",
@@ -366,20 +375,17 @@ class SvpSubmitWorkFormScreenController extends GetxController {
     }
   }
 
-
-
-
-
-
-
   Future<void> loadWorkDetails() async {
     // Use the stored booking ID if the observable is empty
-    String idToUse = bookingId.value.isNotEmpty ? bookingId.value : _storedBookingId;
+    String idToUse =
+        bookingId.value.isNotEmpty ? bookingId.value : _storedBookingId;
 
     if (idToUse.isEmpty) {
       log("❌ No booking ID available for loading work details");
       Get.snackbar("Info", "Booking information not found",
-          backgroundColor: Colors.orange, colorText: Colors.white, duration: Duration(seconds: 2));
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+          duration: Duration(seconds: 2));
       return;
     }
 
@@ -398,7 +404,9 @@ class SvpSubmitWorkFormScreenController extends GetxController {
       if (token == null || token.isEmpty) {
         log("❌ No auth token found for API call");
         Get.snackbar("Error", "Session expired. Please log in again.",
-            backgroundColor: Colors.red, colorText: Colors.white, duration: Duration(seconds: 2));
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            duration: Duration(seconds: 2));
         isLoadingWorkDetails.value = false;
         return;
       }
@@ -446,23 +454,25 @@ class SvpSubmitWorkFormScreenController extends GetxController {
             log("✅ Work details loaded successfully from API");
 
             // Show success message
-            Get.snackbar(
-                "Success",
-                "Work details refreshed",
+            Get.snackbar("Success", "Work details refreshed",
                 backgroundColor: Colors.green,
                 colorText: Colors.white,
-                duration: Duration(seconds: 1)
-            );
+                duration: Duration(seconds: 1));
           } else {
             log("⚠️ No serviceBooking data in API response");
             Get.snackbar("Info", "No work details found in API response",
-                backgroundColor: Colors.orange, colorText: Colors.white, duration: Duration(seconds: 2));
+                backgroundColor: Colors.orange,
+                colorText: Colors.white,
+                duration: Duration(seconds: 2));
           }
         } else {
-          final errorMessage = responseData['message']?.toString() ?? "Unexpected response format";
+          final errorMessage = responseData['message']?.toString() ??
+              "Unexpected response format";
           log("⚠️ API Error in response data: $errorMessage");
           Get.snackbar("Info", errorMessage,
-              backgroundColor: Colors.orange, colorText: Colors.white, duration: Duration(seconds: 2));
+              backgroundColor: Colors.orange,
+              colorText: Colors.white,
+              duration: Duration(seconds: 2));
         }
       } else {
         log("❌ API Request Failed");
@@ -472,13 +482,19 @@ class SvpSubmitWorkFormScreenController extends GetxController {
         // Handle specific error codes
         if (response.statusCode == 401) {
           Get.snackbar("Session Expired", "Please log in again",
-              backgroundColor: Colors.red, colorText: Colors.white, duration: Duration(seconds: 3));
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+              duration: Duration(seconds: 3));
         } else if (response.statusCode == 404) {
           Get.snackbar("Not Found", "Booking details not found",
-              backgroundColor: Colors.orange, colorText: Colors.white, duration: Duration(seconds: 2));
+              backgroundColor: Colors.orange,
+              colorText: Colors.white,
+              duration: Duration(seconds: 2));
         } else {
           Get.snackbar("Error", "Could not refresh data. Please try again.",
-              backgroundColor: Colors.red, colorText: Colors.white, duration: Duration(seconds: 2));
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+              duration: Duration(seconds: 2));
         }
       }
     } catch (e, stackTrace) {
@@ -487,13 +503,19 @@ class SvpSubmitWorkFormScreenController extends GetxController {
       // Handle specific exceptions
       if (e is SocketException) {
         Get.snackbar("No Internet", "Please check your connection",
-            backgroundColor: Colors.red, colorText: Colors.white, duration: Duration(seconds: 2));
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            duration: Duration(seconds: 2));
       } else if (e is TimeoutException) {
         Get.snackbar("Timeout", "Request took too long. Please try again.",
-            backgroundColor: Colors.orange, colorText: Colors.white, duration: Duration(seconds: 2));
+            backgroundColor: Colors.orange,
+            colorText: Colors.white,
+            duration: Duration(seconds: 2));
       } else {
         Get.snackbar("Error", "Network error. Please try again.",
-            backgroundColor: Colors.red, colorText: Colors.white, duration: Duration(seconds: 2));
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+            duration: Duration(seconds: 2));
       }
     } finally {
       isLoadingWorkDetails.value = false;
@@ -523,16 +545,6 @@ class SvpSubmitWorkFormScreenController extends GetxController {
         fileName.endsWith('.flv');
   }
 
-  // Helper function to check if file is image
-  bool _isImageFile(String path) {
-    final fileName = path.toLowerCase();
-    return fileName.endsWith('.jpg') ||
-        fileName.endsWith('.jpeg') ||
-        fileName.endsWith('.png') ||
-        fileName.endsWith('.gif') ||
-        fileName.endsWith('.bmp');
-  }
-
   Future<void> pickMediaFromGallery() async {
     try {
       // Use pickMultipleMedia to get both images and videos
@@ -560,7 +572,10 @@ class SvpSubmitWorkFormScreenController extends GetxController {
   Future<void> pickPhotoFromCamera() async {
     try {
       final XFile? image = await _picker.pickImage(
-        source: ImageSource.camera, maxWidth: 1024, maxHeight: 1024, imageQuality: 85,
+        source: ImageSource.camera,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 85,
       );
       if (image != null) {
         mediaFiles.add(MediaFile(path: image.path, isVideo: false));
@@ -576,7 +591,8 @@ class SvpSubmitWorkFormScreenController extends GetxController {
   Future<void> pickVideoFromCamera() async {
     try {
       final XFile? video = await _picker.pickVideo(
-        source: ImageSource.camera, maxDuration: Duration(minutes: 10),
+        source: ImageSource.camera,
+        maxDuration: Duration(minutes: 10),
       );
       if (video != null) {
         mediaFiles.add(MediaFile(path: video.path, isVideo: true));
@@ -595,11 +611,13 @@ class SvpSubmitWorkFormScreenController extends GetxController {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Container(
           padding: EdgeInsets.all(16),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(10)),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Add Proof Files", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+              Text("Add Proof Files",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
               SizedBox(height: 16),
               ListTile(
                 leading: Icon(Icons.camera_alt, color: Colors.blue),
@@ -632,9 +650,14 @@ class SvpSubmitWorkFormScreenController extends GetxController {
                 style: TextStyle(fontSize: 12, color: Colors.grey),
               ),
               SizedBox(height: 16),
-              TextButton(
-                  onPressed: Get.back,
-                  child: Text("Cancel", style: TextStyle(color: Colors.red))
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                      onPressed: Get.back,
+                      child:
+                          Text("Cancel", style: TextStyle(color: Colors.red))),
+                ],
               ),
             ],
           ),
@@ -693,20 +716,19 @@ class SvpSubmitWorkFormScreenController extends GetxController {
 
   int get totalImageCount =>
       mediaFiles.where((file) => !file.isVideo).length +
-          apiAttachments.where((attachment) => attachment.type != 'video').length;
+      apiAttachments.where((attachment) => attachment.type != 'video').length;
 
   int get videoCount =>
       mediaFiles.where((file) => file.isVideo).length +
-          apiAttachments.where((attachment) => attachment.type == 'video').length;
+      apiAttachments.where((attachment) => attachment.type == 'video').length;
 
   int get totalMediaCount => mediaFiles.length + apiAttachments.length;
 
-
-
-
   final Map<String, VideoPlayerController> _thumbnailControllers = {};
+
   // 🆕 Initialize video controller for thumbnail
-  Future<VideoPlayerController?> initializeVideoThumbnail(String videoUrl) async {
+  Future<VideoPlayerController?> initializeVideoThumbnail(
+      String videoUrl) async {
     try {
       // Check if controller already exists
       if (_thumbnailControllers.containsKey(videoUrl)) {
@@ -862,7 +884,8 @@ class SvpSubmitWorkFormScreenController extends GetxController {
 
         String errorMessage = 'Upload failed';
         try {
-          final jsonResponse = json.decode(response.body) as Map<String, dynamic>;
+          final jsonResponse =
+              json.decode(response.body) as Map<String, dynamic>;
           errorMessage = jsonResponse['message']?.toString() ??
               jsonResponse['error']?.toString() ??
               'Upload failed';
@@ -878,7 +901,8 @@ class SvpSubmitWorkFormScreenController extends GetxController {
           return NetworkResponse(
             isSuccess: false,
             statusCode: response.statusCode,
-            errorMessage: response.body.isNotEmpty ? response.body : errorMessage,
+            errorMessage:
+                response.body.isNotEmpty ? response.body : errorMessage,
           );
         }
       }
@@ -904,7 +928,8 @@ class SvpSubmitWorkFormScreenController extends GetxController {
   }
 
   Future<bool> addAdditionalCost(String name, double price) async {
-    String idToUse = bookingId.value.isNotEmpty ? bookingId.value : _storedBookingId;
+    String idToUse =
+        bookingId.value.isNotEmpty ? bookingId.value : _storedBookingId;
 
     if (idToUse.isEmpty) {
       Get.snackbar("Error", "No booking ID found",
@@ -944,7 +969,8 @@ class SvpSubmitWorkFormScreenController extends GetxController {
         return true;
       } else {
         String errorMsg = response.errorMessage ?? "Failed to add cost";
-        if (response.jsonResponse != null && response.jsonResponse!['message'] != null) {
+        if (response.jsonResponse != null &&
+            response.jsonResponse!['message'] != null) {
           errorMsg = response.jsonResponse!['message'].toString();
         }
 
@@ -970,7 +996,8 @@ class SvpSubmitWorkFormScreenController extends GetxController {
   /// ================== SUBMISSION LOGIC ==================
 
   Future<void> requestPayment() async {
-    String idToUse = bookingId.value.isNotEmpty ? bookingId.value : _storedBookingId;
+    String idToUse =
+        bookingId.value.isNotEmpty ? bookingId.value : _storedBookingId;
 
     // Validate booking ID
     if (idToUse.isEmpty) {
@@ -988,7 +1015,8 @@ class SvpSubmitWorkFormScreenController extends GetxController {
     // Validate duration (must be non-empty and numeric)
     final durationText = durationTimeController.text.trim();
     if (durationText.isEmpty) {
-      Get.snackbar("Warning", "Duration is required. Please select a valid completion date.");
+      Get.snackbar("Warning",
+          "Duration is required. Please select a valid completion date.");
       return;
     }
 
@@ -999,20 +1027,19 @@ class SvpSubmitWorkFormScreenController extends GetxController {
     }
 
     // Ensure completionDate is in ISO 8601 format (UTC)
-    // Your current completionDateController.text is in "MM-dd-yyyy"
-    // So we need to convert it to "yyyy-MM-ddT00:00:00Z"
-
     DateTime? selectedDate;
     try {
       // Parse the displayed date (e.g., "12-04-2025")
-      selectedDate = DateFormat('MM-dd-yyyy').parseStrict(completionDateController.text);
+      selectedDate =
+          DateFormat('MM-dd-yyyy').parseStrict(completionDateController.text);
     } catch (e) {
       Get.snackbar("Error", "Invalid date format");
       return;
     }
 
     // Convert to ISO UTC midnight (as per your example: "2025-12-04T00:00:00Z")
-    final completionDateIso = '${selectedDate.toUtc().toIso8601String().split('T')[0]}T00:00:00Z';
+    final completionDateIso =
+        '${selectedDate.toUtc().toIso8601String().split('T')[0]}T00:00:00Z';
 
     isPaymentRequestLoading.value = true;
 
@@ -1026,7 +1053,8 @@ class SvpSubmitWorkFormScreenController extends GetxController {
 
       final body = {
         'completionDate': completionDateIso,
-        'duration': duration.toInt().toString(), // API expects string "10", not number
+        'duration': duration.toInt().toString(),
+        // API expects string "10", not number
       };
 
       log("📤 Requesting payment with body: $body");
@@ -1038,6 +1066,10 @@ class SvpSubmitWorkFormScreenController extends GetxController {
       );
 
       if (response.isSuccess) {
+        await Future.delayed(Duration(milliseconds: 500)); // Let snackbar show
+
+        Get.back();
+        Get.back();
         Get.snackbar(
           "Success",
           "Payment request submitted successfully!",
@@ -1045,15 +1077,11 @@ class SvpSubmitWorkFormScreenController extends GetxController {
           colorText: Colors.white,
           duration: Duration(seconds: 2),
         );
+        Get.find<SvpBookingsInProgressController>().fetchInProgressBookings();
 
-        // Navigate directly to SvpBookingsScreen and pass initial tab index
-        Get.offAll(
-              () => SvpBookingsScreen(),
-          arguments: {'initialTabIndex': 2},
-        );
-      }
-      else {
-        String errorMsg = response.errorMessage ?? "Failed to submit payment request";
+      } else {
+        String errorMsg =
+            response.errorMessage ?? "Failed to submit payment request";
         if (response.jsonResponse?['message'] != null) {
           errorMsg = response.jsonResponse!['message'].toString();
         }

@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
@@ -506,6 +507,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
         fileName.endsWith('.gif');
   }
 
+
   Future<void> _uploadMediaFiles() async {
     // Get booking ID from controller
     String bookingIdToUse = controller.bookingId.value.isNotEmpty
@@ -529,7 +531,6 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
         backgroundColor: Colors.blue,
         colorText: Colors.white,
       );
-      isMediaCompleted.value = true;
       return;
     }
 
@@ -558,7 +559,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
 
       // Call the method that handles multiple files
       final response = await controller.uploadMultipleMediaFiles(
-        bookingId: bookingIdToUse, // Use the stored booking ID
+        bookingId: bookingIdToUse,
         files: fileObjects,
       );
 
@@ -567,9 +568,6 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
 
         // ✅ Clear media files after successful upload
         controller.clearMediaFilesAfterUpload();
-
-        // ✅ Show success state
-        _showUploadSuccessState();
 
         Get.snackbar(
           "Success",
@@ -601,10 +599,6 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
     }
   }
 
-  // Function to show upload success state
-  void _showUploadSuccessState() {
-    // You can add any success UI here if needed
-  }
 
   // ✅ FIXED: Refresh handler that properly hits the GET API
   Future<void> _handleRefresh() async {
@@ -1092,86 +1086,94 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                     ),
                                     UIHelper.verticalSpace(16.h),
                                   ],
-                                )
-                              else if (isMediaCompleted.value)
-                              // Show success state when files are uploaded
-                                Container(
-                                  padding: EdgeInsets.symmetric(vertical: 20.h),
-                                  child: Column(
-                                    children: [
-                                      Icon(
-                                        Icons.check_circle,
-                                        color: Colors.green,
-                                        size: 48.h,
-                                      ),
-                                      SizedBox(height: 12.h),
-                                      Text(
-                                        "Files uploaded successfully!",
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.green,
-                                        ),
-                                      ),
-                                      SizedBox(height: 8.h),
-                                      Text(
-                                        "All files have been uploaded to the server.",
-                                        style: TextStyle(
-                                          fontSize: 12.sp,
-                                          color: Colors.grey.shade600,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      UIHelper.verticalSpace(16.h),
-                                      CustomElevatedButton(
-                                        onTap: () {
-                                          // Allow adding more files
-                                          isMediaCompleted.value = false;
-                                        },
-                                        buttonWidth: 160.w,
-                                        buttonHeight: 36.h,
-                                        buttonTitle: "Add More Files",
-                                      ),
-                                    ],
-                                  ),
                                 ),
 
-                              // Add files button (only show if no files and not in success state)
-                              if (controller.mediaFiles.isEmpty && !isMediaCompleted.value)
-                                Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: AppColors.ce6e6e6,
-                                      width: 1.5,
-                                      style: BorderStyle.solid,
-                                    ),
-                                    borderRadius: BorderRadius.circular(12.r),
+                              // ALWAYS show "Add New Files" button regardless of media state
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: AppColors.ce6e6e6,
+                                    width: 1.5,
+                                    style: BorderStyle.solid,
                                   ),
-                                  child: InkWell(
-                                    onTap: () {
-                                      log("Browse Button Tapped");
-                                      controller.showMediaSourceDialog();
-                                    },
-                                    borderRadius: BorderRadius.circular(12.r),
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
+                                  borderRadius: BorderRadius.circular(12.r),
+                                ),
+                                child: InkWell(
+                                  onTap: () {
+                                    log("Browse Button Tapped");
+                                    controller.showMediaSourceDialog();
+                                  },
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.add,
+                                          color: AppColors.c000e08,
+                                          size: 20.h,
+                                        ),
+                                        UIHelper.horizontalSpace(10.w),
+                                        Text(
+                                          controller.mediaFiles.isEmpty ? "Add New Files" : "Add More Files",
+                                          style: TextFontStyle.headline12w700c000e08StyleSatoshi,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+                              // Show success state when files are uploaded and isMediaCompleted is true
+                              if (isMediaCompleted.value)
+                                Column(
+                                  children: [
+                                    UIHelper.verticalSpace(16.h),
+                                    Container(
+                                      padding: EdgeInsets.all(16.w),
+                                      decoration: BoxDecoration(
+                                        color: Colors.green.shade50,
+                                        borderRadius: BorderRadius.circular(12.r),
+                                        border: Border.all(color: Colors.green.shade100),
+                                      ),
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          Icon(
-                                            Icons.add,
-                                            color: AppColors.c000e08,
-                                            size: 20.h,
+                                          Icon(Icons.check_circle, color: Colors.green, size: 24.h),
+                                          SizedBox(width: 12.w),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "Files uploaded successfully!",
+                                                  style: TextStyle(
+                                                    fontSize: 14.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Colors.green,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 4.h),
+                                                Text(
+                                                  "All files have been uploaded to the server.",
+                                                  style: TextStyle(
+                                                    fontSize: 12.sp,
+                                                    color: Colors.grey.shade600,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                          UIHelper.horizontalSpace(10.w),
-                                          Text(
-                                            "Add New Files",
-                                            style: TextFontStyle.headline12w700c000e08StyleSatoshi,
+                                          IconButton(
+                                            icon: Icon(Icons.close, color: Colors.grey),
+                                            onPressed: () {
+                                              isMediaCompleted.value = false;
+                                            },
                                           ),
                                         ],
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ),
 
                               // File type hint
@@ -1190,6 +1192,10 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                       ],
                     );
                   }),
+
+
+
+
                   UIHelper.verticalSpace(16.h),
 
                   /// Section: Media Done Button
