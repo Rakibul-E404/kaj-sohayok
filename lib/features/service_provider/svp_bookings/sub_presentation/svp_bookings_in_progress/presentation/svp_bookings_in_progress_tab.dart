@@ -54,10 +54,10 @@ class SvpBookingsInProgressTab extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(color: AppColors.c000e08),
+                    // CircularProgressIndicator(color: AppColors.c000e08),
                     UIHelper.verticalSpace(16.h),
                     Text(
-                      'Loading in-progress bookings...',
+                      'Loading In-progress Bookings...',
                       style: TextFontStyle.headline10w400c6c606cStyleSatoshi,
                     ),
                   ],

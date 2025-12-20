@@ -326,7 +326,7 @@ class WorkCompletedTab extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircularProgressIndicator(),
+              // CircularProgressIndicator(),
               UIHelper.verticalSpace(16.h),
               Text(
                 'Loading work completed bookings...',

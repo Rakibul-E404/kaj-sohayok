@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
@@ -10,10 +9,10 @@ import 'package:http/http.dart' as http;
 import 'package:mime/mime.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:intl/intl.dart';
+import 'package:video_player/video_player.dart';
 import '../features/normal_user/work_completed_details/model/additional_cost_model.dart';
 import '../features/service_provider/svp_bookings/presentation/svp_bookings_screen.dart';
 import '../features/service_provider/svp_submit_work_form/model/media_file.dart';
-import '../routes/routes.dart';
 import '../service/network_caller.dart';
 import '../service/network_response.dart';
 import '../service/secured_storage.dart';
@@ -369,6 +368,10 @@ class SvpSubmitWorkFormScreenController extends GetxController {
 
 
 
+
+
+
+
   Future<void> loadWorkDetails() async {
     // Use the stored booking ID if the observable is empty
     String idToUse = bookingId.value.isNotEmpty ? bookingId.value : _storedBookingId;
@@ -698,7 +701,49 @@ class SvpSubmitWorkFormScreenController extends GetxController {
 
   int get totalMediaCount => mediaFiles.length + apiAttachments.length;
 
-  // ================== CUSTOM FILE UPLOAD USING HTTP DIRECTLY ==================
+
+
+
+  final Map<String, VideoPlayerController> _thumbnailControllers = {};
+  // 🆕 Initialize video controller for thumbnail
+  Future<VideoPlayerController?> initializeVideoThumbnail(String videoUrl) async {
+    try {
+      // Check if controller already exists
+      if (_thumbnailControllers.containsKey(videoUrl)) {
+        return _thumbnailControllers[videoUrl];
+      }
+
+      log("🎬 Initializing video thumbnail for: $videoUrl");
+
+      final controller = VideoPlayerController.networkUrl(Uri.parse(videoUrl));
+      await controller.initialize();
+      await controller.seekTo(Duration.zero); // Go to first frame
+
+      _thumbnailControllers[videoUrl] = controller;
+
+      log("✅ Video thumbnail initialized successfully");
+      return controller;
+    } catch (e) {
+      log("❌ Error initializing video thumbnail: $e");
+      return null;
+    }
+  }
+
+  // 🆕 Get video thumbnail controller
+  VideoPlayerController? getVideoThumbnailController(String videoUrl) {
+    return _thumbnailControllers[videoUrl];
+  }
+
+  // 🆕 Dispose specific video thumbnail
+  void disposeVideoThumbnail(String videoUrl) {
+    if (_thumbnailControllers.containsKey(videoUrl)) {
+      _thumbnailControllers[videoUrl]?.dispose();
+      _thumbnailControllers.remove(videoUrl);
+      log("🗑️ Video thumbnail disposed for: $videoUrl");
+    }
+  }
+
+  /// ================== CUSTOM FILE UPLOAD USING HTTP DIRECTLY ==================
 
   Future<NetworkResponse> uploadMultipleMediaFiles({
     required String bookingId,
@@ -848,7 +893,7 @@ class SvpSubmitWorkFormScreenController extends GetxController {
     }
   }
 
-  // ================== COST HANDLING ==================
+  /// ================== COST HANDLING ==================
 
   double calculateTotalPayment() {
     double total = initialCost.value;
@@ -1030,11 +1075,20 @@ class SvpSubmitWorkFormScreenController extends GetxController {
   void onClose() {
     completionDateController.dispose();
     durationTimeController.dispose();
+
+    // Dispose all media file video controllers
     for (var mediaFile in mediaFiles) {
       if (mediaFile.isVideo && mediaFile.videoController != null) {
         mediaFile.videoController!.dispose();
       }
     }
+
+    // 🆕 Dispose all thumbnail controllers
+    for (var controller in _thumbnailControllers.values) {
+      controller.dispose();
+    }
+    _thumbnailControllers.clear();
+
     super.onClose();
   }
 }

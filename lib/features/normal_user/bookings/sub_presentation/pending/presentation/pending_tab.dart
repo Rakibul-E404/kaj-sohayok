@@ -34,10 +34,10 @@ class _PendingTabState extends State<PendingTab> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(),
+                    // CircularProgressIndicator(),
                     UIHelper.verticalSpace(16.h),
                     Text(
-                      'loading_bookings'.tr,
+                      'Loading Bookings...'.tr,
                       style: TextStyle(fontSize: 16.sp, color: Colors.grey),
                     ),
                   ],

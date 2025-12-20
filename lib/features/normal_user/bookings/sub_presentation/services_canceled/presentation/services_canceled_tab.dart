@@ -29,10 +29,10 @@ class ServicesCanceledTab extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(),
+                    // CircularProgressIndicator(),
                     UIHelper.verticalSpace(16.h),
                     Text(
-                      'loading_canceled_booking'.tr,
+                      'Loading Canceled Bookings...'.tr,
                       style: TextStyle(fontSize: 16.sp, color: Colors.grey),
                     ),
                   ],

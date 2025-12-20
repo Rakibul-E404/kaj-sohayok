@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
@@ -764,6 +763,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                           hintText: "Select Date",
                           isEnabled: false,
                           controller: controller.completionDateController,
+                          suffixIcon: Icon(Icons.calendar_month),
                         ),
                       ),
                       if (controller.bookingDate.value != null)
@@ -782,7 +782,6 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   ),
                   UIHelper.verticalSpace(16.h),
 
-                  /// Section: Duration Time (Auto-calculated)
                   /// Section: Duration Time (Auto-calculated)
                   Obx(() {
                     return Row(
@@ -904,25 +903,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                               border: Border.all(color: Colors.grey.shade300),
                                             ),
                                             child: isVideo
-                                                ? Container(
-                                              color: Colors.black.withValues(alpha: 0.8),
-                                              child: Center(
-                                                child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    Icon(Icons.videocam, color: Colors.white, size: 24.h),
-                                                    SizedBox(height: 4.h),
-                                                    Text(
-                                                      'Video',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 10.sp,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            )
+                                                ? _buildVideoThumbnail(mediaUrl, index)  // 🆕 Use the new method
                                                 : ClipRRect(
                                               borderRadius: BorderRadius.circular(8.r),
                                               child: CachedNetworkImage(
@@ -936,6 +917,12 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                                 ),
                                               ),
                                             ),
+
+
+
+
+
+
                                           ),
                                           Positioned(
                                             bottom: 4,
@@ -1534,4 +1521,102 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
         )
     );
   }
+
+
+  // ADD THIS METHOD in your _SvpSubmitWorkFormScreenState class
+// (Add it after your existing _showLocalImageDialog method)
+
+  Widget _buildVideoThumbnail(String videoUrl, int index) {
+    return FutureBuilder<VideoPlayerController?>(
+      future: controller.initializeVideoThumbnail(videoUrl),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done &&
+            snapshot.hasData &&
+            snapshot.data != null &&
+            snapshot.data!.value.isInitialized) {
+          return Stack(
+            children: [
+              // Show video frame
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.r),
+                child: SizedBox(
+                  width: 80.w,
+                  height: 80.h,
+                  child: FittedBox(
+                    fit: BoxFit.cover,
+                    child: SizedBox(
+                      width: snapshot.data!.value.size.width,
+                      height: snapshot.data!.value.size.height,
+                      child: VideoPlayer(snapshot.data!),
+                    ),
+                  ),
+                ),
+              ),
+              // Play button overlay
+              Center(
+                child: Container(
+                  padding: EdgeInsets.all(8.w),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.6),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.play_arrow,
+                    color: Colors.white,
+                    size: 20.h,
+                  ),
+                ),
+              ),
+            ],
+          );
+        } else if (snapshot.hasError) {
+          // Error loading video - show fallback
+          return Container(
+            width: 80.w,
+            height: 80.h,
+            decoration: BoxDecoration(
+              color: Colors.black87,
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.videocam, color: Colors.white, size: 24.h),
+                  SizedBox(height: 4.h),
+                  Text(
+                    'Video',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10.sp,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else {
+          // Loading
+          return Container(
+            width: 80.w,
+            height: 80.h,
+            decoration: BoxDecoration(
+              color: Colors.black87,
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Colors.white,
+              ),
+            ),
+          );
+        }
+      },
+    );
+  }
+
 }
+
+
+

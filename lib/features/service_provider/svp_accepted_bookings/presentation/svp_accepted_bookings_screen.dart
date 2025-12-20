@@ -175,7 +175,7 @@ class SvpAcceptedBookingsScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircularProgressIndicator(color: AppColors.c000e08),
+              // CircularProgressIndicator(color: AppColors.c000e08),
               UIHelper.verticalSpace(16.h),
               Text(
                 'Loading accepted bookings...',

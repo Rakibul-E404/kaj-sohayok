@@ -30,10 +30,10 @@ class PaymentRequestTab extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(),
+                    // CircularProgressIndicator(),
                     UIHelper.verticalSpace(16.h),
                     Text(
-                      'loading_requested_bookings'.tr,
+                      'Loading Payment Request...'.tr,
                       style: TextStyle(fontSize: 16.sp, color: Colors.grey),
                     ),
                   ],
