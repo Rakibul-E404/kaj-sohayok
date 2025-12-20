@@ -13,6 +13,7 @@ import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
 import '../features/normal_user/work_completed_details/model/additional_cost_model.dart';
 import '../features/service_provider/svp_submit_work_form/model/media_file.dart';
+import '../gen/colors.gen.dart';
 import '../service/network_caller.dart';
 import '../service/network_response.dart';
 import '../service/secured_storage.dart';
@@ -605,59 +606,337 @@ class SvpSubmitWorkFormScreenController extends GetxController {
     }
   }
 
+  // void showMediaSourceDialog() {
+  //   Get.dialog(
+  //     Dialog(
+  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  //       child: Container(
+  //         padding: EdgeInsets.all(16),
+  //         decoration: BoxDecoration(
+  //             color: Colors.white, borderRadius: BorderRadius.circular(10)),
+  //         child: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             Text("Add Proof Files",
+  //                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+  //             SizedBox(height: 16),
+  //             ListTile(
+  //               leading: Icon(Icons.camera_alt, color: Colors.blue),
+  //               title: Text("Take Photo"),
+  //               onTap: () {
+  //                 Get.back();
+  //                 pickPhotoFromCamera();
+  //               },
+  //             ),
+  //             ListTile(
+  //               leading: Icon(Icons.videocam, color: Colors.red),
+  //               title: Text("Record Video"),
+  //               onTap: () {
+  //                 Get.back();
+  //                 pickVideoFromCamera();
+  //               },
+  //             ),
+  //             ListTile(
+  //               leading: Icon(Icons.photo_library, color: Colors.green),
+  //               title: Text("Choose from Gallery"),
+  //               subtitle: Text("Images & Videos"),
+  //               onTap: () {
+  //                 Get.back();
+  //                 pickMediaFromGallery();
+  //               },
+  //             ),
+  //             SizedBox(height: 8),
+  //             Text(
+  //               "Supported formats: JPG, PNG, MP4, MOV",
+  //               style: TextStyle(fontSize: 12, color: Colors.grey),
+  //             ),
+  //             SizedBox(height: 16),
+  //             Row(
+  //               mainAxisAlignment: MainAxisAlignment.end,
+  //               children: [
+  //                 TextButton(
+  //                     onPressed: Get.back,
+  //                     child:
+  //                         Text("Cancel", style: TextStyle(color: Colors.red))),
+  //               ],
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+
+
+
   void showMediaSourceDialog() {
     Get.dialog(
       Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
         child: Container(
-          padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(10)),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 25,
+                spreadRadius: 0,
+                offset: Offset(0, 10),
+              ),
+            ],
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text("Add Proof Files",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+              // Header with gradient
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 22, horizontal: 24),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [AppColors.ca4b1f2, AppColors.ca4b1f2],
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.attach_file, color: Colors.white, size: 22),
+                    ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        "Add Proof Files",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: 8),
+
+              // Media options
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4),
+                child: Column(
+                  children: [
+                    // Camera option
+                    _buildMediaOption(
+                      icon: Icons.camera_alt_rounded,
+                      iconColor: Color(0xFF6A11CB),
+                      iconBackground: Color(0xFFF0E7FF),
+                      title: "Take Photo",
+                      subtitle: "Use your camera",
+                      onTap: () {
+                        Get.back();
+                        pickPhotoFromCamera();
+                      },
+                    ),
+
+                    Divider(height: 0, thickness: 0.5, color: Colors.grey[200]),
+
+                    // Video option
+                    _buildMediaOption(
+                      icon: Icons.videocam_rounded,
+                      iconColor: Color(0xFFF44336),
+                      iconBackground: Color(0xFFFFEBEE),
+                      title: "Record Video",
+                      subtitle: "Record a new video",
+                      onTap: () {
+                        Get.back();
+                        pickVideoFromCamera();
+                      },
+                    ),
+
+                    Divider(height: 0, thickness: 0.5, color: Colors.grey[200]),
+
+                    // Gallery option
+                    _buildMediaOption(
+                      icon: Icons.photo_library_rounded,
+                      iconColor: Color(0xFF4CAF50),
+                      iconBackground: Color(0xFFE8F5E9),
+                      title: "Choose from Gallery",
+                      subtitle: "Images & Videos from device",
+                      onTap: () {
+                        Get.back();
+                        pickMediaFromGallery();
+                      },
+                      isHighlighted: true,
+                    ),
+                  ],
+                ),
+              ),
+
               SizedBox(height: 16),
-              ListTile(
-                leading: Icon(Icons.camera_alt, color: Colors.blue),
-                title: Text("Take Photo"),
-                onTap: () {
-                  Get.back();
-                  pickPhotoFromCamera();
-                },
+
+              // Supported formats note
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 24),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Color(0xFFF8F9FA),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey[200]!),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline_rounded,
+                        size: 18,
+                        color: Colors.blueGrey[600]),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        "JPG, PNG, MP4, MOV • Max file size: 100MB",
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.blueGrey[700],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              ListTile(
-                leading: Icon(Icons.videocam, color: Colors.red),
-                title: Text("Record Video"),
-                onTap: () {
-                  Get.back();
-                  pickVideoFromCamera();
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.photo_library, color: Colors.green),
-                title: Text("Choose from Gallery"),
-                subtitle: Text("Images & Videos"),
-                onTap: () {
-                  Get.back();
-                  pickMediaFromGallery();
-                },
+
+              SizedBox(height: 20),
+
+              // Cancel button
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: Get.back,
+                        style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          side: BorderSide(color: Colors.grey[300]!),
+                        ),
+                        child: Text(
+                          "Cancel",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               SizedBox(height: 8),
-              Text(
-                "Supported formats: JPG, PNG, MP4, MOV",
-                style: TextStyle(fontSize: 12, color: Colors.grey),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+// Helper widget for media options
+  Widget _buildMediaOption({
+    required IconData icon,
+    required Color iconColor,
+    required Color iconBackground,
+    required String title,
+    String? subtitle,
+    required VoidCallback onTap,
+    bool isHighlighted = false,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        splashColor: iconColor.withOpacity(0.1),
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            color: isHighlighted ? Color(0xFFF8F9FF) : Colors.transparent,
+          ),
+          child: Row(
+            children: [
+              // Icon container
+              Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: iconBackground,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: iconColor.withOpacity(0.2),
+                      blurRadius: 8,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  icon,
+                  color: iconColor,
+                  size: 24,
+                ),
               ),
-              SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                      onPressed: Get.back,
-                      child:
-                          Text("Cancel", style: TextStyle(color: Colors.red))),
-                ],
+
+              SizedBox(width: 18),
+
+              // Text content
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey[900],
+                      ),
+                    ),
+                    if (subtitle != null) ...[
+                      SizedBox(height: 4),
+                      Text(
+                        subtitle,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+
+              // Arrow indicator
+              Icon(
+                Icons.chevron_right_rounded,
+                color: Colors.grey[400],
+                size: 24,
               ),
             ],
           ),
@@ -665,6 +944,8 @@ class SvpSubmitWorkFormScreenController extends GetxController {
       ),
     );
   }
+
+
 
   Future<void> removeMediaFile(int index) async {
     if (index >= 0 && index < mediaFiles.length) {
