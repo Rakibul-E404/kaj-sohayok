@@ -1,22 +1,15 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
-import 'package:kaz_bd/custom_widgets/dotted_line_divider_widget.dart';
 import 'package:kaz_bd/features/service_provider/svp_profile/sub_presentation/svp_wallet/widget/payment_card_tile_widget.dart';
 import 'package:kaz_bd/features/service_provider/svp_profile/sub_presentation/svp_wallet/widget/transection_history_card.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/helpers/waiting_widget.dart';
-import 'package:kaz_bd/utilities/logger_util.dart';
 
 import '../../../../../controllers/svp_wallet_controller.dart';
-import '../../../../../gen/assets.gen.dart';
-import '../../../../../gen/colors.gen.dart';
 import '../../../../../models/service_wallet_transaction_model.dart';
 
 class SvpWalletTab extends StatelessWidget {
@@ -38,7 +31,7 @@ class SvpWalletTab extends StatelessWidget {
           children: [
             ///Section : Total Balance Card
             WalletCardTileWidget(
-              title: "Total Balance",
+              title: 'total_balance'.tr,
               amount:
                   "${svpWalletController.serviceWalletAccount.value?.totalBalance.toStringAsFixed(2)}",
             ),
@@ -47,7 +40,7 @@ class SvpWalletTab extends StatelessWidget {
             ///Section : Total Withdrawl Card
             WalletCardTileWidget(
               isWithdrawlCard: true,
-              title: "Total Withdrawal Balance",
+              title: 'total_withdrawl_balance'.tr,
               amount:
                   "${svpWalletController.serviceWalletAccount.value?.amount.toStringAsFixed(2)}",
             ),
@@ -58,15 +51,13 @@ class SvpWalletTab extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Transactions History",
+                  'transection_history'.tr,
                   style: TextFontStyle.headline18w700c202020StyleSatoshi,
                 ),
-
                 Obx(
                   () => Visibility(
                     visible: svpWalletController
-                        .serviceWalletTransactions
-                        .isNotEmpty,
+                        .serviceWalletTransactions.isNotEmpty,
                     replacement: SizedBox.shrink(),
                     child: InkWell(
                       onTap: () {
@@ -97,8 +88,7 @@ class SvpWalletTab extends StatelessWidget {
                                     shrinkWrap: true,
                                     // physics: const NeverScrollableScrollPhysics(),
                                     itemCount: svpWalletController
-                                        .serviceWalletTransactions
-                                        .length,
+                                        .serviceWalletTransactions.length,
                                     separatorBuilder: (_, __) =>
                                         SizedBox(height: 12),
                                     itemBuilder: (context, index) {
@@ -130,7 +120,7 @@ class SvpWalletTab extends StatelessWidget {
                         );
                       },
                       child: Text(
-                        "See all",
+                        'see_all'.tr,
                         style: TextFontStyle.headline10w400c6c606cStyleSatoshi
                             .copyWith(decoration: TextDecoration.underline),
                       ),
@@ -145,14 +135,14 @@ class SvpWalletTab extends StatelessWidget {
               () => Visibility(
                 visible:
                     svpWalletController.serviceWalletTransactions.isNotEmpty,
-                replacement: Text('No Transaction History Available '),
+                replacement: Text('${'no_transaction_history_available'.tr} '),
                 child: ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount:
                       svpWalletController.serviceWalletTransactions.length <= 2
-                      ? svpWalletController.serviceWalletTransactions.length
-                      : 2,
+                          ? svpWalletController.serviceWalletTransactions.length
+                          : 2,
                   separatorBuilder: (_, __) => SizedBox(height: 12),
                   itemBuilder: (context, index) {
                     final ServiceWalletTransactionModel item =
@@ -175,14 +165,14 @@ class SvpWalletTab extends StatelessWidget {
               () => Visibility(
                 visible:
                     svpWalletController.serviceWalletAccount.value?.amount !=
-                    0.0,
+                        0.0,
                 replacement: SizedBox.shrink(),
                 child: CustomElevatedButton(
                   onTap: () {
                     showWithdrawalBottomSheet(context);
                   },
                   borderRadius: 12.r,
-                  buttonTitle: "Withdraw Balance",
+                  buttonTitle: 'withdraw_balance'.tr,
                 ),
               ),
             ),
@@ -230,7 +220,7 @@ class SvpWalletTab extends StatelessWidget {
                     UIHelper.verticalSpace(16.h),
 
                     Text(
-                      "Please Provide Information For The Withdrawal",
+                      'provide_information_for_withdrawl'.tr,
                       style: TextFontStyle.headline18w700c202020StyleSatoshi,
                     ),
                     UIHelper.verticalSpace(24.h),
@@ -238,11 +228,11 @@ class SvpWalletTab extends StatelessWidget {
                     // Bank Name Field
                     _buildTextField(
                       controller: svpWalletController.bankNameController,
-                      label: "Bank Name",
+                      label: 'bank_name'.tr,
                       icon: Icons.account_balance,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter bank name';
+                          return 'please_enter_bank_name'.tr;
                         }
                         return null;
                       },
@@ -251,11 +241,11 @@ class SvpWalletTab extends StatelessWidget {
                     UIHelper.verticalSpace(16.h),
                     _buildTextField(
                       controller: svpWalletController.bankBranchController,
-                      label: "Bank Branch Name",
+                      label: 'bank_branch_name'.tr,
                       icon: Icons.account_balance,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter bank branch';
+                          return 'please_enter_bank_branch_name'.tr;
                         }
                         return null;
                       },
@@ -266,14 +256,14 @@ class SvpWalletTab extends StatelessWidget {
                     _buildTextField(
                       controller:
                           svpWalletController.bankRoutingNumberController,
-                      label: "Bank Routing Number",
+                      label: 'bank_routing_number'.tr,
                       icon: Icons.account_balance,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter bank account holder name';
+                          return 'please_enter_account_holder_number'.tr;
                         }
                         if (double.tryParse(value) == null) {
-                          return 'Please enter valid amount';
+                          return 'please_enter_valid_amount'.tr;
                         }
                         return null;
                       },
@@ -283,11 +273,11 @@ class SvpWalletTab extends StatelessWidget {
                     _buildTextField(
                       controller:
                           svpWalletController.accountHolderNameController,
-                      label: "Account Holder Name",
+                      label: 'account_holder_name'.tr,
                       icon: Icons.account_balance,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter  account holder name';
+                          return 'please_enter_account_holder_name'.tr;
                         }
                         return null;
                       },
@@ -300,16 +290,16 @@ class SvpWalletTab extends StatelessWidget {
                     DropdownButtonFormField<String>(
                       value:
                           svpWalletController.accountTypeController.text.isEmpty
-                          ? null
-                          : svpWalletController.accountTypeController.text,
+                              ? null
+                              : svpWalletController.accountTypeController.text,
                       items: [
                         DropdownMenuItem(
                           value: 'savings',
-                          child: Text('Savings'),
+                          child: Text('svings'.tr),
                         ),
                         DropdownMenuItem(
                           value: 'current',
-                          child: Text('Current'),
+                          child: Text('current'.tr),
                         ),
                       ],
                       onChanged: (String? newValue) {
@@ -320,12 +310,12 @@ class SvpWalletTab extends StatelessWidget {
                       },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please select account type';
+                          return 'please_select_account_type'.tr;
                         }
                         return null;
                       },
                       decoration: InputDecoration(
-                        labelText: "Account Type",
+                        labelText: 'account_type'.tr,
                         prefixIcon: Icon(Icons.person_outline),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.r),
@@ -337,12 +327,12 @@ class SvpWalletTab extends StatelessWidget {
                     // Account Number Field
                     _buildTextField(
                       controller: svpWalletController.accountNumberController,
-                      label: "Account Number",
+                      label: 'account_number'.tr,
                       icon: Icons.credit_card,
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter account number';
+                          return 'please_enter_account_number'.tr;
                         }
                         return null;
                       },
@@ -353,15 +343,15 @@ class SvpWalletTab extends StatelessWidget {
                     // Withdrawal Amount Field
                     _buildTextField(
                       controller: svpWalletController.amountController,
-                      label: "Withdrawal Amount",
+                      label: 'withdrawl_amount'.tr,
                       icon: Icons.attach_money,
                       keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter amount';
+                          return 'please_enter_amount'.tr;
                         }
                         if (double.tryParse(value) == null) {
-                          return 'Please enter valid amount';
+                          return 'please_enter_valid_amount'.tr;
                         }
                         return null;
                       },
@@ -376,8 +366,8 @@ class SvpWalletTab extends StatelessWidget {
                       },
                       borderRadius: 12.r,
                       buttonTitle: svpWalletController.loader.value
-                          ? 'Confirming'
-                          : "Confirm Withdrawal",
+                          ? 'confirming'.tr
+                          : 'confirming_withdrawl'.tr,
                     ),
 
                     UIHelper.verticalSpace(16.h),
