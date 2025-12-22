@@ -104,19 +104,19 @@ class SvpHomeScreen extends StatelessWidget {
 
                       final List<Map<String, Object>> jobTypes = [
                         {
-                          'title': 'Pending',
+                          'title': 'pending'.tr,
                           'totalJobs': stats?.totalRequests ?? 0,
                         },
                         {
-                          'title': 'Accepted',
+                          'title': 'accepted'.tr,
                           'totalJobs': stats?.accepted ?? 0
                         },
                         {
-                          'title': 'In Progress',
+                          'title': 'in_progress'.tr,
                           'totalJobs': stats?.inProgress ?? 0,
                         },
                         {
-                          'title': 'Completed',
+                          'title': 'completed'.tr,
                           'totalJobs': stats?.completed ?? 0,
                         },
                       ];
@@ -164,7 +164,7 @@ class SvpHomeScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Recent Job Request",
+                          'recent_job_request'.tr,
                           style:
                               TextFontStyle.headline18w700c202020StyleSatoshi,
                         ),
@@ -184,7 +184,7 @@ class SvpHomeScreen extends StatelessWidget {
                             text: TextSpan(
                               children: [
                                 TextSpan(
-                                  text: "Total ",
+                                  text: "${'total'.tr} ",
                                   style: TextFontStyle
                                       .headline14w500c4d4d4dStyleSatoshi,
                                 ),

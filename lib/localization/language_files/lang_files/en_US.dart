@@ -452,4 +452,36 @@ Map<String, String> englishLanguage = {
   'delete_message': 'Delete Message',
   'profile_view': 'Profile View',
   'write_your_message': 'Write your message',
+
+  ///Screen--------------->> Svp Home Screen
+  'total_income': 'Total Income',
+  'total': 'Total',
+  'no_chart_data_are_available': 'No chart data are available',
+  'recent_job_request': 'Recent Job Request',
+  'work_started': 'Work Started',
+  'start_work': 'Start Work',
+  'submit_work': 'Submit Work',
+  'accept': 'Accept',
+  'accepted': 'Accepted',
+  'completed': 'Completed',
+  'job_request': 'Job Request',
+  'booking_id_not_found': 'Booking ID not found',
+  'authentication_required_login_again':
+      'Authentication required. Please login again.',
+  'failed_to_load_job_details': 'Failed to load job details',
+  'network_error_check_again': 'Network error. Please check your connection.',
+  'job_request_cancelled_successfully': 'Job request cancelled successfully!',
+  'failed_to_cancel_job_request': 'Failed to cancel job request',
+  'network_error': 'Network Error',
+  'failed_to_cancel_job_request_check_internet_connection':
+      'Failed to cancel job request. Please check your connection.',
+  'job_request_accepted_successfully': 'Job request accepted successfully!',
+  'failed_to_accept_job_request': 'Failed to accept job request',
+  'failed_to_accept_job_request_check_internet_connection':
+      'Failed to accept job request. Please check your connection.',
+  'work_started_successfully': 'Work started successfully!',
+  'failed_to_start_work': 'Failed to start work',
+  'failed_to_start_work_check_your_connection':
+      'Failed to start work. Please check your internet connection.',
+  'unknown_user': 'Unknown User',
 };
