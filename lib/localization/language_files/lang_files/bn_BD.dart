@@ -448,4 +448,7 @@ Map<String, String> banglaLanguage = {
   'confirming_withdrawl': 'প্রত্যাহার নিশ্চিত করুন',
   'total_amount': 'মোট পরিমাণ:',
   'payment_date': 'পেমেন্ট তারিখ:',
+  'delete_message': 'বার্তা মুছুন',
+  'profile_view': 'প্রোফাইল_ভিউ',
+  'write_your_message': 'আপনার বার্তা লিখুন',
 };

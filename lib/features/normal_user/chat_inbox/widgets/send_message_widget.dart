@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_utils/get_utils.dart';
 
 import '../../../../gen/colors.gen.dart';
 import '../../../../helpers/ui_helpers.dart';
@@ -32,7 +33,7 @@ class SendMessageWidget extends StatelessWidget {
               child: TextField(
                 controller: controller,
                 decoration: InputDecoration(
-                  hintText: "Write your message",
+                  hintText: 'write_your_message'.tr,
                   contentPadding: EdgeInsets.symmetric(
                     vertical: 12.h,
                     horizontal: 16.w,

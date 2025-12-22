@@ -449,4 +449,7 @@ Map<String, String> englishLanguage = {
   'confirming_withdrawl': 'Confirm Withdrawal',
   'total_amount': 'Total Amount :',
   'payment_date': 'Payment Date :',
+  'delete_message': 'Delete Message',
+  'profile_view': 'Profile View',
+  'write_your_message': 'Write your message',
 };
