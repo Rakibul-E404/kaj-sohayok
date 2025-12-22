@@ -1,4 +1,4 @@
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
+//-------------------->> Screen : User Part Text's
 
 Map<String, String> englishLanguage = {
   ///----------> Onboarding Screen
@@ -382,4 +382,16 @@ Map<String, String> englishLanguage = {
   'active_now': 'Active Now',
   'audio_call': 'Adio Call..',
   'audio_call_button_taped': 'Audio Call button has been taped!',
+
+  //-------------------->> Screen : Service  Provider Part Text's
+  //--------------->> Service Provider Profile -> Main Screen
+
+  'documents': 'Documents',
+  'wallet': 'Wallet',
+  'failed_to_pick_image': 'Failed to pick image:',
+  'camera': 'Camera',
+  'failed': 'Failed',
+  'video': 'Video',
+  'work_gallery': 'Work Gallery',
+  'provider_documents': 'Provider Documents',
 };

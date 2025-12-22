@@ -62,16 +62,14 @@ class SvpProfileTab extends StatelessWidget {
                           top: Radius.circular(16.r),
                         ),
                       ),
-
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Profile information",
+                            'profile_information'.tr,
                             style:
                                 TextFontStyle.headline16w700c000000StyleSatoshi,
                           ),
-
                           InkWell(
                             onTap: () {
                               log("Navigated to SVP Edit Profile Screen");
@@ -83,38 +81,37 @@ class SvpProfileTab extends StatelessWidget {
                       ),
                     ),
                     UIHelper.verticalSpace(10.h),
-
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10.w),
                       child: Obx(() {
                         List<ProfileTileModel> userProfileList = [
                           ProfileTileModel(
-                            title: "Name",
+                            title: 'name'.tr,
                             data:
                                 "${svpProfileScreenController.providerProfileModel.value?.name ?? ''} ",
                           ),
                           ProfileTileModel(
-                            title: "Email",
+                            title: 'email'.tr,
                             data:
                                 "${svpProfileScreenController.providerProfileModel.value?.email ?? ''} ",
                           ),
                           ProfileTileModel(
-                            title: "Phone number",
+                            title: 'phone_number'.tr,
                             data:
                                 "${svpProfileScreenController.providerProfileModel.value?.phoneNumber ?? ''} ",
                           ),
                           ProfileTileModel(
-                            title: "Address",
+                            title: 'address'.tr,
                             data:
                                 "${svpProfileScreenController.providerProfileModel.value?.location.en ?? ''} ",
                           ),
                           ProfileTileModel(
-                            title: "Date of Birth",
+                            title: 'date_of_birth'.tr,
                             data:
                                 "${formatDateTime(svpProfileScreenController.providerProfileModel.value?.dob)} ",
                           ),
                           ProfileTileModel(
-                            title: "Gender",
+                            title: 'gender'.tr,
                             data:
                                 "${svpProfileScreenController.providerProfileModel.value?.gender.toUpperCase() ?? ''} ",
                           ),

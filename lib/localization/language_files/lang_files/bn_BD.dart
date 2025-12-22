@@ -328,6 +328,7 @@ Map<String, String> banglaLanguage = {
   ///----------> User Profile Screen
   //////
   ///
+
   ///----------> Profile Tab
   'my_profile': 'আমার প্রোফাইল',
   'profile': 'প্রোফাইল',
@@ -381,4 +382,15 @@ Map<String, String> banglaLanguage = {
   'active_now': 'এখন সক্রিয়',
   'audio_call': 'অ্যাডিও কল..',
   'audio_call_button_taped': 'অডিও কল বোতামটি টেপ করা হয়েছে!',
+
+  //-------------------->> Screen : Service  Provider Part Text's
+  //--------------->> Service Provider Profile -> Main Screen
+  'documents': 'নথিপত্র',
+  'wallet': 'ওয়ালেট',
+  'failed_to_pick_image': 'ছবি_বাছাই_করতে_ব্যর্থ',
+  'camera': 'ক্যামেরা',
+  'failed': 'ব্যর্থ হয়েছে',
+  'video': 'ভিডিও',
+  'work_gallery': 'কাজের গ্যালারি',
+  'provider_documents': 'প্রদানকারীর নথি',
 };
