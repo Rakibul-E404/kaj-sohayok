@@ -40,7 +40,7 @@ class ImagePickerGridWidget extends StatelessWidget {
                 children: [
                   ///Section : Text -> Add Demo Image
                   Text(
-                    "Add Demo Images",
+                    'add_demo_image'.tr,
                     style: TextFontStyle.headline16w700c111111StyleSatoshi,
                   ),
                   UIHelper.verticalSpace(16.h),
@@ -56,7 +56,7 @@ class ImagePickerGridWidget extends StatelessWidget {
 
                   ///Section : Text -> Browse File From Here
                   Text(
-                    "Browse File From Here",
+                    'browse_files_from_there'.tr,
                     style: TextFontStyle.headline16w500c000000StyleSatoshi,
                   ),
                   UIHelper.verticalSpace(4.h),
@@ -70,7 +70,7 @@ class ImagePickerGridWidget extends StatelessWidget {
 
                   ///Section : Upload Limit
                   Text(
-                    "Max Image Uploading Limit : $maxImages",
+                    "${'image_max_uploading_limit'.tr} $maxImages",
                     style: TextFontStyle.headline10w400c6c606cStyleSatoshi,
                   ),
                   UIHelper.verticalSpace(18.h),
@@ -80,7 +80,7 @@ class ImagePickerGridWidget extends StatelessWidget {
                     onTap: onPickImages,
                     buttonWidth: 160.w,
                     buttonHeight: 40.h,
-                    buttonTitle: "Upload Image",
+                    buttonTitle: 'upload_image'.tr,
                   ),
                 ],
               )

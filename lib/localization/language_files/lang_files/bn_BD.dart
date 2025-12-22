@@ -400,5 +400,21 @@ Map<String, String> banglaLanguage = {
       'জাতীয় পরিচয়পত্র/ড্রাইভিং লাইসেন্স/পাসপোর্ট (ফন্ট সাইড) ছবি',
   'nid_driving_license_image_back_part':
       'জাতীয় পরিচয়পত্র/ড্রাইভিং লাইসেন্স/পাসপোর্ট (পিছনের দিকের) ছবি',
-  'self_image': 'সেলফ ইমেজ'
+  'self_image': 'সেলফ ইমেজ',
+  'edit_documents': 'নথি সম্পাদনা করুন',
+  'start_price': 'শুরু মূল্য',
+  'gallery_images_and_video': 'গ্যালারি (ছবি ও ভিডিও)',
+  'maximum': 'সর্বোচ্চ',
+  'items_allowed': 'আইটেম অনুমোদিত',
+  'no_gallery_items': 'কোন গ্যালারি আইটেম নেই',
+  'description': 'বর্ণনা',
+  'video_unavilable': 'ভিডিও অনুপলব্ধ',
+  'delete_attachment': 'সংযুক্তি মুছুন',
+  'are_you_sure_you_want_to_delete':
+      'আপনি কি নিশ্চিত যে আপনি এই আইটেমটি মুছে ফেলতে চান?',
+  'delete': 'মুছুন',
+  'loading': 'লোড হচ্ছে...',
+  'new': 'নতুন',
+  'add_image_and_video': 'ছবি/ভিডিও যোগ করুন',
+  'save_changes': 'পরিবর্তনগুলি সংরক্ষণ করুন',
 };

@@ -403,4 +403,20 @@ Map<String, String> englishLanguage = {
       'NID/driving license/passport(back side) image',
 
   'self_image': 'Selfe Image',
+  'edit_documents': 'Edit Documents',
+  'start_price': 'Start Price',
+  'gallery_images_and_video': 'Gallery (Images & Videos)',
+  'maximum': 'Maximum',
+  'items_allowed': 'items allowed',
+  'no_gallery_items': 'No gallery items',
+  'description': 'Description',
+  'video_unavilable': 'Video unavailable',
+  'delete_attachment': 'Delete Attachment',
+  'are_you_sure_you_want_to_delete':
+      'Are you sure you want to delete this item?',
+  'delete': 'Delete',
+  'loading': 'Loading...',
+  'new': 'New',
+  'add_image_and_video': 'Add Images/Videos',
+  'save_changes': 'Save Changes',
 };
