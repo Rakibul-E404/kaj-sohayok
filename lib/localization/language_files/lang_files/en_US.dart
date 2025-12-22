@@ -394,4 +394,13 @@ Map<String, String> englishLanguage = {
   'video': 'Video',
   'work_gallery': 'Work Gallery',
   'provider_documents': 'Provider Documents',
+  'work_type': 'Work Type',
+  'start_from_work_price': 'Intial price of starting work',
+  'bio': 'Bio',
+  'nid_driving_license_image_front_part':
+      'NID/driving license/passport(font side) image',
+  'nid_driving_license_image_back_part':
+      'NID/driving license/passport(back side) image',
+
+  'self_image': 'Selfe Image',
 };

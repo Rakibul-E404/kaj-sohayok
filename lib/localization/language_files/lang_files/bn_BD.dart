@@ -393,4 +393,12 @@ Map<String, String> banglaLanguage = {
   'video': 'ভিডিও',
   'work_gallery': 'কাজের গ্যালারি',
   'provider_documents': 'প্রদানকারীর নথি',
+  'work_type': 'কাজের ধরন',
+  'start_from_work_price': 'কাজ শুরু করার প্রাথমিক মূল্য',
+  'bio': 'ভূমিকা',
+  'nid_driving_license_image_front_part':
+      'জাতীয় পরিচয়পত্র/ড্রাইভিং লাইসেন্স/পাসপোর্ট (ফন্ট সাইড) ছবি',
+  'nid_driving_license_image_back_part':
+      'জাতীয় পরিচয়পত্র/ড্রাইভিং লাইসেন্স/পাসপোর্ট (পিছনের দিকের) ছবি',
+  'self_image': 'সেলফ ইমেজ'
 };

@@ -414,32 +414,32 @@ class _SvpDocumentationTabState extends State<SvpDocumentationTab> {
                         child: Obx(() {
                           List<ProfileTileModel> userProfileList = [
                             ProfileTileModel(
-                              title: "Work Type",
+                              title: 'work_type'.tr,
                               data:
                                   "${svpProfileScreenDocumentsTabController.providerDocumentDetailsModel.value?.serviceProvider.serviceCategoryId.name.en} ",
                             ),
                             ProfileTileModel(
-                              title: "Services Name",
+                              title: 'service_name'.tr,
                               data:
                                   "${svpProfileScreenDocumentsTabController.providerDocumentDetailsModel.value?.serviceProvider.serviceName.en ?? ''} ",
                             ),
                             ProfileTileModel(
-                              title: "Year Of Experience",
+                              title: 'years_of_experience'.tr,
                               data:
                                   "${svpProfileScreenDocumentsTabController.providerDocumentDetailsModel.value?.serviceProvider.yearsOfExperience ?? 0} ",
                             ),
                             ProfileTileModel(
-                              title: "Start from Work Price",
+                              title: 'start_from_work_price'.tr,
                               data:
                                   "${svpProfileScreenDocumentsTabController.providerDocumentDetailsModel.value?.serviceProvider.startPrice ?? 0} ",
                             ),
                             ProfileTileModel(
-                              title: "Intro Bio",
+                              title: 'bio'.tr,
                               data:
                                   "${svpProfileScreenDocumentsTabController.providerDocumentDetailsModel.value?.serviceProvider.introOrBio.en} ",
                             ),
                             ProfileTileModel(
-                              title: "Service Description",
+                              title: 'service_description'.tr,
                               data:
                                   "${svpProfileScreenDocumentsTabController.providerDocumentDetailsModel.value?.serviceProvider.description.en} ",
                             ),
@@ -483,7 +483,7 @@ class _SvpDocumentationTabState extends State<SvpDocumentationTab> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Text(
-                "NID/driving license/passport(font side) image",
+                'nid_driving_license_image_front_part'.tr,
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w700,
@@ -524,7 +524,7 @@ class _SvpDocumentationTabState extends State<SvpDocumentationTab> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Text(
-                "NID/driving license/passport(back side) image",
+                'nid_driving_license_image_back_part'.tr,
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w700,
@@ -565,7 +565,7 @@ class _SvpDocumentationTabState extends State<SvpDocumentationTab> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Text(
-                "Selfie Image",
+                'self_image'.tr,
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w700,
