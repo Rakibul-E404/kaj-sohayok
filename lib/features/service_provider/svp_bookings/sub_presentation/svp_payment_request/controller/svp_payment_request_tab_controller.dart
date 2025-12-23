@@ -47,7 +47,7 @@ class SvpPaymentRequestController extends GetxController {
 
       if (token == null) {
         hasError.value = true;
-        errorMessage.value = 'Authentication required. Please login again.';
+        errorMessage.value = 'authentication_required_login_again'.tr;
         isLoading.value = false;
         return;
       }
@@ -71,13 +71,13 @@ class SvpPaymentRequestController extends GetxController {
           isLoading.value = false;
         } else {
           hasError.value = true;
-          errorMessage.value = 'Unexpected response format';
+          errorMessage.value = 'unexpected_response_format'.tr;
           isLoading.value = false;
         }
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to load payment requests';
+            'failed_to_load_payment_requests'.tr;
 
         hasError.value = true;
         errorMessage.value = errorMsg;
@@ -92,7 +92,7 @@ class SvpPaymentRequestController extends GetxController {
       log('Error fetching payment requests: $e',
           error: e, stackTrace: stackTrace);
       hasError.value = true;
-      errorMessage.value = 'Network error. Please check your connection.';
+      errorMessage.value = 'network_error_check_again'.tr;
       isLoading.value = false;
     }
   }
@@ -140,8 +140,8 @@ class SvpPaymentRequestController extends GetxController {
   }
 
   String getAddress(Map<String, dynamic>? address) {
-    if (address == null) return 'Address not available';
-    return address['en'] ?? address['bn'] ?? 'Address not available';
+    if (address == null) return 'address_not_available'.tr;
+    return address['en'] ?? address['bn'] ?? 'address_not_available'.tr;
   }
 
   SvpPaymentRequestTabCard buildPaymentRequestCard(int index) {
