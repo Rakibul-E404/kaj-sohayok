@@ -484,4 +484,17 @@ Map<String, String> englishLanguage = {
   'failed_to_start_work_check_your_connection':
       'Failed to start work. Please check your internet connection.',
   'unknown_user': 'Unknown User',
+  'address_not_available': 'Address not available',
+  'date_not_valid': 'Date not available',
+  'not_specified': 'Not specified',
+  'loading_job_details': 'Loading job details...',
+  'job_address_and_date': 'Job Address & Date',
+  'my_price': 'My Price',
+  'user_information': 'User Information',
+  'job_details': 'Job Details',
+  'accepted_bookings': 'Accepted Bookings',
+  'no_accepted_bookings_yet': 'No accepted bookings yet',
+  'accepted_job_requests_will_appear_here':
+      'Accepted job requests will appear here',
+  'failed_to_load_accepted_bookings': 'Failed to load accepted bookings'
 };

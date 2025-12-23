@@ -462,4 +462,36 @@ Map<String, String> banglaLanguage = {
   'accepted': 'মুলতুবি',
   'completed': 'সম্পন্ন',
   'job_request': 'চাকরির অনুরোধ',
+  'booking_id_not_found': 'বুকিং আইডি পাওয়া যায়নি',
+  'authentication_required_login_again':
+      'প্রমাণীকরণ প্রয়োজন। অনুগ্রহ করে আবার লগইন করুন।',
+  'failed_to_load_job_details': 'চাকরির বিবরণ লোড করা যায়নি',
+  'network_error_check_again':
+      'নেটওয়ার্ক ত্রুটি। অনুগ্রহ করে আপনার সংযোগ পরীক্ষা করুন।',
+  'job_request_cancelled_successfully':
+      'চাকরির অনুরোধ সফলভাবে বাতিল করা হয়েছে!',
+  'failed_to_cancel_job_request': 'চাকরির অনুরোধ বাতিল করতে ব্যর্থ',
+  'network_error': 'নেটওয়ার্ক ত্রুটি৷',
+  'failed_to_cancel_job_request_check_internet_connection':
+      'চাকরির অনুরোধ বাতিল করতে ব্যর্থ হয়েছে। অনুগ্রহ করে আপনার সংযোগ পরীক্ষা করুন।',
+  'job_request_accepted_successfully': 'চাকরির অনুরোধ সফলভাবে গৃহীত হয়েছে!',
+  'failed_to_accept_job_request': 'চাকরির অনুরোধ গ্রহণ করতে ব্যর্থ',
+  'work_started_successfully': 'কাজ সফলভাবে শুরু হয়েছে!',
+  'failed_to_start_work': 'কাজ শুরু করতে ব্যর্থ',
+  'failed_to_start_work_check_your_connection':
+      'কাজ শুরু করতে পারিনি। দয়া করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন।',
+  'unknown_user': 'অজানা ব্যবহারকারী',
+  'address_not_available': 'ঠিকানা পাওয়া যাচ্ছে না',
+  'date_not_valid': 'তারিখ পাওয়া যাচ্ছে না',
+  'not_specified': 'নির্দিষ্ট নয়',
+  'loading_job_details': 'কাজের বিবরণ লোড হচ্ছে...',
+  'job_address_and_date': 'চাকরির ঠিকানা ও তারিখ',
+  'my_price': 'আমার দাম',
+  'user_information': 'ব্যবহারকারীর তথ্য',
+  'job_details': 'কাজের বিবরণ',
+  'accepted_bookings': 'গৃহীত বুকিং',
+  'no_accepted_bookings_yet': 'এখনও কোনও বুকিং গৃহীত হয়নি',
+  'accepted_job_requests_will_appear_here':
+      'গৃহীত চাকরির অনুরোধগুলি এখানে প্রদর্শিত হবে',
+  'failed_to_load_accepted_bookings': 'গৃহীত বুকিং লোড করতে ব্যর্থ'
 };

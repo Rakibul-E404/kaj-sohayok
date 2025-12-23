@@ -793,7 +793,6 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:kaz_bd/constants/appList.dart';
 import 'package:kaz_bd/constants/app_enums.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
@@ -1358,11 +1357,11 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
     final gender = profileId['gender'] as String? ?? 'not_specified'.tr;
 
     return [
-      UserInfoData(fieldName: 'gf', data: getUserName()),
+      UserInfoData(fieldName: 'name'.tr, data: getUserName()),
       UserInfoData(
-          fieldName: 'Location',
+          fieldName: 'location'.tr,
           data: location['en'] ?? location['bn'] ?? 'not_specified'.tr),
-      UserInfoData(fieldName: 'Gender', data: gender),
+      UserInfoData(fieldName: 'gender'.tr, data: gender),
     ];
   }
 
@@ -1377,7 +1376,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
             CircularProgressIndicator(color: AppColors.c000e08),
             UIHelper.verticalSpace(16.h),
             Text(
-              'Loading job details...',
+              'loading_job_details'.tr,
               style: TextFontStyle.headline10w400c6c606cStyleSatoshi,
             ),
           ],
@@ -1409,7 +1408,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                 backgroundColor: AppColors.c000e08,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('Retry'),
+              child: Text('retry'.tr),
             ),
           ],
         ),
@@ -1501,7 +1500,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                                     buttonWidth: 100.w,
                                     buttonHeight: 38.h,
                                     buttonColor: AppColors.cfce9e9,
-                                    buttonTitle: "Cancel",
+                                    buttonTitle: 'cancel'.tr,
                                     textStyle: TextFontStyle
                                         .headline14w500ce73d3dStyleSatoshi,
                                   ),
@@ -1535,7 +1534,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                                     onTap: acceptJobRequest,
                                     buttonWidth: 100.w,
                                     buttonHeight: 38.h,
-                                    buttonTitle: "Accept",
+                                    buttonTitle: 'accept'.tr,
                                   ),
                               ],
                             ),
@@ -1571,7 +1570,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                                     onTap: null, // Disabled
                                     buttonWidth: 100.w,
                                     buttonHeight: 38.h,
-                                    buttonTitle: "Work Started",
+                                    buttonTitle: 'work_started'.tr,
                                     buttonColor: AppColors.c000e08,
                                   )
                                 else
@@ -1579,7 +1578,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                                     onTap: startWork,
                                     buttonWidth: 100.w,
                                     buttonHeight: 38.h,
-                                    buttonTitle: "Start Work",
+                                    buttonTitle: 'start_work'.tr,
                                   ),
 
                                 UIHelper.horizontalSpace(12.w),
@@ -1596,7 +1595,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                                   buttonWidth: 100.w,
                                   buttonHeight: 38.h,
                                   buttonColor: Colors.transparent,
-                                  buttonTitle: "Message",
+                                  buttonTitle: 'message'.tr,
                                   textStyle: TextFontStyle
                                       .headline14w500c000000StyleSatoshi,
                                   isButtonBorderUsed: true,
@@ -1643,7 +1642,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                           borderRadius: BorderRadius.circular(4.r),
                         ),
                         child: Text(
-                          "Job Address & Date",
+                          'job_address_and_date'.tr,
                           style:
                               TextFontStyle.headline16w700c202020StyleSatoshi,
                         ),
@@ -1689,7 +1688,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "My Price",
+                      'my_price'.tr,
                       style: TextFontStyle.headline16w700c202020StyleSatoshi,
                     ),
                     Spacer(),
@@ -1699,7 +1698,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: "Start from ${AppText.bdTkSign}",
+                            text: "${'start_from'.tr} ${AppText.bdTkSign}",
                             style:
                                 TextFontStyle.headline12w500c6a6a6aStyleSatoshi,
                           ),
@@ -1726,7 +1725,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                   horizontal: 16.w,
                 ),
                 child: Text(
-                  "User Information",
+                  'user_information'.tr,
                   style: TextFontStyle.headline16w700c202020StyleSatoshi,
                 ),
               ),
@@ -1767,7 +1766,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          "Job Details",
+          'job_details'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
         centerTitle: true,

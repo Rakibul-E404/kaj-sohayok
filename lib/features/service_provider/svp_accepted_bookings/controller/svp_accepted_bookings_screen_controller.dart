@@ -159,13 +159,6 @@ class SvpAcceptedBookingsScreenController extends GetxController {
   }
 }*/
 
-
-
-
-
-
-
-
 ///
 ///
 ///
@@ -174,9 +167,6 @@ class SvpAcceptedBookingsScreenController extends GetxController {
 ///
 ///
 ///
-
-
-
 
 import 'dart:convert';
 import 'dart:developer';
@@ -220,7 +210,7 @@ class SvpAcceptedBookingsScreenController extends GetxController {
       if (token == null) {
         log('No token found in storage');
         hasError.value = true;
-        errorMessage.value = 'Authentication required. Please login again.';
+        errorMessage.value = 'authentication_required_login_again'.tr;
         isLoading.value = false;
         return;
       }
@@ -250,8 +240,8 @@ class SvpAcceptedBookingsScreenController extends GetxController {
             responseData['data'] != null &&
             responseData['data']['attributes'] != null &&
             responseData['data']['attributes']['results'] != null) {
-
-          final results = List<dynamic>.from(responseData['data']['attributes']['results']);
+          final results =
+              List<dynamic>.from(responseData['data']['attributes']['results']);
           log('Found ${results.length} accepted bookings');
 
           // Log each booking for debugging
@@ -284,7 +274,7 @@ class SvpAcceptedBookingsScreenController extends GetxController {
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to load accepted bookings';
+            'failed_to_load_accepted_bookings'.tr;
 
         log('API Error: $errorMsg');
         hasError.value = true;
@@ -298,9 +288,10 @@ class SvpAcceptedBookingsScreenController extends GetxController {
         }
       }
     } catch (e, stackTrace) {
-      log('Error fetching accepted bookings: $e', error: e, stackTrace: stackTrace);
+      log('Error fetching accepted bookings: $e',
+          error: e, stackTrace: stackTrace);
       hasError.value = true;
-      errorMessage.value = 'Network error. Please check your connection.';
+      errorMessage.value = 'network_error_check_again'.tr;
       isLoading.value = false;
     }
   }
@@ -318,7 +309,8 @@ class SvpAcceptedBookingsScreenController extends GetxController {
     }
 
     // Otherwise, construct full URL using base path
-    final cleanPath = imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
+    final cleanPath =
+        imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
     final fullUrl = '${AppUrl.imageBaseUrl}/$cleanPath';
     log('getImageUrl: Constructed URL - $fullUrl');
     return fullUrl;
@@ -328,8 +320,18 @@ class SvpAcceptedBookingsScreenController extends GetxController {
     try {
       final dateTime = DateTime.parse(dateTimeString).toLocal();
       final months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
       ];
       final month = months[dateTime.month - 1];
       final day = dateTime.day;
@@ -347,19 +349,21 @@ class SvpAcceptedBookingsScreenController extends GetxController {
   String getAddress(Map<String, dynamic>? address) {
     if (address == null) {
       log('getAddress: Address is null');
-      return 'Address not available';
+      return 'address_not_available'.tr;
     }
 
     final englishAddress = address['en'];
     final banglaAddress = address['bn'];
     log('getAddress: English="$englishAddress", Bangla="$banglaAddress"');
 
-    return englishAddress ?? banglaAddress ?? 'Address not available';
+    return englishAddress ?? banglaAddress ?? 'address_not_available'.tr;
   }
 
   void navigateToJobDetails(Map<String, dynamic> jobRequest) {
     final bookingId = jobRequest['_ServiceBookingId'] as String? ?? '';
-    final userId = (jobRequest['userId'] as Map<String, dynamic>?)?['_userId'] as String? ?? '';
+    final userId = (jobRequest['userId'] as Map<String, dynamic>?)?['_userId']
+            as String? ??
+        '';
     log("Navigating to job details for booking ID: $bookingId");
 
     Get.toNamed(
@@ -385,8 +389,8 @@ class SvpAcceptedBookingsScreenController extends GetxController {
       if (token == null) {
         log('No token found for start work request');
         Get.snackbar(
-          'Error',
-          'Authentication required. Please login again.',
+          'error'.tr,
+          'authentication_required_login_again'.tr,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -430,15 +434,16 @@ class SvpAcceptedBookingsScreenController extends GetxController {
 
           // Show success message
           Get.snackbar(
-            'Success',
-            'Work started successfully!',
+            'success'.tr,
+            'work_started_successfully'.tr,
             backgroundColor: Colors.green,
             colorText: Colors.white,
           );
 
           // Update the status in the local list
           if (index >= 0 && index < jobRequests.length) {
-            final updatedJobRequest = Map<String, dynamic>.from(jobRequests[index]);
+            final updatedJobRequest =
+                Map<String, dynamic>.from(jobRequests[index]);
             updatedJobRequest['status'] = 'inProgress';
             jobRequests[index] = updatedJobRequest;
           }
@@ -446,10 +451,10 @@ class SvpAcceptedBookingsScreenController extends GetxController {
           // Optionally refresh the list
           await fetchAcceptedBookings();
         } else {
-          final errorMsg = responseData['message'] ?? 'Failed to start work';
+          final errorMsg = responseData['message'] ?? 'failed_to_start_work'.tr;
           log('Start Work API Error: $errorMsg');
           Get.snackbar(
-            'Error',
+            'error'.tr,
             errorMsg,
             backgroundColor: Colors.red,
             colorText: Colors.white,
@@ -458,11 +463,11 @@ class SvpAcceptedBookingsScreenController extends GetxController {
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to start work';
+            'failed_to_start_work'.tr;
 
         log('Start Work API Error: $errorMsg');
         Get.snackbar(
-          'Error',
+          'error'.tr,
           errorMsg,
           backgroundColor: Colors.red,
           colorText: Colors.white,
@@ -478,8 +483,8 @@ class SvpAcceptedBookingsScreenController extends GetxController {
     } catch (e, stackTrace) {
       log('Error starting work: $e', error: e, stackTrace: stackTrace);
       Get.snackbar(
-        'Network Error',
-        'Failed to start work. Please check your connection.',
+        'network_error'.tr,
+        'failed_to_start_work_check_your_connection'.tr,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -504,7 +509,8 @@ class SvpAcceptedBookingsScreenController extends GetxController {
     final currentStatus = jobRequest['status'] as String? ?? '';
 
     // Check if work is already started
-    final isWorkStarted = currentStatus == 'inProgress' || currentStatus == 'completed';
+    final isWorkStarted =
+        currentStatus == 'inProgress' || currentStatus == 'completed';
 
     // Get loading state for this booking
     final isLoadingStartWork = processingStartWork[bookingId] ?? false;
@@ -518,9 +524,7 @@ class SvpAcceptedBookingsScreenController extends GetxController {
 
     return RecentJobRequestStatusWidget(
       onTap: () => navigateToJobDetails(jobRequest),
-      startWorkOnTap: isWorkStarted
-          ? null
-          : () => startWork(bookingId, index),
+      startWorkOnTap: isWorkStarted ? null : () => startWork(bookingId, index),
       isJobRequestAccpted: true,
       userImage: getImageUrl(profileImage),
       userName: userName,
@@ -532,6 +536,3 @@ class SvpAcceptedBookingsScreenController extends GetxController {
     );
   }
 }
-
-
-
