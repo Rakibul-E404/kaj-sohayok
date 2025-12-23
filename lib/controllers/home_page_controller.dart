@@ -68,7 +68,8 @@ class HomePageController extends GetxController {
             log('🏠 HOME CONTROLLER: Banners list is empty - checking if attribute exists in response');
             if (response.jsonResponse!['data'] != null &&
                 response.jsonResponse!['data']['attributes'] != null) {
-              dynamic bannerData = response.jsonResponse!['data']['attributes']['banners'];
+              dynamic bannerData =
+                  response.jsonResponse!['data']['attributes']['banners'];
               log('🏠 HOME CONTROLLER: Raw banner data from API: $bannerData');
               log('🏠 HOME CONTROLLER: Type of banner data: ${bannerData.runtimeType}');
             }
@@ -81,8 +82,8 @@ class HomePageController extends GetxController {
           '🏠 HOME CONTROLLER: Failed to load home data - ${response.errorMessage}',
         );
         Get.snackbar(
-          'Error',
-          'Failed to load home data: ${response.errorMessage}',
+          'error'.tr,
+          '${'failed_to_load_home_data'.tr}: ${response.errorMessage}',
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -90,8 +91,8 @@ class HomePageController extends GetxController {
     } catch (e) {
       log('🏠 HOME CONTROLLER: Exception occurred - $e');
       Get.snackbar(
-        'Error',
-        'Something went wrong: $e',
+        'error'.tr,
+        '${'something_went_wrong'.tr}: $e',
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );

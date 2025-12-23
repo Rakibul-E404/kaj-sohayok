@@ -1,3 +1,5 @@
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
+
 Map<String, String> banglaLanguage = {
   ///----------> On-Boarding Screen
   'your_home_best_friend': 'তোমার বাড়ির সবচেয়ে ভালো বন্ধু',
@@ -568,4 +570,12 @@ Map<String, String> banglaLanguage = {
   'no_canceled_bookings': 'কোনো বাতিল বুকিং নেই',
   'canceled_jobs_will_appear_here': 'বাতিল কাজগুলি এখানে দেখা যাবে',
   'failed_to_load_canceled_bookings': 'বাতিল বুকিং লোড করতে ব্যর্থ হয়েছে',
+  'failed_to_load_completed_bookings':
+      'সম্পন্ন বুকিং লোড করতে ব্যর্থ হয়েছে'.tr,
+  'category_id_is_missing': 'বিষয়শ্রেণী আইডি অনুপস্থিত',
+  'no_services_for_specific_category':
+      'এই বিষয়শ্রেণীর জন্য কোনো সার্ভিস পাওয়া যায়নি',
+  'failed_to_load_services': 'সার্ভিস লোড করতে ব্যর্থ হয়েছে',
+  'somthing_went_wrong': 'কিছু সমস্যা হয়েছে',
+  'failed_to_load_home_data': 'হোম ডেটা লোড করতে ব্যর্থ হয়েছে',
 };

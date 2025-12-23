@@ -571,4 +571,11 @@ Map<String, String> englishLanguage = {
   'no_canceled_bookings': 'No canceled bookings',
   'canceled_jobs_will_appear_here': 'Canceled jobs will appear here',
   'failed_to_load_canceled_bookings': 'Failed to load canceled bookings',
+
+  'failed_to_load_completed_bookings': 'Failed to load completed bookings',
+  'category_id_is_missing': 'Category ID is missing',
+  'no_services_for_specific_category': 'No services found for this category',
+  'failed_to_load_services': 'Failed to load services',
+  'somthing_went_wrong': 'Something went wrong',
+  'failed_to_load_home_data': 'Failed to load home data',
 };

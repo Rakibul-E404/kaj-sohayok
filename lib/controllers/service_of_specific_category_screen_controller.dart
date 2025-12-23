@@ -36,12 +36,13 @@ class ServiceOfSpecificCategoryScreenController extends GetxController {
     handleServiceFromSpecificCategory();
   }
 
-  Future<void> handleServiceFromSpecificCategory({String? searchQuery, bool isLoadMore = false}) async {
+  Future<void> handleServiceFromSpecificCategory(
+      {String? searchQuery, bool isLoadMore = false}) async {
     // Check if categoryId is available
     if (categoryId.value.isEmpty) {
       Get.snackbar(
-        'Error',
-        'Category ID is missing',
+        'error'.tr,
+        'category_id_is_missing'.tr,
         backgroundColor: AppColors.cee3333,
         colorText: AppColors.cFFFFFF,
       );
@@ -65,7 +66,8 @@ class ServiceOfSpecificCategoryScreenController extends GetxController {
         AppUrl.getSpecificServiceByCategory(
           categoryId: categoryId.value,
           pageId: pageId.value,
-          serviceName: this.searchQuery.value.isNotEmpty ? this.searchQuery.value : null,
+          serviceName:
+              this.searchQuery.value.isNotEmpty ? this.searchQuery.value : null,
         ),
       );
 
@@ -95,8 +97,8 @@ class ServiceOfSpecificCategoryScreenController extends GetxController {
           if (!isLoadMore) {
             specificCategoryList.clear();
             Get.snackbar(
-              'Info',
-              'No services found for this category',
+              'info'.tr,
+              'no_services_for_specific_category'.tr,
               backgroundColor: AppColors.cffb701,
               colorText: AppColors.cFFFFFF,
             );
@@ -104,16 +106,16 @@ class ServiceOfSpecificCategoryScreenController extends GetxController {
         }
       } else {
         Get.snackbar(
-          'Error',
-          'Failed to load services: ${response.errorMessage}',
+          'error'.tr,
+          '${'failed_to_load_services'.tr}: ${response.errorMessage}',
           backgroundColor: AppColors.cee3333,
           colorText: AppColors.cFFFFFF,
         );
       }
     } catch (e) {
       Get.snackbar(
-        'Error',
-        'Something went wrong: $e',
+        'error'.tr,
+        '${'somthing_went_wrong'.tr}: $e',
         backgroundColor: AppColors.cee3333,
         colorText: AppColors.cFFFFFF,
       );
@@ -135,7 +137,8 @@ class ServiceOfSpecificCategoryScreenController extends GetxController {
 
   // Method to load more data for pagination
   Future<void> loadMoreServices() async {
-    if (!hasMoreData.value || isLoadingMore.value) return; // Prevent multiple calls when loading or no more data
+    if (!hasMoreData.value || isLoadingMore.value)
+      return; // Prevent multiple calls when loading or no more data
 
     pageId.value = (int.parse(pageId.value) + 1).toString();
     await handleServiceFromSpecificCategory(isLoadMore: true);
