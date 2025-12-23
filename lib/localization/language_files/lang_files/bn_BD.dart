@@ -546,4 +546,6 @@ Map<String, String> banglaLanguage = {
   'no_completed_work_yet': 'এখনো কোনো সম্পন্ন কাজ নেই',
   'finished_jobs_will_appear_here': 'সম্পন্ন কাজগুলি এখানে দেখা যাবে',
   'failed_to_load_complete_work': 'সম্পন্ন কাজ লোড করতে ব্যর্থ হয়েছে',
+  'details_of_completed_work': 'সম্পন্ন কাজের বিবরণ',
+  'proof_of_image': 'ছবির প্রমাণ',
 };

@@ -549,4 +549,6 @@ Map<String, String> englishLanguage = {
   'no_completed_work_yet': 'No completed work yet',
   'finished_jobs_will_appear_here': 'Finished jobs will appear here',
   'failed_to_load_complete_work': 'Failed to load completed work',
+  'details_of_completed_work': 'Details of Completed Work',
+  'proof_of_image': 'Proof of Image',
 };

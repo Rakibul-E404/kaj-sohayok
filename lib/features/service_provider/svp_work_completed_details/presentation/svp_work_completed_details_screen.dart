@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/utils.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 
 import '../../../../constants/appList.dart';
 import '../../../../constants/text_font_style.dart';
-import '../../../../custom_widgets/more_info_widget_tile.dart';
 import '../../../../custom_widgets/payment_summery_widget.dart';
 import '../../../../custom_widgets/proof_of_work_showing_widget.dart';
 import '../../../../custom_widgets/ratings_showing_widget.dart';
@@ -21,7 +21,7 @@ class SvpWorkCompletedDetailsScreen extends StatelessWidget {
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          "Details of Completed Work",
+          'details_of_completed_work'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
         centerTitle: true,
@@ -46,7 +46,7 @@ class SvpWorkCompletedDetailsScreen extends StatelessWidget {
 
                 ///Section : Text -> work complete information
                 Text(
-                  "Work Complete Information",
+                  'work_complete_information'.tr,
                   style: TextFontStyle.headline16w700c202020StyleSatoshi,
                 ),
                 UIHelper.verticalSpace(16.h),
@@ -66,7 +66,7 @@ class SvpWorkCompletedDetailsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Completion Date",
+                        'completation_date'.tr,
                         style: TextFontStyle.headline14w500c202020StyleSatoshi,
                       ),
                       UIHelper.verticalSpace(20.h),
@@ -101,7 +101,7 @@ class SvpWorkCompletedDetailsScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Duration Time",
+                        'duration_time'.tr,
                         style: TextFontStyle.headline14w500c202020StyleSatoshi,
                       ),
                       UIHelper.verticalSpace(20.h),
@@ -118,7 +118,7 @@ class SvpWorkCompletedDetailsScreen extends StatelessWidget {
                 ///Section : Text -> Proof of image
                 ///Section : Work Image
                 ProofOfWorkShowingWidget(
-                  title: "Proof of Image",
+                  title: 'proof_of_image'.tr,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(4.r),
                     child: Image.asset(
@@ -135,8 +135,7 @@ class SvpWorkCompletedDetailsScreen extends StatelessWidget {
                 PaymentSummeryWidget(
                   initialCost: 30,
                   additionalCostList: AppList.additionalCosts,
-                  totalPayment:
-                      30 +
+                  totalPayment: 30 +
                       AppList.additionalCosts.fold(
                         0,
                         (sum, item) => sum + item.price,
