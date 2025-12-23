@@ -150,7 +150,8 @@ class AcceptedBookingTab extends StatelessWidget {
                 Get.find<MessageScreenController>().createMessage(
                   participantId: messageProviderId,
                   name: provider?['name'] ?? 'Unknown Provider',
-                  imageUrl: imageUrl ?? Assets.images.userImage.path,
+                  // imageUrl: imageUrl ?? Assets.images.userImage.path,
+                  imageUrl: controller.getImageUrl(bookingId)
                 );
               },
 

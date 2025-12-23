@@ -46,6 +46,7 @@ import '../bindings/route_bindings/normal_user_service_preview_screen_binding.da
 import '../bindings/route_bindings/service_of_specific_category_screen_binding.dart';
 import '../controllers/service_of_specific_category_screen_controller.dart';
 import '../features/auth/verify_otp/verify_otp_screen.dart';
+import '../features/call/presentation/screen/call_screen.dart';
 import '../features/normal_user/search_location/presentation/search_location_screen.dart';
 import '../features/service_provider/profile_under_review/presentation/profile_under_review_screen.dart';
 import '../features/service_provider/face_verification/presentation/face_verification_screen.dart';
@@ -490,6 +491,13 @@ class Routes {
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),
+    ),
+    GetPage(
+      name: '/call-screen',
+      page: () => const CallScreen(),
+      // binding: CallBinding(),
+      transition: Transition.fadeIn,
+      transitionDuration: Duration(milliseconds: 300),
     ),
   ];
 }

@@ -52,7 +52,7 @@ class NotificationShowingWidget extends StatelessWidget {
                 ),
                 UIHelper.verticalSpace(5.h),
                 Text(
-                  "$notificationTime minutes ago",
+                  "$notificationTime ",
                   style: TextFontStyle.headline10w400c999999StyleSatoshi,
                 ),
               ],

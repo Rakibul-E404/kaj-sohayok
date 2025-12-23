@@ -34,7 +34,8 @@ class AppUrl {
 
   // ==========> Service Form ==========>
   static String serviceFormCategories = '${baseUrl}v1/service-categories/';
-  static String serviceProviderFormSubmit = '${baseUrl}v1/service-providers';
+  // static String serviceProviderFormSubmit = '${baseUrl}v1/service-providers';
+  static String serviceProviderFormSubmit = '${baseUrl}v1/service-providers/with-locationInfo';
 
   // ==========> Service Wallet ==========>
   static String serviceProviderWithdrawalRequest =
@@ -56,9 +57,16 @@ class AppUrl {
     return '${baseUrl}v1/attachments/$id';
   }
 
-  // ======= Conversation ==============>
+  // ======= Notification ==============>
+  static String notification =
+      '${baseUrl}v1/notifications/?page=1&limit=300000';
+
+  // ================== Conversation ==============>
 
   static String createConversation = '${baseUrl}v1/conversations/';
+
+  // ======================= Call ==============>
+  static String getAgoraToken = '${baseUrl}v1/call/token';
 
   ///
   ///
@@ -89,8 +97,8 @@ class AppUrl {
       '${baseUrl}v1/service-bookings/paginate/for-provider?status=cancelled';
   static String providerCompletedBookings =
       '${baseUrl}v1/service-bookings/paginate/for-provider?status=completed';
-  // static String paymentRequests = '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
 
+  // static String paymentRequests = '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
 
   // static String jobRequests = '${baseUrl}v1/service-bookings/paginate/for-provider?status=pending';
   // static String providerAcceptedBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=accepted';
@@ -102,15 +110,19 @@ class AppUrl {
   static String providerJobRequestAcceptButton(String bookingId) {
     return '${baseUrl}v1/service-bookings/update-status/$bookingId/status/accept';
   }
+
   static String providerJobRequestCancelButton(String bookingId) {
     return '${baseUrl}v1/service-bookings/update-status/$bookingId/status/cancel-by-provider';
   }
+
   static String providerStartWorkButton(String bookingId) {
     return '${baseUrl}v1/service-bookings/update-status/$bookingId/status/inProgress';
   }
+
   static String providerJobDetailsApi(String bookingId) {
     return '${baseUrl}v1/service-bookings/user-details/$bookingId';
   }
+
   static String providerWorkSubmitForm(String bookingId) {
     return '${baseUrl}v1/service-bookings/with-costs-summary/$bookingId';
   }
@@ -124,12 +136,10 @@ class AppUrl {
   // }
   static const String additionalCost = '${baseUrl}v1/additional-cost';
 
-
   ///===> rakibul api add close::::::::::::::::>
   ///
   ///
   ///
-
 
   ///
   ///

@@ -12,6 +12,7 @@ import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../../controllers/message_screen_controller.dart';
 import '../../../../custom_widgets/address_and_order_date_tile.dart';
 import '../../../../custom_widgets/payment_summery_widget.dart';
 import '../../../../custom_widgets/proof_of_work_showing_widget.dart';
@@ -20,6 +21,8 @@ import '../../../../gen/colors.gen.dart';
 import '../../../../models/user_payment_history_details_model.dart'; // Adjust path if needed
 import '../../../../routes/routes.dart';
 import '../../../../utilities/app_url.dart';
+import '../../../call/presentation/controller/call_controller.dart';
+import '../../chat_list/model/chat_list_response_model.dart';
 import '../model/additional_cost_model.dart';
 
 class WorkCompletedDetailsScreen extends StatefulWidget {
@@ -44,15 +47,14 @@ class _WorkCompletedDetailsScreenState
   }
 
   void _initializeVideoPlayers() {
-    final videoAttachments =
-        _paymentDetails.serviceBooking?.attachments
+    final videoAttachments = _paymentDetails.serviceBooking?.attachments
             ?.where(
               (a) =>
-          (a.attachmentType?.toLowerCase() == 'video') &&
-              (a.attachment?.isNotEmpty == true),
-        )
+                  (a.attachmentType?.toLowerCase() == 'video') &&
+                  (a.attachment?.isNotEmpty == true),
+            )
             .toList() ??
-            [];
+        [];
 
     for (var att in videoAttachments) {
       final url = att.attachment!;
@@ -62,17 +64,14 @@ class _WorkCompletedDetailsScreenState
         Uri.parse(url.trim()),
       );
 
-      _videoControllers[key]!
-          .initialize()
-          .then((_) {
+      _videoControllers[key]!.initialize().then((_) {
         if (mounted) {
           setState(() {
             _initializedVideos.add(key);
           });
           log('Video initialized: $url');
         }
-      })
-          .catchError((error) {
+      }).catchError((error) {
         log('Failed to load video: $url | Error: $error');
       });
 
@@ -272,8 +271,8 @@ class _WorkCompletedDetailsScreenState
     final List<Widget> widgets = [];
 
     final imageAttachments = attachments.where(
-          (a) =>
-      a.attachmentType?.toLowerCase() == 'image' &&
+      (a) =>
+          a.attachmentType?.toLowerCase() == 'image' &&
           a.attachment?.isNotEmpty == true,
     );
 
@@ -300,8 +299,8 @@ class _WorkCompletedDetailsScreenState
     }
 
     final videoAttachments = attachments.where(
-          (a) =>
-      a.attachmentType?.toLowerCase() == 'video' &&
+      (a) =>
+          a.attachmentType?.toLowerCase() == 'video' &&
           a.attachment?.isNotEmpty == true,
     );
 
@@ -329,15 +328,14 @@ class _WorkCompletedDetailsScreenState
     final List<AdditionalCostModel> additionalCosts = apiAdditionalCosts
         .map(
           (cost) => AdditionalCostModel(
-        title: cost.costName ?? "Additional Cost",
-        price: cost.price ?? 0.0,
-      ),
-    )
+            title: cost.costName ?? "Additional Cost",
+            price: cost.price ?? 0.0,
+          ),
+        )
         .toList();
 
-    final totalPayment =
-        initialCost +
-            additionalCosts.fold(0.0, (sum, cost) => sum + cost.price);
+    final totalPayment = initialCost +
+        additionalCosts.fold(0.0, (sum, cost) => sum + cost.price);
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
@@ -441,7 +439,7 @@ class _WorkCompletedDetailsScreenState
                               borderRadius: BorderRadius.circular(24),
                               child: CachedNetworkImage(
                                 imageUrl:
-                                '${AppUrl.imageBaseUrl}${provider.profileImage?.imageUrl}',
+                                    '${AppUrl.imageBaseUrl}${provider.profileImage?.imageUrl}',
                               ),
                             ),
                           ),
@@ -466,11 +464,19 @@ class _WorkCompletedDetailsScreenState
                           Row(
                             children: [
                               InkWell(
-                                onTap: () => log("Message tapped"),
+                                onTap: () {
+                                  Get.find<MessageScreenController>()
+                                      .createMessage(
+                                    participantId: provider.userId ?? '',
+                                    name: provider.name ?? "Unknown Provider",
+                                    imageUrl:
+                                        '${AppUrl.imageBaseUrl}${provider.profileImage?.imageUrl}',
+                                  );
+                                },
                                 child: Container(
                                   padding: EdgeInsets.all(6.sp),
                                   decoration: BoxDecoration(
-                                    color: AppColors.c778beb,
+                                    color: AppColors.cbababa,
                                     shape: BoxShape.circle,
                                   ),
                                   child: SvgPicture.asset(
@@ -479,20 +485,36 @@ class _WorkCompletedDetailsScreenState
                                 ),
                               ),
                               UIHelper.horizontalSpace(8.w),
-                              InkWell(
-                                onTap: () => log("Call tapped"),
-                                child: Container(
-                                  padding: EdgeInsets.all(6.sp),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.c778beb,
-                                    shape: BoxShape.circle,
-                                  ),
+                              Obx(() {
+                                final isCallInProgress =
+                                    Get.find<CallController>()
+                                            .callState
+                                            .value !=
+                                        CallState.idle;
+
+                                return InkWell(
+                                  onTap: isCallInProgress
+                                      ? null
+                                      : () {
+                                          // Call the controller method
+                                          Get.find<CallController>()
+                                              .initiateAudioCallOutsideInbox(
+                                                  receiverId:
+                                                      provider.userId ?? '',
+                                                  name: provider.name ??
+                                                      "Unknown Provider",
+                                                  image: ProfileImageModel(
+                                                      imageUrl:
+                                                          '${AppUrl.imageBaseUrl}${provider.profileImage?.imageUrl}'));
+                                        },
                                   child: Icon(
                                     Icons.call,
-                                    color: AppColors.cFFFFFF,
+                                    color: isCallInProgress
+                                        ? AppColors.c999999.withOpacity(0.5)
+                                        : AppColors.c999999,
                                   ),
-                                ),
-                              ),
+                                );
+                              })
                             ],
                           ),
                         ],
@@ -507,9 +529,11 @@ class _WorkCompletedDetailsScreenState
                   initialCost: initialCost,
                   additionalCostList: additionalCosts,
                   totalPayment: totalPayment,
-                  isTransactionIdCardVisible: serviceBooking?.paymentTransactionId != null,
+                  isTransactionIdCardVisible:
+                      serviceBooking?.paymentTransactionId != null,
                   transactionID: serviceBooking?.paymentTransactionId ?? "N/A",
-                  isAddAdditionalCostButtonVisible: false, // Hide button in read-only view
+                  isAddAdditionalCostButtonVisible: false,
+                  // Hide button in read-only view
                   onTap: () {
                     showAdditionalCostDialog(
                       context: context,
@@ -535,4 +559,3 @@ class _WorkCompletedDetailsScreenState
     );
   }
 }
-

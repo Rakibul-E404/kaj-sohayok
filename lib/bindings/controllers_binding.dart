@@ -19,6 +19,7 @@ import '../controllers/svp_profile_screen_documents_tab_controller.dart';
 import '../controllers/user_edit_profile_controller.dart';
 import '../controllers/user_profile_screen_controller.dart';
 import '../controllers/svp_submit_work_form_screen_controller.dart';
+import '../features/call/presentation/controller/call_controller.dart';
 
 class ControllerBindings extends Bindings {
   @override
@@ -26,6 +27,7 @@ class ControllerBindings extends Bindings {
     /// ==============> Shahriar ==============>
     // Get.put(MessageScreenController());
     Get.lazyPut(() => MessageScreenController(), fenix: true);
+    Get.put(CallController(), permanent: true);
     Get.lazyPut(() => OnboardingController());
     Get.lazyPut(() => SignInScreenController());
     Get.lazyPut(() => UserSignUpController());

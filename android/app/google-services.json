@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "657687530376",
+    "project_id": "kazbd-638f5",
+    "storage_bucket": "kazbd-638f5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:657687530376:android:323efcac194664450a083d",
+        "android_client_info": {
+          "package_name": "com.example.kaz_bd"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtvpuAstULXSDGF0DUxN7PdcqnRrkKXl8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

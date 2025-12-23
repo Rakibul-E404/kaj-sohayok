@@ -113,7 +113,7 @@ class UserProfileScreen extends StatelessWidget {
                                                   url,
                                                   error,
                                                   ) => Icon(
-                                                Icons.error,
+                                                Icons.person,
                                                 color: Colors
                                                     .white,
                                                 size: 48.sp,

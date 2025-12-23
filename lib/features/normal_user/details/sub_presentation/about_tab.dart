@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:kaz_bd/controllers/details_screen_controller.dart';
 import 'package:kaz_bd/controllers/message_screen_controller.dart';
 import 'package:kaz_bd/custom_widgets/custom_shimmer_effect.dart';
+import 'package:kaz_bd/features/call/presentation/controller/call_controller.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/routes/routes.dart';
@@ -13,6 +14,7 @@ import 'package:kaz_bd/utilities/app_url.dart';
 import '../../../../constants/text_font_style.dart';
 import '../../../../custom_widgets/custom_text_with_readmore_button.dart';
 import '../../../../helpers/ui_helpers.dart';
+import '../../chat_list/model/chat_list_response_model.dart';
 
 class AboutTab extends StatelessWidget {
   final bool isRoutedFromBookingTab;
@@ -25,7 +27,7 @@ class AboutTab extends StatelessWidget {
   Widget build(BuildContext context) {
     DetailsScreenController detailsScreenController =
         Get.find<DetailsScreenController>();
-     String? imageUrl;
+    String? imageUrl;
     String? fullImageUrl;
     return SingleChildScrollView(
       key: const PageStorageKey('about'),
@@ -78,7 +80,6 @@ class AboutTab extends StatelessWidget {
                 children: [
                   ///Section : Service Provider Image
                   Obx(() {
-
                     if (detailsScreenController
                             .providerProfileImage?.isNotEmpty ==
                         true) {
@@ -86,7 +87,7 @@ class AboutTab extends StatelessWidget {
                     }
 
                     if (imageUrl != null && imageUrl!.isNotEmpty) {
-                        fullImageUrl = imageUrl;
+                      fullImageUrl = imageUrl;
 
                       if (!imageUrl!.startsWith('http')) {
                         fullImageUrl = '${AppUrl.imageBaseUrl}$imageUrl';
@@ -187,8 +188,6 @@ class AboutTab extends StatelessWidget {
                         } else {
                           return InkWell(
                             onTap: () {
-                              ///TODO : Add message here ============>
-
                               Get.find<MessageScreenController>().createMessage(
                                   participantId: detailsScreenController
                                           .serviceDetails
@@ -198,8 +197,7 @@ class AboutTab extends StatelessWidget {
                                       '',
                                   name: detailsScreenController.providerName ??
                                       "",
-                                  imageUrl: fullImageUrl ??
-                                      '');
+                                  imageUrl: detailsScreenController.providerProfileImage ?? '');
                             },
                             child: Container(
                               padding: EdgeInsets.all(6.sp),
@@ -226,19 +224,40 @@ class AboutTab extends StatelessWidget {
                             ),
                           );
                         } else {
-                          return InkWell(
-                            onTap: () {},
-                            child: Container(
-                              padding: EdgeInsets.all(6.sp),
-                              decoration: BoxDecoration(
-                                color: isRoutedFromBookingTab
-                                    ? AppColors.c778beb
-                                    : AppColors.cbababa,
-                                shape: BoxShape.circle,
+                          return Obx(() {
+                            final isCallInProgress =
+                                Get.find<CallController>().callState.value !=
+                                    CallState.idle;
+
+                            return InkWell(
+                              onTap: isCallInProgress
+                                  ? null
+                                  : () {
+                                      // Call the controller method
+                                      Get.find<CallController>()
+                                          .initiateAudioCallOutsideInbox(
+                                              receiverId:
+                                                  detailsScreenController
+                                                          .serviceDetails
+                                                          .value
+                                                          ?.providerId
+                                                          ?.userId ??
+                                                      '',
+                                              name: detailsScreenController
+                                                      .providerName ??
+                                                  '',
+                                              image: ProfileImageModel(
+                                                  imageUrl:
+                                                      fullImageUrl ?? ''));
+                                    },
+                              child: Icon(
+                                Icons.call,
+                                color: isCallInProgress
+                                    ? AppColors.c999999.withOpacity(0.5)
+                                    : AppColors.c999999,
                               ),
-                              child: Icon(Icons.call, color: AppColors.cFFFFFF),
-                            ),
-                          );
+                            );
+                          });
                         }
                       }),
                     ],

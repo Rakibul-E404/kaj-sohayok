@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:kaz_bd/controllers/message_screen_controller.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/models/sign_in_model.dart';
+import 'package:kaz_bd/service/fcm_push_notification.dart';
 import 'package:kaz_bd/service/get_storage.dart';
 import 'package:kaz_bd/service/socket_service.dart';
 import 'package:kaz_bd/utilities/enum.dart';
@@ -33,10 +34,11 @@ class SignInScreenController extends GetxController {
         return;
       }
       loader.value = true;
-
+      final String fcmToken = await FCMService.getToken();
       final Map<String, dynamic> loginForm = <String, dynamic>{
         "email": "${emailTEController.text}",
         "password": "${passwordTEController.text}",
+        "fcmToken":fcmToken
       };
 
       final NetworkResponse postResponse = await NetworkCaller().postRequest(

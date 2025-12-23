@@ -68,25 +68,25 @@ class UserEditProfileScreen extends StatelessWidget {
                         child: ClipOval(
                           child: hasImage
                               ? (isNetworkImage
-                                    ? CachedNetworkImage(
-                                        imageUrl: imagePath,
-                                        fit: BoxFit.cover,
-                                        placeholder: (context, url) => Center(
-                                          child: CircularProgressIndicator(
-                                            color: AppColors.c778beb,
-                                          ),
+                                  ? CachedNetworkImage(
+                                      imageUrl: imagePath,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) => Center(
+                                        child: CircularProgressIndicator(
+                                          color: AppColors.c778beb,
                                         ),
-                                        errorWidget: (context, url, error) =>
-                                            Icon(
-                                              Icons.person,
-                                              size: 60.sp,
-                                              color: Colors.grey[400],
-                                            ),
-                                      )
-                                    : Image.file(
-                                        File(imagePath),
-                                        fit: BoxFit.cover,
-                                      ))
+                                      ),
+                                      errorWidget: (context, url, error) =>
+                                          Icon(
+                                        Icons.person,
+                                        size: 60.sp,
+                                        color: Colors.grey[400],
+                                      ),
+                                    )
+                                  : Image.file(
+                                      File(imagePath),
+                                      fit: BoxFit.cover,
+                                    ))
                               : Container(
                                   color: Colors.grey[200],
                                   child: Icon(
@@ -152,6 +152,7 @@ class UserEditProfileScreen extends StatelessWidget {
                     ],
                   ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       /// Name Form Field
                       EditProfileFormFieldWidget(
@@ -170,13 +171,14 @@ class UserEditProfileScreen extends StatelessWidget {
                       ),
                       UIHelper.verticalSpace(16.h),
 
+                /*      /// ============>  Location Removed =====================>
                       /// Location Form Field
                       EditProfileFormFieldWidget(
                         lableText: "Location",
                         hintText: "Enter Your Location",
                         controller: controller.locationController,
                       ),
-                      UIHelper.verticalSpace(16.h),
+                      UIHelper.verticalSpace(16.h),*/
 
                       /// Date of Birth Form Field
                       GestureDetector(
@@ -186,11 +188,11 @@ class UserEditProfileScreen extends StatelessWidget {
                             context: context,
                             initialDate:
                                 controller.dateOfBirthController.text.isEmpty
-                                ? DateTime.now()
-                                : _parseDate(
-                                        controller.dateOfBirthController.text,
-                                      ) ??
-                                      DateTime.now(),
+                                    ? DateTime.now()
+                                    : _parseDate(
+                                          controller.dateOfBirthController.text,
+                                        ) ??
+                                        DateTime.now(),
                             firstDate: DateTime(1900),
                             lastDate: DateTime.now(),
                             builder: (context, child) {

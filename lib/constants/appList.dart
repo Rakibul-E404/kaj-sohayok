@@ -16,21 +16,7 @@ import '../features/service_provider/svp_home/model/svp_card_model.dart';
 class AppList {
   static final List<String> genderList = ["Male", "Female"];
 
-  static List<NotificationModel> notificationList = [
-    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-    NotificationModel(title: "Your Password Updated Successfully!", time: 10),
-  ];
+
 
   // Pages of categories
   static final List<List<CategoryModel>> categories = [
