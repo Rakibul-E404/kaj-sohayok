@@ -56,7 +56,7 @@ class SvpAcceptedBookingsTab extends StatelessWidget {
                 children: [
                   UIHelper.verticalSpace(16.h),
                   Text(
-                    'Loading accepted bookings...',
+                    'loading_accepted_bookings'.tr,
                     style: TextFontStyle.headline10w400c6c606cStyleSatoshi,
                   ),
                 ],
@@ -94,7 +94,7 @@ class SvpAcceptedBookingsTab extends StatelessWidget {
                         backgroundColor: AppColors.c000e08,
                         foregroundColor: Colors.white,
                       ),
-                      child: const Text('Retry'),
+                      child: Text('retry'.tr),
                     ),
                   ],
                 ),
@@ -119,13 +119,13 @@ class SvpAcceptedBookingsTab extends StatelessWidget {
                       size: 60.h, color: Colors.grey),
                   UIHelper.verticalSpace(16.h),
                   Text(
-                    'No accepted bookings yet',
+                    'no_accepted_bookings_yet'.tr,
                     style: TextFontStyle.headline10w500c000000StyleSatoshi
                         .copyWith(color: Colors.grey),
                   ),
                   UIHelper.verticalSpace(8.h),
                   Text(
-                    'Accepted job requests will appear here',
+                    'accepted_job_requests_will_appear_here'.tr,
                     style: TextFontStyle.headline10w400c6c606cStyleSatoshi
                         .copyWith(color: Colors.grey),
                   ),

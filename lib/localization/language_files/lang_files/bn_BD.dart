@@ -548,4 +548,21 @@ Map<String, String> banglaLanguage = {
   'failed_to_load_complete_work': 'সম্পন্ন কাজ লোড করতে ব্যর্থ হয়েছে',
   'details_of_completed_work': 'সম্পন্ন কাজের বিবরণ',
   'proof_of_image': 'ছবির প্রমাণ',
+  'loading_job_request': 'কর্ম অনুরোধ লোড হচ্ছে...',
+  'no_job_request_available': 'কোনো কর্ম অনুরোধ উপলব্ধ নেই',
+  'new_job_request_will_appear_here': 'নতুন কর্ম অনুরোধ এখানে দেখা যাবে',
+  'failed_to_load_job_request': 'কর্ম অনুরোধ লোড করতে ব্যর্থ হয়েছে',
+  'authentication_required': 'অথেন্টিকেশন প্রয়োজন',
+  'failed_to_cancel_job_request_server_configuration_issue':
+      'কর্ম অনুরোধ বাতিল করতে ব্যর্থ হয়েছে - সার্ভার কনফিগারেশন সমস্যা',
+  'failed_to_accept_job_request_server_configuration_issue':
+      'কর্ম অনুরোধ গ্রহণ করতে ব্যর্থ হয়েছে - সার্ভার কনফিগারেশন সমস্যা',
+  'failed_to_load_work_form_data': 'কর্ম ফর্ম ডেটা লোড করতে ব্যর্থ হয়েছে',
+  'failed_to_load_work_form_please_check_your_connection':
+      'কর্ম ফর্ম লোড করতে ব্যর্থ হয়েছে৷ আপনার সংযোগ পরীক্ষা করুন।',
+  'loading_payment_requests': 'পেমেন্ট অনুরোধ লোড হচ্ছে...',
+  'no_payment_requests': 'কোনো পেমেন্ট অনুরোধ নেই',
+  'payment_request_will_appear_here': 'পেমেন্ট অনুরোধগুলি এখানে দেখা যাবে',
+  'pending_payment': 'অপেক্ষমান পেমেন্ট',
+  'failed_to_load_payment_requests': 'পেমেন্ট অনুরোধ লোড করতে ব্যর্থ হয়েছে',
 };

@@ -109,7 +109,7 @@ class SvpPaymentRequestTab extends StatelessWidget {
                     CircularProgressIndicator(color: AppColors.c000e08),
                     UIHelper.verticalSpace(16.h),
                     Text(
-                      'Loading payment requests...',
+                      'loading_payment_requests'.tr,
                       style: TextFontStyle.headline10w400c6c606cStyleSatoshi,
                     ),
                   ],
@@ -148,7 +148,7 @@ class SvpPaymentRequestTab extends StatelessWidget {
                         backgroundColor: AppColors.c000e08,
                         foregroundColor: Colors.white,
                       ),
-                      child: const Text('Retry'),
+                      child: Text('retry'.tr),
                     ),
                   ],
                 ),
@@ -173,13 +173,13 @@ class SvpPaymentRequestTab extends StatelessWidget {
                   Icon(Icons.payments, size: 60.h, color: Colors.grey),
                   UIHelper.verticalSpace(16.h),
                   Text(
-                    'No payment requests',
+                    'no_payment_requests'.tr,
                     style: TextFontStyle.headline10w500c000000StyleSatoshi
                         .copyWith(color: Colors.grey),
                   ),
                   UIHelper.verticalSpace(8.h),
                   Text(
-                    'Payment requests will appear here',
+                    'payment_request_will_appear_here'.tr,
                     style: TextFontStyle.headline10w400c6c606cStyleSatoshi
                         .copyWith(color: Colors.grey),
                   ),

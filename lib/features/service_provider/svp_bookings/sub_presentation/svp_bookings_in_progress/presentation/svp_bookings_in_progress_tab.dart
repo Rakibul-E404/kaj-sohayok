@@ -57,7 +57,7 @@ class SvpBookingsInProgressTab extends StatelessWidget {
                     CircularProgressIndicator(color: AppColors.c000e08),
                     UIHelper.verticalSpace(16.h),
                     Text(
-                      'Loading in-progress bookings...',
+                      'loading_inprogress_bookings'.tr,
                       style: TextFontStyle.headline10w400c6c606cStyleSatoshi,
                     ),
                   ],
@@ -96,7 +96,7 @@ class SvpBookingsInProgressTab extends StatelessWidget {
                         backgroundColor: AppColors.c000e08,
                         foregroundColor: Colors.white,
                       ),
-                      child: const Text('Retry'),
+                      child: Text('retry'.tr),
                     ),
                   ],
                 ),

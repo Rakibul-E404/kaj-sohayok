@@ -551,4 +551,21 @@ Map<String, String> englishLanguage = {
   'failed_to_load_complete_work': 'Failed to load completed work',
   'details_of_completed_work': 'Details of Completed Work',
   'proof_of_image': 'Proof of Image',
+  'loading_job_request': 'Loading job requests...',
+  'no_job_request_available': 'No job requests available',
+  'new_job_request_will_appear_here': 'New job requests will appear here',
+  'failed_to_load_job_request': 'Failed to load job requests',
+  'authentication_required': 'Authentication required',
+  'failed_to_cancel_job_request_server_configuration_issue':
+      'Failed to cancel job request - Server configuration issue',
+  'failed_to_accept_job_request_server_configuration_issue':
+      'Failed to accept job request - Server configuration issue',
+  'failed_to_load_work_form_data': 'Failed to load work form data',
+  'failed_to_load_work_form_please_check_your_connection':
+      'Failed to load work form. Please check your connection.',
+  'loading_payment_requests': 'Loading payment requests...',
+  'no_payment_requests': 'No payment requests',
+  'payment_request_will_appear_here': 'Payment requests will appear here',
+  'pending_payment': 'Pending Payment',
+  'failed_to_load_payment_requests': 'Failed to load payment requests',
 };
