@@ -1,9 +1,7 @@
 // lib/.../controller/svp_in_progress_screen_controller.dart
 
 import 'dart:developer';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../constants/app_enums.dart';
 import '../../../../custom_widgets/recent_job_request_status_widget.dart';
 import '../../../../routes/routes.dart';
 import '../../../../service/network_caller.dart';
@@ -36,7 +34,7 @@ class SvpInProgressScreenController extends GetxController {
 
       if (token == null) {
         hasError.value = true;
-        errorMessage.value = 'Authentication required. Please login again.';
+        errorMessage.value = 'authentication_required_login_again'.tr;
         isLoading.value = false;
         return;
       }
@@ -55,17 +53,18 @@ class SvpInProgressScreenController extends GetxController {
             responseData['data'] != null &&
             responseData['data']['attributes'] != null &&
             responseData['data']['attributes']['results'] != null) {
-          inProgressBookings.assignAll(List<dynamic>.from(responseData['data']['attributes']['results']));
+          inProgressBookings.assignAll(List<dynamic>.from(
+              responseData['data']['attributes']['results']));
           isLoading.value = false;
         } else {
           hasError.value = true;
-          errorMessage.value = 'Unexpected response format';
+          errorMessage.value = 'unexpected_response_format'.tr;
           isLoading.value = false;
         }
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to load in-progress bookings';
+            'failed_to_load_in_progress_bookings'.tr;
 
         hasError.value = true;
         errorMessage.value = errorMsg;
@@ -77,9 +76,10 @@ class SvpInProgressScreenController extends GetxController {
         }
       }
     } catch (e, stackTrace) {
-      log('Error fetching in-progress bookings: $e', error: e, stackTrace: stackTrace);
+      log('Error fetching in-progress bookings: $e',
+          error: e, stackTrace: stackTrace);
       hasError.value = true;
-      errorMessage.value = 'Network error. Please check your connection.';
+      errorMessage.value = 'network_error_check_again'.tr;
       isLoading.value = false;
     }
   }
@@ -100,8 +100,18 @@ class SvpInProgressScreenController extends GetxController {
     try {
       final dateTime = DateTime.parse(dateTimeString).toLocal();
       final months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
       ];
       final month = months[dateTime.month - 1];
       final day = dateTime.day;
@@ -117,8 +127,8 @@ class SvpInProgressScreenController extends GetxController {
   }
 
   String getAddress(Map<String, dynamic>? address) {
-    if (address == null) return 'Address not available';
-    return address['en'] ?? address['bn'] ?? 'Address not available';
+    if (address == null) return 'address_not_available'.tr;
+    return address['en'] ?? address['bn'] ?? 'address_not_available'.tr;
   }
 
   void navigateToSubmitWorkForm(Map<String, dynamic> booking) {

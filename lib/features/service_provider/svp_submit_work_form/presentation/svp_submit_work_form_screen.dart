@@ -853,7 +853,6 @@ import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/custom_widgets/payment_summery_widget.dart';
 import 'package:kaz_bd/controllers/svp_submit_work_form_screen_controller.dart';
-import 'package:kaz_bd/custom_widgets/proof_of_image_uploading_widget.dart';
 import 'package:kaz_bd/custom_widgets/work_address_and_date_widget.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/custom_widgets/more_info_widget_tile.dart';
@@ -969,7 +968,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                   ),
                                   SizedBox(height: 8.h),
                                   Text(
-                                    'Failed to load image',
+                                    'failed_to_load_image'.tr,
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 14.sp,
@@ -1031,12 +1030,12 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   Icon(Icons.error, color: Colors.white, size: 48),
                   SizedBox(height: 16),
                   Text(
-                    'Failed to load video',
+                    'failed_to_load_video'.tr,
                     style: TextStyle(color: Colors.white),
                   ),
                   SizedBox(height: 8),
                   Text(
-                    errorMessage ?? 'Unknown error',
+                    errorMessage ?? 'unknown_error'.tr,
                     style: TextStyle(color: Colors.grey),
                     textAlign: TextAlign.center,
                   ),
@@ -1062,7 +1061,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   children: [
                     Expanded(
                       child: Text(
-                        title ?? 'Video Preview',
+                        title ?? 'video_preview'.tr,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16.sp,
@@ -1097,12 +1096,12 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                     Icon(Icons.videocam, color: Colors.white70, size: 16),
                     SizedBox(width: 8.w),
                     Text(
-                      'Video File',
+                      'video_file'.tr,
                       style: TextStyle(color: Colors.white70, fontSize: 14.sp),
                     ),
                     Spacer(),
                     Text(
-                      'Tap to play/pause',
+                      'tap_to_play_pause'.tr,
                       style: TextStyle(color: Colors.white54, fontSize: 12.sp),
                     ),
                   ],
@@ -1115,8 +1114,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
       );
     } catch (e) {
       Get.snackbar(
-        "Error",
-        "Failed to load video: ${e.toString()}",
+        'error'.tr,
+        "${'failed_to_load_video'.tr} ${e.toString()}",
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -1160,7 +1159,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   children: [
                     Expanded(
                       child: Text(
-                        title ?? 'Video Preview',
+                        title ?? 'video_preview'.tr,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16.sp,
@@ -1191,7 +1190,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                     Icon(Icons.videocam, color: Colors.white70, size: 16),
                     SizedBox(width: 8.w),
                     Text(
-                      'Local Video',
+                      'local_video'.tr,
                       style: TextStyle(color: Colors.white70, fontSize: 14.sp),
                     ),
                     Spacer(),
@@ -1209,8 +1208,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
       );
     } catch (e) {
       Get.snackbar(
-        "Error",
-        "Failed to load video: ${e.toString()}",
+        'error'.tr,
+        "${'failed_to_load_video'.tr} ${e.toString()}",
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -1259,8 +1258,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
     if (controller.bookingId.value == null ||
         controller.bookingId.value!.isEmpty) {
       Get.snackbar(
-        "Error",
-        "Booking ID not found",
+        'error'.tr,
+        'booking_id_not_found'.tr,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -1269,8 +1268,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
 
     if (controller.mediaFiles.isEmpty) {
       Get.snackbar(
-        "Info",
-        "No new files to upload",
+        'info'.tr,
+        'no_new_files_to_upload'.tr,
         backgroundColor: Colors.blue,
         colorText: Colors.white,
       );
@@ -1300,8 +1299,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
 
       if (fileObjects.isEmpty) {
         Get.snackbar(
-          "Error",
-          "No valid files to upload",
+          'error'.tr,
+          'no_valid_files_to_upload'.tr,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -1321,16 +1320,16 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
         isMediaCompleted.value = true;
 
         Get.snackbar(
-          "Success",
-          "${fileObjects.length} file(s) uploaded successfully",
+          'success'.tr,
+          "${fileObjects.length} ${'files_uploaded_successfully'.tr}",
           backgroundColor: Colors.green,
           colorText: Colors.white,
           duration: Duration(seconds: 3),
         );
       } else {
-        final errorMsg = response.errorMessage ?? "Failed to upload files";
+        final errorMsg = response.errorMessage ?? 'failed_to_upload_files'.tr;
         Get.snackbar(
-          "Upload Failed",
+          'upload_failed'.tr,
           errorMsg,
           backgroundColor: Colors.red,
           colorText: Colors.white,
@@ -1339,8 +1338,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
     } catch (e, stackTrace) {
       log("Error uploading media: $e", error: e, stackTrace: stackTrace);
       Get.snackbar(
-        "Error",
-        "Failed to upload files: ${e.toString()}",
+        'error'.tr,
+        "${'failed_to_upload_files'.tr} ${e.toString()}",
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -1354,8 +1353,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
       appBar: AppBar(
         title: Obx(() => Text(
               controller.isLoadingWorkDetails.value
-                  ? "Loading..."
-                  : "Submit Work Form",
+                  ? 'loading'.tr
+                  : 'submit_work_form'.tr,
               style: TextFontStyle.headline18w700c000000StyleSatoshi,
             )),
         centerTitle: true,
@@ -1385,16 +1384,16 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   WorkAddressAndDateWidget(
                     address: controller.address.value.isNotEmpty
                         ? controller.address.value
-                        : "Address not available",
+                        : 'address_not_available'.tr,
                     dateTime: controller.bookingDateTime.value.isNotEmpty
                         ? controller.bookingDateTime.value
-                        : "Date not available",
+                        : 'date_not_valid'.tr,
                   ),
                   UIHelper.verticalSpace(24.h),
 
                   /// Section: Proof Of Work Complete Information
                   Text(
-                    "Proof Of Work Complete Information",
+                    'proof_of_work_completed_information'.tr,
                     style: TextFontStyle.headline16w700c202020StyleSatoshi,
                   ),
                   UIHelper.verticalSpace(16.h),
@@ -1415,8 +1414,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                       }
                     },
                     child: MoreInfoWidgetTile(
-                      title: "Completion Date",
-                      hintText: "Select Date",
+                      title: 'completation_date'.tr,
+                      hintText: 'select_date'.tr,
                       isEnabled: false,
                       controller: controller.completionDateController,
                     ),
@@ -1425,8 +1424,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
 
                   /// Section: Duration Time
                   MoreInfoWidgetTile(
-                    title: "Duration Time",
-                    hintText: "Type Day's In Numbers",
+                    title: 'duration_time'.tr,
+                    hintText: 'type_days_in_numbers'.tr,
                     keyboardType: TextInputType.number,
                     controller: controller.durationTimeController,
                   ),
@@ -1441,7 +1440,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                           Row(
                             children: [
                               Text(
-                                "Existing Proof Files",
+                                'existing_proof_files'.tr,
                                 style: TextFontStyle
                                     .headline16w700c202020StyleSatoshi,
                               ),
@@ -1503,7 +1502,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                       onTap: () {
                                         _showMediaInDialog(
                                             mediaUrl,
-                                            "Proof File ${index + 1}",
+                                            "${'proof_file'.tr} ${index + 1}",
                                             isVideo ? 'video' : 'image');
                                       },
                                       child: Stack(
@@ -1533,7 +1532,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                                               size: 24.h),
                                                           SizedBox(height: 4.h),
                                                           Text(
-                                                            'Video',
+                                                            'video'.tr,
                                                             style: TextStyle(
                                                               color:
                                                                   Colors.white,
@@ -1612,7 +1611,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                 ),
                                 UIHelper.verticalSpace(8.h),
                                 Text(
-                                  "Tap on any file to preview. Videos will play in a video player.",
+                                  'tap_on_any_file_to_see_preview'.tr,
                                   style: TextStyle(
                                     fontSize: 11.sp,
                                     color: Colors.grey.shade600,
@@ -1635,7 +1634,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Add New Proof Files",
+                          'add_new_proof_files'.tr,
                           style:
                               TextFontStyle.headline16w700c202020StyleSatoshi,
                         ),
@@ -1724,13 +1723,15 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                                               if (isVideo) {
                                                                 _showLocalVideoDialog(
                                                                     file,
-                                                                    "Preview Video");
+                                                                    'preview_video'
+                                                                        .tr);
                                                               } else if (isImage) {
                                                                 // For local images, you might need to use Image.file
                                                                 // Or convert to base64/network URL
                                                                 Get.snackbar(
-                                                                  "Preview",
-                                                                  "Image preview for local files would need implementation",
+                                                                  'preview'.tr,
+                                                                  'image_preview_for_loacal_files_needs_implementation'
+                                                                      .tr,
                                                                   backgroundColor:
                                                                       Colors
                                                                           .blue,
@@ -1751,7 +1752,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                                                 SizedBox(
                                                                     width: 4.w),
                                                                 Text(
-                                                                  'Preview',
+                                                                  'preview'.tr,
                                                                   style:
                                                                       TextStyle(
                                                                     fontSize:
@@ -1818,7 +1819,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                         ),
                                         UIHelper.horizontalSpace(10.w),
                                         Text(
-                                          "Add New Files",
+                                          'add_new_files'.tr,
                                           style: TextFontStyle
                                               .headline12w700c000e08StyleSatoshi,
                                         ),
@@ -1882,7 +1883,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                     ),
                                     SizedBox(width: 8.w),
                                     Text(
-                                      "Uploading...",
+                                      'uploading'.tr,
                                       style: TextStyle(
                                         color: Colors.blue.shade800,
                                         fontSize: 12.sp,
@@ -1897,7 +1898,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                 onTap: _uploadMediaFiles,
                                 buttonWidth: 120.w,
                                 buttonHeight: 36.h,
-                                buttonTitle: "Done",
+                                buttonTitle: 'done'.tr,
                               ),
                           ],
                         ),
@@ -1931,8 +1932,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                 _requestPayment();
                               },
                         buttonTitle: controller.isPaymentRequestLoading.value
-                            ? "Requesting..."
-                            : "Request Payment",
+                            ? 'requesting'.tr
+                            : 'request_payment'.tr,
                       ),
                     );
                   }),
@@ -1956,7 +1957,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
       AlertDialog(
         backgroundColor: AppColors.cFFFFFF,
         title: Text(
-          "Add Additional Cost",
+          'add_additional_cost'.tr,
           style: TextFontStyle.headline16w500c000000StyleSatoshi,
         ),
         content: Form(
@@ -1970,7 +1971,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                 TextFormField(
                   controller: additionalCostTitle,
                   decoration: InputDecoration(
-                    hintText: "Enter cost title",
+                    hintText: 'enter_cost_title'.tr,
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: AppColors.ce6e6e6),
                       borderRadius: BorderRadius.circular(8.r),
@@ -1978,7 +1979,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter cost title';
+                      return 'please_enter_cost_title'.tr;
                     }
                     return null;
                   },
@@ -1988,7 +1989,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   controller: additionalCost,
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
-                    hintText: "Enter cost amount",
+                    hintText: 'enter_cost_amount'.tr,
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: AppColors.ce6e6e6),
                       borderRadius: BorderRadius.circular(8.r),
@@ -1996,11 +1997,11 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter cost amount';
+                      return 'please_enter_cost_amount'.tr;
                     }
                     final price = double.tryParse(value.trim());
                     if (price == null || price <= 0) {
-                      return 'Please enter a valid amount';
+                      return 'please_enter_valid_amount'.tr;
                     }
                     return null;
                   },
@@ -2019,7 +2020,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   Get.back();
                 },
                 child: Text(
-                  'Cancel',
+                  'cancel'.tr,
                   style: TextStyle(
                     color: Colors.grey.shade600,
                     fontSize: 14.sp,
@@ -2044,7 +2045,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                 },
                 buttonWidth: 107.w,
                 buttonHeight: 38.h,
-                buttonTitle: "Save",
+                buttonTitle: 'save'.tr,
               ),
             ],
           ),
@@ -2056,18 +2057,18 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
 
   void _requestPayment() {
     if (controller.completionDateController.text.isEmpty) {
-      Get.snackbar("Warning", "Please select completion date");
+      Get.snackbar('warning'.tr, 'please_select_completation_date'.tr);
       return;
     }
 
     if (controller.durationTimeController.text.isEmpty) {
-      Get.snackbar("Warning", "Please enter duration time");
+      Get.snackbar('warning'.tr, 'please_enter_duration_time'.tr);
       return;
     }
 
     final duration = double.tryParse(controller.durationTimeController.text);
     if (duration == null) {
-      Get.snackbar("Warning", "Please enter a valid number for duration");
+      Get.snackbar('warning'.tr, 'please_enter_a_valid_number_for_duration'.tr);
       return;
     }
 
@@ -2079,7 +2080,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
           children: [
             Icon(Icons.payment, color: AppColors.c000e08),
             SizedBox(width: 8.w),
-            Text("Request Payment",
+            Text('request_payment'.tr,
                 style: TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
@@ -2088,32 +2089,31 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                  "You are about to request payment with the following details:",
+              Text('you_are_about_request_payment_with_these_details'.tr,
                   style: TextStyle(fontWeight: FontWeight.w500)),
               SizedBox(height: 16.h),
-              _buildDetailRow(
-                  "Completion Date:", controller.completionDateController.text),
-              _buildDetailRow("Duration:",
-                  "${controller.durationTimeController.text} days"),
-              _buildDetailRow("Total Files:", "$totalMedia"),
+              _buildDetailRow("${'completation_date'.tr}:",
+                  controller.completionDateController.text),
+              _buildDetailRow('duration'.tr,
+                  "${controller.durationTimeController.text} ${'days'.tr}"),
+              _buildDetailRow('total_files'.tr, "$totalMedia"),
               if (controller.apiAttachments.isNotEmpty)
-                _buildDetailRow("  - Existing files:",
+                _buildDetailRow("  - ${'existing_files'.tr}",
                     "${controller.apiAttachments.length}"),
               if (controller.mediaFiles.isNotEmpty)
                 _buildDetailRow(
-                    "  - New files:", "${controller.mediaFiles.length}"),
+                    "  - ${'new_files'.tr}", "${controller.mediaFiles.length}"),
               SizedBox(height: 12.h),
               Divider(),
               SizedBox(height: 12.h),
-              _buildDetailRow("Initial Cost:",
+              _buildDetailRow("${'initial_cost'.tr}:",
                   "\$${controller.initialCost.value.toStringAsFixed(2)}"),
               if (controller.additionalCosts.isNotEmpty)
-                _buildDetailRow("Additional Costs:",
+                _buildDetailRow("${'additional_cost'.tr}:",
                     "\$${(controller.calculateTotalPayment() - controller.initialCost.value).toStringAsFixed(2)}"),
               SizedBox(height: 8.h),
               _buildDetailRow(
-                "Total Payment:",
+                "${'total_payment'.tr}:",
                 "\$${controller.calculateTotalPayment().toStringAsFixed(2)}",
                 isBold: true,
               ),
@@ -2125,7 +2125,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Text(
-                  "The client will be notified about this payment request.",
+                  'the_client_will_be_notified_about_this_payment_request'.tr,
                   style: TextStyle(
                     fontSize: 12.sp,
                     color: Colors.blue.shade900,
@@ -2139,8 +2139,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
         actions: [
           TextButton(
             onPressed: Get.back,
-            child:
-                Text("Cancel", style: TextStyle(color: Colors.grey.shade600)),
+            child: Text('cancel'.tr,
+                style: TextStyle(color: Colors.grey.shade600)),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -2152,7 +2152,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.r)),
             ),
-            child: Text("Send Request",
+            child: Text('send_request'.tr,
                 style: TextStyle(
                     color: Colors.white, fontWeight: FontWeight.w600)),
           ),
