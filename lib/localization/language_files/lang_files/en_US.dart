@@ -545,4 +545,8 @@ Map<String, String> englishLanguage = {
   'the_client_will_be_notified_about_this_payment_request':
       'The client will be notified about this payment request.',
   'send_request': 'Send Request',
+  'loading_completed_work': 'Loading completed work...',
+  'no_completed_work_yet': 'No completed work yet',
+  'finished_jobs_will_appear_here': 'Finished jobs will appear here',
+  'failed_to_load_complete_work': 'Failed to load completed work',
 };

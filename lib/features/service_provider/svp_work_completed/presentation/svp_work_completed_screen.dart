@@ -56,11 +56,6 @@ class SvpWorkCompletedScreen extends StatelessWidget {
 }
 */
 
-
-
-
-
-
 ///
 ///
 ///
@@ -68,8 +63,6 @@ class SvpWorkCompletedScreen extends StatelessWidget {
 ///
 ///
 ///
-
-
 
 // lib/.../svp_work_completed_screen.dart
 
@@ -92,7 +85,7 @@ class SvpWorkCompletedScreen extends StatelessWidget {
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          "Work Completed",
+          'work_completed'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
         centerTitle: true,
@@ -115,7 +108,7 @@ class SvpWorkCompletedScreen extends StatelessWidget {
             CircularProgressIndicator(color: AppColors.c000e08),
             UIHelper.verticalSpace(16.h),
             Text(
-              'Loading completed work...',
+              'loading_completed_work'.tr,
               style: TextFontStyle.headline10w400c6c606cStyleSatoshi,
             ),
           ],
@@ -134,7 +127,8 @@ class SvpWorkCompletedScreen extends StatelessWidget {
               UIHelper.verticalSpace(16.h),
               Text(
                 controller.errorMessage.value,
-                style: TextFontStyle.headline10w400c6c606cStyleSatoshi.copyWith(color: Colors.red),
+                style: TextFontStyle.headline10w400c6c606cStyleSatoshi
+                    .copyWith(color: Colors.red),
                 textAlign: TextAlign.center,
               ),
               UIHelper.verticalSpace(16.h),
@@ -144,7 +138,7 @@ class SvpWorkCompletedScreen extends StatelessWidget {
                   backgroundColor: AppColors.c000e08,
                   foregroundColor: Colors.white,
                 ),
-                child: const Text('Retry'),
+                child: Text('retry'.tr),
               ),
             ],
           ),
@@ -160,13 +154,15 @@ class SvpWorkCompletedScreen extends StatelessWidget {
             Icon(Icons.check_circle, size: 60.h, color: Colors.grey),
             UIHelper.verticalSpace(16.h),
             Text(
-              'No completed work yet',
-              style: TextFontStyle.headline10w500c000000StyleSatoshi.copyWith(color: Colors.grey),
+              'no_completed_work_yet'.tr,
+              style: TextFontStyle.headline10w500c000000StyleSatoshi
+                  .copyWith(color: Colors.grey),
             ),
             UIHelper.verticalSpace(8.h),
             Text(
-              'Finished jobs will appear here',
-              style: TextFontStyle.headline10w400c6c606cStyleSatoshi.copyWith(color: Colors.grey),
+              'finished_jobs_will_appear_here'.tr,
+              style: TextFontStyle.headline10w400c6c606cStyleSatoshi
+                  .copyWith(color: Colors.grey),
             ),
           ],
         ),

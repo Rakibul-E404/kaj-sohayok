@@ -542,4 +542,8 @@ Map<String, String> banglaLanguage = {
   'the_client_will_be_notified_about_this_payment_request':
       'ক্লায়েন্টকে এই পেমেন্ট অনুরোধ সম্পর্কে অবহিত করা হবে।',
   'send_request': 'অনুরোধ পাঠান',
+  'loading_completed_work': 'সম্পন্ন কাজ লোড হচ্ছে...',
+  'no_completed_work_yet': 'এখনো কোনো সম্পন্ন কাজ নেই',
+  'finished_jobs_will_appear_here': 'সম্পন্ন কাজগুলি এখানে দেখা যাবে',
+  'failed_to_load_complete_work': 'সম্পন্ন কাজ লোড করতে ব্যর্থ হয়েছে',
 };
