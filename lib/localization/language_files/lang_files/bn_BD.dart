@@ -565,4 +565,7 @@ Map<String, String> banglaLanguage = {
   'payment_request_will_appear_here': 'পেমেন্ট অনুরোধগুলি এখানে দেখা যাবে',
   'pending_payment': 'অপেক্ষমান পেমেন্ট',
   'failed_to_load_payment_requests': 'পেমেন্ট অনুরোধ লোড করতে ব্যর্থ হয়েছে',
+  'no_canceled_bookings': 'কোনো বাতিল বুকিং নেই',
+  'canceled_jobs_will_appear_here': 'বাতিল কাজগুলি এখানে দেখা যাবে',
+  'failed_to_load_canceled_bookings': 'বাতিল বুকিং লোড করতে ব্যর্থ হয়েছে',
 };

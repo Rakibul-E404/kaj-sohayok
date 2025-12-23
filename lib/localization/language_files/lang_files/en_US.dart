@@ -568,4 +568,7 @@ Map<String, String> englishLanguage = {
   'payment_request_will_appear_here': 'Payment requests will appear here',
   'pending_payment': 'Pending Payment',
   'failed_to_load_payment_requests': 'Failed to load payment requests',
+  'no_canceled_bookings': 'No canceled bookings',
+  'canceled_jobs_will_appear_here': 'Canceled jobs will appear here',
+  'failed_to_load_canceled_bookings': 'Failed to load canceled bookings',
 };

@@ -96,7 +96,7 @@ class SvpBookingsCanceledTab extends StatelessWidget {
                     CircularProgressIndicator(color: AppColors.c000e08),
                     UIHelper.verticalSpace(16.h),
                     Text(
-                      'Loading canceled bookings...',
+                      'loading_canceled_booking'.tr,
                       style: TextFontStyle.headline10w400c6c606cStyleSatoshi,
                     ),
                   ],
@@ -135,7 +135,7 @@ class SvpBookingsCanceledTab extends StatelessWidget {
                         backgroundColor: AppColors.c000e08,
                         foregroundColor: Colors.white,
                       ),
-                      child: const Text('Retry'),
+                      child: Text('retry'.tr),
                     ),
                   ],
                 ),
@@ -160,13 +160,13 @@ class SvpBookingsCanceledTab extends StatelessWidget {
                   Icon(Icons.cancel, size: 60.h, color: Colors.grey),
                   UIHelper.verticalSpace(16.h),
                   Text(
-                    'No canceled bookings',
+                    'no_canceled_bookings'.tr,
                     style: TextFontStyle.headline10w500c000000StyleSatoshi
                         .copyWith(color: Colors.grey),
                   ),
                   UIHelper.verticalSpace(8.h),
                   Text(
-                    'Canceled jobs will appear here',
+                    'canceled_jobs_will_appear_here'.tr,
                     style: TextFontStyle.headline10w400c6c606cStyleSatoshi
                         .copyWith(color: Colors.grey),
                   ),
