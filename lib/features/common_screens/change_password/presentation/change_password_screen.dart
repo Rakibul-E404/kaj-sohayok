@@ -28,7 +28,7 @@ class ChangePasswordScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: AppColors.scaffoldBackgroundColor,
         title: Text(
-          "Change Password",
+          'change_password'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
       ),
@@ -46,7 +46,7 @@ class ChangePasswordScreen extends StatelessWidget {
                     ? () {}
                     : controller.handleChangePassword();
               },
-              buttonTitle: "Change Password",
+              buttonTitle: 'change_password'.tr,
             ),
           ),
         ),
@@ -62,8 +62,8 @@ class ChangePasswordScreen extends StatelessWidget {
                   Obx(() {
                     return CustomFormField(
                       controller: controller.oldPasswordController,
-                      labelText: "Old Password",
-                      hintText: "Enter Password",
+                      labelText: 'old_password'.tr,
+                      hintText: 'enter_password'.tr,
                       isPass: true,
                       isObsecure: controller.isVisibleOldPassword.value,
                       prefixIcon: SvgPicture.asset(
@@ -86,20 +86,20 @@ class ChangePasswordScreen extends StatelessWidget {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please Enter Old Password !!';
+                          return 'please_enter_old_password'.tr;
                         }
                         return null;
                       },
                     );
                   }),
                   UIHelper.verticalSpace(16.h),
-              
+
                   ///Section : New Passwrd Form Field
                   Obx(() {
                     return CustomFormField(
                       controller: controller.newPasswordController,
-                      labelText: "New Password",
-                      hintText: "Enter Password",
+                      labelText: 'new_password'.tr,
+                      hintText: 'enter_password'.tr,
                       isPass: true,
                       isObsecure: controller.isVisibleNewPassword.value,
                       prefixIcon: SvgPicture.asset(
@@ -122,21 +122,21 @@ class ChangePasswordScreen extends StatelessWidget {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please Enter New Password !!';
+                          return 'please_enter_new_password'.tr;
                         }
-              
+
                         return null;
                       },
                     );
                   }),
                   UIHelper.verticalSpace(16.h),
-              
+
                   ///Section : Confirm Passwrd Form Field
                   Obx(() {
                     return CustomFormField(
                       controller: controller.confirmPasswordController,
-                      labelText: "Confirm Password",
-                      hintText: "Enter Password",
+                      labelText: 'confirm_password'.tr,
+                      hintText: 'enter_password'.tr,
                       isPass: true,
                       isObsecure: controller.isVisibleConfirmPassword.value,
                       prefixIcon: SvgPicture.asset(
@@ -159,10 +159,10 @@ class ChangePasswordScreen extends StatelessWidget {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please confirm password !!';
+                          return 'please_confirm_password'.tr;
                         } else if (value !=
                             controller.newPasswordController.text) {
-                          return "Passwords do not match !!";
+                          return 'password_do_not_match'.tr;
                         }
                         return null;
                       },

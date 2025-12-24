@@ -55,7 +55,7 @@ class SvpJobRequestTabController extends GetxController {
       if (token == null) {
         log('No token found in storage');
         hasError.value = true;
-        errorMessage.value = 'Authentication required. Please login again.';
+        errorMessage.value = 'authentication_required_login_again'.tr;
         isLoading.value = false;
         return;
       }
@@ -112,13 +112,13 @@ class SvpJobRequestTabController extends GetxController {
           }
 
           hasError.value = true;
-          errorMessage.value = 'Unexpected response format';
+          errorMessage.value = 'unexpected_response_format'.tr;
           isLoading.value = false;
         }
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to load job requests';
+            'failed_to_load_job_request'.tr;
 
         log('API Error: $errorMsg');
         hasError.value = true;
@@ -134,7 +134,7 @@ class SvpJobRequestTabController extends GetxController {
     } catch (e, stackTrace) {
       log('Error fetching job requests: $e', error: e, stackTrace: stackTrace);
       hasError.value = true;
-      errorMessage.value = 'Network error. Please check your connection.';
+      errorMessage.value = 'network_error_check_again'.tr;
       isLoading.value = false;
     }
   }
@@ -196,14 +196,14 @@ class SvpJobRequestTabController extends GetxController {
   String getAddress(Map<String, dynamic>? address) {
     if (address == null) {
       log('getAddress: Address is null');
-      return 'Address not available';
+      return 'address_not_available'.tr;
     }
 
     final englishAddress = address['en'];
     final banglaAddress = address['bn'];
     log('getAddress: English="$englishAddress", Bangla="$banglaAddress"');
 
-    return englishAddress ?? banglaAddress ?? 'Address not available';
+    return englishAddress ?? banglaAddress ?? 'address_not_available'.tr;
   }
 
   Future<void> cancelJobRequest(String bookingId, String userName) async {
@@ -216,7 +216,7 @@ class SvpJobRequestTabController extends GetxController {
       if (token == null) {
         log('No token found for cancel request');
         Get.back();
-        Get.snackbar('Error', 'Authentication required',
+        Get.snackbar('error'.tr, 'authentication_required'.tr,
             backgroundColor: Colors.red, colorText: Colors.white);
         return;
       }
@@ -267,7 +267,7 @@ class SvpJobRequestTabController extends GetxController {
         } catch (e2) {
           log('Both approaches failed: $e2');
           Get.back();
-          Get.snackbar('Error', 'Network error: ${e2.toString()}',
+          Get.snackbar('error'.tr, '${'network_error'.tr}: ${e2.toString()}',
               backgroundColor: Colors.red, colorText: Colors.white);
           return;
         }
@@ -286,13 +286,13 @@ class SvpJobRequestTabController extends GetxController {
 
       if (response.isSuccess) {
         log('Job cancelled successfully - status: ${response.statusCode}');
-        Get.snackbar('Success', 'Job request cancelled successfully',
+        Get.snackbar('success'.tr, 'job_request_cancelled_successfully'.tr,
             backgroundColor: Colors.green, colorText: Colors.white);
         fetchJobRequests(); // Refresh the list
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to cancel job request';
+            'failed_to_cancel_job_request'.tr;
         log('Cancel API Error: $errorMsg');
 
         // If we get JSON error, try a different body format
@@ -309,7 +309,7 @@ class SvpJobRequestTabController extends GetxController {
     } catch (e, stackTrace) {
       Get.back();
       log('Error cancelling job request: $e', error: e, stackTrace: stackTrace);
-      Get.snackbar('Error', 'Failed to cancel job request',
+      Get.snackbar('error'.tr, 'failed_to_cancel_job_request'.tr,
           backgroundColor: Colors.red, colorText: Colors.white);
     }
   }
@@ -339,7 +339,7 @@ class SvpJobRequestTabController extends GetxController {
 
         if (response.isSuccess) {
           log('SUCCESS with format: ${body == null ? "null" : jsonEncode(body)}');
-          Get.snackbar('Success', 'Job request cancelled successfully',
+          Get.snackbar('success'.tr, 'job_request_cancelled_successfully'.tr,
               backgroundColor: Colors.green, colorText: Colors.white);
           fetchJobRequests();
           return;
@@ -358,8 +358,8 @@ class SvpJobRequestTabController extends GetxController {
     }
 
     // If all formats failed
-    Get.snackbar(
-        'Error', 'Failed to cancel job request - Server configuration issue',
+    Get.snackbar('error'.tr,
+        'failed_to_cancel_job_request_server_configuration_issue'.tr,
         backgroundColor: Colors.red, colorText: Colors.white);
     log('All body format attempts failed for booking ID: $bookingId');
   }
@@ -374,7 +374,7 @@ class SvpJobRequestTabController extends GetxController {
       if (token == null) {
         log('No token found for accept request');
         Get.back();
-        Get.snackbar('Error', 'Authentication required',
+        Get.snackbar('error'.tr, 'authentication_required'.tr,
             backgroundColor: Colors.red, colorText: Colors.white);
         return;
       }
@@ -425,7 +425,7 @@ class SvpJobRequestTabController extends GetxController {
         } catch (e2) {
           log('Both approaches failed: $e2');
           Get.back();
-          Get.snackbar('Error', 'Network error: ${e2.toString()}',
+          Get.snackbar('error'.tr, '${'network_error'.tr}: ${e2.toString()}',
               backgroundColor: Colors.red, colorText: Colors.white);
           return;
         }
@@ -444,13 +444,13 @@ class SvpJobRequestTabController extends GetxController {
 
       if (response.isSuccess) {
         log('Job accepted successfully - status: ${response.statusCode}');
-        Get.snackbar('Success', 'Job request accepted successfully',
+        Get.snackbar('success'.tr, 'job_request_accepted_successfully'.tr,
             backgroundColor: Colors.green, colorText: Colors.white);
         fetchJobRequests(); // Refresh the list
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to accept job request';
+            'failed_to_accept_job_request'.tr;
         log('Accept API Error: $errorMsg');
 
         // If we still get JSON error, try a different body format
@@ -461,13 +461,13 @@ class SvpJobRequestTabController extends GetxController {
           return;
         }
 
-        Get.snackbar('Error', errorMsg,
+        Get.snackbar('error'.tr, errorMsg,
             backgroundColor: Colors.red, colorText: Colors.white);
       }
     } catch (e, stackTrace) {
       Get.back();
       log('Error accepting job request: $e', error: e, stackTrace: stackTrace);
-      Get.snackbar('Error', 'Failed to accept job request',
+      Get.snackbar('error'.tr, 'failed_to_accept_job_request'.tr,
           backgroundColor: Colors.red, colorText: Colors.white);
     }
   }
@@ -497,7 +497,7 @@ class SvpJobRequestTabController extends GetxController {
 
         if (response.isSuccess) {
           log('SUCCESS with format: ${body == null ? "null" : jsonEncode(body)}');
-          Get.snackbar('Success', 'Job request accepted successfully',
+          Get.snackbar('success'.tr, 'job_request_accepted_successfully'.tr,
               backgroundColor: Colors.green, colorText: Colors.white);
           fetchJobRequests();
           return;
@@ -516,8 +516,8 @@ class SvpJobRequestTabController extends GetxController {
     }
 
     // If all formats failed
-    Get.snackbar(
-        'Error', 'Failed to accept job request - Server configuration issue',
+    Get.snackbar('error'.tr,
+        'failed_to_accept_job_request_server_configuration_issue'.tr,
         backgroundColor: Colors.red, colorText: Colors.white);
     log('All body format attempts failed for booking ID: $bookingId');
   }

@@ -780,13 +780,6 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
   }
 }*/
 
-
-
-
-
-
-
-
 ///
 ///
 ///
@@ -797,13 +790,9 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
 ///
 ///
 
-
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:kaz_bd/constants/appList.dart';
 import 'package:kaz_bd/constants/app_enums.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
@@ -871,7 +860,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
       setState(() {
         isLoading = false;
         hasError = true;
-        errorMessage = 'Booking ID not found';
+        errorMessage = 'booking_id_not_found'.tr;
       });
       return;
     }
@@ -889,7 +878,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
         setState(() {
           isLoading = false;
           hasError = true;
-          errorMessage = 'Authentication required. Please login again.';
+          errorMessage = 'authentication_required_login_again'.tr;
         });
         return;
       }
@@ -907,7 +896,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
         final responseData = response.jsonResponse!;
 
         if (responseData['code'] == 200 && responseData['data'] != null) {
-          final data = responseData['data']['attributes'] as Map<String, dynamic>? ?? {};
+          final data =
+              responseData['data']['attributes'] as Map<String, dynamic>? ?? {};
 
           setState(() {
             jobDetails = data;
@@ -915,19 +905,21 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
 
             // Check if work is already started (for accepted jobs)
             final currentStatus = jobDetails['status'] as String? ?? '';
-            isWorkStarted = currentStatus == 'inProgress' || currentStatus == 'completed';
+            isWorkStarted =
+                currentStatus == 'inProgress' || currentStatus == 'completed';
           });
         } else {
           setState(() {
             isLoading = false;
             hasError = true;
-            errorMessage = responseData['message'] ?? 'Failed to load job details';
+            errorMessage =
+                responseData['message'] ?? 'failed_to_load_job_details'.tr;
           });
         }
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to load job details';
+            'failed_to_load_job_details'.tr;
 
         setState(() {
           isLoading = false;
@@ -945,7 +937,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
       setState(() {
         isLoading = false;
         hasError = true;
-        errorMessage = 'Network error. Please check your connection.';
+        errorMessage = 'network_error_check_again'.tr;
       });
     }
   }
@@ -963,8 +955,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
 
       if (token == null) {
         Get.snackbar(
-          'Error',
-          'Authentication required. Please login again.',
+          'error'.tr,
+          'authentication_required_login_again'.tr,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -990,8 +982,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
         if (responseData['code'] == 200 || response.isSuccess) {
           // Show success message
           Get.snackbar(
-            'Success',
-            'Job request cancelled successfully!',
+            'success'.tr,
+            'job_request_cancelled_successfully'.tr,
             backgroundColor: Colors.green,
             colorText: Colors.white,
           );
@@ -1007,9 +999,10 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
           // Go back to previous screen after cancellation
           Get.back();
         } else {
-          final errorMsg = responseData['message'] ?? 'Failed to cancel job request';
+          final errorMsg =
+              responseData['message'] ?? 'failed_to_cancel_job_request'.tr;
           Get.snackbar(
-            'Error',
+            'error'.tr,
             errorMsg,
             backgroundColor: Colors.red,
             colorText: Colors.white,
@@ -1021,10 +1014,10 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to cancel job request';
+            'failed_to_cancel_job_request'.tr;
 
         Get.snackbar(
-          'Error',
+          'error'.tr,
           errorMsg,
           backgroundColor: Colors.red,
           colorText: Colors.white,
@@ -1042,8 +1035,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        'Network Error',
-        'Failed to cancel job request. Please check your connection.',
+        'network_error'.tr,
+        'failed_to_cancel_job_request_check_internet_connection'.tr,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -1066,8 +1059,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
 
       if (token == null) {
         Get.snackbar(
-          'Error',
-          'Authentication required. Please login again.',
+          'error'.tr,
+          'authentication_required_login_again'.tr,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -1093,8 +1086,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
         if (responseData['code'] == 200 || response.isSuccess) {
           // Show success message
           Get.snackbar(
-            'Success',
-            'Job request accepted successfully!',
+            'success'.tr,
+            'job_request_accepted_successfully'.tr,
             backgroundColor: Colors.green,
             colorText: Colors.white,
           );
@@ -1116,9 +1109,10 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
           // Also fetch accepted bookings to update that tab
           _fetchAcceptedBookingsInTab();
         } else {
-          final errorMsg = responseData['message'] ?? 'Failed to accept job request';
+          final errorMsg =
+              responseData['message'] ?? 'failed_to_accept_job_request'.tr;
           Get.snackbar(
-            'Error',
+            'error'.tr,
             errorMsg,
             backgroundColor: Colors.red,
             colorText: Colors.white,
@@ -1130,10 +1124,10 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to accept job request';
+            'failed_to_accept_job_request'.tr;
 
         Get.snackbar(
-          'Error',
+          'error'.tr,
           errorMsg,
           backgroundColor: Colors.red,
           colorText: Colors.white,
@@ -1151,8 +1145,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        'Network Error',
-        'Failed to accept job request. Please check your connection.',
+        'network_error'.tr,
+        'failed_to_accept_job_request_check_internet_connection'.tr,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -1175,8 +1169,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
 
       if (token == null) {
         Get.snackbar(
-          'Error',
-          'Authentication required. Please login again.',
+          'error'.tr,
+          'authentication_required_login_again'.tr,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -1202,8 +1196,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
         if (responseData['code'] == 200) {
           // Show success message
           Get.snackbar(
-            'Success',
-            'Work started successfully!',
+            'success'.tr,
+            'work_started_successfully'.tr,
             backgroundColor: Colors.green,
             colorText: Colors.white,
           );
@@ -1220,9 +1214,9 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
           // Fetch accepted bookings in the tab (if it exists)
           _fetchAcceptedBookingsInTab();
         } else {
-          final errorMsg = responseData['message'] ?? 'Failed to start work';
+          final errorMsg = responseData['message'] ?? 'failed_to_start_work'.tr;
           Get.snackbar(
-            'Error',
+            'error'.tr,
             errorMsg,
             backgroundColor: Colors.red,
             colorText: Colors.white,
@@ -1234,10 +1228,10 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to start work';
+            'failed_to_start_work'.tr;
 
         Get.snackbar(
-          'Error',
+          'error'.tr,
           errorMsg,
           backgroundColor: Colors.red,
           colorText: Colors.white,
@@ -1255,8 +1249,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
       }
     } catch (e) {
       Get.snackbar(
-        'Network Error',
-        'Failed to start work. Please check your connection.',
+        'network_error'.tr,
+        'failed_to_start_work_check_your_connection'.tr,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -1282,7 +1276,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
   void _fetchAcceptedBookingsInTab() {
     try {
       // Get the controller instance if it exists
-      final acceptedBookingsController = Get.find<SvpAcceptedBookingsController>();
+      final acceptedBookingsController =
+          Get.find<SvpAcceptedBookingsController>();
       acceptedBookingsController.fetchAcceptedBookings();
     } catch (e) {
       // Controller might not be initialized yet, that's okay
@@ -1293,12 +1288,13 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
   // Helper methods to extract data from jobDetails
   String getUserName() {
     final userData = jobDetails['userId'] as Map<String, dynamic>? ?? {};
-    return userData['name'] as String? ?? 'Unknown User';
+    return userData['name'] as String? ?? 'unknown_user'.tr;
   }
 
   String getUserProfileImage() {
     final userData = jobDetails['userId'] as Map<String, dynamic>? ?? {};
-    final profileImage = userData['profileImage'] as Map<String, dynamic>? ?? {};
+    final profileImage =
+        userData['profileImage'] as Map<String, dynamic>? ?? {};
     final imageUrl = profileImage['imageUrl'] as String? ?? '';
 
     if (imageUrl.isEmpty) return '';
@@ -1313,19 +1309,29 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
 
   String getLocation() {
     final address = jobDetails['address'] as Map<String, dynamic>?;
-    if (address == null) return 'Address not available';
-    return address['en'] ?? address['bn'] ?? 'Address not available';
+    if (address == null) return 'address_not_available'.tr;
+    return address['en'] ?? address['bn'] ?? 'address_not_available'.tr;
   }
 
   String getDateTime() {
     final bookingDateTime = jobDetails['bookingDateTime'] as String? ?? '';
-    if (bookingDateTime.isEmpty) return 'Date not available';
+    if (bookingDateTime.isEmpty) return 'date_not_valid'.tr;
 
     try {
       final dateTime = DateTime.parse(bookingDateTime).toLocal();
       final months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
       ];
       final month = months[dateTime.month - 1];
       final day = dateTime.day;
@@ -1348,15 +1354,14 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
     final userData = jobDetails['userId'] as Map<String, dynamic>? ?? {};
     final profileId = userData['profileId'] as Map<String, dynamic>? ?? {};
     final location = profileId['location'] as Map<String, dynamic>? ?? {};
-    final gender = profileId['gender'] as String? ?? 'Not specified';
+    final gender = profileId['gender'] as String? ?? 'not_specified'.tr;
 
     return [
-      UserInfoData(fieldName: 'Name', data: getUserName()),
+      UserInfoData(fieldName: 'name'.tr, data: getUserName()),
       UserInfoData(
-          fieldName: 'Location',
-          data: location['en'] ?? location['bn'] ?? 'Not specified'
-      ),
-      UserInfoData(fieldName: 'Gender', data: gender),
+          fieldName: 'location'.tr,
+          data: location['en'] ?? location['bn'] ?? 'not_specified'.tr),
+      UserInfoData(fieldName: 'gender'.tr, data: gender),
     ];
   }
 
@@ -1371,7 +1376,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
             CircularProgressIndicator(color: AppColors.c000e08),
             UIHelper.verticalSpace(16.h),
             Text(
-              'Loading job details...',
+              'loading_job_details'.tr,
               style: TextFontStyle.headline10w400c6c606cStyleSatoshi,
             ),
           ],
@@ -1392,7 +1397,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
             UIHelper.verticalSpace(16.h),
             Text(
               errorMessage,
-              style: TextFontStyle.headline10w400c6c606cStyleSatoshi.copyWith(color: Colors.red),
+              style: TextFontStyle.headline10w400c6c606cStyleSatoshi
+                  .copyWith(color: Colors.red),
               textAlign: TextAlign.center,
             ),
             UIHelper.verticalSpace(16.h),
@@ -1402,7 +1408,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                 backgroundColor: AppColors.c000e08,
                 foregroundColor: Colors.white,
               ),
-              child: const Text('Retry'),
+              child: Text('retry'.tr),
             ),
           ],
         ),
@@ -1456,7 +1462,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                         children: [
                           Text(
                             getUserName(),
-                            style: TextFontStyle.headline18w700c202020StyleSatoshi,
+                            style:
+                                TextFontStyle.headline18w700c202020StyleSatoshi,
                           ),
                           UIHelper.verticalSpace(16.h),
 
@@ -1470,7 +1477,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                                   Container(
                                     width: 100.w,
                                     height: 38.h,
-                                    padding: EdgeInsets.symmetric(vertical: 8.h),
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 8.h),
                                     child: Center(
                                       child: SizedBox(
                                         width: 20.h,
@@ -1492,8 +1500,9 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                                     buttonWidth: 100.w,
                                     buttonHeight: 38.h,
                                     buttonColor: AppColors.cfce9e9,
-                                    buttonTitle: "Cancel",
-                                    textStyle: TextFontStyle.headline14w500ce73d3dStyleSatoshi,
+                                    buttonTitle: 'cancel'.tr,
+                                    textStyle: TextFontStyle
+                                        .headline14w500ce73d3dStyleSatoshi,
                                   ),
 
                                 UIHelper.horizontalSpace(12.w),
@@ -1503,7 +1512,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                                   Container(
                                     width: 100.w,
                                     height: 38.h,
-                                    padding: EdgeInsets.symmetric(vertical: 8.h),
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 8.h),
                                     child: Center(
                                       child: SizedBox(
                                         width: 20.h,
@@ -1524,11 +1534,12 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                                     onTap: acceptJobRequest,
                                     buttonWidth: 100.w,
                                     buttonHeight: 38.h,
-                                    buttonTitle: "Accept",
+                                    buttonTitle: 'accept'.tr,
                                   ),
                               ],
                             ),
-                          ] else if (status == JobRequestStatusEnum.accepted) ...[
+                          ] else if (status ==
+                              JobRequestStatusEnum.accepted) ...[
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -1537,7 +1548,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                                   Container(
                                     width: 100.w,
                                     height: 38.h,
-                                    padding: EdgeInsets.symmetric(vertical: 8.h),
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 8.h),
                                     child: Center(
                                       child: SizedBox(
                                         width: 20.h,
@@ -1558,7 +1570,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                                     onTap: null, // Disabled
                                     buttonWidth: 100.w,
                                     buttonHeight: 38.h,
-                                    buttonTitle: "Work Started",
+                                    buttonTitle: 'work_started'.tr,
                                     buttonColor: AppColors.c000e08,
                                   )
                                 else
@@ -1566,23 +1578,26 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                                     onTap: startWork,
                                     buttonWidth: 100.w,
                                     buttonHeight: 38.h,
-                                    buttonTitle: "Start Work",
+                                    buttonTitle: 'start_work'.tr,
                                   ),
 
                                 UIHelper.horizontalSpace(12.w),
                                 CustomElevatedButton(
                                   onTap: () {
-                                     Get.find<MessageScreenController>().createMessage(
-                                        participantId:userId,
-                                        name: getUserName(),
-                                        imageUrl: getUserProfileImage() ?? '');
+                                    Get.find<MessageScreenController>()
+                                        .createMessage(
+                                            participantId: userId,
+                                            name: getUserName(),
+                                            imageUrl:
+                                                getUserProfileImage() ?? '');
                                     // Add message functionality here
                                   },
                                   buttonWidth: 100.w,
                                   buttonHeight: 38.h,
                                   buttonColor: Colors.transparent,
-                                  buttonTitle: "Message",
-                                  textStyle: TextFontStyle.headline14w500c000000StyleSatoshi,
+                                  buttonTitle: 'message'.tr,
+                                  textStyle: TextFontStyle
+                                      .headline14w500c000000StyleSatoshi,
                                   isButtonBorderUsed: true,
                                   buttonBorderColor: AppColors.c778beb,
                                   buttonBorderWidth: 1.5.sp,
@@ -1627,8 +1642,9 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                           borderRadius: BorderRadius.circular(4.r),
                         ),
                         child: Text(
-                          "Job Address & Date",
-                          style: TextFontStyle.headline16w700c202020StyleSatoshi,
+                          'job_address_and_date'.tr,
+                          style:
+                              TextFontStyle.headline16w700c202020StyleSatoshi,
                         ),
                       ),
                       UIHelper.verticalSpace(14.h),
@@ -1672,7 +1688,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "My Price",
+                      'my_price'.tr,
                       style: TextFontStyle.headline16w700c202020StyleSatoshi,
                     ),
                     Spacer(),
@@ -1682,12 +1698,14 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: "Start from ${AppText.bdTkSign}",
-                            style: TextFontStyle.headline12w500c6a6a6aStyleSatoshi,
+                            text: "${'start_from'.tr} ${AppText.bdTkSign}",
+                            style:
+                                TextFontStyle.headline12w500c6a6a6aStyleSatoshi,
                           ),
                           TextSpan(
                             text: "${getStartPrice()}",
-                            style: TextFontStyle.headline18w700c778bebStyleSatoshi,
+                            style:
+                                TextFontStyle.headline18w700c778bebStyleSatoshi,
                           ),
                         ],
                       ),
@@ -1707,7 +1725,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
                   horizontal: 16.w,
                 ),
                 child: Text(
-                  "User Information",
+                  'user_information'.tr,
                   style: TextFontStyle.headline16w700c202020StyleSatoshi,
                 ),
               ),
@@ -1748,7 +1766,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          "Job Details",
+          'job_details'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
         centerTitle: true,
@@ -1758,8 +1776,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
         child: isLoading
             ? _buildLoading()
             : hasError
-            ? _buildError()
-            : _buildContent(),
+                ? _buildError()
+                : _buildContent(),
       ),
     );
   }
@@ -1772,6 +1790,3 @@ class UserInfoData {
 
   UserInfoData({required this.fieldName, required this.data});
 }
-
-
-

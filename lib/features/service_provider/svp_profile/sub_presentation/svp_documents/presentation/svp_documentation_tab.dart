@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:kaz_bd/helpers/waiting_widget.dart';
-import 'package:kaz_bd/models/provider_profile_model.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../../../constants/text_font_style.dart';
@@ -48,19 +46,16 @@ class _SvpDocumentationTabState extends State<SvpDocumentationTab> {
 
     _videoControllers[videoUrl] = controller;
 
-    controller
-        .initialize()
-        .then((_) {
-          if (mounted) {
-            setState(() {
-              _initializedVideos.add(videoUrl);
-            });
-            log('Video initialized: $videoUrl');
-          }
-        })
-        .catchError((error) {
-          log('Failed to load video: $videoUrl | Error: $error');
+    controller.initialize().then((_) {
+      if (mounted) {
+        setState(() {
+          _initializedVideos.add(videoUrl);
         });
+        log('Video initialized: $videoUrl');
+      }
+    }).catchError((error) {
+      log('Failed to load video: $videoUrl | Error: $error');
+    });
 
     controller.addListener(() {
       if (mounted) setState(() {});
@@ -93,7 +88,7 @@ class _SvpDocumentationTabState extends State<SvpDocumentationTab> {
               CircularProgressIndicator(color: AppColors.c778beb),
               UIHelper.verticalSpace(8.h),
               Text(
-                'Loading video...',
+                'loading_video'.tr,
                 style: TextFontStyle.headline12w400c727272StyleSatoshi,
               ),
             ],
@@ -219,7 +214,7 @@ class _SvpDocumentationTabState extends State<SvpDocumentationTab> {
                     Icon(Icons.videocam, color: Colors.white, size: 14.sp),
                     SizedBox(width: 4.w),
                     Text(
-                      'Video',
+                      'video'.tr,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 10.sp,
@@ -258,7 +253,7 @@ class _SvpDocumentationTabState extends State<SvpDocumentationTab> {
                 Icon(Icons.broken_image, size: 60.sp, color: Colors.grey[400]),
                 SizedBox(height: 8.h),
                 Text(
-                  'Failed to load image',
+                  'failed_to_load_image'.tr,
                   style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
                 ),
               ],
@@ -272,12 +267,8 @@ class _SvpDocumentationTabState extends State<SvpDocumentationTab> {
   Widget _buildGallerySection(
     SvpProfileScreenDocumentsTabController controller,
   ) {
-    final attachments =
-        controller
-            .providerDocumentDetailsModel
-            .value
-            ?.serviceProvider
-            .documentAttachments ??
+    final attachments = controller.providerDocumentDetailsModel.value
+            ?.serviceProvider.documentAttachments ??
         [];
 
     if (attachments.isEmpty) {
@@ -317,7 +308,7 @@ class _SvpDocumentationTabState extends State<SvpDocumentationTab> {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Text(
-            "Work Gallery",
+            'work_gallery'.tr,
             style: TextFontStyle.headline16w700c000000StyleSatoshi,
           ),
         ),
@@ -350,7 +341,7 @@ class _SvpDocumentationTabState extends State<SvpDocumentationTab> {
   @override
   Widget build(BuildContext context) {
     final SvpProfileScreenDocumentsTabController
-    svpProfileScreenDocumentsTabController = Get.put(
+        svpProfileScreenDocumentsTabController = Get.put(
       SvpProfileScreenDocumentsTabController(),
     );
 
@@ -403,7 +394,7 @@ class _SvpDocumentationTabState extends State<SvpDocumentationTab> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Provider Documents",
+                              'provider_documents'.tr,
                               style: TextFontStyle
                                   .headline16w700c000000StyleSatoshi,
                             ),
@@ -418,38 +409,37 @@ class _SvpDocumentationTabState extends State<SvpDocumentationTab> {
                         ),
                       ),
                       UIHelper.verticalSpace(10.h),
-
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10.w),
                         child: Obx(() {
                           List<ProfileTileModel> userProfileList = [
                             ProfileTileModel(
-                              title: "Work Type",
+                              title: 'work_type'.tr,
                               data:
                                   "${svpProfileScreenDocumentsTabController.providerDocumentDetailsModel.value?.serviceProvider.serviceCategoryId.name.en} ",
                             ),
                             ProfileTileModel(
-                              title: "Services Name",
+                              title: 'service_name'.tr,
                               data:
                                   "${svpProfileScreenDocumentsTabController.providerDocumentDetailsModel.value?.serviceProvider.serviceName.en ?? ''} ",
                             ),
                             ProfileTileModel(
-                              title: "Year Of Experience",
+                              title: 'years_of_experience'.tr,
                               data:
                                   "${svpProfileScreenDocumentsTabController.providerDocumentDetailsModel.value?.serviceProvider.yearsOfExperience ?? 0} ",
                             ),
                             ProfileTileModel(
-                              title: "Start from Work Price",
+                              title: 'start_from_work_price'.tr,
                               data:
                                   "${svpProfileScreenDocumentsTabController.providerDocumentDetailsModel.value?.serviceProvider.startPrice ?? 0} ",
                             ),
                             ProfileTileModel(
-                              title: "Intro Bio",
+                              title: 'bio'.tr,
                               data:
                                   "${svpProfileScreenDocumentsTabController.providerDocumentDetailsModel.value?.serviceProvider.introOrBio.en} ",
                             ),
                             ProfileTileModel(
-                              title: "Service Description",
+                              title: 'service_description'.tr,
                               data:
                                   "${svpProfileScreenDocumentsTabController.providerDocumentDetailsModel.value?.serviceProvider.description.en} ",
                             ),
@@ -493,7 +483,7 @@ class _SvpDocumentationTabState extends State<SvpDocumentationTab> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Text(
-                "NID/driving license/passport(font side) image",
+                'nid_driving_license_image_front_part'.tr,
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w700,
@@ -509,8 +499,7 @@ class _SvpDocumentationTabState extends State<SvpDocumentationTab> {
                   borderRadius: BorderRadius.circular(12.r),
                   child: CachedNetworkImage(
                     imageUrl: svpProfileScreenDocumentsTabController
-                        .imageFrontSide
-                        .value,
+                        .imageFrontSide.value,
                     errorWidget: (context, url, error) => Center(
                       child: Container(
                         decoration: BoxDecoration(
@@ -535,7 +524,7 @@ class _SvpDocumentationTabState extends State<SvpDocumentationTab> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Text(
-                "NID/driving license/passport(back side) image",
+                'nid_driving_license_image_back_part'.tr,
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w700,
@@ -551,8 +540,7 @@ class _SvpDocumentationTabState extends State<SvpDocumentationTab> {
                   borderRadius: BorderRadius.circular(12.r),
                   child: CachedNetworkImage(
                     imageUrl: svpProfileScreenDocumentsTabController
-                        .imageBackSide
-                        .value,
+                        .imageBackSide.value,
                     errorWidget: (context, url, error) => Center(
                       child: Container(
                         decoration: BoxDecoration(
@@ -577,7 +565,7 @@ class _SvpDocumentationTabState extends State<SvpDocumentationTab> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Text(
-                "Selfie Image",
+                'self_image'.tr,
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w700,
@@ -594,8 +582,7 @@ class _SvpDocumentationTabState extends State<SvpDocumentationTab> {
                   borderRadius: BorderRadius.circular(12.r),
                   child: CachedNetworkImage(
                     imageUrl: svpProfileScreenDocumentsTabController
-                        .imageSelfie
-                        .value,
+                        .imageSelfie.value,
                     errorWidget: (context, url, error) => Center(
                       child: Container(
                         decoration: BoxDecoration(

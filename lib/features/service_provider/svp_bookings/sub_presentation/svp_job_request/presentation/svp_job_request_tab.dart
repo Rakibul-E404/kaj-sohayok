@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
@@ -48,7 +49,7 @@ class _SvpJobRequestTabState extends State<SvpJobRequestTab> {
                 children: [
                   UIHelper.verticalSpace(16.h),
                   Text(
-                    'Loading job requests...',
+                    'loading_job_request'.tr,
                     style: TextFontStyle.headline10w400c6c606cStyleSatoshi,
                   ),
                 ],
@@ -84,7 +85,7 @@ class _SvpJobRequestTabState extends State<SvpJobRequestTab> {
                       backgroundColor: AppColors.c000e08,
                       foregroundColor: Colors.white,
                     ),
-                    child: const Text('Retry'),
+                    child: Text('retry'.tr),
                   ),
                 ],
               ),
@@ -108,13 +109,13 @@ class _SvpJobRequestTabState extends State<SvpJobRequestTab> {
                   Icon(Icons.work_outline, size: 60.h, color: Colors.grey),
                   UIHelper.verticalSpace(16.h),
                   Text(
-                    'No job requests available',
+                    'no_job_request_available'.tr,
                     style: TextFontStyle.headline10w500c000000StyleSatoshi
                         .copyWith(color: Colors.grey),
                   ),
                   UIHelper.verticalSpace(8.h),
                   Text(
-                    'New job requests will appear here',
+                    'new_job_request_will_appear_here'.tr,
                     style: TextFontStyle.headline10w400c6c606cStyleSatoshi
                         .copyWith(color: Colors.grey),
                   ),
@@ -136,7 +137,5 @@ class _SvpJobRequestTabState extends State<SvpJobRequestTab> {
         return controller.buildRecentJobRequestWidget(index);
       },
     );
-
-
   }
 }

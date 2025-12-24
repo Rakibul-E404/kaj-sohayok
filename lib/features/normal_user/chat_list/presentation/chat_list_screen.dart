@@ -42,7 +42,7 @@ class _MessageScreenState extends State<MessageScreen> {
         surfaceTintColor: Colors.transparent,
         centerTitle: true,
         title: Text(
-          'Chat',
+          'chat'.tr,
           style: TextFontStyle.headline18w700c4d4d4dStyleSatoshi,
         ),
       ),
@@ -76,7 +76,7 @@ class _MessageScreenState extends State<MessageScreen> {
                     return Padding(
                       padding: EdgeInsets.symmetric(vertical: 40.h),
                       child: Text(
-                        'No chats found',
+                        'no_chats_found'.tr,
                         style: TextFontStyle.headline18w700c4d4d4dStyleSatoshi
                             .copyWith(
                           color: Colors.grey,
@@ -88,7 +88,7 @@ class _MessageScreenState extends State<MessageScreen> {
                   return Obx(
                     () => Visibility(
                       visible: controller.chatLists.isNotEmpty,
-                      replacement: Text('No Conversation Found'),
+                      replacement: Text('no_conversation_found'.tr),
                       child: ListView.separated(
                         shrinkWrap: true,
                         // reverse: true,

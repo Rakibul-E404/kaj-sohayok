@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -7,13 +6,11 @@ import 'package:kaz_bd/features/normal_user/chat_list/widgets/message_tile.dart'
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/service/get_storage.dart';
 import 'package:kaz_bd/utilities/app_constants.dart';
-import 'package:kaz_bd/utilities/logger_util.dart';
-import '../../../../constants/appList.dart';
+
 import '../../../../controllers/chat_inbox_screen_controller.dart';
 import '../../../../controllers/message_screen_controller.dart';
 import '../../../../gen/colors.gen.dart';
 import '../../chat_list/model/chat_list_response_model.dart';
-import '../model/chat_individual_message_model.dart';
 import '../widgets/chat_bubble_widget.dart';
 import '../widgets/end_drawer_widget.dart';
 import '../widgets/send_message_widget.dart';
@@ -38,7 +35,7 @@ class _PersonalInboxState extends State<PersonalInbox> {
 
   @override
   Widget build(BuildContext context) {
-     /// ================= Receive the Conversation ID ==================>
+    /// ================= Receive the Conversation ID ==================>
     return Scaffold(
       key: controller.scaffoldKey,
       backgroundColor: AppColors.cFFFFFF,
@@ -102,7 +99,7 @@ class _PersonalInboxState extends State<PersonalInbox> {
                       SizedBox(width: 6), // Reduced spacing
                       Flexible(
                         child: Text(
-                          "Active Now",
+                          'active_now'.tr,
                           style: TextStyle(
                             color: AppColors.c111111,
                             fontSize: 12, // Smaller font
@@ -123,8 +120,8 @@ class _PersonalInboxState extends State<PersonalInbox> {
           InkWell(
             onTap: () {
               Get.snackbar(
-                "Adio Call..",
-                "Audio Call button has been taped!",
+                'audio_call'.tr,
+                'audio_call_button_taped'.tr,
                 snackPosition: SnackPosition.TOP,
               );
             },

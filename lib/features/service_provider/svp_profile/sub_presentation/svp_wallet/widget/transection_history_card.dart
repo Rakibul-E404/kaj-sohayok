@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/custom_widgets/dotted_line_divider_widget.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
@@ -22,7 +21,8 @@ class TransectionHistoryCard extends StatelessWidget {
     required this.transactionType,
     required this.totalAmount,
     required this.paymentDate,
-    required this.currency, required this.transactionStatus,
+    required this.currency,
+    required this.transactionStatus,
   });
 
   @override
@@ -63,7 +63,7 @@ class TransectionHistoryCard extends StatelessWidget {
             children: [
               ///Section : Total Amount
               Text(
-                "Total Amount : ",
+                "${'total_amount'.tr} ",
                 style: TextFontStyle.headline14w400c111111StyleSatoshi,
               ),
 
@@ -97,7 +97,7 @@ class TransectionHistoryCard extends StatelessWidget {
             children: [
               ///Section : Text -> Payment Date
               Text(
-                "Payment Date : ",
+                "${'payment_date'.tr} ",
                 style: TextFontStyle.headline14w400c111111StyleSatoshi,
               ),
 

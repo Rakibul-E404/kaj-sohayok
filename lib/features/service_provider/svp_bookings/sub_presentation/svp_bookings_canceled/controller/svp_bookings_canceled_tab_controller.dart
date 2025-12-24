@@ -47,7 +47,7 @@ class SvpBookingsCanceledController extends GetxController {
 
       if (token == null) {
         hasError.value = true;
-        errorMessage.value = 'Authentication required. Please login again.';
+        errorMessage.value = 'authentication_required_login_again'.tr;
         isLoading.value = false;
         return;
       }
@@ -71,13 +71,13 @@ class SvpBookingsCanceledController extends GetxController {
           isLoading.value = false;
         } else {
           hasError.value = true;
-          errorMessage.value = 'Unexpected response format';
+          errorMessage.value = 'unexpected_response_format'.tr;
           isLoading.value = false;
         }
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to load canceled bookings';
+            'failed_to_load_canceled_bookings'.tr;
 
         hasError.value = true;
         errorMessage.value = errorMsg;
@@ -92,7 +92,7 @@ class SvpBookingsCanceledController extends GetxController {
       log('Error fetching canceled bookings: $e',
           error: e, stackTrace: stackTrace);
       hasError.value = true;
-      errorMessage.value = 'Network error. Please check your connection.';
+      errorMessage.value = 'network_error_check_again'.tr;
       isLoading.value = false;
     }
   }
@@ -140,8 +140,8 @@ class SvpBookingsCanceledController extends GetxController {
   }
 
   String getAddress(Map<String, dynamic>? address) {
-    if (address == null) return 'Address not available';
-    return address['en'] ?? address['bn'] ?? 'Address not available';
+    if (address == null) return 'address_not_available'.tr;
+    return address['en'] ?? address['bn'] ?? 'address_not_available'.tr;
   }
 
   SvpBookingsCanceledCard buildCanceledBookingCard(int index) {
@@ -150,7 +150,7 @@ class SvpBookingsCanceledController extends GetxController {
     final address = getAddress(booking['address'] as Map<String, dynamic>?);
     final bookingDateTime = booking['bookingDateTime'] as String? ?? '';
     final bookingId = booking['_ServiceBookingId'] as String? ?? '';
-    final userName = userData['name'] as String? ?? 'Unknown User';
+    final userName = userData['name'] as String? ?? 'unknown_user'.tr;
     final profileImage = userData['profileImage']?['imageUrl'] as String?;
 
     return SvpBookingsCanceledCard(

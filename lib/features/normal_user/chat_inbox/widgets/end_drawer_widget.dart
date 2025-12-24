@@ -26,7 +26,7 @@ class EndDrawerWidget extends StatelessWidget {
                     ListTile(
                       leading: Icon(Icons.delete, color: AppColors.c111111),
                       title: Text(
-                        'Delete Message ',
+                        'delete_message'.tr,
                         style: TextFontStyle.headline14w500c111111StyleSatoshi,
                       ),
                       onTap: () {
@@ -37,7 +37,7 @@ class EndDrawerWidget extends StatelessWidget {
                     ListTile(
                       leading: Icon(Icons.person, color: AppColors.c111111),
                       title: Text(
-                        'Profile View',
+                        'profile_view'.tr,
                         style: TextFontStyle.headline14w500c111111StyleSatoshi,
                       ),
                       onTap: () {

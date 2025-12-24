@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../../../constants/app_enums.dart';
 import '../../../../../../controllers/message_screen_controller.dart';
 import '../../../../../../custom_widgets/recent_job_request_status_widget.dart';
 import '../../../../../../routes/routes.dart';
@@ -80,10 +79,10 @@ class SvpBookingsInProgressController extends GetxController {
         final booking = bookings[i];
         final bookingId = booking['_ServiceBookingId'] as String? ?? 'N/A';
         final serviceName =
-            booking['serviceName']?['en'] as String? ?? 'Unknown Service';
+            booking['serviceName']?['en'] as String? ?? 'unknown_service'.tr;
         final userName =
             (booking['userId'] as Map<String, dynamic>?)?['name'] as String? ??
-                'Unknown User';
+                'unknown_user'.tr;
 
         print('${i + 1}. Booking ID: $bookingId');
         print('   Service: $serviceName');
@@ -109,7 +108,7 @@ class SvpBookingsInProgressController extends GetxController {
       if (token == null) {
         print('❌ No access token found');
         hasError.value = true;
-        errorMessage.value = 'Authentication required. Please login again.';
+        errorMessage.value = 'authentication_required_login_again'.tr;
         isLoading.value = false;
         return;
       }
@@ -145,13 +144,13 @@ class SvpBookingsInProgressController extends GetxController {
         } else {
           print('⚠️ Unexpected response format');
           hasError.value = true;
-          errorMessage.value = 'Unexpected response format';
+          errorMessage.value = 'unexpected_response_format'.tr;
           isLoading.value = false;
         }
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to load in-progress bookings';
+            'failed_to_load_in_progress_bookings'.tr;
 
         print('❌ API Error: $errorMsg');
 
@@ -237,8 +236,8 @@ class SvpBookingsInProgressController extends GetxController {
   }
 
   String getAddress(Map<String, dynamic>? address) {
-    if (address == null) return 'Address not available';
-    return address['en'] ?? address['bn'] ?? 'Address not available';
+    if (address == null) return 'address_not_available'.tr;
+    return address['en'] ?? address['bn'] ?? 'address_not_available'.tr;
   }
 
   Future<void> navigateToSubmitWorkForm(Map<String, dynamic> jobRequest) async {
@@ -252,8 +251,8 @@ class SvpBookingsInProgressController extends GetxController {
       final token = await SecureStorageService().read(AppConstants.accessToken);
       if (token == null) {
         Get.snackbar(
-          'Error',
-          'Authentication required. Please login again.',
+          'error'.tr,
+          'authentication_required_login_again'.tr,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -297,9 +296,9 @@ class SvpBookingsInProgressController extends GetxController {
           );
         } else {
           final errorMsg =
-              responseData['message'] ?? 'Failed to load work form data';
+              responseData['message'] ?? 'failed_to_load_work_form_data'.tr;
           Get.snackbar(
-            'Error',
+            'error'.tr,
             errorMsg,
             backgroundColor: Colors.red,
             colorText: Colors.white,
@@ -308,10 +307,10 @@ class SvpBookingsInProgressController extends GetxController {
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to load work form data';
+            'failed_to_load_work_form_data'.tr;
 
         Get.snackbar(
-          'Error',
+          'error'.tr,
           errorMsg,
           backgroundColor: Colors.red,
           colorText: Colors.white,
@@ -329,8 +328,8 @@ class SvpBookingsInProgressController extends GetxController {
       log('Error fetching work form data: $e',
           error: e, stackTrace: stackTrace);
       Get.snackbar(
-        'Network Error',
-        'Failed to load work form. Please check your connection.',
+        'network_error'.tr,
+        'failed_to_load_work_form_please_check_your_connection'.tr,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );

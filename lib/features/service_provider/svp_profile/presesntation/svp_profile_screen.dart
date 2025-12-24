@@ -5,12 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
+
 import '../../../../constants/text_font_style.dart';
 import '../../../../controllers/svp_profile_screen_controller.dart';
-import '../../../../custom_widgets/custom_profile_image_widget.dart';
 import '../../../../custom_widgets/select_language_widget.dart';
 import '../../../../custom_widgets/tab_showing_widget.dart';
-import '../../../../gen/assets.gen.dart';
 import '../../../../helpers/ui_helpers.dart';
 import '../../../normal_user/details/widget/sliver_tab_bar_delegate_helper_widget.dart';
 import '../sub_presentation/svp_documents/presentation/svp_documentation_tab.dart';
@@ -29,18 +28,16 @@ class SvpProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
-
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(
-          "My Profile",
+          'my_profile'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
       ),
-
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
           SliverToBoxAdapter(
@@ -67,11 +64,9 @@ class SvpProfileScreen extends StatelessWidget {
                       // }),
                       Obx(() {
                         final imagePath = controller.profileImage.value;
-                        final bool isNetworkImage =
-                            imagePath.isNotEmpty &&
+                        final bool isNetworkImage = imagePath.isNotEmpty &&
                             imagePath.startsWith('http');
-                        final bool isLocalImage =
-                            imagePath.isNotEmpty &&
+                        final bool isLocalImage = imagePath.isNotEmpty &&
                             !imagePath.startsWith('http');
                         final bool hasImage = imagePath.isNotEmpty;
 
@@ -98,19 +93,18 @@ class SvpProfileScreen extends StatelessWidget {
                                                   fit: BoxFit.contain,
                                                   placeholder: (context, url) =>
                                                       Center(
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                      ),
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
                                                   errorWidget:
                                                       (context, url, error) =>
                                                           Icon(
-                                                            Icons.person,
-                                                            color: Colors.white,
-                                                            size: 48.sp,
-                                                          ),
+                                                    Icons.person,
+                                                    color: Colors.white,
+                                                    size: 48.sp,
+                                                  ),
                                                 )
                                               : Image.file(
                                                   File(imagePath),
@@ -132,27 +126,25 @@ class SvpProfileScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(50.r),
                               child: hasImage
                                   ? (isNetworkImage
-                                        ? CachedNetworkImage(
-                                            imageUrl: imagePath,
-                                            fit: BoxFit.cover,
-                                            placeholder: (context, url) =>
-                                                Center(
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                        strokeWidth: 2,
-                                                      ),
-                                                ),
-                                            errorWidget:
-                                                (context, url, error) => Icon(
-                                                  Icons.person,
-                                                  size: 48.sp,
-                                                  color: Colors.grey[400],
-                                                ),
-                                          )
-                                        : Image.file(
-                                            File(imagePath),
-                                            fit: BoxFit.cover,
-                                          ))
+                                      ? CachedNetworkImage(
+                                          imageUrl: imagePath,
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) => Center(
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                            ),
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              Icon(
+                                            Icons.person,
+                                            size: 48.sp,
+                                            color: Colors.grey[400],
+                                          ),
+                                        )
+                                      : Image.file(
+                                          File(imagePath),
+                                          fit: BoxFit.cover,
+                                        ))
                                   : Icon(
                                       Icons.person,
                                       size: 48.sp,
@@ -207,11 +199,11 @@ class SvpProfileScreen extends StatelessWidget {
                   dividerColor: AppColors.c778beb,
                   indicatorSize: TabBarIndicatorSize.label,
                   indicatorWeight: 4.h,
-                  tabs: const [
-                    Tab(text: "Profile"),
-                    Tab(text: "Documents"),
-                    Tab(text: "Setting"),
-                    Tab(text: "Wallet"),
+                  tabs: [
+                    Tab(text: 'profile'.tr),
+                    Tab(text: 'documents'.tr),
+                    Tab(text: 'settings'.tr),
+                    Tab(text: 'wallet'.tr),
                   ],
                 ),
               ),

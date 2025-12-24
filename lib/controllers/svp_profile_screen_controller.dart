@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:image_picker/image_picker.dart';
+import '../constants/app_constant_text.dart';
 import '../gen/colors.gen.dart';
+import '../helpers/di.dart';
 import '../models/provider_profile_model.dart';
 import '../routes/routes.dart';
 import '../service/network_caller.dart';
@@ -40,7 +42,7 @@ class SvpProfileScreenController extends GetxController
         // Get.snackbar('Cancelled', 'No image selected');
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to pick image: $e');
+      Get.snackbar('error'.tr, '${'failed_to_pick_image'.tr} $e');
     }
   }
 
@@ -60,7 +62,7 @@ class SvpProfileScreenController extends GetxController
             children: [
               ListTile(
                 leading: const Icon(Icons.camera_alt),
-                title: const Text("Camera"),
+                title: Text('camera'.tr),
                 onTap: () {
                   Get.back();
                   pickImage(source: ImageSource.camera);
@@ -68,7 +70,7 @@ class SvpProfileScreenController extends GetxController
               ),
               ListTile(
                 leading: const Icon(Icons.photo),
-                title: const Text("Gallery"),
+                title: Text('gallery'.tr),
                 onTap: () {
                   Get.back();
                   pickImage(source: ImageSource.gallery);
@@ -82,11 +84,29 @@ class SvpProfileScreenController extends GetxController
   }
 
   /// ------------------- Language Selection -------------------
+  // late TabController languageTabController;
+  // var languageSelectionTabIndex = 0.obs;
+
+  // void changeLanguageTab(int index) {
+  //   languageSelectionTabIndex.value = index;
+  // }
+
   late TabController languageTabController;
-  var languageSelectionTabIndex = 0.obs;
+  var languageSelectionTabIndex = 0.obs; // Will be updated in onInit
 
   void changeLanguageTab(int index) {
     languageSelectionTabIndex.value = index;
+    if (index == 0) {
+      appData.write(kKeyEnglish, true);
+      appData.write(kKeyBangla, false);
+      Get.updateLocale(Locale('en', 'US')); // Update the app locale
+    } else if (index == 1) {
+      appData.write(kKeyEnglish, false);
+      appData.write(kKeyBangla, true);
+      Get.updateLocale(Locale('bn', 'BD')); // Update the app locale
+    } else {
+      return;
+    }
   }
 
   /// ------------------- Profile Options Tabs -------------------
@@ -101,6 +121,8 @@ class SvpProfileScreenController extends GetxController
   @override
   void onInit() {
     super.onInit();
+    // Initialize language selection tab index based on stored preference
+    languageSelectionTabIndex.value = appData.read(kKeyEnglish) ? 0 : 1;
 
     /// Language Tab Controller
     languageTabController = TabController(
@@ -208,7 +230,7 @@ class SvpProfileScreenController extends GetxController
         // LoggerUtils.debug(uerProfileModel.value?.email);
       } else {
         Get.snackbar(
-          'Failed',
+          'failed'.tr,
           getResponse.jsonResponse?['message'],
           backgroundColor: Colors.red,
           colorText: Colors.white,

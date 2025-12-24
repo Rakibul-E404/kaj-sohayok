@@ -100,7 +100,7 @@ class SvpWorkCompletedTab extends StatelessWidget {
                     // CircularProgressIndicator(color: AppColors.c000e08),
                     UIHelper.verticalSpace(16.h),
                     Text(
-                      'Loading completed work...',
+                      'loading_completed_work'.tr,
                       style: TextFontStyle.headline10w400c6c606cStyleSatoshi,
                     ),
                   ],
@@ -139,7 +139,7 @@ class SvpWorkCompletedTab extends StatelessWidget {
                         backgroundColor: AppColors.c000e08,
                         foregroundColor: Colors.white,
                       ),
-                      child: const Text('Retry'),
+                      child: Text('retry'.tr),
                     ),
                   ],
                 ),
@@ -164,13 +164,13 @@ class SvpWorkCompletedTab extends StatelessWidget {
                   Icon(Icons.check_circle, size: 60.h, color: Colors.grey),
                   UIHelper.verticalSpace(16.h),
                   Text(
-                    'No completed work yet',
+                    'no_completed_work_yet'.tr,
                     style: TextFontStyle.headline10w500c000000StyleSatoshi
                         .copyWith(color: Colors.grey),
                   ),
                   UIHelper.verticalSpace(8.h),
                   Text(
-                    'Finished jobs will appear here',
+                    'finished_jobs_will_appear_here'.tr,
                     style: TextFontStyle.headline10w400c6c606cStyleSatoshi
                         .copyWith(color: Colors.grey),
                   ),

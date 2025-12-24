@@ -133,9 +133,8 @@ class SvpDocumentEditPage extends StatelessWidget {
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
-
         title: Text(
-          "Edit Documents",
+          'edit_documents'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
         centerTitle: true,
@@ -154,14 +153,14 @@ class SvpDocumentEditPage extends StatelessWidget {
               children: [
                 // Service Name
                 _buildTextField(
-                  label: "Service Name",
+                  label: 'service_name'.tr,
                   controller: controller.servicesNameController,
                 ),
                 UIHelper.verticalSpace(16.h),
 
                 // Years of Experience
                 _buildTextField(
-                  label: "Years of Experience",
+                  label: 'years_of_experience'.tr,
                   controller: controller.yearsOfExperienceController,
                   keyboardType: TextInputType.number,
                 ),
@@ -169,7 +168,7 @@ class SvpDocumentEditPage extends StatelessWidget {
 
                 // Start Price
                 _buildTextField(
-                  label: "Start Price",
+                  label: 'start_price'.tr,
                   controller: controller.initialPayableController,
                   keyboardType: TextInputType.number,
                 ),
@@ -177,7 +176,7 @@ class SvpDocumentEditPage extends StatelessWidget {
 
                 // Intro/Bio
                 _buildTextField(
-                  label: "Intro/Bio",
+                  label: 'bio'.tr,
                   controller: controller.introController,
                   maxLines: 3,
                 ),
@@ -185,7 +184,7 @@ class SvpDocumentEditPage extends StatelessWidget {
 
                 // Description
                 _buildTextField(
-                  label: "Description",
+                  label: 'description'.tr,
                   controller: controller.descriptionController,
                   maxLines: 5,
                 ),
@@ -193,7 +192,7 @@ class SvpDocumentEditPage extends StatelessWidget {
 
                 // Gallery Section
                 Text(
-                  "Gallery (Images & Videos)",
+                  'gallery_images_and_video'.tr,
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w700,
@@ -202,19 +201,15 @@ class SvpDocumentEditPage extends StatelessWidget {
                 ),
                 UIHelper.verticalSpace(8.h),
                 Text(
-                  "Maximum ${controller.maxMedia} items allowed",
+                  "${'maximum'.tr} ${controller.maxMedia} ${'items_allowed'.tr}",
                   style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
                 ),
                 UIHelper.verticalSpace(12.h),
 
                 // Existing Attachments + New Media
                 Obx(() {
-                  final attachments =
-                      controller
-                          .providerDocumentDetailsModel
-                          .value
-                          ?.serviceProvider
-                          .documentAttachments ??
+                  final attachments = controller.providerDocumentDetailsModel
+                          .value?.serviceProvider.documentAttachments ??
                       [];
 
                   final visibleAttachments = attachments.where((att) {
@@ -234,7 +229,7 @@ class SvpDocumentEditPage extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text(
-                          "No gallery items",
+                          'no_gallery_items'.tr,
                           style:
                               TextFontStyle.headline12w400c727272StyleSatoshi,
                         ),
@@ -277,7 +272,7 @@ class SvpDocumentEditPage extends StatelessWidget {
                                             ),
                                           ),
                                           child: Center(
-                                            child: Text('Video unavailable'),
+                                            child: Text('video_unavilable'.tr),
                                           ),
                                         );
                                       }
@@ -297,23 +292,22 @@ class SvpDocumentEditPage extends StatelessWidget {
                                         fit: BoxFit.cover,
                                         placeholder: (context, url) =>
                                             Container(
-                                              color: Colors.grey.shade200,
-                                              child: Center(
-                                                child:
-                                                    CircularProgressIndicator(
-                                                      color: AppColors.c778beb,
-                                                    ),
-                                              ),
+                                          color: Colors.grey.shade200,
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                              color: AppColors.c778beb,
                                             ),
+                                          ),
+                                        ),
                                         errorWidget: (context, url, error) =>
                                             Container(
-                                              color: Colors.grey.shade200,
-                                              child: Icon(
-                                                Icons.broken_image,
-                                                size: 40.sp,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
+                                          color: Colors.grey.shade200,
+                                          child: Icon(
+                                            Icons.broken_image,
+                                            size: 40.sp,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
                                       ),
                                     ),
                             ),
@@ -331,7 +325,7 @@ class SvpDocumentEditPage extends StatelessWidget {
                                         ),
                                       ),
                                       title: Text(
-                                        'Delete Attachment',
+                                        'delete_attachment'.tr,
                                         style: TextStyle(
                                           fontSize: 18.0,
                                           fontWeight: FontWeight.bold,
@@ -340,7 +334,7 @@ class SvpDocumentEditPage extends StatelessWidget {
                                         ),
                                       ),
                                       content: Text(
-                                        'Are you sure you want to delete this item?',
+                                        'are_you_sure_you_want_to_delete'.tr,
                                         style: TextStyle(
                                           fontSize: 16.0,
                                           color: Colors.black87,
@@ -361,7 +355,7 @@ class SvpDocumentEditPage extends StatelessWidget {
                                                   BorderRadius.circular(8.0),
                                             ),
                                             child: Text(
-                                              'Cancel',
+                                              'cancel'.tr,
                                               style: TextStyle(
                                                 color: Colors.blueAccent,
                                                 fontSize: 16.0,
@@ -374,8 +368,8 @@ class SvpDocumentEditPage extends StatelessWidget {
                                           onPressed: () {
                                             controller
                                                 .markAttachmentForDeletion(
-                                                  attachmentId,
-                                                );
+                                              attachmentId,
+                                            );
                                             Get.back();
                                           },
                                           child: Container(
@@ -389,7 +383,7 @@ class SvpDocumentEditPage extends StatelessWidget {
                                                   BorderRadius.circular(8.0),
                                             ),
                                             child: Text(
-                                              'Delete',
+                                              'delete'.tr,
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 16.0,
@@ -457,7 +451,7 @@ class SvpDocumentEditPage extends StatelessWidget {
                                                 ),
                                                 UIHelper.verticalSpace(8.h),
                                                 Text(
-                                                  'Loading...',
+                                                  'loading'.tr,
                                                   style: TextStyle(
                                                     fontSize: 10.sp,
                                                   ),
@@ -519,7 +513,7 @@ class SvpDocumentEditPage extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(4.r),
                                 ),
                                 child: Text(
-                                  'NEW',
+                                  'new'.tr,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 8.sp,
@@ -552,7 +546,7 @@ class SvpDocumentEditPage extends StatelessWidget {
                                       ),
                                       SizedBox(width: 2.w),
                                       Text(
-                                        'VIDEO',
+                                        'video'.tr,
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 8.sp,
@@ -574,8 +568,7 @@ class SvpDocumentEditPage extends StatelessWidget {
 
                 // Add Media Button
                 Obx(() {
-                  final totalExisting =
-                      (controller
+                  final totalExisting = (controller
                               .providerDocumentDetailsModel
                               .value
                               ?.serviceProvider
@@ -588,11 +581,10 @@ class SvpDocumentEditPage extends StatelessWidget {
                       (totalExisting + totalNew) < controller.maxMedia;
 
                   return ElevatedButton.icon(
-                    onPressed: canAddMore
-                        ? controller.showMediaPickerDialog
-                        : null,
+                    onPressed:
+                        canAddMore ? controller.showMediaPickerDialog : null,
                     icon: Icon(Icons.add_photo_alternate),
-                    label: Text('Add Images/Videos'),
+                    label: Text('add_image_and_video'.tr),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.c778beb,
                       foregroundColor: Colors.white,
@@ -612,14 +604,13 @@ class SvpDocumentEditPage extends StatelessWidget {
                     onPressed: controller.loader.value
                         ? null
                         : () => controller.updateProviderDocuments(
-                            serviceProviderDetailsId:
-                                controller
-                                    .providerDocumentDetailsModel
-                                    .value
-                                    ?.serviceProvider
-                                    .id ??
-                                '',
-                          ),
+                              serviceProviderDetailsId: controller
+                                      .providerDocumentDetailsModel
+                                      .value
+                                      ?.serviceProvider
+                                      .id ??
+                                  '',
+                            ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.c778beb,
                       foregroundColor: Colors.white,
@@ -638,7 +629,7 @@ class SvpDocumentEditPage extends StatelessWidget {
                             ),
                           )
                         : Text(
-                            'Save Changes',
+                            'save_changes'.tr,
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600,

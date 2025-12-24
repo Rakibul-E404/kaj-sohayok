@@ -117,12 +117,6 @@ class SvpPaymentRequestTabCard extends StatelessWidget {
 }
 */
 
-
-
-
-
-
-
 ///
 ///
 ///
@@ -134,15 +128,11 @@ class SvpPaymentRequestTabCard extends StatelessWidget {
 ///
 ///
 
-
-
-
-
-
 // lib/.../widgets/svp_payment_request_tab_card.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import '../../../../../../constants/text_font_style.dart';
 import '../../../../../../custom_widgets/custom_elevated_button.dart';
 import '../../../../../../custom_widgets/date_and_time_widget_tile.dart';
@@ -243,7 +233,7 @@ class SvpPaymentRequestTabCard extends StatelessWidget {
                 buttonWidth: 140.w,
                 buttonHeight: 38.h,
                 buttonColor: AppColors.cd5dbf9,
-                buttonTitle: "Pending Payment",
+                buttonTitle: 'pending_payment'.tr,
                 textStyle: TextFontStyle.headline14w500c6a6a6aStyleSatoshi,
               ),
             ),

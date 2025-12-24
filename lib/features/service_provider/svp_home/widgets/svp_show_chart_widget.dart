@@ -40,7 +40,7 @@ class IncomeChartCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Total Income',
+                'total_income'.tr,
                 style: TextFontStyle.headline16w700c4d4d4dStyleSatoshi,
               ),
               Container(
@@ -99,9 +99,9 @@ class IncomeChartCard extends StatelessWidget {
               final chartData = controller.chartData;
               final maxValue = controller.maxValue;
 
-              final  List<String> yAxisLabels = _generateYAxisLabels(maxValue);
+              final List<String> yAxisLabels = _generateYAxisLabels(maxValue);
               if (chartData.isEmpty) {
-                return const Center(child: Text('No chart data available'));
+                return Center(child: Text('no_chart_data_are_available'.tr));
               }
 
               // Generate Y-axis labels based on maxValue
@@ -136,72 +136,92 @@ class IncomeChartCard extends StatelessWidget {
                             // Access the observable values to ensure reactivity
                             final localChartData = controller.chartData;
                             final localMaxValue = controller.maxValue;
-                            final localSelectedPeriod = controller.selectedPeriod.value;
+                            final localSelectedPeriod =
+                                controller.selectedPeriod.value;
 
                             // If there are many items (> 7), make it horizontally scrollable
                             bool shouldScroll = localChartData.length > 7;
 
                             return Expanded(
                               child: shouldScroll
-                                ? SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: localChartData.asMap().entries.map((entry) {
+                                  ? SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: localChartData
+                                            .asMap()
+                                            .entries
+                                            .map((entry) {
+                                          var data = entry.value;
+                                          return Container(
+                                            margin: EdgeInsets.only(right: 8.w),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                // Bar
+                                                CustomBar(
+                                                  value: (data.income ?? 0)
+                                                      .toDouble(),
+                                                  maxValue: localMaxValue,
+                                                  label: data.label ?? '',
+                                                  barWidth: 14.w,
+                                                ),
+                                                UIHelper.verticalSpace(4
+                                                    .h), // Reduced to save space
+                                                // Label below the bar
+                                                Text(
+                                                  data.label ?? '',
+                                                  style: TextFontStyle
+                                                      .headline12w500c4d4d4dStyleSatoshi
+                                                      .copyWith(
+                                                          fontSize: 8
+                                                              .sp), // Reduced font size to save space
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    )
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: localChartData
+                                          .asMap()
+                                          .entries
+                                          .map((entry) {
                                         var data = entry.value;
-                                        return Container(
-                                          margin: EdgeInsets.only(right: 8.w),
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.end,
-                                            children: [
-                                              // Bar
-                                              CustomBar(
-                                                value: (data.income ?? 0).toDouble(),
-                                                maxValue: localMaxValue,
-                                                label: data.label ?? '',
-                                                barWidth: 14.w,
-                                              ),
-                                              UIHelper.verticalSpace(4.h), // Reduced to save space
-                                              // Label below the bar
-                                              Text(
-                                                data.label ?? '',
-                                                style: TextFontStyle
-                                                    .headline12w500c4d4d4dStyleSatoshi
-                                                    .copyWith(fontSize: 8.sp), // Reduced font size to save space
-                                              ),
-                                            ],
-                                          ),
+                                        return Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            // Bar
+                                            CustomBar(
+                                              value:
+                                                  (data.income ?? 0).toDouble(),
+                                              maxValue: localMaxValue,
+                                              label: data.label ?? '',
+                                              barWidth: 14.w,
+                                            ),
+                                            UIHelper.verticalSpace(
+                                                4.h), // Reduced to save space
+                                            // Label below the bar
+                                            Text(
+                                              data.label ?? '',
+                                              style: TextFontStyle
+                                                  .headline12w500c4d4d4dStyleSatoshi
+                                                  .copyWith(
+                                                      fontSize: 8
+                                                          .sp), // Reduced font size to save space
+                                            ),
+                                          ],
                                         );
                                       }).toList(),
                                     ),
-                                  )
-                                : Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: localChartData.asMap().entries.map((entry) {
-                                      var data = entry.value;
-                                      return Column(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
-                                          // Bar
-                                          CustomBar(
-                                            value: (data.income ?? 0).toDouble(),
-                                            maxValue: localMaxValue,
-                                            label: data.label ?? '',
-                                            barWidth: 14.w,
-                                          ),
-                                          UIHelper.verticalSpace(4.h), // Reduced to save space
-                                          // Label below the bar
-                                          Text(
-                                            data.label ?? '',
-                                            style: TextFontStyle
-                                                .headline12w500c4d4d4dStyleSatoshi
-                                                .copyWith(fontSize: 8.sp), // Reduced font size to save space
-                                          ),
-                                        ],
-                                      );
-                                    }).toList(),
-                                  ),
                             );
                           }),
                         ],

@@ -20,7 +20,7 @@ class AboutUsScreen extends StatelessWidget {
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          "About us",
+          'about_us'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
         centerTitle: true,
@@ -45,7 +45,6 @@ class AboutUsScreen extends StatelessWidget {
                 UIHelper.verticalSpace(24.h),
 
                 HtmlWrapper(htmlContent: bodyText)
-
               ],
             ),
           ),

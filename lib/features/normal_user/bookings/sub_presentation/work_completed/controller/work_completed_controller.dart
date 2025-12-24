@@ -37,8 +37,7 @@ class WorkCompletedBookingsController extends GetxController {
       log('🔑 [WORK COMPLETED CONTROLLER] Token retrieved: ${token != null ? 'Yes' : 'No'}');
 
       if (token == null) {
-        errorMessage.value =
-            'Authentication token not found. Please login again.';
+        errorMessage.value = 'auth_token_not_found_login_again'.tr;
         isLoading.value = false;
         log('❌ [WORK COMPLETED CONTROLLER] No token found');
         return;
@@ -99,21 +98,19 @@ class WorkCompletedBookingsController extends GetxController {
 
           // Process review status
           _processReviewStatus(results);
-
         } else {
           String apiMessage =
-              response.jsonResponse!['message'] ?? 'Failed to load bookings';
+              response.jsonResponse!['message'] ?? 'failed_to_load_bookings'.tr;
           errorMessage.value = apiMessage;
           log('❌ [WORK COMPLETED CONTROLLER] API returned error: $apiMessage');
         }
       } else {
-        String error = response.errorMessage ?? 'Something went wrong';
+        String error = response.errorMessage ?? 'something_went_wrong'.tr;
         errorMessage.value = error;
         log('❌ [WORK COMPLETED CONTROLLER] Network error: $error');
       }
     } catch (e) {
-      errorMessage.value =
-          'Connection error: Please check your internet connection';
+      errorMessage.value = 'connection_error_check_your_internet'.tr;
       log('❌ [WORK COMPLETED CONTROLLER] Exception in getWorkCompletedBookings: $e');
     } finally {
       isLoading.value = false;
@@ -167,7 +164,6 @@ class WorkCompletedBookingsController extends GetxController {
           isAwsUrl: isAwsUrl,
           isAccessible: isAccessible,
         );
-
       } else {
         // Store empty image info
         bookingImageInfo[bookingId] = ImageInfo(
@@ -206,7 +202,8 @@ class WorkCompletedBookingsController extends GetxController {
     return fullUrl;
   }
 
-  Future<bool> _verifyImageAccessibility(String bookingId, String imageUrl) async {
+  Future<bool> _verifyImageAccessibility(
+      String bookingId, String imageUrl) async {
     try {
       log('🔍 [WORK COMPLETED CONTROLLER] Verifying image accessibility for: $imageUrl');
 
@@ -234,11 +231,12 @@ class WorkCompletedBookingsController extends GetxController {
 
   // Get image info for a booking
   ImageInfo getImageInfo(String bookingId) {
-    return bookingImageInfo[bookingId] ?? ImageInfo(
-      url: '',
-      isAwsUrl: false,
-      isAccessible: false,
-    );
+    return bookingImageInfo[bookingId] ??
+        ImageInfo(
+          url: '',
+          isAwsUrl: false,
+          isAccessible: false,
+        );
   }
 
   // Get image URL (backward compatibility)

@@ -123,36 +123,42 @@ class AppList {
     Assets.images.userImage.path,
   ];
 
-  static List<ProfileTileModel> profileTileList = [
-    ProfileTileModel(title: 'occupation'.tr, data: "AC-Repair"),
-    ProfileTileModel(title: 'years_of_experience'.tr, data: "4 Years"),
-    ProfileTileModel(title: 'name'.tr, data: "Ripon Mia"),
-    ProfileTileModel(title: 'phone_number'.tr, data: "1233333333"),
-    ProfileTileModel(title: 'location'.tr, data: "Rangpur Bangladesh"),
-    ProfileTileModel(title: 'date_of_birth'.tr, data: "11-11-2025"),
-    ProfileTileModel(title: 'gender'.tr, data: "Male"),
-  ];
+  static List<ProfileTileModel> get profileTileList {
+    return [
+      ProfileTileModel(title: 'occupation'.tr, data: "AC-Repair"),
+      ProfileTileModel(title: 'years_of_experience'.tr, data: "4 Years"),
+      ProfileTileModel(title: 'name'.tr, data: "Ripon Mia"),
+      ProfileTileModel(title: 'phone_number'.tr, data: "1233333333"),
+      ProfileTileModel(title: 'location'.tr, data: "Rangpur Bangladesh"),
+      ProfileTileModel(title: 'date_of_birth'.tr, data: "11-11-2025"),
+      ProfileTileModel(title: 'gender'.tr, data: "Male"),
+    ];
+  }
 
-  static List<SettingsOptionsModel> settingsOptionsList = [
-    SettingsOptionsModel(
-      icon: Assets.icons.keyIcon,
-      optionName: "Change Password",
-    ),
-    SettingsOptionsModel(
-      icon: Assets.icons.privacyPolicyIcon,
-      optionName: "Privacy policy",
-    ),
-    SettingsOptionsModel(
-      icon: Assets.icons.termsConditionsIcon,
-      optionName: "Terms & conditions",
-    ),
-    SettingsOptionsModel(
-      icon: Assets.icons.aboutUsIcon,
-      optionName: "About us",
-    ),
-    SettingsOptionsModel(icon: Assets.icons.helpIcon, optionName: "Contact Us"),
-    SettingsOptionsModel(icon: Assets.icons.logOutIcon, optionName: "Logout"),
-  ];
+  static List<SettingsOptionsModel> get settingsOptionsList {
+    return [
+      SettingsOptionsModel(
+        icon: Assets.icons.keyIcon,
+        optionName: 'change_password'.tr,
+      ),
+      SettingsOptionsModel(
+        icon: Assets.icons.privacyPolicyIcon,
+        optionName: 'privacy_policy'.tr,
+      ),
+      SettingsOptionsModel(
+        icon: Assets.icons.termsConditionsIcon,
+        optionName: 'terms_and_condition'.tr,
+      ),
+      SettingsOptionsModel(
+        icon: Assets.icons.aboutUsIcon,
+        optionName: 'about_us'.tr,
+      ),
+      SettingsOptionsModel(
+          icon: Assets.icons.helpIcon, optionName: 'contact_us'.tr),
+      SettingsOptionsModel(
+          icon: Assets.icons.logOutIcon, optionName: 'logout'.tr),
+    ];
+  }
 
   static List<ProfileTileModel> userProfileList = [
     ProfileTileModel(title: "Name", data: "Chowdhury Md. Imtiazul Islam"),

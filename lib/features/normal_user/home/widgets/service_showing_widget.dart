@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:kaz_bd/constants/app_constant_text.dart';
 
 import '../../../../constants/text_font_style.dart';
@@ -33,7 +34,6 @@ class ServiceWidget extends StatelessWidget {
           border: Border.all(color: AppColors.c778beb),
           borderRadius: BorderRadius.circular(24.r),
         ),
-
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -97,7 +97,7 @@ class ServiceWidget extends StatelessWidget {
               text: TextSpan(
                 style: TextFontStyle.headline10w500c6a6a6aStyleSatoshi,
                 children: [
-                  const TextSpan(text: 'Start from '),
+                  TextSpan(text: '${'start_from'.tr} '),
                   TextSpan(
                     text: '${AppText.bdTkSign}$initialPayablePrice',
                     style: TextFontStyle.headline16w700c778bebStyleSatoshi,
@@ -117,7 +117,6 @@ class ServiceWidget extends StatelessWidget {
                   style: TextFontStyle.headline10w500c4d4d4dStyleSatoshi,
                 ),
                 UIHelper.horizontalSpace(2.w),
-
                 Icon(Icons.star_rate_rounded, color: AppColors.cffcd22),
               ],
             ),

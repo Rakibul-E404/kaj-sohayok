@@ -116,10 +116,6 @@ class SvpAcceptedBookingsScreen extends StatelessWidget {
   }
 }*/
 
-
-
-
-
 ///
 ///
 ///
@@ -127,9 +123,6 @@ class SvpAcceptedBookingsScreen extends StatelessWidget {
 ///
 ///
 ///
-
-
-
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -150,7 +143,7 @@ class SvpAcceptedBookingsScreen extends StatelessWidget {
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          "Accepted Bookings",
+          'accepted_bookings'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
         centerTitle: true,
@@ -178,7 +171,7 @@ class SvpAcceptedBookingsScreen extends StatelessWidget {
               // CircularProgressIndicator(color: AppColors.c000e08),
               UIHelper.verticalSpace(16.h),
               Text(
-                'Loading accepted bookings...',
+                'loading_accepted_bookings'.tr,
                 style: TextFontStyle.headline10w400c6c606cStyleSatoshi,
               ),
             ],
@@ -198,7 +191,8 @@ class SvpAcceptedBookingsScreen extends StatelessWidget {
               UIHelper.verticalSpace(16.h),
               Text(
                 controller.errorMessage.value,
-                style: TextFontStyle.headline10w400c6c606cStyleSatoshi.copyWith(color: Colors.red),
+                style: TextFontStyle.headline10w400c6c606cStyleSatoshi
+                    .copyWith(color: Colors.red),
                 textAlign: TextAlign.center,
               ),
               UIHelper.verticalSpace(16.h),
@@ -208,7 +202,7 @@ class SvpAcceptedBookingsScreen extends StatelessWidget {
                   backgroundColor: AppColors.c000e08,
                   foregroundColor: Colors.white,
                 ),
-                child: const Text('Retry'),
+                child: Text('retry'.tr),
               ),
             ],
           ),
@@ -224,13 +218,15 @@ class SvpAcceptedBookingsScreen extends StatelessWidget {
             Icon(Icons.check_circle_outline, size: 60.h, color: Colors.grey),
             UIHelper.verticalSpace(16.h),
             Text(
-              'No accepted bookings yet',
-              style: TextFontStyle.headline10w500c000000StyleSatoshi.copyWith(color: Colors.grey),
+              'no_accepted_bookings_yet'.tr,
+              style: TextFontStyle.headline10w500c000000StyleSatoshi
+                  .copyWith(color: Colors.grey),
             ),
             UIHelper.verticalSpace(8.h),
             Text(
-              'Accepted job requests will appear here',
-              style: TextFontStyle.headline10w400c6c606cStyleSatoshi.copyWith(color: Colors.grey),
+              'accepted_job_requests_will_appear_here'.tr,
+              style: TextFontStyle.headline10w400c6c606cStyleSatoshi
+                  .copyWith(color: Colors.grey),
             ),
           ],
         ),
@@ -250,6 +246,3 @@ class SvpAcceptedBookingsScreen extends StatelessWidget {
     );
   }
 }
-
-
-

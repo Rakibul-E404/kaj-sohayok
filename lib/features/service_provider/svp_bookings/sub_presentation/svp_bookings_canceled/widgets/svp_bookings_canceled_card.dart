@@ -115,11 +115,6 @@ class SvpBookingsCanceledCard extends StatelessWidget {
 }
 */
 
-
-
-
-
-
 ///
 ///
 ///
@@ -129,15 +124,11 @@ class SvpBookingsCanceledCard extends StatelessWidget {
 ///
 ///
 
-
-
-
 // lib/.../widgets/svp_bookings_canceled_card.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../../constants/text_font_style.dart';
-import '../../../../../../custom_widgets/custom_elevated_button.dart';
 import '../../../../../../custom_widgets/date_and_time_widget_tile.dart';
 import '../../../../../../custom_widgets/dotted_line_divider_widget.dart';
 import '../../../../../../gen/colors.gen.dart';
@@ -221,8 +212,6 @@ class SvpBookingsCanceledCard extends StatelessWidget {
           UIHelper.verticalSpace(6.h),
           DateAndAddressWidgetTile(icon: Icons.watch_later, title: dateTime),
           UIHelper.verticalSpace(12.h),
-
-
         ],
       ),
     );

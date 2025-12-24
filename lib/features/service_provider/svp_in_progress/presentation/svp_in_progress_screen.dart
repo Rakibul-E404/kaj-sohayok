@@ -61,12 +61,6 @@ class SvpInProgressScreen extends StatelessWidget {
 }
 */
 
-
-
-
-
-
-
 ///
 ///
 ///
@@ -74,9 +68,6 @@ class SvpInProgressScreen extends StatelessWidget {
 ///
 ///
 ///
-
-
-
 
 // lib/.../svp_in_progress_screen.dart
 
@@ -99,7 +90,7 @@ class SvpInProgressScreen extends StatelessWidget {
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          "In Progress",
+          'in_progress'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
         centerTitle: true,
@@ -122,7 +113,7 @@ class SvpInProgressScreen extends StatelessWidget {
             CircularProgressIndicator(color: AppColors.c000e08),
             UIHelper.verticalSpace(16.h),
             Text(
-              'Loading in-progress jobs...',
+              'loading_in_progress_job'.tr,
               style: TextFontStyle.headline10w400c6c606cStyleSatoshi,
             ),
           ],
@@ -141,7 +132,8 @@ class SvpInProgressScreen extends StatelessWidget {
               UIHelper.verticalSpace(16.h),
               Text(
                 controller.errorMessage.value,
-                style: TextFontStyle.headline10w400c6c606cStyleSatoshi.copyWith(color: Colors.red),
+                style: TextFontStyle.headline10w400c6c606cStyleSatoshi
+                    .copyWith(color: Colors.red),
                 textAlign: TextAlign.center,
               ),
               UIHelper.verticalSpace(16.h),
@@ -151,7 +143,7 @@ class SvpInProgressScreen extends StatelessWidget {
                   backgroundColor: AppColors.c000e08,
                   foregroundColor: Colors.white,
                 ),
-                child: const Text('Retry'),
+                child: Text('retry'.tr),
               ),
             ],
           ),
@@ -167,13 +159,15 @@ class SvpInProgressScreen extends StatelessWidget {
             Icon(Icons.pending_actions, size: 60.h, color: Colors.grey),
             UIHelper.verticalSpace(16.h),
             Text(
-              'No jobs in progress',
-              style: TextFontStyle.headline10w500c000000StyleSatoshi.copyWith(color: Colors.grey),
+              'no_jobs_in_progress'.tr,
+              style: TextFontStyle.headline10w500c000000StyleSatoshi
+                  .copyWith(color: Colors.grey),
             ),
             UIHelper.verticalSpace(8.h),
             Text(
-              'Active jobs will appear here',
-              style: TextFontStyle.headline10w400c6c606cStyleSatoshi.copyWith(color: Colors.grey),
+              'active_jobs_will_appear_here'.tr,
+              style: TextFontStyle.headline10w400c6c606cStyleSatoshi
+                  .copyWith(color: Colors.grey),
             ),
           ],
         ),
