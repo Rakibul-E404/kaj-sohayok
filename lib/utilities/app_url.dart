@@ -34,8 +34,10 @@ class AppUrl {
 
   // ==========> Service Form ==========>
   static String serviceFormCategories = '${baseUrl}v1/service-categories/';
+
   // static String serviceProviderFormSubmit = '${baseUrl}v1/service-providers';
-  static String serviceProviderFormSubmit = '${baseUrl}v1/service-providers/with-locationInfo';
+  static String serviceProviderFormSubmit =
+      '${baseUrl}v1/service-providers/with-locationInfo';
 
   // ==========> Service Wallet ==========>
   static String serviceProviderWithdrawalRequest =
@@ -129,6 +131,10 @@ class AppUrl {
 
   static String addNewProofFile(String bookingId) {
     return '${baseUrl}v1/service-bookings/update-work-proof/$bookingId';
+  }
+
+  static String deleteUser(String userId) {
+    return '${baseUrl}v1/users/softDelete/$userId';
   }
 
   // static String additionalCost(String bookingId) {

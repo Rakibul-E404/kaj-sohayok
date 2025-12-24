@@ -137,6 +137,99 @@ class SettingsTab extends StatelessWidget {
                       ),
                     ),
                   )
+                :  index == 6
+                ? Get.bottomSheet(
+              backgroundColor: AppColors.cFFFFFF,
+              Container(
+                width: 1.sw,
+                padding: EdgeInsets.all(30.sp),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ///Section : Bottom Sheet Mini Divider
+                    Container(
+                      height: 6.h,
+                      width: 50.w,
+                      decoration: BoxDecoration(
+                        color: AppColors.cb5b5b5,
+                        borderRadius:
+                        BorderRadius.circular(
+                            10.r),
+                      ),
+                    ),
+                    UIHelper.verticalSpace(24.h),
+
+                    ///Section : Remove Account Image
+                    Image.asset(
+                      height: 130.h,
+                      width: 130.w,
+                      fit: BoxFit.contain,
+                      Assets.images.logOutImage
+                          .path, // Replace with appropriate delete/remove image
+                    ),
+                    UIHelper.verticalSpace(24.h),
+
+                    ///Section : Text -> Remove Account Text...
+                    Text(
+                      "Remove Account",
+                      style: TextFontStyle
+                          .headline18w700c000000StyleSatoshi,
+                    ),
+                    UIHelper.verticalSpace(10.h),
+                    Text(
+                      "Are you sure you want to remove your account?\nThis action cannot be undone.",
+                      textAlign: TextAlign.center,
+                      style: TextFontStyle
+                          .headline14w400c494949StyleSatoshi,
+                    ),
+                    UIHelper.verticalSpace(24.h),
+
+                    ///Section : Button -> No & Yes
+                    Row(
+                      mainAxisAlignment:
+                      MainAxisAlignment
+                          .center,
+                      children: [
+                        ///Section : Button -> No
+                        CustomElevatedButton(
+                          onTap: () {
+                            Get.back();
+                          },
+                          buttonWidth: 136.w,
+                          isButtonBorderUsed:
+                          true,
+                          buttonBorderColor:
+                          AppColors.c778beb,
+                          buttonBorderWidth:
+                          1.5.sp,
+                          buttonColor:
+                          Colors.transparent,
+                          buttonTitle: "No",
+                          textStyle: TextFontStyle
+                              .headline14w500c000000StyleSatoshi,
+                        ),
+                        UIHelper.horizontalSpace(
+                            16.w),
+
+                        ///Section : Button -> Yes
+                        CustomElevatedButton(
+                          onTap: () {
+                            Get.back();
+
+                            userProfileController
+                                .handleRemoveAccount();
+                          },
+                          buttonWidth: 136.w,
+                          buttonTitle: "Yes",
+                          buttonColor: Colors
+                              .red, // Red color for danger action
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            )
                 : null;
           },
           prefixIcon: data.icon,

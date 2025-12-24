@@ -180,13 +180,13 @@ class _PersonalInboxState extends State<PersonalInbox> {
 
           UIHelper.horizontalSpace(10.w),
 
-          // More options button
-          InkWell(
-            onTap: () {
-              controller.openEndDrawer();
-            },
-            child: Icon(Icons.more_vert, color: AppColors.cb4b4b4),
-          ),
+          // // More options button
+          // InkWell(
+          //   onTap: () {
+          //     controller.openEndDrawer();
+          //   },
+          //   child: Icon(Icons.more_vert, color: AppColors.cb4b4b4),
+          // ),
         ],
       ),
 

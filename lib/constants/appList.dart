@@ -16,8 +16,6 @@ import '../features/service_provider/svp_home/model/svp_card_model.dart';
 class AppList {
   static final List<String> genderList = ["Male", "Female"];
 
-
-
   // Pages of categories
   static final List<List<CategoryModel>> categories = [
     [
@@ -138,6 +136,8 @@ class AppList {
     ),
     SettingsOptionsModel(icon: Assets.icons.helpIcon, optionName: "Contact Us"),
     SettingsOptionsModel(icon: Assets.icons.logOutIcon, optionName: "Logout"),
+    SettingsOptionsModel(
+        icon: Assets.icons.logOutIcon, optionName: "Remove Account"),
   ];
 
   static List<ProfileTileModel> userProfileList = [

@@ -97,6 +97,7 @@ import 'package:kaz_bd/models/user_profile_model.dart';
 import 'package:kaz_bd/service/socket_service.dart';
 
 import '../routes/routes.dart';
+import '../service/get_storage.dart';
 import '../service/network_caller.dart';
 import '../service/network_response.dart';
 import '../service/secured_storage.dart';
@@ -309,6 +310,47 @@ class UserProfileScreenController extends GetxController
     } catch (e) {
       LoggerUtils.debug("Exception : ${e.toString()}");
     } finally {
+      loader.value = false;
+    }
+  }
+
+  ///----------------------------- Remove Account  -------------------------->
+
+  handleRemoveAccount() async {
+    try {
+      loader.value = true;
+
+      final String currentUserId =
+          GetStorageModel().read(AppConstants.userId) ?? '';
+      final NetworkResponse postResponse = await NetworkCaller().putRequest(
+        AppUrl.deleteUser(currentUserId),
+      );
+      if (postResponse.isSuccess) {
+        Get.snackbar(
+          'Success',
+          postResponse.jsonResponse?['message'] ??
+              "Account Processed for deleting",
+          backgroundColor: AppColors.c778beb,
+        );
+        await handleLogOut();
+      } else {
+        LoggerUtils.debug(postResponse.jsonResponse?['message']);
+
+        Get.snackbar(
+          'Error',
+          postResponse.jsonResponse?['message'],
+          backgroundColor: Colors.red,
+        );
+      }
+    } catch (e) {
+      // ToastManager.show(
+      //   message: e.toString(),
+      //   backgroundColor: AppColors.red,
+      //   textColor: AppColors.white,
+      // );
+      LoggerUtils.debug("Exception : ${e.toString()}");
+    } finally {
+      // clearTextFields();
       loader.value = false;
     }
   }
