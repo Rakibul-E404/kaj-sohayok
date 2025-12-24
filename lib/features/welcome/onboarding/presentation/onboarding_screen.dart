@@ -86,8 +86,8 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               ///Section : AppLogo
               Image.asset(
                 Assets.images.appLogo.path,
-                width: 170.w,
-                height: 99.h,
+                // width: 170.w,
+                height: 120,
                 fit: BoxFit.cover,
               ),
               Spacer(),
