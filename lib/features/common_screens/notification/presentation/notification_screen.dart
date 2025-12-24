@@ -70,7 +70,7 @@ class NotificationScreen extends StatelessWidget {
         return RefreshIndicator(
           onRefresh: () => controller.fetchNotification(isRefresh: true),
           child: ListView.separated(
-            padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),
+             padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),
             itemCount: controller.notificationList.length,
             separatorBuilder: (context, index) => SizedBox(height: 16.h),
             itemBuilder: (context, index) {
