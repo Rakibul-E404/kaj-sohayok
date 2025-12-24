@@ -16,7 +16,7 @@ class EndDrawerWidget extends StatelessWidget {
         children: [
           SizedBox(
             width: 0.55.sw,
-            height: 0.12.sh,
+            height: 0.15.sh,
             child: Drawer(
               backgroundColor: AppColors.cFFFFFF,
               child: SafeArea(

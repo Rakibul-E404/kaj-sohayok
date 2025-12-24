@@ -10,6 +10,8 @@ import 'package:kaz_bd/utilities/app_constants.dart';
 import '../../../../controllers/chat_inbox_screen_controller.dart';
 import '../../../../controllers/message_screen_controller.dart';
 import '../../../../gen/colors.gen.dart';
+import '../../../../utilities/app_url.dart';
+import '../../../call/presentation/controller/call_controller.dart';
 import '../../chat_list/model/chat_list_response_model.dart';
 import '../widgets/chat_bubble_widget.dart';
 import '../widgets/end_drawer_widget.dart';
@@ -19,7 +21,7 @@ import '../widgets/send_message_widget.dart';
 class PersonalInbox extends StatefulWidget {
   const PersonalInbox({
     super.key,
-  }); // Constructor to accept name
+  });
 
   @override
   State<PersonalInbox> createState() => _PersonalInboxState();
@@ -30,12 +32,46 @@ class _PersonalInboxState extends State<PersonalInbox> {
   MessageScreenController messageScreenController =
       Get.find<MessageScreenController>();
 
+  // Initialize CallController
+  late final CallController callController;
+
   final UserIdModel? receiverProfile = Get.arguments["receiverModel"];
   final String? conversationId = Get.arguments["conversationId"];
 
   @override
+  void initState() {
+    super.initState();
+    // Get or create CallController
+    if (Get.isRegistered<CallController>()) {
+      callController = Get.find<CallController>();
+    } else {
+      callController = Get.put(CallController(), permanent: true);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    /// ================= Receive the Conversation ID ==================>
+    // Handle image URL logic
+    final String imageUrl;
+    if (receiverProfile != null &&
+        receiverProfile!.profileImage != null &&
+        receiverProfile!.profileImage!.imageUrl != null &&
+        receiverProfile!.profileImage!.imageUrl!.contains('amazonaws')) {
+      imageUrl = receiverProfile!.profileImage!.imageUrl!;
+    } else {
+      if (receiverProfile != null &&
+          receiverProfile!.profileImage != null &&
+          receiverProfile!.profileImage!.imageUrl != null &&
+          receiverProfile!.profileImage!.imageUrl!.startsWith('http')) {
+        imageUrl = receiverProfile?.profileImage?.imageUrl ?? '';
+      } else {
+        imageUrl =
+            "${AppUrl.imageBaseUrl}${receiverProfile?.profileImage?.imageUrl ?? ''}";
+      }
+
+      // LoggerUtils.error(imageUrl);
+    }
+
     return Scaffold(
       key: controller.scaffoldKey,
       backgroundColor: AppColors.cFFFFFF,
@@ -47,7 +83,6 @@ class _PersonalInboxState extends State<PersonalInbox> {
           },
           child: Icon(Icons.arrow_back_ios),
         ),
-        // leadingWidth: 100.w,
         title: Row(
           spacing: 16,
           children: [
@@ -61,7 +96,7 @@ class _PersonalInboxState extends State<PersonalInbox> {
                 borderRadius: BorderRadius.circular(50),
                 child: CachedNetworkImage(
                   height: 45,
-                  imageUrl: receiverProfile?.profileImage?.imageUrl ?? '',
+                  imageUrl: imageUrl,
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Container(
                     color: Colors.grey[300],
@@ -74,7 +109,7 @@ class _PersonalInboxState extends State<PersonalInbox> {
               ),
             )),
             Expanded(
-              flex: 4,
+              flex: 3,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -84,7 +119,7 @@ class _PersonalInboxState extends State<PersonalInbox> {
                     receiverProfile?.name ?? '',
                     style: TextStyle(
                       color: AppColors.c111111,
-                      fontSize: 16, // Slightly smaller font
+                      fontSize: 16,
                     ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -96,13 +131,13 @@ class _PersonalInboxState extends State<PersonalInbox> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       CircleAvatar(backgroundColor: Colors.green, radius: 4),
-                      SizedBox(width: 6), // Reduced spacing
+                      SizedBox(width: 6),
                       Flexible(
                         child: Text(
                           'active_now'.tr,
                           style: TextStyle(
                             color: AppColors.c111111,
-                            fontSize: 12, // Smaller font
+                            fontSize: 12,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -117,26 +152,38 @@ class _PersonalInboxState extends State<PersonalInbox> {
         backgroundColor: AppColors.cFFFFFF,
         actions: [
           ///Section : Audio call button
-          InkWell(
-            onTap: () {
-              Get.snackbar(
-                'audio_call'.tr,
-                'audio_call_button_taped'.tr,
-                snackPosition: SnackPosition.TOP,
-              );
-            },
-            child: Icon(Icons.call, color: AppColors.c999999),
-          ),
+          Obx(() {
+            final isCallInProgress =
+                callController.callState.value != CallState.idle;
+
+            return InkWell(
+              onTap: isCallInProgress
+                  ? null
+                  : () {
+                      // Call the controller method
+                      callController.initiateAudioCallFromInbox(
+                        conversationId: conversationId,
+                        receiverProfile: receiverProfile,
+                      );
+                    },
+              child: Icon(
+                Icons.call,
+                color: isCallInProgress
+                    ? AppColors.c999999.withOpacity(0.5)
+                    : AppColors.c999999,
+              ),
+            );
+          }),
 
           UIHelper.horizontalSpace(10.w),
 
-          // More options button
-          InkWell(
-            onTap: () {
-              controller.openEndDrawer();
-            },
-            child: Icon(Icons.more_vert, color: AppColors.cb4b4b4),
-          ),
+          // // More options button
+          // InkWell(
+          //   onTap: () {
+          //     controller.openEndDrawer();
+          //   },
+          //   child: Icon(Icons.more_vert, color: AppColors.cb4b4b4),
+          // ),
         ],
       ),
 
@@ -170,7 +217,7 @@ class _PersonalInboxState extends State<PersonalInbox> {
             ),
           ),
 
-          ///Section : Send Message Option.....
+          ///Section : Send Message Option
           SendMessageWidget(
             onTap: () {
               controller.sendMessage(conversationId: conversationId ?? '');

@@ -171,13 +171,14 @@ class UserEditProfileScreen extends StatelessWidget {
                       ),
                       UIHelper.verticalSpace(16.h),
 
+                /*      /// ============>  Location Removed =====================>
                       /// Location Form Field
                       EditProfileFormFieldWidget(
                         lableText: 'location'.tr,
                         hintText: 'enter_your_location'.tr,
                         controller: controller.locationController,
                       ),
-                      UIHelper.verticalSpace(16.h),
+                      UIHelper.verticalSpace(16.h),*/
 
                       /// Date of Birth Form Field
                       GestureDetector(

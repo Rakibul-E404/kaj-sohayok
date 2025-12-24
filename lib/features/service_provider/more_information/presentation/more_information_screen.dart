@@ -13,6 +13,7 @@ import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import '../../../../controllers/more_information_screen_controller.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../../gen/colors.gen.dart';
+import '../../../../routes/routes.dart';
 
 class MoreInformationScreen extends StatelessWidget {
   const MoreInformationScreen({super.key});
@@ -61,7 +62,7 @@ class MoreInformationScreen extends StatelessWidget {
                             controller.isOtherSelected.value
                                 ? controller.otherServiceText.value.trim()
                                 : controller.selectedCategory.value?.nameEn ??
-                                      'Select work type',
+                                    'Select work type',
                           ),
                         ),
                       ),
@@ -273,7 +274,9 @@ class MoreInformationScreen extends StatelessWidget {
                       child: SizedBox(
                         height: 48.h,
                         child: OutlinedButton(
-                          onPressed: () => Get.back(),
+                          onPressed: () {
+                            Get.offAllNamed(Routes.chooseRoleScreen);
+                          },
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(color: Colors.grey[300]!),
                             shape: RoundedRectangleBorder(
@@ -449,7 +452,7 @@ class MoreInformationScreen extends StatelessWidget {
                               final category = controller.categories[index];
                               final isSelected =
                                   controller.selectedCategory.value?.id ==
-                                  category.id;
+                                      category.id;
 
                               return RadioListTile<String>(
                                 title: Row(
@@ -464,21 +467,20 @@ class MoreInformationScreen extends StatelessWidget {
                                               fit: BoxFit.contain,
                                               placeholder: (context, url) =>
                                                   const Center(
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                          strokeWidth: 2,
-                                                        ),
-                                                  ),
-                                              errorWidget:
-                                                  (
-                                                    context,
-                                                    url,
-                                                    error,
-                                                  ) => SvgPicture.asset(
-                                                    Assets
-                                                        .icons
-                                                        .serviceProviderLogo,
-                                                  ),
+                                                child:
+                                                    CircularProgressIndicator(
+                                                  strokeWidth: 2,
+                                                ),
+                                              ),
+                                              errorWidget: (
+                                                context,
+                                                url,
+                                                error,
+                                              ) =>
+                                                  SvgPicture.asset(
+                                                Assets
+                                                    .icons.serviceProviderLogo,
+                                              ),
                                             ),
                                           )
                                         : SvgPicture.asset(
@@ -500,8 +502,8 @@ class MoreInformationScreen extends StatelessWidget {
                             },
                             separatorBuilder:
                                 (BuildContext context, int index) {
-                                  return Divider();
-                                },
+                              return Divider();
+                            },
                           ),
                   ),
 

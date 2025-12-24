@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +16,11 @@ import '../../../../controllers/message_screen_controller.dart';
 import '../../../../custom_widgets/custom_shimmer_effect.dart';
 import '../../../../custom_widgets/profile_tile_widget.dart';
 import '../../../../utilities/app_url.dart';
+import '../../../call/presentation/controller/call_controller.dart';
+import '../../chat_list/model/chat_list_response_model.dart';
 
 class ProviderDetailsScreen extends StatelessWidget {
-  const ProviderDetailsScreen({super.key});
+  const   ProviderDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +199,7 @@ class ProviderDetailsScreen extends StatelessWidget {
                                                   name:
                                                       svpProfileDetailsController
                                                           .providerName,
-                                                  imageUrl: fullImageUrl ?? '');
+                                                  imageUrl: imageUrl ?? '');
                                         },
                                         child: Container(
                                           padding: EdgeInsets.all(6.sp),
@@ -214,22 +215,43 @@ class ProviderDetailsScreen extends StatelessWidget {
                                       UIHelper.horizontalSpace(8.w),
 
                                       ///Section : Call
-                                      InkWell(
-                                        onTap: () {
-                                          log("Call Button Taped!");
-                                        },
-                                        child: Container(
-                                          padding: EdgeInsets.all(6.sp),
-                                          decoration: BoxDecoration(
-                                            color: AppColors.cbababa,
-                                            shape: BoxShape.circle,
-                                          ),
+                                      Obx(() {
+                                        final isCallInProgress =
+                                            Get.find<CallController>()
+                                                    .callState
+                                                    .value !=
+                                                CallState.idle;
+
+                                        return InkWell(
+                                          onTap: isCallInProgress
+                                              ? null
+                                              : () {
+                                                  // Call the controller method
+                                                  Get.find<CallController>()
+                                                      .initiateAudioCallOutsideInbox(
+                                                          receiverId:
+                                                              svpProfileDetailsController
+                                                                      .serviceProviderAttributes
+                                                                      .value
+                                                                      ?.id ??
+                                                                  '',
+                                                          name:
+                                                              svpProfileDetailsController
+                                                                  .providerName,
+                                                          image: ProfileImageModel(
+                                                              imageUrl:
+                                                                  fullImageUrl ??
+                                                                      ''));
+                                                },
                                           child: Icon(
                                             Icons.call,
-                                            color: AppColors.cFFFFFF,
+                                            color: isCallInProgress
+                                                ? AppColors.c999999
+                                                    .withOpacity(0.5)
+                                                : AppColors.c999999,
                                           ),
-                                        ),
-                                      ),
+                                        );
+                                      })
                                     ],
                                   ),
                                 ],

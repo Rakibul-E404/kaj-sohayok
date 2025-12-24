@@ -52,22 +52,19 @@
 	<key>GMSApiKey</key>
 	<string>AIzaSyBCpOGdv0EFTfy3Q_SujBEWW28c-CG_sWg</string>
 	<!----------------------------------------------------------->
-	<!-------------------------- For Zego Calling permissions ------------------->
+	<!-------------------------- For Agora Calling permissions ------------------->
 	<!----------------------------------------------------------->
-	<!-- Microphone access -->
+    <!-- Add these permission descriptions -->
+    <key>NSCameraUsageDescription</key>
+    <string>We need camera access for video calls</string>
+
     <key>NSMicrophoneUsageDescription</key>
-    <string>This app needs access to your microphone to make audio calls.</string>
+    <string>We need microphone access for voice and video calls</string>
 
-    <!-- Optional: Camera (if you plan to support video later) -->
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>We need local network access for calls</string>
 
-
-    <!-- Required for background calling -->
-    <key>UIBackgroundModes</key>
-    <array>
-        <string>audio</string>
-        <string>voip</string>
-        <!-- Optional: if using push notifications -->
-        <string>remote-notification</string>
-    </array>
+    <key>io.flutter.embedded_views_preview</key>
+    <true/>
 </dict>
 </plist>

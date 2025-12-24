@@ -99,10 +99,12 @@ dependencies:
   pull_to_refresh: ^2.0.0
   video_thumbnail: ^0.5.6
   #for icon :
-  flutter_launcher_icons: ^0.14.4
+#  flutter_launcher_icons: ^0.14.4
   #for calling :
-#  zego_uikit_prebuilt_call: ^4.13.0
-#  zego_uikit_signaling_plugin: ^2.8.0
+  agora_rtc_engine: ^6.3.2
+  flutter_dotenv: ^5.2.1
+  #for icon :
+  flutter_launcher_icons: ^0.14.4
 
 
 dev_dependencies:

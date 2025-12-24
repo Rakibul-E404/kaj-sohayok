@@ -34,7 +34,10 @@ class AppUrl {
 
   // ==========> Service Form ==========>
   static String serviceFormCategories = '${baseUrl}v1/service-categories/';
-  static String serviceProviderFormSubmit = '${baseUrl}v1/service-providers';
+
+  // static String serviceProviderFormSubmit = '${baseUrl}v1/service-providers';
+  static String serviceProviderFormSubmit =
+      '${baseUrl}v1/service-providers/with-locationInfo';
 
   // ==========> Service Wallet ==========>
   static String serviceProviderWithdrawalRequest =
@@ -56,9 +59,16 @@ class AppUrl {
     return '${baseUrl}v1/attachments/$id';
   }
 
-  // ======= Conversation ==============>
+  // ======= Notification ==============>
+  static String notification =
+      '${baseUrl}v1/notifications/?page=1&limit=300000';
+
+  // ================== Conversation ==============>
 
   static String createConversation = '${baseUrl}v1/conversations/';
+
+  // ======================= Call ==============>
+  static String getAgoraToken = '${baseUrl}v1/call/token';
 
   ///
   ///
@@ -97,6 +107,7 @@ class AppUrl {
   static String providerCompletedBookings =
       '${baseUrl}v1/service-bookings/paginate/for-provider?status=completed';
 
+  // static String paymentRequests = '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
 
   static String providerJobRequestAcceptButton(String bookingId) {
     return '${baseUrl}v1/service-bookings/update-status/$bookingId/status/accept';
@@ -127,6 +138,15 @@ class AppUrl {
   }
 
   static const String additionalCost = '${baseUrl}v1/additional-cost';
+
+  static String deleteUser(String userId) {
+    return '${baseUrl}v1/users/softDelete/$userId';
+  }
+
+  // static String additionalCost(String bookingId) {
+  //   return '${baseUrl}v1/additional-cost';
+  // }
+  // static const String additionalCost = '${baseUrl}v1/additional-cost';
 
   ///===> rakibul api add close::::::::::::::::>
   ///

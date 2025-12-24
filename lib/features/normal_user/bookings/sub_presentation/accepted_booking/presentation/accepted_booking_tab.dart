@@ -171,15 +171,6 @@ class _AcceptedBookingTabState extends State<AcceptedBookingTab> {
                     );
                   },
 
-                  // Data
-                  // ///Button OnTap : Message
-                  // isAcceptedBookingTabMessageOnTap: () async {
-                  //   log("💬 Message button tapped for booking: $bookingId");
-                  //    Get.find<MessageScreenController>().createMessage(
-                  //       participantId: booking['providerId']['_userId'],
-                  //       name: _getServiceName(serviceName),
-                  //       imageUrl: imageUrl);
-                  // },
                   title: _getServiceName(serviceName),
                   initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
                   location: _getAddress(address),
@@ -188,9 +179,16 @@ class _AcceptedBookingTabState extends State<AcceptedBookingTab> {
                   serviceProviderProfileImage:
                       imageUrl ?? Assets.images.userImage.path,
                   serviceProviderName: provider?['name'] ?? 'Unknown Provider',
-                  serviceProviderDesignation: 'services_provider'.tr,
+                  serviceProviderDesignation: 'Service Provider',
                   isNetworkImage: isNetworkImage,
                 );
+
+                // Get.find<MessageScreenController>().createMessage(
+                //   participantId: messageProviderId,
+                //   name: provider?['name'] ?? 'Unknown Provider',
+                //   // imageUrl: imageUrl ?? Assets.images.userImage.path,
+                //   imageUrl: controller.getImageUrl(bookingId)
+                // );
               },
             );
           }),

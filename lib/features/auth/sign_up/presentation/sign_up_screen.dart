@@ -317,7 +317,7 @@ class SignUpScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  UIHelper.verticalSpace(32.h),
+              /*    UIHelper.verticalSpace(32.h),
 
                   /// Section : Text -> OR
                   Text(
@@ -344,7 +344,7 @@ class SignUpScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ),
+                  ),*/
                   UIHelper.verticalSpace(32.h),
                 ],
               ),

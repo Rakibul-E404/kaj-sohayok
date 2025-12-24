@@ -12,7 +12,9 @@ import 'package:kaz_bd/service/secured_storage.dart';
 import 'package:kaz_bd/utilities/app_constants.dart';
 import 'package:kaz_bd/utilities/logger_util.dart';
 
+import '../gen/colors.gen.dart';
 import '../models/service_signup_form_model.dart';
+import '../service/location/location_controller.dart';
 import '../service/network_caller.dart';
 import '../utilities/app_url.dart';
 
@@ -233,14 +235,42 @@ class MoreInformationScreenController extends GetxController {
     }
 
     try {
+      LocationController locationController = Get.put(LocationController());
+      await locationController.fetchCurrentLocation();
+
       isLoading.value = true;
       Map<String, String> fields;
+
+      if (locationController.currentPosition.value == null ||
+          locationController.currentPosition.value!.latitude
+              .toString()
+              .isEmpty ||
+          (locationController.currentPosition.value == null ||
+              locationController.currentPosition.value!.longitude
+                  .toString()
+                  .isEmpty)) {
+        Get.snackbar(
+          'Error',
+          'Please ensure location access to submit the form',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return;
+      }
       if (selectedCategory.value != null) {
         fields = {
           'serviceCategoryId': selectedCategory.value!.id.toString(),
           'serviceName': businessNameController.text.trim(),
           'yearsOfExperience': yearsOfExperienceController.text.trim(),
           'startPrice': workPriceController.text.trim(),
+          "address":
+              '${(locationController.currentAddress.value?.street ?? '')},${(locationController.currentAddress.value?.subLocality ?? '')},${(locationController.currentAddress.value?.locality ?? '')},${(locationController.currentAddress.value?.country ?? '')} ',
+          "lat":
+              locationController.currentPosition.value?.latitude.toString() ??
+                  '',
+          "lng":
+              locationController.currentPosition.value?.longitude.toString() ??
+                  '',
         };
       } else {
         fields = {
@@ -248,6 +278,14 @@ class MoreInformationScreenController extends GetxController {
           'serviceName': businessNameController.text.trim(),
           'yearsOfExperience': yearsOfExperienceController.text.trim(),
           'startPrice': workPriceController.text.trim(),
+          "address":
+              '${(locationController.currentAddress.value?.street ?? '')},${(locationController.currentAddress.value?.subLocality ?? '')},${(locationController.currentAddress.value?.locality ?? '')},${(locationController.currentAddress.value?.country ?? '')} ',
+          "lat":
+              locationController.currentPosition.value?.latitude.toString() ??
+                  '',
+          "lng":
+              locationController.currentPosition.value?.longitude.toString() ??
+                  '',
         };
       }
 
@@ -307,7 +345,6 @@ class MoreInformationScreenController extends GetxController {
       isLoading.value = false;
     }
   }
-
 
   @override
   void onClose() {

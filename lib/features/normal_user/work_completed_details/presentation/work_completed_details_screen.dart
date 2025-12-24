@@ -10,6 +10,8 @@ import 'package:kaz_bd/features/normal_user/work_completed_details/widgets/addit
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:video_player/video_player.dart';
+
+import '../../../../controllers/message_screen_controller.dart';
 import '../../../../custom_widgets/address_and_order_date_tile.dart';
 import '../../../../custom_widgets/payment_summery_widget.dart';
 import '../../../../custom_widgets/proof_of_work_showing_widget.dart';
@@ -17,6 +19,8 @@ import '../../../../custom_widgets/workCompleteDateAndTimeWidget.dart';
 import '../../../../gen/colors.gen.dart';
 import '../../../../utilities/app_url.dart';
 import '../controller/WorkCompletedDetailsController.dart';
+import '../../../call/presentation/controller/call_controller.dart';
+import '../../chat_list/model/chat_list_response_model.dart';
 import '../model/additional_cost_model.dart';
 import 'package:kaz_bd/models/user_payment_history_details_model.dart'
     as details_model;
@@ -807,7 +811,7 @@ class _WorkCompletedDetailsScreenState
                                 child: Container(
                                   padding: EdgeInsets.all(6.sp),
                                   decoration: BoxDecoration(
-                                    color: AppColors.c778beb,
+                                    color: AppColors.cbababa,
                                     shape: BoxShape.circle,
                                   ),
                                   child: SvgPicture.asset(
@@ -818,21 +822,35 @@ class _WorkCompletedDetailsScreenState
                                 ),
                               ),
                               UIHelper.horizontalSpace(8.w),
-                              InkWell(
-                                onTap: () => log("Call tapped"),
-                                child: Container(
-                                  padding: EdgeInsets.all(6.sp),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.c778beb,
-                                    shape: BoxShape.circle,
-                                  ),
+                              Obx(() {
+                                final isCallInProgress =
+                                    Get.find<CallController>()
+                                            .callState
+                                            .value !=
+                                        CallState.idle;
+
+                                return InkWell(
+                                  onTap: isCallInProgress
+                                      ? null
+                                      : () {
+                                          // Call the controller method
+                                          Get.find<CallController>()
+                                              .initiateAudioCallOutsideInbox(
+                                                  receiverId:
+                                                      provider.userId ?? '',
+                                                  name: provider.name ??
+                                                      "Unknown Provider",
+                                                  image: ProfileImageModel(
+                                                      imageUrl:
+                                                          '${AppUrl.imageBaseUrl}${provider.profileImage?.imageUrl}'));
+                                        },
                                   child: Icon(
                                     Icons.call,
                                     color: AppColors.cFFFFFF,
                                     size: 18.sp,
                                   ),
-                                ),
-                              ),
+                                );
+                              })
                             ],
                           ),
                         ],

@@ -5,10 +5,12 @@ import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/features/normal_user/chat_list/widgets/message_tile.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/models/user_profile_model.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 
 import '../../../../constants/appList.dart';
 import '../../../../controllers/message_screen_controller.dart';
 import '../../../../gen/colors.gen.dart';
+import '../../../../utilities/app_url.dart';
 import '../../chat_inbox/presentation/chat_inbox_screen.dart';
 import '../model/chat_list_response_model.dart';
 import '../widgets/search_bar_widget.dart';
@@ -87,8 +89,10 @@ class _MessageScreenState extends State<MessageScreen> {
 
                   return Obx(
                     () => Visibility(
-                      visible: controller.chatLists.isNotEmpty,
-                      replacement: Text('no_conversation_found'.tr),
+                      visible: controller.chatLists.isNotEmpty  ,
+                      replacement: Text(controller.loader.value == true
+                          ? ''
+                          : 'No Conversation Found'),
                       child: ListView.separated(
                         shrinkWrap: true,
                         // reverse: true,
@@ -99,6 +103,19 @@ class _MessageScreenState extends State<MessageScreen> {
                         itemBuilder: (context, index) {
                           final ChatListResponseModel message =
                               filteredChats[index];
+
+                          final String imageUrl;
+                          if (message.userId != null &&
+                              message.userId!.profileImage != null &&
+                              message.userId!.profileImage!.imageUrl != null &&
+                              message.userId!.profileImage!.imageUrl!.contains(
+                                'amazonaws',
+                              )) {
+                            imageUrl = message.userId!.profileImage!.imageUrl!;
+                          } else {
+                            imageUrl =
+                                "${AppUrl.imageBaseUrl}${message.userId!.profileImage!.imageUrl!}";
+                          }
                           return InkWell(
                             onTap: () async {
                               await controller.handleViewSingleProfileChat(
@@ -115,8 +132,7 @@ class _MessageScreenState extends State<MessageScreen> {
                                   transition: Transition.rightToLeft);
                             },
                             child: MessageTile(
-                              imageUrl:
-                                  message.userId?.profileImage?.imageUrl ?? '',
+                              imageUrl: imageUrl,
                               userName: message.userId?.name ?? '',
                               lastMessage: message
                                       .conversations.firstOrNull?.lastMessage ??
