@@ -24,9 +24,9 @@ class GetNrmUserServiceProviderProfileInfoController extends GetxController {
   Rx<Attributes?> serviceProviderAttributes = Rx<Attributes?>(null);
 
   void setServiceId({required String svcId}) {
-    log('🔧 setServiceProviderId called From Service Provider Profile Screen');
-    log('   Previous ID: ${serviceProviderId.value}');
-    log('   New ID: $svcId');
+    log('🔧 setServiceId called From Service Provider Profile Screen');
+    log('   Previous Service ID: ${svcID.value}');
+    log('   New Service ID: $svcId');
     log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     svcID.value = svcId;
   }
@@ -65,7 +65,7 @@ class GetNrmUserServiceProviderProfileInfoController extends GetxController {
 
       final NetworkResponse response = await NetworkCaller().getRequest(
         AppUrl.getNrmUserServiceProviderProfileDetailsInfo(
-          svcId: svcID.value,
+          svcId: svcID.value.isNotEmpty ? svcID.value : '',
         ),
         headers: token.isNotEmpty ? {'Authorization': 'Bearer $token'} : null,
       );

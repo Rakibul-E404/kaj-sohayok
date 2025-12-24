@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:get/get.dart';
+import 'package:kaz_bd/controllers/get_nrm_user_service_provider_profile_info.dart';
 import 'package:kaz_bd/service/network_caller.dart';
 import 'package:kaz_bd/service/network_response.dart';
 import 'package:kaz_bd/utilities/app_url.dart';
@@ -8,9 +9,12 @@ import 'package:kaz_bd/service/secured_storage.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import '../gen/colors.gen.dart';
 import '../features/normal_user/details/model/get_specific_service_model.dart';
-import 'get_nrm_user_service_provider_profile_info.dart';
 
 class DetailsScreenController extends GetxController {
+  GetNrmUserServiceProviderProfileInfoController
+      serviceProviderProfileController =
+      Get.find<GetNrmUserServiceProviderProfileInfoController>();
+
   RxBool isLoading = false.obs;
   RxBool serviceImageNotAvailable = false.obs;
 
@@ -36,16 +40,6 @@ class DetailsScreenController extends GetxController {
     log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
     serviceID.value = svcId;
-
-    // Also update the GetNrmUserServiceProviderProfileInfoController if it exists
-    try {
-      if (Get.isRegistered<GetNrmUserServiceProviderProfileInfoController>()) {
-        final profileController = Get.find<GetNrmUserServiceProviderProfileInfoController>();
-        profileController.setServiceId(svcId: svcId);
-      }
-    } catch (e) {
-      log('Could not update GetNrmUserServiceProviderProfileInfoController with service ID: $e');
-    }
   }
 
   void setServiceProviderId({required String svpId}) {
@@ -56,20 +50,6 @@ class DetailsScreenController extends GetxController {
     log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
     serviceProviderId.value = svpId;
-
-    // Also update the GetNrmUserServiceProviderProfileInfoController if it exists
-    try {
-      if (Get.isRegistered<GetNrmUserServiceProviderProfileInfoController>()) {
-        final profileController = Get.find<GetNrmUserServiceProviderProfileInfoController>();
-        profileController.setServiceProviderId(svpId: svpId);
-        // Also pass the current service ID if available
-        if (serviceID.value.isNotEmpty) {
-          profileController.setServiceId(svcId: serviceID.value);
-        }
-      }
-    } catch (e) {
-      log('Could not update GetNrmUserServiceProviderProfileInfoController with service provider ID: $e');
-    }
   }
 
   void setProviderID({required String pvID}) {
@@ -133,6 +113,8 @@ class DetailsScreenController extends GetxController {
 
       if (response.isSuccess) {
         if (response.jsonResponse != null) {
+          serviceProviderProfileController?.setServiceId(
+              svcId: serviceID.value);
           log('✅ JSON response is not null');
           log('📋 Response structure check:');
           log('   Has "data": ${response.jsonResponse!.containsKey("data")}');
