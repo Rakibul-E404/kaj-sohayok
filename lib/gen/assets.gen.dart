@@ -167,7 +167,7 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/app_logo.png
   AssetGenImage get appLogo =>
-      const AssetGenImage('assets/images/app_logo.png');
+      const AssetGenImage('assets/images/name.jpg');
 
   /// File path: assets/images/bell_image.png
   AssetGenImage get bellImage =>

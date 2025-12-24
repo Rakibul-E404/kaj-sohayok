@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:get/get.dart';
+import 'package:kaz_bd/controllers/get_nrm_user_service_provider_profile_info.dart';
 import 'package:kaz_bd/service/network_caller.dart';
 import 'package:kaz_bd/service/network_response.dart';
 import 'package:kaz_bd/utilities/app_url.dart';
@@ -10,6 +11,10 @@ import '../gen/colors.gen.dart';
 import '../features/normal_user/details/model/get_specific_service_model.dart';
 
 class DetailsScreenController extends GetxController {
+  GetNrmUserServiceProviderProfileInfoController
+      serviceProviderProfileController =
+      Get.find<GetNrmUserServiceProviderProfileInfoController>();
+
   RxBool isLoading = false.obs;
   RxBool serviceImageNotAvailable = false.obs;
 
@@ -26,6 +31,16 @@ class DetailsScreenController extends GetxController {
 
   ///Provider ID
   var providerID = ''.obs;
+  var serviceID = ''.obs;
+  void setServiceId({required String svcId}) {
+    log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    log('🔧 ServiceID called on Details Screen');
+    log('   Previous ID: ${serviceID.value}');
+    log('   New ID: $svcId');
+    log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+    serviceID.value = svcId;
+  }
 
   void setServiceProviderId({required String svpId}) {
     log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -82,7 +97,7 @@ class DetailsScreenController extends GetxController {
 
       // Build the API URL
       final String apiUrl =
-          AppUrl.getSpecificServiceDetails(svpId: serviceProviderId.value);
+          AppUrl.getSpecificServiceDetails(svcId: serviceID.value);
       log('🌐 API URL: $apiUrl');
       log('📤 Making GET request...');
 
@@ -98,6 +113,8 @@ class DetailsScreenController extends GetxController {
 
       if (response.isSuccess) {
         if (response.jsonResponse != null) {
+          serviceProviderProfileController?.setServiceId(
+              svcId: serviceID.value);
           log('✅ JSON response is not null');
           log('📋 Response structure check:');
           log('   Has "data": ${response.jsonResponse!.containsKey("data")}');
@@ -193,7 +210,7 @@ class DetailsScreenController extends GetxController {
       } else {
         log('❌ API call failed');
         log('   Status Code: ${response.statusCode}');
-        log('   Error: ${response.errorMessage}');
+        log('   Error: ${response.errorMessage ?? "No error"}');
 
         String errorMsg = 'Failed to load service details';
         if (response.statusCode == 502) {

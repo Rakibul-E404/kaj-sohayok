@@ -11,7 +11,7 @@ class NetworkResponse {
     this.statusCode,
     required this.isSuccess,
     this.jsonResponse,
-    this.errorMessage = 'Something went wrong',
+    this.errorMessage,
   });
 }
 

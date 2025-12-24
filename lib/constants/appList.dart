@@ -119,28 +119,32 @@ class AppList {
     ];
   }
 
-  static List<SettingsOptionsModel> settingsOptionsList = [
-    SettingsOptionsModel(
-      icon: Assets.icons.keyIcon,
-      optionName: "Change Password",
-    ),
-    SettingsOptionsModel(
-      icon: Assets.icons.privacyPolicyIcon,
-      optionName: "Privacy policy",
-    ),
-    SettingsOptionsModel(
-      icon: Assets.icons.termsConditionsIcon,
-      optionName: "Terms & conditions",
-    ),
-    SettingsOptionsModel(
-      icon: Assets.icons.aboutUsIcon,
-      optionName: "About us",
-    ),
-    SettingsOptionsModel(icon: Assets.icons.helpIcon, optionName: "Contact Us"),
-    SettingsOptionsModel(icon: Assets.icons.logOutIcon, optionName: "Logout"),
-    SettingsOptionsModel(
-        icon: Assets.icons.logOutIcon, optionName: "Remove Account"),
-  ];
+  static List<SettingsOptionsModel> get settingsOptionsList {
+    return [
+      SettingsOptionsModel(
+        icon: Assets.icons.keyIcon,
+        optionName: 'change_password'.tr,
+      ),
+      SettingsOptionsModel(
+        icon: Assets.icons.privacyPolicyIcon,
+        optionName: 'privacy_policy'.tr,
+      ),
+      SettingsOptionsModel(
+        icon: Assets.icons.termsConditionsIcon,
+        optionName: 'terms_and_condition'.tr,
+      ),
+      SettingsOptionsModel(
+        icon: Assets.icons.aboutUsIcon,
+        optionName: 'about_us'.tr,
+      ),
+      SettingsOptionsModel(
+          icon: Assets.icons.helpIcon, optionName: 'contact_us'.tr),
+      SettingsOptionsModel(
+          icon: Assets.icons.logOutIcon, optionName: 'logout'.tr),
+      SettingsOptionsModel(
+          icon: Assets.icons.logOutIcon, optionName: 'remove_account'.tr),
+    ];
+  }
 
   static List<ProfileTileModel> userProfileList = [
     ProfileTileModel(title: "Name", data: "Chowdhury Md. Imtiazul Islam"),
