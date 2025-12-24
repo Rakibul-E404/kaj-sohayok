@@ -88,19 +88,32 @@ class SignInScreen extends StatelessWidget {
                   UIHelper.verticalSpace(32.h),
 
                   ///Section : Password Form Field
-                  CustomFormField(
-                    controller: signInScreenController.passwordTEController,
-                    labelText: 'password'.tr,
-                    hintText: 'enter_password'.tr,
-                    // hintTextStyle: ,
-                    prefixIcon: Icon(Icons.lock, color: AppColors.c858c94),
-                    validator: (String? value) {
-                      if (value?.isEmpty ?? true) {
-                        return 'please_enter_password'.tr;
-                      }
-                      return null;
-                    },
-                  ),
+                  Obx(() {
+                    return CustomFormField(
+                      controller: signInScreenController.passwordTEController,
+                      labelText: 'password'.tr,
+                      hintText: 'enter_password'.tr,
+                      // hintTextStyle: ,
+                      prefixIcon: Icon(Icons.lock, color: AppColors.c858c94),
+                      isPass: true,
+                      isObsecure:
+                          signInScreenController.isPasswordVisible.value,
+                      suffixIcon: GestureDetector(
+                          onTap: () {
+                            signInScreenController.setPasswordVisibility();
+                          },
+                          child: Icon(
+                              signInScreenController.isPasswordVisible.value
+                                  ? Icons.visibility_off
+                                  : Icons.visibility)),
+                      validator: (String? value) {
+                        if (value?.isEmpty ?? true) {
+                          return 'please_enter_password'.tr;
+                        }
+                        return null;
+                      },
+                    );
+                  }),
                   UIHelper.verticalSpace(24.h),
 
                   ///Section : Forgot Password

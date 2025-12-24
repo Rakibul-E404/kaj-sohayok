@@ -14,6 +14,7 @@ import '../utilities/app_constants.dart';
 class GetNrmUserServiceProviderProfileInfoController extends GetxController {
   RxBool isLoading = false.obs;
   var serviceProviderId = ''.obs;
+  var svcID = ''.obs;
 
   // Change from RxList to Rx and store the single profile object
   // Rx<GetServiceProviderProfileDetailsModel?> getServiceProviderProfileInfo =
@@ -21,6 +22,14 @@ class GetNrmUserServiceProviderProfileInfoController extends GetxController {
 
   // Alternative: If you want to store just the attributes
   Rx<Attributes?> serviceProviderAttributes = Rx<Attributes?>(null);
+
+  void setServiceId({required String svcId}) {
+    log('🔧 setServiceProviderId called From Service Provider Profile Screen');
+    log('   Previous ID: ${serviceProviderId.value}');
+    log('   New ID: $svcId');
+    log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    svcID.value = svcId;
+  }
 
   void setServiceProviderId({required String svpId}) {
     log('🔧 setServiceProviderId called From Service Provider Profile Screen');
@@ -56,24 +65,33 @@ class GetNrmUserServiceProviderProfileInfoController extends GetxController {
 
       final NetworkResponse response = await NetworkCaller().getRequest(
         AppUrl.getNrmUserServiceProviderProfileDetailsInfo(
-          svpId: serviceProviderId.value,
+          svcId: svcID.value,
         ),
         headers: token.isNotEmpty ? {'Authorization': 'Bearer $token'} : null,
       );
 
-      if (response.isSuccess && response.jsonResponse != null) {
-        final serviceProviderProfileInfoModel =
-            GetServiceProviderProfileDetailsModel.fromJson(
-          response.jsonResponse!,
-        );
+      if (response.isSuccess) {
+        if (response.jsonResponse != null) {
+          final serviceProviderProfileInfoModel =
+              GetServiceProviderProfileDetailsModel.fromJson(
+            response.jsonResponse!,
+          );
 
-        // Store the complete model
-        // getServiceProviderProfileInfo.value = serviceProviderProfileInfoModel;
+          // Store the complete model
+          // getServiceProviderProfileInfo.value = serviceProviderProfileInfoModel;
 
-        // Also store just the attributes for easier access
-        if (serviceProviderProfileInfoModel.data?.attributes != null) {
-          serviceProviderAttributes.value =
-              serviceProviderProfileInfoModel.data!.attributes;
+          // Also store just the attributes for easier access
+          if (serviceProviderProfileInfoModel.data?.attributes != null) {
+            serviceProviderAttributes.value =
+                serviceProviderProfileInfoModel.data!.attributes;
+          } else {
+            // No attributes in the response, but API call was successful
+            // This might be a valid case - just no profile data available
+            log('API call successful but no profile attributes found');
+          }
+        } else {
+          // Response was successful but no JSON data returned
+          log('API call successful but no JSON response');
         }
       } else {
         Get.snackbar(

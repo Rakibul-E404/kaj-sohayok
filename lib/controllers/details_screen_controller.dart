@@ -8,6 +8,7 @@ import 'package:kaz_bd/service/secured_storage.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import '../gen/colors.gen.dart';
 import '../features/normal_user/details/model/get_specific_service_model.dart';
+import 'get_nrm_user_service_provider_profile_info.dart';
 
 class DetailsScreenController extends GetxController {
   RxBool isLoading = false.obs;
@@ -26,6 +27,26 @@ class DetailsScreenController extends GetxController {
 
   ///Provider ID
   var providerID = ''.obs;
+  var serviceID = ''.obs;
+  void setServiceId({required String svcId}) {
+    log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    log('🔧 ServiceID called on Details Screen');
+    log('   Previous ID: ${serviceID.value}');
+    log('   New ID: $svcId');
+    log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+    serviceID.value = svcId;
+
+    // Also update the GetNrmUserServiceProviderProfileInfoController if it exists
+    try {
+      if (Get.isRegistered<GetNrmUserServiceProviderProfileInfoController>()) {
+        final profileController = Get.find<GetNrmUserServiceProviderProfileInfoController>();
+        profileController.setServiceId(svcId: svcId);
+      }
+    } catch (e) {
+      log('Could not update GetNrmUserServiceProviderProfileInfoController with service ID: $e');
+    }
+  }
 
   void setServiceProviderId({required String svpId}) {
     log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -35,6 +56,20 @@ class DetailsScreenController extends GetxController {
     log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
     serviceProviderId.value = svpId;
+
+    // Also update the GetNrmUserServiceProviderProfileInfoController if it exists
+    try {
+      if (Get.isRegistered<GetNrmUserServiceProviderProfileInfoController>()) {
+        final profileController = Get.find<GetNrmUserServiceProviderProfileInfoController>();
+        profileController.setServiceProviderId(svpId: svpId);
+        // Also pass the current service ID if available
+        if (serviceID.value.isNotEmpty) {
+          profileController.setServiceId(svcId: serviceID.value);
+        }
+      }
+    } catch (e) {
+      log('Could not update GetNrmUserServiceProviderProfileInfoController with service provider ID: $e');
+    }
   }
 
   void setProviderID({required String pvID}) {
@@ -82,7 +117,7 @@ class DetailsScreenController extends GetxController {
 
       // Build the API URL
       final String apiUrl =
-          AppUrl.getSpecificServiceDetails(svpId: serviceProviderId.value);
+          AppUrl.getSpecificServiceDetails(svcId: serviceID.value);
       log('🌐 API URL: $apiUrl');
       log('📤 Making GET request...');
 
@@ -193,7 +228,7 @@ class DetailsScreenController extends GetxController {
       } else {
         log('❌ API call failed');
         log('   Status Code: ${response.statusCode}');
-        log('   Error: ${response.errorMessage}');
+        log('   Error: ${response.errorMessage ?? "No error"}');
 
         String errorMsg = 'Failed to load service details';
         if (response.statusCode == 502) {

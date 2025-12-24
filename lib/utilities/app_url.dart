@@ -89,8 +89,7 @@ class AppUrl {
 
   static String jobRequests =
       '${baseUrl}v1/service-bookings/paginate/for-provider?status=pending';
-  static String workReview =
-      '${baseUrl}v1/reviews/';
+  static String workReview = '${baseUrl}v1/reviews/';
 
   static String workCompletedDetailsApi(String bookingId) {
     return '${baseUrl}v1/service-bookings/with-costs-summary/${bookingId}';
@@ -160,13 +159,28 @@ class AppUrl {
   static String getNormalUserAllCategory =
       '${baseUrl}v1/service-categories/paginate?page=1&limit=2000&isDeleted=false&isVisible=true';
 
+  // static String getSpecificServiceByCategory({
+  //   required String categoryId,
+  //   required String pageId,
+  //   String? serviceName,
+  // }) {
+  //   String url =
+  //       '${baseUrl}v1/service-providers/paginate?page=$pageId&serviceCategoryId=$categoryId';
+  //   if (serviceName != null && serviceName.isNotEmpty) {
+  //     url += '&serviceName=$serviceName';
+  //   }
+  //   return url;
+  // }
+
   static String getSpecificServiceByCategory({
     required String categoryId,
     required String pageId,
     String? serviceName,
+    required String latValue,
+    required String longValue,
   }) {
     String url =
-        '${baseUrl}v1/service-providers/paginate?page=$pageId&serviceCategoryId=$categoryId';
+        '${baseUrl}v1/service-providers/paginate/by-location?page=$pageId&serviceCategoryId=$categoryId&userLatitude=$latValue&userLongitude=$longValue';
     if (serviceName != null && serviceName.isNotEmpty) {
       url += '&serviceName=$serviceName';
     }
@@ -177,14 +191,14 @@ class AppUrl {
     return '$baseUrl/api/v1/babies/delete/$babyId';
   }
 
-  static String getSpecificServiceDetails({required String svpId}) {
-    return '${baseUrl}v1/service-providers/$svpId';
+  static String getSpecificServiceDetails({required String svcId}) {
+    return '${baseUrl}v1/service-providers/$svcId';
   }
 
   static String getNrmUserServiceProviderProfileDetailsInfo({
-    required String svpId,
+    required String svcId,
   }) {
-    return '${baseUrl}v1/service-providers/profile/$svpId';
+    return '${baseUrl}v1/service-providers/profile/$svcId';
   }
 
   static String getAllPopularProviders = '${baseUrl}v1/users/home-page/popular';

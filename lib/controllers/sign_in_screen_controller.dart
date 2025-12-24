@@ -22,6 +22,11 @@ class SignInScreenController extends GetxController {
   final TextEditingController emailTEController = TextEditingController();
   final TextEditingController passwordTEController = TextEditingController();
   final RxString userSelectedGender = ''.obs;
+  RxBool isPasswordVisible = true.obs;
+
+  void setPasswordVisibility() {
+    isPasswordVisible.value = !isPasswordVisible.value;
+  }
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -38,7 +43,7 @@ class SignInScreenController extends GetxController {
       final Map<String, dynamic> loginForm = <String, dynamic>{
         "email": "${emailTEController.text}",
         "password": "${passwordTEController.text}",
-        "fcmToken":fcmToken
+        "fcmToken": fcmToken
       };
 
       final NetworkResponse postResponse = await NetworkCaller().postRequest(

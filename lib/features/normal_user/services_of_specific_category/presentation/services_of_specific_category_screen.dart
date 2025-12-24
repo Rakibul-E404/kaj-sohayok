@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/routes/routes.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../../constants/text_font_style.dart';
@@ -28,12 +29,12 @@ class _ServicesOfSpecificCategoryScreenState
     extends State<ServicesOfSpecificCategoryScreen> {
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  ServiceOfSpecificCategoryScreenController? itemsOfCategory;
+  late ServiceOfSpecificCategoryScreenController controller;
 
   @override
   void initState() {
     super.initState();
-    itemsOfCategory = Get.find<ServiceOfSpecificCategoryScreenController>();
+    controller = Get.find<ServiceOfSpecificCategoryScreenController>();
     _scrollController.addListener(_onScroll);
   }
 
@@ -49,10 +50,10 @@ class _ServicesOfSpecificCategoryScreenState
     if (_scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent -
                 200 && // Trigger 200 pixels before end
-        !itemsOfCategory!.isLoadingMore.value && // Only if not already loading
-        itemsOfCategory!.hasMoreData.value) {
+        !controller.isLoadingMore.value && // Only if not already loading
+        controller.hasMoreData.value) {
       // Only if there's more data
-      itemsOfCategory?.loadMoreServices();
+      controller.loadMoreServices();
     }
   }
 
@@ -61,11 +62,24 @@ class _ServicesOfSpecificCategoryScreenState
     final arguments = Get.arguments as Map<String, dynamic>?;
 
     final categoryId = arguments?['categoryId'] ?? '';
+    final latValue = arguments?['lat_value'] ?? '';
+    final longValue = arguments?['long_value'] ?? '';
     final categoryName =
         arguments?['categoryName'] ?? 'failed_to_get_service_category_name'.tr;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      itemsOfCategory?.setCategoryData(id: categoryId, name: categoryName);
+      LoggerUtils.info('Setting category data in ServicesOfSpecificCategoryScreen');
+      LoggerUtils.info('Category ID: $categoryId');
+      LoggerUtils.info('Category Name: $categoryName');
+      LoggerUtils.info('Latitude: $latValue');
+      LoggerUtils.info('Longitude: $longValue');
+
+      controller.setCategoryData(
+        id: categoryId,
+        name: categoryName,
+        latValue: latValue,
+        longValue: longValue,
+      );
     });
 
     return Scaffold(
@@ -75,8 +89,8 @@ class _ServicesOfSpecificCategoryScreenState
         backgroundColor: AppColors.scaffoldBackgroundColor,
         title: Obx(() {
           return Text(
-            itemsOfCategory?.categoryName.value.isNotEmpty == true
-                ? itemsOfCategory!.categoryName.value
+            controller.categoryName.value.isNotEmpty
+                ? controller.categoryName.value
                 : categoryName,
             style: TextFontStyle.headline18w700c000000StyleSatoshi,
           );
@@ -93,11 +107,7 @@ class _ServicesOfSpecificCategoryScreenState
               prefixIcon: SvgPicture.asset(Assets.icons.searchIcon),
               hintText: "${'search'.tr} $categoryName ${'services'.tr}",
               onFieldSubmitted: (value) {
-                itemsOfCategory?.performSearch(value);
-              },
-              onChanged: (value) {
-                // Optional: Add debounce if you want real-time search
-                // For now, we'll search on submit only to reduce API calls
+                controller.performSearch(value);
               },
             ),
             UIHelper.verticalSpace(16.h),
@@ -105,8 +115,11 @@ class _ServicesOfSpecificCategoryScreenState
             ///Section : Available Services
             Expanded(
               child: Obx(() {
+                LoggerUtils.debug('UI rebuild triggered. List length: ${controller.specificCategoryList.length}, Loading: ${controller.isLoading.value}');
+
                 ///When Loading state is true
-                if (itemsOfCategory?.isLoading.value == true) {
+                if (controller.isLoading.value) {
+                  LoggerUtils.debug('Showing loading state');
                   return ListView(
                     children: [
                       ...List.generate(
@@ -124,7 +137,8 @@ class _ServicesOfSpecificCategoryScreenState
                 }
 
                 ///When There is no Data to Show
-                if (itemsOfCategory?.specificCategoryList.isEmpty == true) {
+                if (controller.specificCategoryList.isEmpty) {
+                  LoggerUtils.debug('Showing empty state');
                   return Center(
                     child: Lottie.asset(
                       Assets.lottie.emptyScreen,
@@ -133,22 +147,20 @@ class _ServicesOfSpecificCategoryScreenState
                   );
                 }
 
+                LoggerUtils.debug('Showing list with ${controller.specificCategoryList.length} items');
                 return RefreshIndicator(
                   onRefresh: () async {
-                    itemsOfCategory?.pageId.value = '1';
-                    await itemsOfCategory?.handleServiceFromSpecificCategory();
+                    controller.pageId.value = '1';
+                    await controller.handleServiceFromSpecificCategory();
                   },
                   child: ListView.builder(
                     controller: _scrollController,
-                    itemCount: itemsOfCategory!.specificCategoryList.length +
-                        (itemsOfCategory!.isLoadingMore.value
-                            ? 1
-                            : 0), // Add 1 for loading indicator if needed
+                    itemCount: controller.specificCategoryList.length +
+                        (controller.isLoadingMore.value ? 1 : 0),
                     itemBuilder: (context, index) {
                       // Check if we're on the last item and need to show a loading indicator
-                      if (index >=
-                          itemsOfCategory!.specificCategoryList.length) {
-                        // This is the loading indicator at the end
+                      if (index >= controller.specificCategoryList.length) {
+                        LoggerUtils.debug('Showing loading indicator at index $index');
                         return Padding(
                           padding: EdgeInsets.symmetric(vertical: 16.h),
                           child: Center(
@@ -157,55 +169,64 @@ class _ServicesOfSpecificCategoryScreenState
                         );
                       }
 
-                      final service =
-                          itemsOfCategory!.specificCategoryList[index];
+                      final service = controller.specificCategoryList[index];
+                      LoggerUtils.debug('Building item at index $index for service: ${controller.getServiceId(service)}');
 
-                      // Extract service data from the model
-                      final String serviceName =
-                          service.serviceName?.en ?? 'service'.tr;
-                      final String providerName =
-                          service.providerId?.name ?? 'provider'.tr;
-                      final double rating = (service.rating ?? 0).toDouble();
-                      final double price = (service.startPrice ?? 0).toDouble();
+                      // Extract data using controller helper methods
+                      final serviceName = controller.getServiceName(service);
+                      final providerName = controller.getProviderName(service);
+                      final rating = controller.getServiceRating(service);
+                      final price = controller.getServicePrice(service);
+                      final imageUrl = controller.getServiceImage(service);
+                      final providerImageUrl =
+                          controller.getProviderImage(service);
 
-                      // Get image URL
-                      String? imageUrl;
-                      if (service.attachmentsForGallery != null &&
-                          service.attachmentsForGallery!.isNotEmpty) {
-                        imageUrl = service.attachmentsForGallery![0].attachment;
-                      }
+                      LoggerUtils.debug('Service: $serviceName, Provider: $providerName, Image: $imageUrl, Provider Image: $providerImageUrl');
 
                       return Column(
                         children: [
                           SpecificServiceShowingWidget(
                             seeDetailsOnTap: () {
-                              log("Specific Service Item taped at index : $index");
-                              log("Service Image Url : $imageUrl");
+                              log("Specific Service Item tapped at index: $index");
                               Get.toNamed(
                                 Routes.serviceDetailsScreen,
                                 arguments: {
-                                  'providerID': service.providerId?.userId,
+                                  'serviceId': controller.getServiceId(service),
+                                  'providerID':
+                                      controller.getProviderId(service),
                                   'serviceProviderID':
-                                      service.serviceProviderId,
+                                      controller.getProviderId(service),
                                   'serviceName': serviceName,
                                   'providerName': providerName,
+                                  'serviceImage': imageUrl,
+                                  'providerImage': providerImageUrl,
+                                  'rating': rating,
+                                  'price': price,
+                                  'experience':
+                                      controller.getExperience(service),
                                 },
                               );
                             },
                             goToBookingsOnTap: () {
-                              log("Book Now Button Taped at Index : $index");
-                              log("Service Image Url : $imageUrl");
-                              Get.toNamed(Routes.bookingDateScreen, arguments: {
-                                'providerID': service.providerId?.userId,
-                              });
+                              log("Book Now Button Tapped at Index: $index");
+                              Get.toNamed(
+                                Routes.bookingDateScreen,
+                                arguments: {
+                                  'providerID':
+                                      controller.getProviderId(service),
+                                  'serviceId': controller.getServiceId(service),
+                                  'serviceName': serviceName,
+                                },
+                              );
                             },
-                            serviceImagePath:
-                                imageUrl ?? Assets.images.serviceImage.path,
+                            serviceImagePath: imageUrl.isNotEmpty
+                                ? imageUrl
+                                : Assets.images.serviceImage.path,
                             serviceName: serviceName,
                             initialPayablePrice: price,
-                            serviceProviderImage:
-                                service.providerId?.profileImage?.imageUrl ??
-                                    Assets.images.userImage.path,
+                            serviceProviderImage: providerImageUrl.isNotEmpty
+                                ? providerImageUrl
+                                : Assets.images.userImage.path,
                             serviceProviderName: providerName,
                             serviceProviderRating: rating,
                           ),

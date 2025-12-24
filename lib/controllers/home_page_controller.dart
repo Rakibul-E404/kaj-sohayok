@@ -2,13 +2,19 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 
+import '../service/location/location_controller.dart';
 import '../service/network_caller.dart';
 import '../service/network_response.dart';
 import '../utilities/app_url.dart';
 import '../features/normal_user/home/models/home_page_data_model.dart' as Model;
 
 class HomePageController extends GetxController {
+  LocationController locationController = Get.put(LocationController());
+  String latitudeValue = '';
+  String longitudeValue = '';
+
   var currentPage = 0.obs;
   RxBool isLoading = false.obs;
 
@@ -46,6 +52,22 @@ class HomePageController extends GetxController {
         final homePageDataModel = Model.HomePageDataModel.fromJson(
           response.jsonResponse!,
         );
+        await locationController.fetchCurrentLocation();
+        // LoggerUtils.error(
+        //     locationController.currentPosition.value?.latitude.toString() ??
+        //         '');
+        // LoggerUtils.error(
+        //     locationController.currentPosition.value?.longitude.toString() ??
+        //         '');
+
+        latitudeValue =
+            locationController.currentPosition.value?.latitude.toString() ?? '';
+        longitudeValue =
+            locationController.currentPosition.value?.longitude.toString() ??
+                '';
+
+        // LoggerUtils.info(latitudeValue);
+        // LoggerUtils.info(longitudeValue);
 
         log('🏠 HOME CONTROLLER: Response parsed successfully');
 

@@ -349,6 +349,7 @@ Map<String, String> banglaLanguage = {
   'terms_and_condition': 'শর্তাবলী',
   'about_us': 'আমাদের সম্পর্কে',
   'contact_us': 'আমাদের সাথে যোগাযোগ করুন',
+  'remove_account': 'অ্যাকাউন্ট মুছুন',
 
   ///--------------> Payment History Tab
   'no_payment_history_available': 'কোনও পেমেন্ট ইতিহাস উপলব্ধ নেই',

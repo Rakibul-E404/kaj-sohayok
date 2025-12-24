@@ -74,6 +74,8 @@ class CategoryViewWidget extends StatelessWidget {
                 arguments: {
                   'categoryId': categoryId,
                   'categoryName': categoryName,
+                  'lat_value': controller.latitudeValue,
+                  'long_value': controller.longitudeValue,
                 },
               );
             },

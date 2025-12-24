@@ -345,6 +345,7 @@ Map<String, String> englishLanguage = {
   'terms_and_condition': 'Terms & conditions',
   'about_us': 'About us',
   'contact_us': 'Contact Us',
+  'remove_account': 'Remove Account',
 
   ///--------------> Payment History Tab
 
