@@ -1,9 +1,9 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kaz_bd/utilities/logger_util.dart';
 import '../../../../../../constants/app_enums.dart';
 import '../../../../../../controllers/message_screen_controller.dart';
+import '../../../../../../controllers/svp_home_screen_controller.dart';
 import '../../../../../../custom_widgets/recent_job_request_status_widget.dart';
 import '../../../../../../routes/routes.dart';
 import '../../../../../../service/network_caller.dart';
@@ -13,6 +13,9 @@ import '../../../../../../utilities/app_constants.dart';
 import '../../../../../../utilities/app_url.dart';
 
 class SvpAcceptedBookingsController extends GetxController {
+  final SvpHomeScreenController controller =
+      Get.find<SvpHomeScreenController>();
+  late ScrollController scrollController;
   final jobRequests = <dynamic>[].obs;
   final isLoading = true.obs;
   final hasError = false.obs;
@@ -24,7 +27,24 @@ class SvpAcceptedBookingsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
+    scrollController = ScrollController();
+
+    // Listen to scroll events
+    scrollController.addListener(() {
+      if (scrollController.position.pixels <= 0) {
+        // At the top, auto-refresh
+        fetchAcceptedBookings();
+      }
+    });
+
     fetchAcceptedBookings();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   Future<void> fetchAcceptedBookings() async {
@@ -38,7 +58,7 @@ class SvpAcceptedBookingsController extends GetxController {
 
       if (token == null) {
         hasError.value = true;
-        errorMessage.value = 'Authentication required. Please login again.';
+        errorMessage.value = 'authentication_required_login_again'.tr;
         isLoading.value = false;
         return;
       }
@@ -51,6 +71,7 @@ class SvpAcceptedBookingsController extends GetxController {
       log('Accepted Bookings API Response: ${response.statusCode}');
 
       if (response.isSuccess && response.jsonResponse != null) {
+        controller.getServiceProviderHomeData();
         final responseData = response.jsonResponse!;
 
         if (responseData['success'] == true &&
@@ -62,13 +83,13 @@ class SvpAcceptedBookingsController extends GetxController {
           isLoading.value = false;
         } else {
           hasError.value = true;
-          errorMessage.value = 'Unexpected response format';
+          errorMessage.value = 'unexpected_response_format'.tr;
           isLoading.value = false;
         }
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to load accepted bookings';
+            'failed_to_load_accepted_bookings'.tr;
 
         hasError.value = true;
         errorMessage.value = errorMsg;
@@ -83,7 +104,7 @@ class SvpAcceptedBookingsController extends GetxController {
       log('Error fetching accepted bookings: $e',
           error: e, stackTrace: stackTrace);
       hasError.value = true;
-      errorMessage.value = 'Network error. Please check your connection.';
+      errorMessage.value = 'network_error_check_again'.tr;
       isLoading.value = false;
     }
   }
@@ -132,8 +153,8 @@ class SvpAcceptedBookingsController extends GetxController {
   }
 
   String getAddress(Map<String, dynamic>? address) {
-    if (address == null) return 'Address not available';
-    return address['en'] ?? address['bn'] ?? 'Address not available';
+    if (address == null) return 'address_not_available'.tr;
+    return address['en'] ?? address['bn'] ?? 'address_not_available'.tr;
   }
 
   void navigateToJobDetails(Map<String, dynamic> jobRequest) {
@@ -163,8 +184,8 @@ class SvpAcceptedBookingsController extends GetxController {
 
       if (token == null) {
         Get.snackbar(
-          'Error',
-          'Authentication required. Please login again.',
+          'error'.tr,
+          'authentication_required_login_again'.tr,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -190,8 +211,8 @@ class SvpAcceptedBookingsController extends GetxController {
         if (responseData['code'] == 200) {
           // Show success message
           Get.snackbar(
-            'Success',
-            'Work started successfully!',
+            'success'.tr,
+            'work_started_successfully'.tr,
             backgroundColor: Colors.green,
             colorText: Colors.white,
           );
@@ -207,9 +228,9 @@ class SvpAcceptedBookingsController extends GetxController {
           // Optionally refresh the list
           await fetchAcceptedBookings();
         } else {
-          final errorMsg = responseData['message'] ?? 'Failed to start work';
+          final errorMsg = responseData['message'] ?? 'failed_to_start_work'.tr;
           Get.snackbar(
-            'Error',
+            'error'.tr,
             errorMsg,
             backgroundColor: Colors.red,
             colorText: Colors.white,
@@ -218,10 +239,10 @@ class SvpAcceptedBookingsController extends GetxController {
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to start work';
+            'failed_to_start_work'.tr;
 
         Get.snackbar(
-          'Error',
+          'error'.tr,
           errorMsg,
           backgroundColor: Colors.red,
           colorText: Colors.white,
@@ -236,8 +257,8 @@ class SvpAcceptedBookingsController extends GetxController {
     } catch (e, stackTrace) {
       log('Error starting work: $e', error: e, stackTrace: stackTrace);
       Get.snackbar(
-        'Network Error',
-        'Failed to start work. Please check your connection.',
+        'network_error'.tr,
+        'failed_to_start_work_check_your_connection'.tr,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -265,7 +286,9 @@ class SvpAcceptedBookingsController extends GetxController {
     final isLoadingStartWork = processingStartWork[bookingId] ?? false;
 
     return RecentJobRequestStatusWidget(
-      onTap: () => navigateToJobDetails(jobRequest),
+      onTap: () {
+        navigateToJobDetails(jobRequest);
+      },
       startWorkOnTap: isWorkStarted ? null : () => startWork(bookingId, index),
       isJobRequestAccpted: true,
       userImage: getImageUrl(profileImage),

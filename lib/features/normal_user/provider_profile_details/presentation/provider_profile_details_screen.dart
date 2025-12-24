@@ -34,7 +34,7 @@ class ProviderDetailsScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: AppColors.scaffoldBackgroundColor,
         title: Text(
-          "Profile Details",
+          'profile_details'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
       ),
@@ -265,7 +265,7 @@ class ProviderDetailsScreen extends StatelessWidget {
                                 vertical: 10.h,
                               ),
                               child: Text(
-                                "Profile information",
+                                'profile_information'.tr,
                                 style: TextFontStyle
                                     .headline16w700c000000StyleSatoshi,
                               ),

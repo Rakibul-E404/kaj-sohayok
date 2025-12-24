@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/features/normal_user/user_profile/sub_presentation/normal_user_payment_booking_history/presentation/payment_booking_history_tab.dart';
@@ -13,13 +12,9 @@ import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 
 import '../../../../controllers/user_profile_screen_controller.dart';
-import '../../../../custom_widgets/custom_profile_image_widget.dart';
 import '../../../../custom_widgets/select_language_widget.dart';
 import '../../../../custom_widgets/tab_showing_widget.dart';
-import '../../../../gen/assets.gen.dart';
 import '../../details/widget/sliver_tab_bar_delegate_helper_widget.dart';
-import '../../provider_profile_details/model/profile_tile_model.dart';
-import '../widgets/profile_image_show_and_select_widget.dart';
 
 class UserProfileScreen extends StatelessWidget {
   const UserProfileScreen({super.key});
@@ -36,7 +31,7 @@ class UserProfileScreen extends StatelessWidget {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text(
-            "My Profile",
+            'my_profile'.tr,
             style: TextFontStyle.headline18w700c000000StyleSatoshi,
           ),
           centerTitle: true,
@@ -69,11 +64,9 @@ class UserProfileScreen extends StatelessWidget {
                         /// ===================== PROFILE IMAGE =================>
                         Obx(() {
                           final imagePath = controller.profileImage.value;
-                          final bool isNetworkImage =
-                              imagePath.isNotEmpty &&
+                          final bool isNetworkImage = imagePath.isNotEmpty &&
                               imagePath.startsWith('http');
-                          final bool isLocalImage =
-                              imagePath.isNotEmpty &&
+                          final bool isLocalImage = imagePath.isNotEmpty &&
                               !imagePath.startsWith('http');
                           final bool hasImage = imagePath.isNotEmpty;
 
@@ -83,49 +76,47 @@ class UserProfileScreen extends StatelessWidget {
                                     showDialog(
                                       context: Get.context!,
                                       builder: (_) => Dialog(
-                                        backgroundColor: Colors.transparent,
-                                        insetPadding: EdgeInsets.all(16.w),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                          BorderRadius.circular(16.r),
-                                          child: Container(
-                                            constraints: BoxConstraints(
-                                              maxHeight: 500.h,
-                                              maxWidth: 1.sw - 32.w,
-                                            ),
-                                            child: isNetworkImage
-                                                ? CachedNetworkImage(
-                                              imageUrl: imagePath,
-                                              fit: BoxFit.contain,
-                                              placeholder:
-                                                  (
-                                                  context,
-                                                  url,
-                                                  ) => Center(
-                                                child: CircularProgressIndicator(
-                                                  color: Colors
-                                                      .white,
-                                                ),
+                                          backgroundColor: Colors.transparent,
+                                          insetPadding: EdgeInsets.all(16.w),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(16.r),
+                                            child: Container(
+                                              constraints: BoxConstraints(
+                                                maxHeight: 500.h,
+                                                maxWidth: 1.sw - 32.w,
                                               ),
-                                              errorWidget:
-                                                  (
-                                                  context,
-                                                  url,
-                                                  error,
-                                                  ) => Icon(
-                                                Icons.person,
-                                                color: Colors
-                                                    .white,
-                                                size: 48.sp,
-                                              ),
-                                            )
-                                                : Image.file(
-                                              File(imagePath),
-                                              fit: BoxFit.contain,
+                                              child: isNetworkImage
+                                                  ? CachedNetworkImage(
+                                                      imageUrl: imagePath,
+                                                      fit: BoxFit.contain,
+                                                      placeholder: (
+                                                        context,
+                                                        url,
+                                                      ) =>
+                                                          Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                      errorWidget: (
+                                                        context,
+                                                        url,
+                                                        error,
+                                                      ) =>
+                                                          Icon(
+                                                        Icons.person,
+                                                        color: Colors.white,
+                                                        size: 48.sp,
+                                                      ),
+                                                    )
+                                                  : Image.file(
+                                                      File(imagePath),
+                                                      fit: BoxFit.contain,
+                                                    ),
                                             ),
-                                          ),
-                                        )
-                                      ),
+                                          )),
                                     );
                                   }
                                 : null,
@@ -134,32 +125,31 @@ class UserProfileScreen extends StatelessWidget {
                               height: 100.w,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(50.r),
-                               ),
+                              ),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50.r),
                                 child: hasImage
                                     ? (isNetworkImage
-                                          ? CachedNetworkImage(
-                                              imageUrl: imagePath,
-                                              fit: BoxFit.cover,
-                                              placeholder: (context, url) =>
-                                                  Center(
-                                                    child:
-                                                        CircularProgressIndicator(
-                                                          strokeWidth: 2,
-                                                        ),
-                                                  ),
-                                              errorWidget:
-                                                  (context, url, error) => Icon(
-                                                    Icons.person,
-                                                    size: 48.sp,
-                                                    color: Colors.grey[400],
-                                                  ),
-                                            )
-                                          : Image.file(
-                                              File(imagePath),
-                                              fit: BoxFit.cover,
-                                            ))
+                                        ? CachedNetworkImage(
+                                            imageUrl: imagePath,
+                                            fit: BoxFit.cover,
+                                            placeholder: (context, url) =>
+                                                Center(
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                              ),
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) => Icon(
+                                              Icons.person,
+                                              size: 48.sp,
+                                              color: Colors.grey[400],
+                                            ),
+                                          )
+                                        : Image.file(
+                                            File(imagePath),
+                                            fit: BoxFit.cover,
+                                          ))
                                     : Icon(
                                         Icons.person,
                                         size: 48.sp,
@@ -214,10 +204,10 @@ class UserProfileScreen extends StatelessWidget {
                     dividerColor: AppColors.c778beb,
                     indicatorSize: TabBarIndicatorSize.label,
                     indicatorWeight: 4.h,
-                    tabs: const [
-                      Tab(text: "Profile"),
-                      Tab(text: "Setting"),
-                      Tab(text: "Payment History"),
+                    tabs: [
+                      Tab(text: 'profile'.tr),
+                      Tab(text: 'setting'.tr),
+                      Tab(text: 'payment_history'.tr),
                     ],
                   ),
                 ),

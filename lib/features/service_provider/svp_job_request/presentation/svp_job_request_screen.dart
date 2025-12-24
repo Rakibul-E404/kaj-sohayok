@@ -116,17 +116,6 @@ class SvpJobRequestScreen extends StatelessWidget {
   }
 }*/
 
-
-
-
-
-
-
-
-
-
-
-
 ///
 ///
 ///
@@ -134,9 +123,6 @@ class SvpJobRequestScreen extends StatelessWidget {
 ///
 ///
 ///
-
-
-
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -157,7 +143,7 @@ class SvpJobRequestScreen extends StatelessWidget {
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          "Job Request",
+          'job_request'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
         centerTitle: true,
@@ -182,10 +168,10 @@ class SvpJobRequestScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircularProgressIndicator(color: AppColors.c000e08),
+              // CircularProgressIndicator(color: AppColors.c000e08),
               UIHelper.verticalSpace(16.h),
               Text(
-                'Loading job requests...',
+                'loading_job_request'.tr,
                 style: TextFontStyle.headline10w400c6c606cStyleSatoshi,
               ),
             ],
@@ -205,7 +191,8 @@ class SvpJobRequestScreen extends StatelessWidget {
               UIHelper.verticalSpace(16.h),
               Text(
                 controller.errorMessage.value,
-                style: TextFontStyle.headline10w400c6c606cStyleSatoshi.copyWith(color: Colors.red),
+                style: TextFontStyle.headline10w400c6c606cStyleSatoshi
+                    .copyWith(color: Colors.red),
                 textAlign: TextAlign.center,
               ),
               UIHelper.verticalSpace(16.h),
@@ -215,7 +202,7 @@ class SvpJobRequestScreen extends StatelessWidget {
                   backgroundColor: AppColors.c000e08,
                   foregroundColor: Colors.white,
                 ),
-                child: const Text('Retry'),
+                child: Text('retry'.tr),
               ),
             ],
           ),
@@ -231,13 +218,15 @@ class SvpJobRequestScreen extends StatelessWidget {
             Icon(Icons.work_outline, size: 60.h, color: Colors.grey),
             UIHelper.verticalSpace(16.h),
             Text(
-              'No job requests available',
-              style: TextFontStyle.headline10w500c000000StyleSatoshi.copyWith(color: Colors.grey),
+              'no_job_request_available'.tr,
+              style: TextFontStyle.headline10w500c000000StyleSatoshi
+                  .copyWith(color: Colors.grey),
             ),
             UIHelper.verticalSpace(8.h),
             Text(
-              'New job requests will appear here',
-              style: TextFontStyle.headline10w400c6c606cStyleSatoshi.copyWith(color: Colors.grey),
+              'new_job_request_will_appear_here'.tr,
+              style: TextFontStyle.headline10w400c6c606cStyleSatoshi
+                  .copyWith(color: Colors.grey),
             ),
           ],
         ),
@@ -257,6 +246,3 @@ class SvpJobRequestScreen extends StatelessWidget {
     );
   }
 }
-
-
-

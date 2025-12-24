@@ -3,17 +3,15 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:kaz_bd/controllers/set_new_password_screen_controller.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
-import 'package:get/get.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
-import 'package:kaz_bd/routes/routes.dart';
-import 'package:kaz_bd/utilities/logger_util.dart';
 
 import '../../../../constants/text_font_style.dart';
-import '../../../../gen/assets.gen.dart';
 import '../../../../custom_widgets/custom_text_form_field.dart';
+import '../../../../gen/assets.gen.dart';
 
 class SetNewPasswordScreen extends StatelessWidget {
   SetNewPasswordScreen({super.key});
@@ -62,14 +60,14 @@ class SetNewPasswordScreen extends StatelessWidget {
 
                 ///Section : text -> set new password
                 Text(
-                  "Set New Password",
+                  'set_new_password'.tr,
                   style: TextFontStyle.headline24w700c000000StyleSatoshi,
                 ),
                 UIHelper.verticalSpace(14.h),
 
                 ///Section : text -> Please Enter Your Password & Confirm Password.
                 Text(
-                  "Please Enter Your Password & Confirm Password.",
+                  'please_enter_password_and_confirm_password'.tr,
                   style: TextFontStyle.headline12w400c414141StyleSatoshi,
                 ),
                 UIHelper.verticalSpace(32.h),
@@ -79,10 +77,9 @@ class SetNewPasswordScreen extends StatelessWidget {
                   return CustomFormField(
                     controller:
                         setNewPasswordScreenController.newPaswordController,
-                    labelText: "Password",
-                    hintText: "Enter Password",
+                    labelText: 'password'.tr,
+                    hintText: 'enter_password'.tr,
                     isPass: true,
-
                     isObsecure: setNewPasswordScreenController.isVisible.value,
                     prefixIcon: SvgPicture.asset(
                       fit: BoxFit.contain,
@@ -104,7 +101,7 @@ class SetNewPasswordScreen extends StatelessWidget {
                     ),
                     validator: (String? value) {
                       if (value?.isEmpty ?? true) {
-                        return 'Please Enter Your new Password';
+                        return 'please_enter_your_new_password'.tr;
                       }
                       return null;
                     },
@@ -117,13 +114,11 @@ class SetNewPasswordScreen extends StatelessWidget {
                   return CustomFormField(
                     controller:
                         setNewPasswordScreenController.confirmPaswordController,
-                    labelText: "Confirm Password",
-                    hintText: "Enter Confirm Password",
+                    labelText: 'confirm_pass'.tr,
+                    hintText: 'enter_confirm_password'.tr,
                     isPass: true,
-
                     isObsecure: setNewPasswordScreenController
-                        .isConfirmPasswordVisible
-                        .value,
+                        .isConfirmPasswordVisible.value,
                     prefixIcon: SvgPicture.asset(
                       fit: BoxFit.contain,
                       Assets.icons.lockIcon,
@@ -138,8 +133,7 @@ class SetNewPasswordScreen extends StatelessWidget {
                       },
                       child: Icon(
                         setNewPasswordScreenController
-                                .isConfirmPasswordVisible
-                                .value
+                                .isConfirmPasswordVisible.value
                             ? Icons.visibility
                             : Icons.visibility_off,
                         color: AppColors.c6b6b6b,
@@ -147,12 +141,11 @@ class SetNewPasswordScreen extends StatelessWidget {
                     ),
                     validator: (String? value) {
                       if (value?.isEmpty ?? true) {
-                        return 'Please confirm your password Password';
+                        return 'please_confirm_your_password'.tr;
                       } else if (value !=
                           setNewPasswordScreenController
-                              .newPaswordController
-                              .text) {
-                        return 'Passwords do not match !!!';
+                              .newPaswordController.text) {
+                        return 'password_do_not_match'.tr;
                       }
                       return null;
                     },
@@ -237,7 +230,7 @@ class SetNewPasswordScreen extends StatelessWidget {
                     //   },
                     // );
                   },
-                  buttonTitle: "Save Password",
+                  buttonTitle: 'save_password'.tr,
                 ),
                 UIHelper.verticalSpace(50.h),
               ],

@@ -35,8 +35,18 @@ class ServicesPreviewScreen extends StatelessWidget {
     // Helper to get month name
     String _getMonthName(int month) {
       const months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
       ];
       return month >= 1 && month <= 12 ? months[month - 1] : '';
     }
@@ -54,8 +64,10 @@ class ServicesPreviewScreen extends StatelessWidget {
       try {
         DateTime dateTime = DateTime.parse(apiDateTime);
         // Format as "Jun 17, 2025  09:31AM" or similar format
-        String formattedDate = "${_getMonthName(dateTime.month)} ${dateTime.day}, ${dateTime.year}";
-        String formattedTime = _formatTime12Hour(dateTime.hour, dateTime.minute);
+        String formattedDate =
+            "${_getMonthName(dateTime.month)} ${dateTime.day}, ${dateTime.year}";
+        String formattedTime =
+            _formatTime12Hour(dateTime.hour, dateTime.minute);
         return "$formattedDate  $formattedTime";
       } catch (e) {
         log('Error parsing date time: $e');
@@ -128,7 +140,7 @@ class ServicesPreviewScreen extends StatelessWidget {
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          "Services Preview",
+          'service_preview'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
         centerTitle: true,
@@ -234,7 +246,7 @@ class ServicesPreviewScreen extends StatelessWidget {
                           }
                           return RichText(
                             text: TextSpan(
-                              text: 'Start From ',
+                              text: '${'start_from'.tr} ',
                               style: TextFontStyle
                                   .headline12w500c6a6a6aStyleSatoshi,
                               children: [
@@ -264,7 +276,7 @@ class ServicesPreviewScreen extends StatelessWidget {
 
                     // Details header
                     Text(
-                      'Details',
+                      'deails'.tr,
                       style: TextFontStyle.headline16w700c000000StyleSatoshi,
                     ),
                     UIHelper.verticalSpace(16.h),
@@ -275,7 +287,7 @@ class ServicesPreviewScreen extends StatelessWidget {
                         log("Location Edit Button Taped!");
                         Get.back();
                       },
-                      title: "Location",
+                      title: 'location'.tr,
                       data: address,
                       icon: Icons.location_on,
                     ),
@@ -290,8 +302,10 @@ class ServicesPreviewScreen extends StatelessWidget {
                           'providerID': providerID,
                         });
                       },
-                      title: "Date/Time",
-                      data: bookingDateTime.isNotEmpty ? _formatDisplayDateTime(bookingDateTime) : 'Select Date & Time',
+                      title: 'date_time'.tr,
+                      data: bookingDateTime.isNotEmpty
+                          ? _formatDisplayDateTime(bookingDateTime)
+                          : 'Select Date & Time',
                       icon: Icons.watch_later,
                     ),
                   ],
@@ -313,8 +327,8 @@ class ServicesPreviewScreen extends StatelessWidget {
                     }
                   },
                   buttonTitle: controller.isCSBLoading.value
-                      ? "Confirming Your Order"
-                      : "Confirm Booking",
+                      ? 'confirming_your_order'.tr
+                      : 'confirm_booking'.tr,
                 );
               }),
               UIHelper.verticalSpace(20.h),

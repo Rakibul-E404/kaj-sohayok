@@ -1,16 +1,17 @@
 import 'dart:developer';
-import 'package:get/get.dart';
+
 import 'package:flutter/material.dart';
-import 'package:kaz_bd/utilities/logger_util.dart';
-import '../../../../../../routes/routes.dart';
-import '../../../../../../gen/assets.gen.dart';
-import 'package:kaz_bd/constants/app_enums.dart';
-import '../../../../../../helpers/ui_helpers.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../../../utilities/app_url.dart';
-import '../in_progress_controller/in_progress_controller.dart';
-import '../../../../../../controllers/message_screen_controller.dart';
+import 'package:get/get.dart';
+import 'package:kaz_bd/constants/app_enums.dart';
 import 'package:kaz_bd/features/normal_user/bookings/widgets/bookings_details_card_widget.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
+
+import '../../../../../../controllers/message_screen_controller.dart';
+import '../../../../../../gen/assets.gen.dart';
+import '../../../../../../helpers/ui_helpers.dart';
+import '../../../../../../routes/routes.dart';
+import '../in_progress_controller/in_progress_controller.dart';
 
 class InProgressTab extends StatelessWidget {
   const InProgressTab({super.key});
@@ -20,186 +21,196 @@ class InProgressTab extends StatelessWidget {
     // ✅ Initialize controller
     final controller = Get.put(InProgressBookingsController());
 
-    return Obx(() {
-      if (controller.isLoading.value) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(),
-              UIHelper.verticalSpace(16.h),
-              Text(
-                'Loading in-progress bookings...',
-                style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-              ),
-            ],
-          ),
-        );
-      }
-
-      if (controller.errorMessage.isNotEmpty) {
-        return Center(
-          child: Padding(
-            padding: EdgeInsets.all(20.sp),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.error_outline,
-                  size: 64.sp,
-                  color: Colors.red,
+    return RefreshIndicator(
+      onRefresh: () => controller.getInProgressBookings(),
+      child: SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(),
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height * 0.8,
+          child: Obx(() {
+            if (controller.isLoading.value) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // CircularProgressIndicator(),
+                    UIHelper.verticalSpace(16.h),
+                    Text(
+                      'Loading In-progress Bookings...'.tr,
+                      style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                    ),
+                  ],
                 ),
-                UIHelper.verticalSpace(16.h),
-                Text(
-                  controller.errorMessage.value,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    color: Colors.red,
-                    fontWeight: FontWeight.w500,
+              );
+            }
+
+            if (controller.errorMessage.isNotEmpty) {
+              return Center(
+                child: Padding(
+                  padding: EdgeInsets.all(20.sp),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.error_outline,
+                        size: 64.sp,
+                        color: Colors.red,
+                      ),
+                      UIHelper.verticalSpace(16.h),
+                      Text(
+                        controller.errorMessage.value,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: Colors.red,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      UIHelper.verticalSpace(20.h),
+                      ElevatedButton(
+                        onPressed: () => controller.getInProgressBookings(),
+                        child: Text('retry'.tr),
+                      ),
+                    ],
                   ),
-                  textAlign: TextAlign.center,
                 ),
-                UIHelper.verticalSpace(20.h),
-                ElevatedButton(
-                  onPressed: () => controller.getInProgressBookings(),
-                  child: const Text('Retry'),
+              );
+            }
+
+            if (controller.inProgressBookings.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.build_circle_outlined,
+                      size: 64.sp,
+                      color: Colors.grey,
+                    ),
+                    UIHelper.verticalSpace(16.h),
+                    Text(
+                      'no_in_progress_bookings_found'.tr,
+                      style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        );
-      }
+              );
+            }
 
-      if (controller.inProgressBookings.isEmpty) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.build_circle_outlined,
-                size: 64.sp,
-                color: Colors.grey,
-              ),
-              UIHelper.verticalSpace(16.h),
-              Text(
-                'No in-progress bookings found',
-                style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-              ),
-            ],
-          ),
-        );
-      }
+            return ListView.separated(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.only(top: 16.sp),
+              itemCount: controller.inProgressBookings.length,
+              separatorBuilder: (context, index) =>
+                  UIHelper.verticalSpace(16.h),
+              itemBuilder: (context, index) {
+                final booking = controller.inProgressBookings[index];
+                final bookingId =
+                    booking['_ServiceBookingId']?.toString() ?? '';
 
-      return RefreshIndicator(
-        onRefresh: () => controller.getInProgressBookings(),
-        child: ListView.separated(
-          padding: EdgeInsets.only(top: 16.sp),
-          itemCount: controller.inProgressBookings.length,
-          separatorBuilder: (context, index) => UIHelper.verticalSpace(16.h),
-          itemBuilder: (context, index) {
-            final booking = controller.inProgressBookings[index];
-            final bookingId = booking['_ServiceBookingId']?.toString() ?? '';
+                // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
+                final serviceProviderId = _getServiceProviderId(booking);
+                final providerId = _getProviderUserId(booking);
 
-            // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
-            final serviceProviderId = _getServiceProviderId(booking);
-            final providerId = _getProviderUserId(booking);
+                // 🔍 DEBUG: Log what IDs are extracted
+                log('🧾 [IN PROGRESS TAB] Card #$index →');
+                log('   Booking ID: "$bookingId"');
+                log('   Service Provider ID: "$serviceProviderId"');
+                log('   Provider User ID: "$providerId"');
 
-            // 🔍 DEBUG: Log what IDs are extracted
-            log('🧾 [IN PROGRESS TAB] Card #$index →');
-            log('   Booking ID: "$bookingId"');
-            log('   Service Provider ID: "$serviceProviderId"');
-            log('   Provider User ID: "$providerId"');
+                final serviceName = booking['providerDetailsId']?['serviceName']
+                    as Map<String, dynamic>?;
+                final address = booking['address'] as Map<String, dynamic>?;
+                final provider = booking['providerId'] as Map<String, dynamic>?;
 
-            final serviceName = booking['providerDetailsId']?['serviceName']
-                as Map<String, dynamic>?;
-            final address = booking['address'] as Map<String, dynamic>?;
-            final provider = booking['providerId'] as Map<String, dynamic>?;
+                final imageUrl = _getImageUrl(bookingId, controller);
+                final isNetworkImage = _isNetworkImage(bookingId, controller);
 
-            final imageUrl = _getImageUrl(bookingId, controller);
-            final isNetworkImage = _isNetworkImage(bookingId, controller);
+                return BookingDetailsCardWidget(
+                  // ➤ CARD TAP → Navigate with ALL required parameters
+                  onTap: () {
+                    _navigateToDetailsScreen(
+                        bookingId, serviceProviderId, providerId);
+                  },
 
-            return BookingDetailsCardWidget(
-              // ➤ CARD TAP → Navigate with ALL required parameters
-              onTap: () {
-                _navigateToDetailsScreen(
-                    bookingId, serviceProviderId, providerId);
+                  isInProgressTab: true,
+
+                  ///Button OnTap -> Message
+                  isInProgressTabMessageOnTap: () async {
+                    log("💬 [IN PROGRESS TAB] Message button tapped for booking: $bookingId");
+
+                    // 🔴 ADDED: Use providerId for message (user ID)
+                    final messageProviderId = providerId.isNotEmpty
+                        ? providerId
+                        : _getProviderUserId(booking);
+
+                    // 🔴 ADDED: Debug logging
+                    log('   📊 provider object: ${provider?.toString()}');
+                    log('   🆔 providerId from args: $providerId');
+                    log('   🔍 Extracted provider userId: ${_getProviderUserId(booking)}');
+                    log('   ✅ Final messageProviderId to use: $messageProviderId');
+
+                    if (messageProviderId.isEmpty) {
+                      log('❌ [IN PROGRESS TAB] Cannot send message: Provider ID is empty');
+                      Get.snackbar(
+                        'error'.tr,
+                        'cannot_send_message'.tr,
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.red,
+                        colorText: Colors.white,
+                      );
+                      return;
+                    }
+
+                    try {
+                      // 🔴 ADDED: Check if MessageScreenController exists
+                      final msgController = Get.find<MessageScreenController>();
+
+                      LoggerUtils.info(imageUrl);
+                      msgController.createMessage(
+                        participantId: messageProviderId,
+                        name: provider?['name'] ?? 'unknown_provider'.tr,
+                        imageUrl: imageUrl ?? '',
+                      );
+
+                      log('   ✅ createMessage called successfully');
+                    } catch (e) {
+                      log('❌ [IN PROGRESS TAB] Error with MessageScreenController: $e');
+                      Get.snackbar(
+                        'error'.tr,
+                        'messaging_service_not_available'.tr,
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.red,
+                        colorText: Colors.white,
+                      );
+                    }
+                  },
+
+                  ///Button OnTap -> View
+                  isInProgressTabViewOnTap: () {
+                    _navigateToDetailsScreen(
+                        bookingId, serviceProviderId, providerId);
+                  },
+
+                  // Data
+                  title: _getServiceName(serviceName),
+                  initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
+                  location: _getAddress(address),
+                  dateTime: _formatDateTime(
+                      booking['bookingDateTime']?.toString() ?? ''),
+                  serviceProviderProfileImage:
+                      imageUrl ?? Assets.images.userImage.path,
+                  serviceProviderName: provider?['name'] ?? 'Unknown Provider',
+                  serviceProviderDesignation: 'services_provider'.tr,
+                  isNetworkImage: isNetworkImage,
+                );
               },
-
-              isInProgressTab: true,
-
-              ///Button OnTap -> Message
-              isInProgressTabMessageOnTap: () async {
-                log("💬 [IN PROGRESS TAB] Message button tapped for booking: $bookingId");
-
-                // 🔴 ADDED: Use providerId for message (user ID)
-                final messageProviderId = providerId.isNotEmpty
-                    ? providerId
-                    : _getProviderUserId(booking);
-
-                // 🔴 ADDED: Debug logging
-                log('   📊 provider object: ${provider?.toString()}');
-                log('   🆔 providerId from args: $providerId');
-                log('   🔍 Extracted provider userId: ${_getProviderUserId(booking)}');
-                log('   ✅ Final messageProviderId to use: $messageProviderId');
-
-                if (messageProviderId.isEmpty) {
-                  log('❌ [IN PROGRESS TAB] Cannot send message: Provider ID is empty');
-                  Get.snackbar(
-                    'Error',
-                    'Cannot send message: Provider information not available',
-                    snackPosition: SnackPosition.BOTTOM,
-                    backgroundColor: Colors.red,
-                    colorText: Colors.white,
-                  );
-                  return;
-                }
-
-                try {
-                  // 🔴 ADDED: Check if MessageScreenController exists
-                  final msgController = Get.find<MessageScreenController>();
-
-                  LoggerUtils.info(imageUrl);
-                  msgController.createMessage(
-                    participantId: messageProviderId,
-                    name: provider?['name'] ?? 'Unknown Provider',
-                    imageUrl: imageUrl ?? '',
-                  );
-
-                  log('   ✅ createMessage called successfully');
-                } catch (e) {
-                  log('❌ [IN PROGRESS TAB] Error with MessageScreenController: $e');
-                  Get.snackbar(
-                    'Error',
-                    'Messaging service not available',
-                    snackPosition: SnackPosition.BOTTOM,
-                    backgroundColor: Colors.red,
-                    colorText: Colors.white,
-                  );
-                }
-              },
-
-              ///Button OnTap -> View
-              isInProgressTabViewOnTap: () {
-                _navigateToDetailsScreen(
-                    bookingId, serviceProviderId, providerId);
-              },
-
-              // Data
-              title: _getServiceName(serviceName),
-              initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
-              location: _getAddress(address),
-              dateTime:
-                  _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
-              serviceProviderProfileImage:
-                  imageUrl ?? Assets.images.userImage.path,
-              serviceProviderName: provider?['name'] ?? 'Unknown Provider',
-              serviceProviderDesignation: 'Service Provider',
-              isNetworkImage: isNetworkImage,
             );
-          },
+          }),
         ),
-      );
-    });
+      ),
+    );
   }
 
   // ─── HELPER METHODS ───────────────────────────────────────────────
@@ -215,13 +226,13 @@ class InProgressTab extends StatelessWidget {
   }
 
   static String _getServiceName(Map<String, dynamic>? serviceName) {
-    if (serviceName == null) return 'Unknown Service';
-    return serviceName['en'] ?? serviceName['bn'] ?? 'Unknown Service';
+    if (serviceName == null) return 'unknown_service'.tr;
+    return serviceName['en'] ?? serviceName['bn'] ?? 'unknown_service'.tr;
   }
 
   static String _getAddress(Map<String, dynamic>? address) {
-    if (address == null) return 'Unknown Location';
-    return address['en'] ?? address['bn'] ?? 'Unknown Location';
+    if (address == null) return 'unknown_location'.tr;
+    return address['en'] ?? address['bn'] ?? 'unknown_location'.tr;
   }
 
   // 🔴 FIXED: Extract Service Provider ID (_ServiceProviderId)
@@ -292,8 +303,8 @@ class InProgressTab extends StatelessWidget {
     if (serviceProviderId.isEmpty) {
       log('❌ [IN PROGRESS TAB] Navigation ABORTED: serviceProviderId is empty!');
       Get.snackbar(
-        'Navigation Error',
-        'Service provider details unavailable',
+        'navigation_error'.tr,
+        'service_provider_details_unavilable'.tr,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,

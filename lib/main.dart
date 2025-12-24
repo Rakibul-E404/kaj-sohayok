@@ -5,13 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:kaz_bd/constants/app_constant_text.dart';
 import 'package:kaz_bd/helpers/di.dart';
+import 'package:kaz_bd/localization/presentation/languages.dart';
 import 'package:kaz_bd/routes/routes.dart';
+import 'package:kaz_bd/utilities/set_initial_value.dart';
+
 import 'package:kaz_bd/service/fcm_push_notification.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'bindings/controllers_binding.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'firebase_options.dart';
 // List<CameraDescription>? cameras;
@@ -24,6 +27,7 @@ void main() async {
   await diSetup();
   // cameras = await availableCameras();
   await GetStorage.init();
+  setInitialLanguagePreference();
   // await dotenv.load(fileName: ".env");
 
 
@@ -52,6 +56,12 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           // home: WorkCompletedDetailsScreen(),
           debugShowCheckedModeBanner: false,
+          translations: Languages(),
+          locale: appData.read(kKeyEnglish)
+              ? Locale('en', 'US')
+              : appData.read(kKeyBangla)
+                  ? Locale('bn', 'BD')
+                  : Locale('en', 'US'),
 
           initialRoute: Routes.onboardingScreen,
           // initialRoute: Routes.joinAsServiceProviderScreen,

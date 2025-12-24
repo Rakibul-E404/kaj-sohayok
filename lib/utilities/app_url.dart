@@ -89,6 +89,13 @@ class AppUrl {
 
   static String jobRequests =
       '${baseUrl}v1/service-bookings/paginate/for-provider?status=pending';
+  static String workReview =
+      '${baseUrl}v1/reviews/';
+
+  static String workCompletedDetailsApi(String bookingId) {
+    return '${baseUrl}v1/service-bookings/with-costs-summary/${bookingId}';
+  }
+
   static String providerAcceptedBookings =
       '${baseUrl}v1/service-bookings/paginate/for-provider?status=accepted';
   static String providerInProgressBookings =
@@ -101,13 +108,6 @@ class AppUrl {
       '${baseUrl}v1/service-bookings/paginate/for-provider?status=completed';
 
   // static String paymentRequests = '${baseUrl}v1/service-bookings/paginate?status=paymentRequest';
-
-  // static String jobRequests = '${baseUrl}v1/service-bookings/paginate/for-provider?status=pending';
-  // static String providerAcceptedBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=accepted';
-  // static String providerInProgressBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=inProgress';
-  // static String providerPaymentRequests = '${baseUrl}v1/service-bookings/paginate/for-provider?status=paymentRequest';
-  // static String providerCancelledBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=cancelled';
-  // static String providerCompletedBookings = '${baseUrl}v1/service-bookings/paginate/for-provider?status=completed';
 
   static String providerJobRequestAcceptButton(String bookingId) {
     return '${baseUrl}v1/service-bookings/update-status/$bookingId/status/accept';
@@ -133,6 +133,12 @@ class AppUrl {
     return '${baseUrl}v1/service-bookings/update-work-proof/$bookingId';
   }
 
+  static String providerRequestPayment(String bookingId) {
+    return '${baseUrl}v1/service-bookings/update-status/$bookingId/status/paymentRequest';
+  }
+
+  static const String additionalCost = '${baseUrl}v1/additional-cost';
+
   static String deleteUser(String userId) {
     return '${baseUrl}v1/users/softDelete/$userId';
   }
@@ -140,7 +146,7 @@ class AppUrl {
   // static String additionalCost(String bookingId) {
   //   return '${baseUrl}v1/additional-cost';
   // }
-  static const String additionalCost = '${baseUrl}v1/additional-cost';
+  // static const String additionalCost = '${baseUrl}v1/additional-cost';
 
   ///===> rakibul api add close::::::::::::::::>
   ///
@@ -152,7 +158,7 @@ class AppUrl {
   ///-------------///Imtiaz Chowdhury Start///------------------
   static String getNormalUserHomeData = '${baseUrl}v1/users/home-page';
   static String getNormalUserAllCategory =
-      '${baseUrl}v1/service-categories/paginate?page=1&limit=2000';
+      '${baseUrl}v1/service-categories/paginate?page=1&limit=2000&isDeleted=false&isVisible=true';
 
   static String getSpecificServiceByCategory({
     required String categoryId,

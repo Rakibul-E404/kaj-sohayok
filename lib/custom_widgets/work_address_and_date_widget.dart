@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/utils.dart';
 import 'package:kaz_bd/custom_widgets/date_and_time_widget_tile.dart';
 
 import '../constants/text_font_style.dart';
@@ -38,7 +39,7 @@ class WorkAddressAndDateWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(4.r),
             ),
             child: Text(
-              "Working Address",
+              'working_address'.tr,
               style: TextFontStyle.headline16w500c000000StyleSatoshi,
             ),
           ),
@@ -57,7 +58,7 @@ class WorkAddressAndDateWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(4.r),
             ),
             child: Text(
-              "Booking Order Date",
+              'booking_order_date'.tr,
               style: TextFontStyle.headline16w500c000000StyleSatoshi,
             ),
           ),

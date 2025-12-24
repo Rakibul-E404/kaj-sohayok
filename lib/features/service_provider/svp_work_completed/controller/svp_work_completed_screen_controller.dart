@@ -1,7 +1,6 @@
 // lib/.../controller/svp_work_completed_screen_controller.dart
 
 import 'dart:developer';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../constants/app_enums.dart';
 import '../../../../custom_widgets/recent_job_request_status_widget.dart';
@@ -36,7 +35,7 @@ class SvpWorkCompletedScreenController extends GetxController {
 
       if (token == null) {
         hasError.value = true;
-        errorMessage.value = 'Authentication required. Please login again.';
+        errorMessage.value = 'authentication_required_login_again'.tr;
         isLoading.value = false;
         return;
       }
@@ -55,17 +54,18 @@ class SvpWorkCompletedScreenController extends GetxController {
             responseData['data'] != null &&
             responseData['data']['attributes'] != null &&
             responseData['data']['attributes']['results'] != null) {
-          completedBookings.assignAll(List<dynamic>.from(responseData['data']['attributes']['results']));
+          completedBookings.assignAll(List<dynamic>.from(
+              responseData['data']['attributes']['results']));
           isLoading.value = false;
         } else {
           hasError.value = true;
-          errorMessage.value = 'Unexpected response format';
+          errorMessage.value = 'unexpected_response_format'.tr;
           isLoading.value = false;
         }
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to load completed work';
+            'failed_to_load_complete_work'.tr;
 
         hasError.value = true;
         errorMessage.value = errorMsg;
@@ -77,9 +77,10 @@ class SvpWorkCompletedScreenController extends GetxController {
         }
       }
     } catch (e, stackTrace) {
-      log('Error fetching completed work: $e', error: e, stackTrace: stackTrace);
+      log('Error fetching completed work: $e',
+          error: e, stackTrace: stackTrace);
       hasError.value = true;
-      errorMessage.value = 'Network error. Please check your connection.';
+      errorMessage.value = 'network_error_check_again'.tr;
       isLoading.value = false;
     }
   }
@@ -100,8 +101,18 @@ class SvpWorkCompletedScreenController extends GetxController {
     try {
       final dateTime = DateTime.parse(dateTimeString).toLocal();
       final months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
       ];
       final month = months[dateTime.month - 1];
       final day = dateTime.day;
@@ -117,13 +128,15 @@ class SvpWorkCompletedScreenController extends GetxController {
   }
 
   String getAddress(Map<String, dynamic>? address) {
-    if (address == null) return 'Address not available';
-    return address['en'] ?? address['bn'] ?? 'Address not available';
+    if (address == null) return 'address_not_available'.tr;
+    return address['en'] ?? address['bn'] ?? 'address_not_available'.tr;
   }
 
   void navigateToCompletedDetails(Map<String, dynamic> booking) {
     final bookingId = booking['_ServiceBookingId'] as String? ?? '';
-    final userId = (booking['userId'] as Map<String, dynamic>?)?['_userId'] as String? ?? '';
+    final userId =
+        (booking['userId'] as Map<String, dynamic>?)?['_userId'] as String? ??
+            '';
     log("Navigating to completed work details: $bookingId");
 
     Get.toNamed(

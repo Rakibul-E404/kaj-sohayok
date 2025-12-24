@@ -11,6 +11,8 @@ import '../../../../../../utilities/app_url.dart';
 import '../widgets/svp_bookings_canceled_card.dart';
 
 class SvpBookingsCanceledController extends GetxController {
+  late ScrollController scrollController;
+
   final canceledBookings = <dynamic>[].obs;
   final isLoading = true.obs;
   final hasError = false.obs;
@@ -21,6 +23,17 @@ class SvpBookingsCanceledController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
+    scrollController = ScrollController();
+
+    // Listen to scroll events
+    scrollController.addListener(() {
+      if (scrollController.position.pixels <= 0) {
+        // At the top, auto-refresh
+        fetchCanceledBookings();
+      }
+    });
+
     fetchCanceledBookings();
   }
 
@@ -34,7 +47,7 @@ class SvpBookingsCanceledController extends GetxController {
 
       if (token == null) {
         hasError.value = true;
-        errorMessage.value = 'Authentication required. Please login again.';
+        errorMessage.value = 'authentication_required_login_again'.tr;
         isLoading.value = false;
         return;
       }
@@ -53,17 +66,18 @@ class SvpBookingsCanceledController extends GetxController {
             responseData['data'] != null &&
             responseData['data']['attributes'] != null &&
             responseData['data']['attributes']['results'] != null) {
-          canceledBookings.assignAll(List<dynamic>.from(responseData['data']['attributes']['results']));
+          canceledBookings.assignAll(List<dynamic>.from(
+              responseData['data']['attributes']['results']));
           isLoading.value = false;
         } else {
           hasError.value = true;
-          errorMessage.value = 'Unexpected response format';
+          errorMessage.value = 'unexpected_response_format'.tr;
           isLoading.value = false;
         }
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to load canceled bookings';
+            'failed_to_load_canceled_bookings'.tr;
 
         hasError.value = true;
         errorMessage.value = errorMsg;
@@ -75,9 +89,10 @@ class SvpBookingsCanceledController extends GetxController {
         }
       }
     } catch (e, stackTrace) {
-      log('Error fetching canceled bookings: $e', error: e, stackTrace: stackTrace);
+      log('Error fetching canceled bookings: $e',
+          error: e, stackTrace: stackTrace);
       hasError.value = true;
-      errorMessage.value = 'Network error. Please check your connection.';
+      errorMessage.value = 'network_error_check_again'.tr;
       isLoading.value = false;
     }
   }
@@ -98,8 +113,18 @@ class SvpBookingsCanceledController extends GetxController {
     try {
       final dateTime = DateTime.parse(dateTimeString).toLocal();
       final months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
       ];
       final month = months[dateTime.month - 1];
       final day = dateTime.day;
@@ -115,8 +140,8 @@ class SvpBookingsCanceledController extends GetxController {
   }
 
   String getAddress(Map<String, dynamic>? address) {
-    if (address == null) return 'Address not available';
-    return address['en'] ?? address['bn'] ?? 'Address not available';
+    if (address == null) return 'address_not_available'.tr;
+    return address['en'] ?? address['bn'] ?? 'address_not_available'.tr;
   }
 
   SvpBookingsCanceledCard buildCanceledBookingCard(int index) {
@@ -125,7 +150,7 @@ class SvpBookingsCanceledController extends GetxController {
     final address = getAddress(booking['address'] as Map<String, dynamic>?);
     final bookingDateTime = booking['bookingDateTime'] as String? ?? '';
     final bookingId = booking['_ServiceBookingId'] as String? ?? '';
-    final userName = userData['name'] as String? ?? 'Unknown User';
+    final userName = userData['name'] as String? ?? 'unknown_user'.tr;
     final profileImage = userData['profileImage']?['imageUrl'] as String?;
 
     return SvpBookingsCanceledCard(
@@ -138,5 +163,11 @@ class SvpBookingsCanceledController extends GetxController {
       location: address,
       dateTime: formatDateTime(bookingDateTime),
     );
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 }

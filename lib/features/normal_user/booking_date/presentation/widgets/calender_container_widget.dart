@@ -25,12 +25,12 @@ class CalenderContainerWidget extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
             ///Section : Calender Header Widget
             CalenderHeaderWidget(),
-            UIHelper.verticalSpace(20.h),
+            UIHelper.verticalSpace(10.h),
 
             ///Section : Calender Week Days Widget
             CalendarWeekDaysWidget(),

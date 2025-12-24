@@ -212,16 +212,6 @@ class RecentJobRequestStatusWidget extends StatelessWidget {
   }
 }*/
 
-
-
-
-
-
-
-
-
-
-
 ///
 ///
 ///
@@ -234,11 +224,10 @@ class RecentJobRequestStatusWidget extends StatelessWidget {
 ///
 ///
 
-
-
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:kaz_bd/custom_widgets/date_and_time_widget_tile.dart';
 
 import '../constants/text_font_style.dart';
@@ -324,7 +313,8 @@ class RecentJobRequestStatusWidget extends StatelessWidget {
                     radius: 24.r,
                     backgroundImage: cleanImageUrl.isNotEmpty
                         ? NetworkImage(cleanImageUrl)
-                        : const AssetImage('assets/images/default_profile.png') as ImageProvider,
+                        : const AssetImage('assets/images/default_profile.png')
+                            as ImageProvider,
                     // Optional: Add error/fallback handling
                     onBackgroundImageError: (exception, stackTrace) {
                       // Fallback to default image if network fails
@@ -407,7 +397,7 @@ class RecentJobRequestStatusWidget extends StatelessWidget {
                       onTap: null, // Disabled
                       buttonWidth: 108.w,
                       buttonHeight: 38.h,
-                      buttonTitle: "Work Started",
+                      buttonTitle: 'work_started'.tr,
                       buttonColor: AppColors.c000e08, // Green color for started
                     )
                   else
@@ -415,7 +405,7 @@ class RecentJobRequestStatusWidget extends StatelessWidget {
                       onTap: startWorkOnTap,
                       buttonWidth: 108.w,
                       buttonHeight: 38.h,
-                      buttonTitle: "Start Work",
+                      buttonTitle: 'start_work'.tr,
                     ),
 
                   UIHelper.horizontalSpace(12.w),
@@ -426,57 +416,57 @@ class RecentJobRequestStatusWidget extends StatelessWidget {
                     isButtonBorderUsed: true,
                     buttonBorderWidth: 1.5.sp,
                     buttonBorderColor: AppColors.c778beb,
-                    buttonTitle: "Message",
+                    buttonTitle: 'message'.tr,
                     textStyle: TextFontStyle.headline14w500c111111StyleSatoshi,
                     buttonColor: AppColors.cFFFFFF,
                   ),
                 ],
               )
             else if (isJobInProgress)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    CustomElevatedButton(
-                      onTap: submitWorkButtonOnTap,
-                      buttonWidth: 108.w,
-                      buttonHeight: 38.h,
-                      buttonTitle: "Submit Work",
-                    ),
-                    UIHelper.horizontalSpace(12.w),
-                    CustomElevatedButton(
-                      onTap: messageButtonOnTap,
-                      buttonWidth: 108.w,
-                      buttonHeight: 38.h,
-                      isButtonBorderUsed: true,
-                      buttonBorderWidth: 1.5.sp,
-                      buttonBorderColor: AppColors.c778beb,
-                      buttonTitle: "Message",
-                      textStyle: TextFontStyle.headline14w500c111111StyleSatoshi,
-                      buttonColor: AppColors.cFFFFFF,
-                    ),
-                  ],
-                )
-              else
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    CustomElevatedButton(
-                      onTap: cancelOnTap,
-                      buttonTitle: "Cancel",
-                      textStyle: TextFontStyle.headline14w500ce73d3dStyleSatoshi,
-                      buttonWidth: 108.w,
-                      buttonHeight: 38.h,
-                      buttonColor: AppColors.cfce9e9,
-                    ),
-                    UIHelper.horizontalSpace(12.w),
-                    CustomElevatedButton(
-                      onTap: acceptOnTap,
-                      buttonTitle: "Accept",
-                      buttonWidth: 108.w,
-                      buttonHeight: 38.h,
-                    ),
-                  ],
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  CustomElevatedButton(
+                    onTap: submitWorkButtonOnTap,
+                    buttonWidth: 108.w,
+                    buttonHeight: 38.h,
+                    buttonTitle: 'submit_work'.tr,
+                  ),
+                  UIHelper.horizontalSpace(12.w),
+                  CustomElevatedButton(
+                    onTap: messageButtonOnTap,
+                    buttonWidth: 108.w,
+                    buttonHeight: 38.h,
+                    isButtonBorderUsed: true,
+                    buttonBorderWidth: 1.5.sp,
+                    buttonBorderColor: AppColors.c778beb,
+                    buttonTitle: 'message'.tr,
+                    textStyle: TextFontStyle.headline14w500c111111StyleSatoshi,
+                    buttonColor: AppColors.cFFFFFF,
+                  ),
+                ],
+              )
+            else
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  CustomElevatedButton(
+                    onTap: cancelOnTap,
+                    buttonTitle: 'cancel'.tr,
+                    textStyle: TextFontStyle.headline14w500ce73d3dStyleSatoshi,
+                    buttonWidth: 108.w,
+                    buttonHeight: 38.h,
+                    buttonColor: AppColors.cfce9e9,
+                  ),
+                  UIHelper.horizontalSpace(12.w),
+                  CustomElevatedButton(
+                    onTap: acceptOnTap,
+                    buttonTitle: 'accept'.tr,
+                    buttonWidth: 108.w,
+                    buttonHeight: 38.h,
+                  ),
+                ],
+              ),
           ],
         ),
       ),

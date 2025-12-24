@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/utils.dart';
 
 import '../../../../constants/text_font_style.dart';
 import '../../../../gen/assets.gen.dart';
@@ -40,12 +41,11 @@ class TransactionIdWidget extends StatelessWidget {
             child: SvgPicture.asset(Assets.icons.walletIcon),
           ),
           UIHelper.horizontalSpace(10.w),
-
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Transaction ID",
+                'transaction_id'.tr,
                 style: TextFontStyle.headline16w700c1d242dStyleSatoshi,
               ),
               UIHelper.verticalSpace(4.h),

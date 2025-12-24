@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/custom_widgets/dotted_line_divider_widget.dart';
 
@@ -54,7 +55,7 @@ class PaymentSummeryWidget extends StatelessWidget {
         children: [
           ///Section : Text -> Payment Summery
           Text(
-            "Payment Summary",
+            'payment_summery'.tr,
             style: TextFontStyle.headline16w700c202020StyleSatoshi,
           ),
           UIHelper.verticalSpace(16.h),
@@ -91,7 +92,7 @@ class PaymentSummeryWidget extends StatelessWidget {
                   child: CustomElevatedButton(
                     onTap: onTap,
                     buttonWidth: 180.w,
-                    buttonTitle: "Add Additional Cost",
+                    buttonTitle: 'add_additional_cost'.tr,
                   ),
                 )
               : SizedBox.shrink(),

@@ -59,7 +59,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kaz_bd/gen/colors.gen.dart';
 
 import '../../../../../controllers/calender_controller.dart';
 
@@ -98,7 +97,7 @@ class TimePickerWidget extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Selected Time:', style: TextStyle(fontSize: 16)),
+              Text('selected_time'.tr, style: TextStyle(fontSize: 16)),
               Row(
                 children: [
                   Text(

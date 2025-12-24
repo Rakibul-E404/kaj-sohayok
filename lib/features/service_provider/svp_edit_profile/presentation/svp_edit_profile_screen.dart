@@ -1,14 +1,14 @@
 import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/controllers/svp_edit_profile_screen_controller.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
 import '../../../../constants/text_font_style.dart';
 import '../../../../controllers/svp_profile_screen_controller.dart';
-import '../../../../controllers/user_edit_profile_controller.dart';
-import '../../../../controllers/user_profile_screen_controller.dart';
 import '../../../../custom_widgets/custom_elevated_button.dart';
 import '../../../../gen/colors.gen.dart';
 import '../../../normal_user/edit_profile/widgets/edit_profile_formfield_widget.dart';
@@ -30,7 +30,7 @@ class SvpEditProfileScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: AppColors.scaffoldBackgroundColor,
         title: Text(
-          "Edit Profile",
+          'edit_profile'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
       ),
@@ -158,16 +158,16 @@ class SvpEditProfileScreen extends StatelessWidget {
                     children: [
                       /// Name Form Field
                       EditProfileFormFieldWidget(
-                        lableText: "Name",
-                        hintText: "Enter Your Name",
+                        lableText: 'name'.tr,
+                        hintText: 'enter_your_name'.tr,
                         controller: controller.nameController,
                       ),
                       UIHelper.verticalSpace(16.h),
 
                       /// Phone Number Form Field
                       EditProfileFormFieldWidget(
-                        lableText: "Phone Number",
-                        hintText: "Enter Your Phone Number",
+                        lableText: 'phone_number'.tr,
+                        hintText: 'enter_your_phone_number'.tr,
                         controller: controller.phoneNumberController,
                         keyboardType: TextInputType.phone,
                       ),
@@ -176,8 +176,8 @@ class SvpEditProfileScreen extends StatelessWidget {
                       /*       /// ========================> Location Removed ==========================>
                       /// Location Form Field
                       EditProfileFormFieldWidget(
-                        lableText: "Location",
-                        hintText: "Enter Your Location",
+                        lableText: 'location'.tr,
+                        hintText: 'enter_your_location'.tr,
                         controller: controller.locationController,
                       ),
                       UIHelper.verticalSpace(16.h),*/
@@ -219,8 +219,8 @@ class SvpEditProfileScreen extends StatelessWidget {
                         },
                         child: AbsorbPointer(
                           child: EditProfileFormFieldWidget(
-                            lableText: "Date of Birth",
-                            hintText: "Select Date of Birth",
+                            lableText: 'date_of_birth'.tr,
+                            hintText: 'select_date_of_birth'.tr,
                             controller: controller.dateOfBirthController,
                             suffixIcon: Icon(
                               Icons.calendar_today,
@@ -234,7 +234,7 @@ class SvpEditProfileScreen extends StatelessWidget {
 
                       /// Gender Form Field
                       Text(
-                        'Gender',
+                        'gender'.tr,
                         style: TextStyle(
                           fontSize: 14.sp,
                           color: Colors.black87,
@@ -248,10 +248,11 @@ class SvpEditProfileScreen extends StatelessWidget {
                             : controller.genderController.text.toLowerCase(),
                         // Convert to lowercase to match
                         items: [
-                          DropdownMenuItem(value: 'male', child: Text('Male')),
+                          DropdownMenuItem(
+                              value: 'male', child: Text('male'.tr)),
                           DropdownMenuItem(
                             value: 'female',
-                            child: Text('Female'),
+                            child: Text('female'.tr),
                           ),
                         ],
                         onChanged: (String? newValue) {
@@ -261,7 +262,7 @@ class SvpEditProfileScreen extends StatelessWidget {
                         },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please select gender type';
+                            return 'please_select_your_gender_type'.tr;
                           }
                           return null;
                         },
@@ -307,8 +308,8 @@ class SvpEditProfileScreen extends StatelessWidget {
                             controller.updateProfile();
                           },
                     buttonTitle: controller.isLoading.value
-                        ? "Updating..."
-                        : "Update Profile",
+                        ? 'updating...'.tr
+                        : 'update_profile'.tr,
                   ),
                 ),
               ],

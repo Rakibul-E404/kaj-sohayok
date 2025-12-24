@@ -13,3 +13,6 @@ class AppText {
       "habitasse lorem eu arcu. Non enim a elit urna eget nibh quisque donec condimentum. "
       "Elit ut pellentesque neque in quis at viverra. Nisl etiam tristique odio eget convallis.";
 }
+
+const String kKeyEnglish = 'english';
+const String kKeyBangla = 'bangla';

@@ -3,6 +3,7 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get_utils/get_utils.dart';
 
 import '../../../../../../constants/app_constant_text.dart';
 import '../../../../../../constants/text_font_style.dart';
@@ -52,7 +53,6 @@ class PaymentHistoryShowingCard extends StatelessWidget {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-
           children: [
             ///Section : Service Name
             ///Section : Initial Payable Price
@@ -72,7 +72,7 @@ class PaymentHistoryShowingCard extends StatelessWidget {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: "Start from ",
+                        text: "${'start_from'.tr} ",
                         style: TextFontStyle.headline12w500c6a6a6aStyleSatoshi,
                       ),
                       TextSpan(

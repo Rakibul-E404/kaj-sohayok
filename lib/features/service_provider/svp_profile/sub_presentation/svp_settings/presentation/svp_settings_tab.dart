@@ -95,19 +95,21 @@ class SvpSettingsTab extends StatelessWidget {
 
                                               ///Section : Text -> Logout Text...
                                               Text(
-                                                "Logout",
+                                                'logout'.tr,
                                                 style: TextFontStyle
                                                     .headline18w700c000000StyleSatoshi,
                                               ),
                                               UIHelper.verticalSpace(10.h),
                                               Text(
-                                                "Are you sure you want to log out ?",
+                                                'are_you_sure_you_want_to_logout'
+                                                    .tr,
                                                 style: TextFontStyle
                                                     .headline14w400c494949StyleSatoshi,
                                               ),
                                               UIHelper.verticalSpace(24.h),
 
-                                              ///Section : Button -> No & Yes
+                                              ///Section : Button -> No
+                                              ///Section : Button -> Yes
                                               Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.center,
@@ -124,14 +126,12 @@ class SvpSettingsTab extends StatelessWidget {
                                                     buttonBorderWidth: 1.5.sp,
                                                     buttonColor:
                                                         Colors.transparent,
-                                                    buttonTitle: "No",
+                                                    buttonTitle: 'no'.tr,
                                                     textStyle: TextFontStyle
                                                         .headline14w500c000000StyleSatoshi,
                                                   ),
                                                   UIHelper.horizontalSpace(
                                                       16.w),
-
-                                                  ///Section : Button -> Yes
                                                   CustomElevatedButton(
                                                     onTap: () {
                                                       Get.back();
@@ -139,7 +139,7 @@ class SvpSettingsTab extends StatelessWidget {
                                                           .handleLogOut();
                                                     },
                                                     buttonWidth: 136.w,
-                                                    buttonTitle: "Yes",
+                                                    buttonTitle: 'yes'.tr,
                                                   ),
                                                 ],
                                               ),

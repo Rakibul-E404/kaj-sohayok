@@ -20,7 +20,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          "Terms & conditions",
+          'terms_and_conditions'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
         centerTitle: true,
@@ -50,7 +50,6 @@ class TermsAndConditionsScreen extends StatelessWidget {
                 //   style: TextFontStyle.headline14w400c111111StyleSatoshi,
                 // ),
                 HtmlWrapper(htmlContent: bodyText ?? '')
-
               ],
             ),
           ),

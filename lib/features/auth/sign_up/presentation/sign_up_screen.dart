@@ -9,18 +9,13 @@ import 'package:kaz_bd/controllers/sign_up_screen_controller.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/features/auth/sign_up/widgets/gender_selection.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
-import 'package:kaz_bd/helpers/loading_helper.dart';
-import 'package:kaz_bd/service/location/location_controller.dart';
-import 'package:kaz_bd/utilities/enum.dart';
 
 import '../../../../constants/text_font_style.dart';
-import '../../../../gen/assets.gen.dart';
 import '../../../../custom_widgets/custom_text_form_field.dart';
+import '../../../../gen/assets.gen.dart';
 import '../../../../helpers/ui_helpers.dart';
 import '../../../../helpers/waiting_widget.dart';
 import '../../../../routes/routes.dart';
-import '../../../../service/get_storage.dart';
-import '../../../../utilities/app_constants.dart';
 
 class SignUpScreen extends StatelessWidget {
   SignUpScreen({super.key});
@@ -33,7 +28,6 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
-
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -81,28 +75,28 @@ class SignUpScreen extends StatelessWidget {
 
                   ///Section : Text -> sign in your account
                   Text(
-                    "Sign Up Your Account",
+                    'sign_up_your_account'.tr,
                     style: TextFontStyle.headline24w700c000000StyleSatoshi,
                   ),
                   UIHelper.verticalSpace(14.h),
 
                   ///Section : Text -> Please Fillup Your Details.
                   Text(
-                    "Please Fill In Your Details.",
+                    'fill_your_details'.tr,
                     style: TextFontStyle.headline12w400c414141StyleSatoshi,
                   ),
                   UIHelper.verticalSpace(32.h),
 
                   ///Section : Name Form Field
                   CustomFormField(
-                    labelText: "User Name",
-                    hintText: "Enter username",
+                    labelText: 'user_name'.tr,
+                    hintText: 'enter_user_name'.tr,
                     controller: userSignUpController.userNameTEController,
                     // hintTextStyle: ,
                     prefixIcon: SvgPicture.asset(Assets.icons.personIcon),
                     validator: (String? value) {
                       if (value?.isEmpty ?? true) {
-                        return 'Please Enter Your Username';
+                        return 'please_enter_user_name'.tr;
                       }
                       return null;
                     },
@@ -113,13 +107,13 @@ class SignUpScreen extends StatelessWidget {
                   CustomFormField(
                     controller: userSignUpController.emailTEController,
 
-                    labelText: "Your Email",
-                    hintText: "Enter Your Email",
+                    labelText: 'your_email'.tr,
+                    hintText: 'enter_your_email'.tr,
                     // hintTextStyle: ,
                     prefixIcon: Icon(Icons.mail, color: AppColors.c8c8c8c),
                     validator: (String? value) {
                       if (value?.isEmpty ?? true) {
-                        return 'Please Enter Your Email';
+                        return 'please_enter_your_email'.tr;
                       }
                       return null;
                     },
@@ -130,9 +124,9 @@ class SignUpScreen extends StatelessWidget {
                   Obx(() {
                     return CustomFormField(
                       inputType: TextInputType.number,
-                      labelText: "Your Number",
+                      labelText: 'your_number'.tr,
                       controller: userSignUpController.phoneNumberTEController,
-                      hintText: "Enter Your Number",
+                      hintText: 'enter_your_number'.tr,
                       gapBetweenPrefixIconAndDivider: 2.w,
                       onChanged: (value) {
                         userSignUpController.isMobileNumberEmpty.value =
@@ -156,7 +150,7 @@ class SignUpScreen extends StatelessWidget {
                       ),
                       validator: (String? value) {
                         if (value?.isEmpty ?? true) {
-                          return 'Please Enter Your Phone Number';
+                          return 'please_enter_phone_number'.tr;
                         }
                         return null;
                       },
@@ -188,8 +182,8 @@ class SignUpScreen extends StatelessWidget {
                     },
                     child: CustomFormField(
                       controller: userSignUpController.dateOfBirthTEController,
-                      labelText: "Date of Birth",
-                      hintText: "MM/DD/YYYY",
+                      labelText: 'date_of_birth'.tr,
+                      hintText: 'date_hint'.tr,
                       isEnabled: false,
                       prefixIcon: SvgPicture.asset(
                         fit: BoxFit.contain,
@@ -197,7 +191,7 @@ class SignUpScreen extends StatelessWidget {
                       ),
                       validator: (String? value) {
                         if (value?.isEmpty ?? true) {
-                          return 'Please Enter Your Date Of Birth';
+                          return 'enter_your_date_of_birth'.tr;
                         }
                         return null;
                       },
@@ -213,10 +207,9 @@ class SignUpScreen extends StatelessWidget {
                   Obx(() {
                     return CustomFormField(
                       controller: userSignUpController.passwordTEController,
-                      labelText: "Password",
-                      hintText: "Enter Password",
+                      labelText: 'password'.tr,
+                      hintText: 'enter_password'.tr,
                       isPass: true,
-
                       isObsecure: userSignUpController.isVisible.value,
                       prefixIcon: SvgPicture.asset(
                         fit: BoxFit.contain,
@@ -238,7 +231,7 @@ class SignUpScreen extends StatelessWidget {
                       ),
                       validator: (String? value) {
                         if (value?.isEmpty ?? true) {
-                          return 'Please Enter Your password ';
+                          return 'please_enter_password'.tr;
                         }
                         return null;
                       },
@@ -265,7 +258,6 @@ class SignUpScreen extends StatelessWidget {
                         );
                       }),
                       UIHelper.horizontalSpace(10.w),
-
                       Expanded(
                         child: InkWell(
                           onTap: () {
@@ -274,7 +266,7 @@ class SignUpScreen extends StatelessWidget {
                             );
                           },
                           child: Text(
-                            "By creating an account, I accept the Terms & Conditions & Privacy Policy.",
+                            'agree_to_accept_terms_and_conditions'.tr,
                             style:
                                 TextFontStyle.headline12w400c000000StyleSatoshi,
                           ),
@@ -297,7 +289,7 @@ class SignUpScreen extends StatelessWidget {
                           // Get.toNamed(Routes.signInScreen);
                           await userSignUpController.handleSignUp();
                         },
-                        buttonTitle: "Sign Up",
+                        buttonTitle: 'sign_up'.tr,
                       ),
                     ),
                   ),
@@ -308,7 +300,7 @@ class SignUpScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Already have account?",
+                        'already_have_an_account'.tr,
                         style: TextFontStyle.headline14w500c606060StyleSatoshi,
                       ),
                       UIHelper.horizontalSpace(10.w),
@@ -318,7 +310,7 @@ class SignUpScreen extends StatelessWidget {
                           Get.toNamed(Routes.signInScreen);
                         },
                         child: Text(
-                          "Sign in",
+                          'sign_in'.tr,
                           style:
                               TextFontStyle.headline14w700c000000StyleSatoshi,
                         ),
@@ -329,7 +321,7 @@ class SignUpScreen extends StatelessWidget {
 
                   /// Section : Text -> OR
                   Text(
-                    "OR",
+                    'or'.tr,
                     style: TextFontStyle.headline10w700c000000StyleSatoshi,
                   ),
                   UIHelper.verticalSpace(32.h),
@@ -346,7 +338,7 @@ class SignUpScreen extends StatelessWidget {
                         SvgPicture.asset(Assets.icons.googleIcon),
                         UIHelper.horizontalSpace(10.w),
                         Text(
-                          "Sign up with Google",
+                          'sign_up_with_google'.tr,
                           style:
                               TextFontStyle.headline12w500c000000StyleSatoshi,
                         ),

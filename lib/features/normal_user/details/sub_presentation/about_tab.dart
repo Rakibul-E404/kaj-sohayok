@@ -40,7 +40,7 @@ class AboutTab extends StatelessWidget {
               return CustomShimmerEffect(height: 10.h, width: 0.4.sw);
             } else {
               return Text(
-                "Services Description",
+                'service_description'.tr,
                 style: TextFontStyle.headline16w500c000000StyleSatoshi,
               );
             }
@@ -162,7 +162,7 @@ class AboutTab extends StatelessWidget {
                           );
                         } else {
                           return Text(
-                            "Services Provider",
+                            'service_provider'.tr,
                             style:
                                 TextFontStyle.headline10w500c4d4d4dStyleSatoshi,
                           );

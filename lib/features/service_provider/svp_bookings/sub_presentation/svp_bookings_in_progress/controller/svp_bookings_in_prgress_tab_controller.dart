@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../../../constants/app_enums.dart';
 import '../../../../../../controllers/message_screen_controller.dart';
 import '../../../../../../custom_widgets/recent_job_request_status_widget.dart';
 import '../../../../../../routes/routes.dart';
@@ -13,6 +12,8 @@ import '../../../../../../utilities/app_constants.dart';
 import '../../../../../../utilities/app_url.dart';
 
 class SvpBookingsInProgressController extends GetxController {
+  late ScrollController scrollController;
+
   final jobRequests = <dynamic>[].obs;
   final isLoading = true.obs;
   final hasError = false.obs;
@@ -25,6 +26,16 @@ class SvpBookingsInProgressController extends GetxController {
   void onInit() {
     super.onInit();
     print('🚀 SvpBookingsInProgressController initialized');
+
+    scrollController = ScrollController();
+
+    // Listen to scroll events
+    scrollController.addListener(() {
+      if (scrollController.position.pixels <= 0) {
+        // At the top, auto-refresh
+        fetchInProgressBookings();
+      }
+    });
 
     // Set up listener to print booking IDs whenever jobRequests changes
     setupBookingIdPrinter();
@@ -67,8 +78,11 @@ class SvpBookingsInProgressController extends GetxController {
       for (int i = 0; i < bookings.length; i++) {
         final booking = bookings[i];
         final bookingId = booking['_ServiceBookingId'] as String? ?? 'N/A';
-        final serviceName = booking['serviceName']?['en'] as String? ?? 'Unknown Service';
-        final userName = (booking['userId'] as Map<String, dynamic>?)?['name'] as String? ?? 'Unknown User';
+        final serviceName =
+            booking['serviceName']?['en'] as String? ?? 'unknown_service'.tr;
+        final userName =
+            (booking['userId'] as Map<String, dynamic>?)?['name'] as String? ??
+                'unknown_user'.tr;
 
         print('${i + 1}. Booking ID: $bookingId');
         print('   Service: $serviceName');
@@ -94,7 +108,7 @@ class SvpBookingsInProgressController extends GetxController {
       if (token == null) {
         print('❌ No access token found');
         hasError.value = true;
-        errorMessage.value = 'Authentication required. Please login again.';
+        errorMessage.value = 'authentication_required_login_again'.tr;
         isLoading.value = false;
         return;
       }
@@ -115,8 +129,8 @@ class SvpBookingsInProgressController extends GetxController {
             responseData['data'] != null &&
             responseData['data']['attributes'] != null &&
             responseData['data']['attributes']['results'] != null) {
-
-          final results = List<dynamic>.from(responseData['data']['attributes']['results']);
+          final results =
+              List<dynamic>.from(responseData['data']['attributes']['results']);
 
           print('✅ API Success - Received ${results.length} booking(s)');
 
@@ -130,13 +144,13 @@ class SvpBookingsInProgressController extends GetxController {
         } else {
           print('⚠️ Unexpected response format');
           hasError.value = true;
-          errorMessage.value = 'Unexpected response format';
+          errorMessage.value = 'unexpected_response_format'.tr;
           isLoading.value = false;
         }
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to load in-progress bookings';
+            'failed_to_load_in_progress_bookings'.tr;
 
         print('❌ API Error: $errorMsg');
 
@@ -152,7 +166,8 @@ class SvpBookingsInProgressController extends GetxController {
       }
     } catch (e, stackTrace) {
       print('💥 Exception in fetchInProgressBookings: $e');
-      log('Error fetching in-progress bookings: $e', error: e, stackTrace: stackTrace);
+      log('Error fetching in-progress bookings: $e',
+          error: e, stackTrace: stackTrace);
       hasError.value = true;
       errorMessage.value = 'Network error. Please check your connection.';
       isLoading.value = false;
@@ -162,7 +177,9 @@ class SvpBookingsInProgressController extends GetxController {
   // Method to navigate to job details screen
   void navigateToJobDetails(Map<String, dynamic> jobRequest) {
     final bookingId = jobRequest['_ServiceBookingId'] as String? ?? '';
-    final userId = (jobRequest['userId'] as Map<String, dynamic>?)?['_userId'] as String? ?? '';
+    final userId = (jobRequest['userId'] as Map<String, dynamic>?)?['_userId']
+            as String? ??
+        '';
 
     print('📍 Navigating to job details for booking ID: $bookingId');
 
@@ -192,8 +209,18 @@ class SvpBookingsInProgressController extends GetxController {
     try {
       final dateTime = DateTime.parse(dateTimeString).toLocal();
       final months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
       ];
       final month = months[dateTime.month - 1];
       final day = dateTime.day;
@@ -209,8 +236,8 @@ class SvpBookingsInProgressController extends GetxController {
   }
 
   String getAddress(Map<String, dynamic>? address) {
-    if (address == null) return 'Address not available';
-    return address['en'] ?? address['bn'] ?? 'Address not available';
+    if (address == null) return 'address_not_available'.tr;
+    return address['en'] ?? address['bn'] ?? 'address_not_available'.tr;
   }
 
   Future<void> navigateToSubmitWorkForm(Map<String, dynamic> jobRequest) async {
@@ -224,8 +251,8 @@ class SvpBookingsInProgressController extends GetxController {
       final token = await SecureStorageService().read(AppConstants.accessToken);
       if (token == null) {
         Get.snackbar(
-          'Error',
-          'Authentication required. Please login again.',
+          'error'.tr,
+          'authentication_required_login_again'.tr,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -268,9 +295,10 @@ class SvpBookingsInProgressController extends GetxController {
             },
           );
         } else {
-          final errorMsg = responseData['message'] ?? 'Failed to load work form data';
+          final errorMsg =
+              responseData['message'] ?? 'failed_to_load_work_form_data'.tr;
           Get.snackbar(
-            'Error',
+            'error'.tr,
             errorMsg,
             backgroundColor: Colors.red,
             colorText: Colors.white,
@@ -279,10 +307,10 @@ class SvpBookingsInProgressController extends GetxController {
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to load work form data';
+            'failed_to_load_work_form_data'.tr;
 
         Get.snackbar(
-          'Error',
+          'error'.tr,
           errorMsg,
           backgroundColor: Colors.red,
           colorText: Colors.white,
@@ -297,10 +325,11 @@ class SvpBookingsInProgressController extends GetxController {
     } catch (e, stackTrace) {
       isFetchingFormData.value = false;
       print('💥 Error fetching work form data: $e');
-      log('Error fetching work form data: $e', error: e, stackTrace: stackTrace);
+      log('Error fetching work form data: $e',
+          error: e, stackTrace: stackTrace);
       Get.snackbar(
-        'Network Error',
-        'Failed to load work form. Please check your connection.',
+        'network_error'.tr,
+        'failed_to_load_work_form_please_check_your_connection'.tr,
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
@@ -333,5 +362,11 @@ class SvpBookingsInProgressController extends GetxController {
       location: address,
       dateTime: formatDateTime(bookingDateTime),
     );
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 }

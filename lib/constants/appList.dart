@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:kaz_bd/features/normal_user/provider_profile_details/model/profile_tile_model.dart';
 import 'package:kaz_bd/features/service_provider/svp_job_details/model/user_info_model.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
@@ -6,7 +7,6 @@ import 'package:kaz_bd/gen/assets.gen.dart';
 import '../features/normal_user/chat_inbox/model/chat_message_model.dart';
 import '../features/normal_user/home/models/category_mode.dart';
 import '../features/normal_user/chat_list/model/message_model.dart';
-import '../features/normal_user/chat_list/presentation/chat_list_screen.dart';
 import '../features/common_screens/notification/model/notification_model.dart';
 import '../features/normal_user/user_profile/models/settings_options_model.dart';
 import '../features/normal_user/work_completed_details/model/additional_cost_model.dart';
@@ -14,7 +14,7 @@ import '../features/service_provider/svp_home/model/chart_data_model.dart';
 import '../features/service_provider/svp_home/model/svp_card_model.dart';
 
 class AppList {
-  static final List<String> genderList = ["Male", "Female"];
+  static final List<String> genderList = ['male'.tr, 'female'.tr];
 
   // Pages of categories
   static final List<List<CategoryModel>> categories = [
@@ -107,15 +107,17 @@ class AppList {
     Assets.images.userImage.path,
   ];
 
-  static List<ProfileTileModel> profileTileList = [
-    ProfileTileModel(title: "Occupation", data: "AC-Repair"),
-    ProfileTileModel(title: "Years of Experience", data: "4 Years"),
-    ProfileTileModel(title: "Name", data: "Ripon Mia"),
-    ProfileTileModel(title: "Phone Number", data: "1233333333"),
-    ProfileTileModel(title: "Location", data: "Rangpur Bangladesh"),
-    ProfileTileModel(title: "Date of Birth", data: "11-11-2025"),
-    ProfileTileModel(title: "Gender", data: "Male"),
-  ];
+  static List<ProfileTileModel> get profileTileList {
+    return [
+      ProfileTileModel(title: 'occupation'.tr, data: "AC-Repair"),
+      ProfileTileModel(title: 'years_of_experience'.tr, data: "4 Years"),
+      ProfileTileModel(title: 'name'.tr, data: "Ripon Mia"),
+      ProfileTileModel(title: 'phone_number'.tr, data: "1233333333"),
+      ProfileTileModel(title: 'location'.tr, data: "Rangpur Bangladesh"),
+      ProfileTileModel(title: 'date_of_birth'.tr, data: "11-11-2025"),
+      ProfileTileModel(title: 'gender'.tr, data: "Male"),
+    ];
+  }
 
   static List<SettingsOptionsModel> settingsOptionsList = [
     SettingsOptionsModel(

@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -7,15 +6,13 @@ import 'package:kaz_bd/features/normal_user/chat_list/widgets/message_tile.dart'
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/service/get_storage.dart';
 import 'package:kaz_bd/utilities/app_constants.dart';
-import 'package:kaz_bd/utilities/logger_util.dart';
-import '../../../../constants/appList.dart';
+
 import '../../../../controllers/chat_inbox_screen_controller.dart';
 import '../../../../controllers/message_screen_controller.dart';
 import '../../../../gen/colors.gen.dart';
 import '../../../../utilities/app_url.dart';
 import '../../../call/presentation/controller/call_controller.dart';
 import '../../chat_list/model/chat_list_response_model.dart';
-import '../model/chat_individual_message_model.dart';
 import '../widgets/chat_bubble_widget.dart';
 import '../widgets/end_drawer_widget.dart';
 import '../widgets/send_message_widget.dart';
@@ -72,7 +69,7 @@ class _PersonalInboxState extends State<PersonalInbox> {
             "${AppUrl.imageBaseUrl}${receiverProfile?.profileImage?.imageUrl ?? ''}";
       }
 
-      LoggerUtils.error(imageUrl);
+      // LoggerUtils.error(imageUrl);
     }
 
     return Scaffold(
@@ -137,7 +134,7 @@ class _PersonalInboxState extends State<PersonalInbox> {
                       SizedBox(width: 6),
                       Flexible(
                         child: Text(
-                          "Active Now",
+                          'active_now'.tr,
                           style: TextStyle(
                             color: AppColors.c111111,
                             fontSize: 12,

@@ -21,7 +21,7 @@ Future<void> showAdditionalCostDialog({
     builder: (_) => AlertDialog(
       backgroundColor: AppColors.cFFFFFF,
       title: Text(
-        "Add Additional Cost",
+        'addd_additional_cost'.tr,
         style: TextFontStyle.headline16w500c000000StyleSatoshi,
       ),
       content: Form(
@@ -36,7 +36,7 @@ Future<void> showAdditionalCostDialog({
               TextFormField(
                 controller: additionalCostTitle,
                 decoration: InputDecoration(
-                  hintText: "Enter cost title",
+                  hintText: 'enter_cost_title'.tr,
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: AppColors.ce6e6e6),
                     borderRadius: BorderRadius.circular(8.r),
@@ -44,7 +44,7 @@ Future<void> showAdditionalCostDialog({
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Please enter cost title';
+                    return 'please_enter_cost_title'.tr;
                   }
                   return null;
                 },
@@ -56,7 +56,7 @@ Future<void> showAdditionalCostDialog({
                 controller: additionalCost,
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 decoration: InputDecoration(
-                  hintText: "Enter cost amount",
+                  hintText: 'enter_cost_amount'.tr,
                   border: OutlineInputBorder(
                     borderSide: BorderSide(color: AppColors.ce6e6e6),
                     borderRadius: BorderRadius.circular(8.r),
@@ -64,11 +64,11 @@ Future<void> showAdditionalCostDialog({
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Please enter cost amount';
+                    return 'please_enter_cost_amount'.tr;
                   }
                   final price = double.tryParse(value.trim());
                   if (price == null || price <= 0) {
-                    return 'Please enter a valid amount';
+                    return 'please_enter_valid_amount'.tr;
                   }
                   return null;
                 },
@@ -110,8 +110,8 @@ Future<void> showAdditionalCostDialog({
 
                   // Show success message
                   Get.snackbar(
-                    'Success',
-                    'Additional cost added',
+                    'success'.tr,
+                    'additional_cost_added'.tr,
                     backgroundColor: Colors.green,
                     colorText: Colors.white,
                     snackPosition: SnackPosition.BOTTOM,
@@ -121,7 +121,7 @@ Future<void> showAdditionalCostDialog({
               },
               buttonWidth: 107.w,
               buttonHeight: 38.h,
-              buttonTitle: "Save",
+              buttonTitle: 'save'.tr,
             ),
           ],
         ),

@@ -89,10 +89,13 @@
 //   }
 // }
 
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kaz_bd/constants/app_constant_text.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
+import 'package:kaz_bd/helpers/di.dart';
 import 'package:kaz_bd/models/user_profile_model.dart';
 import 'package:kaz_bd/service/socket_service.dart';
 
@@ -174,10 +177,21 @@ class UserProfileScreenController extends GetxController
 
   /// ------------------- Language Selection -------------------
   late TabController languageTabController;
-  var languageSelectionTabIndex = 0.obs;
+  var languageSelectionTabIndex = 0.obs; // Will be updated in onInit
 
   void changeLanguageTab(int index) {
     languageSelectionTabIndex.value = index;
+    if (index == 0) {
+      appData.write(kKeyEnglish, true);
+      appData.write(kKeyBangla, false);
+      Get.updateLocale(Locale('en', 'US')); // Update the app locale
+    } else if (index == 1) {
+      appData.write(kKeyEnglish, false);
+      appData.write(kKeyBangla, true);
+      Get.updateLocale(Locale('bn', 'BD')); // Update the app locale
+    } else {
+      return;
+    }
   }
 
   /// ------------------- Profile Options Tabs -------------------
@@ -192,6 +206,9 @@ class UserProfileScreenController extends GetxController
   @override
   void onInit() {
     super.onInit();
+
+    // Initialize language selection tab index based on stored preference
+    languageSelectionTabIndex.value = appData.read(kKeyEnglish) ? 0 : 1;
 
     /// Language Tab Controller
     languageTabController = TabController(
@@ -358,6 +375,9 @@ class UserProfileScreenController extends GetxController
   ///----------------------------- Dispost the controllers function --------------------------
   @override
   void onClose() {
+    languageTabController.removeListener(() {
+      changeLanguageTab(languageTabController.index);
+    });
     languageTabController.dispose();
     profileOptionsTabController.dispose();
     super.onClose();

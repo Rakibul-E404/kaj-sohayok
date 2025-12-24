@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../models/service_wallet_transaction_model.dart';
 import '../models/user_payment_history_details_model.dart';
 import '../models/user_payment_history_model.dart';
 import '../routes/routes.dart';
@@ -18,7 +16,7 @@ class UserPaymentHistoryController extends GetxController {
   final RxList<UserPaymentHistoryModel> userPaymentHistories =
       <UserPaymentHistoryModel>[].obs;
   final Rxn<UserPaymentHistoryDetailsModel> userPaymentHistoryDetails =
-      Rxn<UserPaymentHistoryDetailsModel>();
+  Rxn<UserPaymentHistoryDetailsModel>();
 
   Future<void> fetchPaymentHistory() async {
     try {
@@ -32,21 +30,19 @@ class UserPaymentHistoryController extends GetxController {
       if (getResponse.isSuccess) {
         userPaymentHistories.clear();
         List<dynamic> resultsList =
-            getResponse.jsonResponse?['data']['attributes']['results'];
+        getResponse.jsonResponse?['data']['attributes']['results'];
         final List<dynamic> paymentHistoryList = resultsList
             .map((dynamic baby) => UserPaymentHistoryModel.fromMap(baby))
             .toList();
 
         for (final UserPaymentHistoryModel userPaymentHistory
-            in paymentHistoryList) {
+        in paymentHistoryList) {
           userPaymentHistories.add(userPaymentHistory);
         }
 
         LoggerUtils.debug(
           "${AppUrl.imageBaseUrl}${userPaymentHistories[0].providerId?.profileImage?.imageUrl} ",
         );
-
-        // LoggerUtils.debug(uerProfileModel.value?.email);
       } else {
         Get.snackbar(
           'Failed',
@@ -73,16 +69,25 @@ class UserPaymentHistoryController extends GetxController {
       );
       if (getResponse.isSuccess) {
         final paymentHistoryResponse =
-            getResponse.jsonResponse?['data']['attributes'];
+        getResponse.jsonResponse?['data']['attributes'];
         final UserPaymentHistoryDetailsModel userPaymentHistoryDetails =
-            UserPaymentHistoryDetailsModel.fromMap(paymentHistoryResponse);
+        UserPaymentHistoryDetailsModel.fromMap(paymentHistoryResponse);
 
+        LoggerUtils.debug("Payment History Details Fetched:");
+        LoggerUtils.debug("  Booking ID: ${userPaymentHistoryDetails.bookingId}");
+        LoggerUtils.debug("  Service Provider ID: ${userPaymentHistoryDetails.serviceProviderID}");
+        LoggerUtils.debug("  Provider ID: ${userPaymentHistoryDetails.providerID}");
 
+        // ✅ FIXED: Navigate with proper Map structure
         Get.toNamed(
           Routes.workCompletedDetailsScreen,
-          arguments: userPaymentHistoryDetails,
+          arguments: {
+            'bookingId': userPaymentHistoryDetails.bookingId,
+            'serviceProviderID': userPaymentHistoryDetails.serviceProviderID,
+            'providerID': userPaymentHistoryDetails.providerID,
+            'paymentHistoryDetails': userPaymentHistoryDetails, // Include full model
+          },
         );
-        // LoggerUtils.debug(uerProfileModel.value?.email);
       } else {
         Get.snackbar(
           'Failed',

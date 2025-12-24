@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:kaz_bd/features/normal_user/bookings/sub_presentation/work_completed/presentation/work_completed_tab.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
@@ -19,7 +21,7 @@ class BookingsScreen extends StatelessWidget {
       backgroundColor: AppColors.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          "My Bookings",
+          'my_bookings'.tr,
           style: TextFontStyle.headline18w700c000000StyleSatoshi,
         ),
         centerTitle: true,
@@ -36,13 +38,15 @@ class BookingsScreen extends StatelessWidget {
               children: [
                 TabBar(
                   isScrollable: true, // Make tabs scrollable
+                  padding: EdgeInsets.zero,
+                  tabAlignment: TabAlignment.start,
                   tabs: [
-                    Tab(child: Text('Pending')),
-                    Tab(child: Text('Accepted Booking')),
-                    Tab(child: Text('In Progress')),
-                    Tab(child: Text('Payment Request')),
-                    Tab(child: Text('Canceled')),
-                    Tab(child: Text('Work Completed')),
+                    Tab(child: Text('pending'.tr)),
+                    Tab(child: Text('accepted_booking'.tr)),
+                    Tab(child: Text('in_progress'.tr)),
+                    Tab(child: Text('payment_request'.tr)),
+                    Tab(child: Text('canceled'.tr)),
+                    Tab(child: Text('work_completed'.tr)),
                   ],
                 ),
                 Expanded(
@@ -69,6 +73,7 @@ class BookingsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                UIHelper.verticalSpace(100.h),
               ],
             ),
           ),

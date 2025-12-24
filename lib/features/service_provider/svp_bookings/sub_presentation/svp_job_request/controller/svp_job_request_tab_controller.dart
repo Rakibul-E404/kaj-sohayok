@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../../../constants/app_enums.dart';
+import '../../../../../../controllers/svp_home_screen_controller.dart';
 import '../../../../../../custom_widgets/recent_job_request_status_widget.dart';
 import '../../../../../../routes/routes.dart';
 import '../../../../../../service/network_caller.dart';
@@ -12,6 +13,10 @@ import '../../../../../../utilities/app_constants.dart';
 import '../../../../../../utilities/app_url.dart';
 
 class SvpJobRequestTabController extends GetxController {
+  final SvpHomeScreenController controller =
+      Get.find<SvpHomeScreenController>();
+  late ScrollController scrollController;
+
   // Reactive state variables
   final jobRequests = <dynamic>[].obs;
   final isLoading = true.obs;
@@ -23,7 +28,18 @@ class SvpJobRequestTabController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
+    scrollController = ScrollController();
+
+    // Listen to scroll events
+    scrollController.addListener(() {
+      if (scrollController.position.pixels <= 0) {
+        // At the top, auto-refresh
+        fetchJobRequests();
+      }
+    });
     log('SvpJobRequestTabController initialized - fetching job requests');
+
     fetchJobRequests();
   }
 
@@ -39,7 +55,7 @@ class SvpJobRequestTabController extends GetxController {
       if (token == null) {
         log('No token found in storage');
         hasError.value = true;
-        errorMessage.value = 'Authentication required. Please login again.';
+        errorMessage.value = 'authentication_required_login_again'.tr;
         isLoading.value = false;
         return;
       }
@@ -69,8 +85,8 @@ class SvpJobRequestTabController extends GetxController {
             responseData['data'] != null &&
             responseData['data']['attributes'] != null &&
             responseData['data']['attributes']['results'] != null) {
-
-          final results = List<dynamic>.from(responseData['data']['attributes']['results']);
+          final results =
+              List<dynamic>.from(responseData['data']['attributes']['results']);
           log('Found ${results.length} job requests');
 
           // Log each job request for debugging
@@ -96,13 +112,13 @@ class SvpJobRequestTabController extends GetxController {
           }
 
           hasError.value = true;
-          errorMessage.value = 'Unexpected response format';
+          errorMessage.value = 'unexpected_response_format'.tr;
           isLoading.value = false;
         }
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to load job requests';
+            'failed_to_load_job_request'.tr;
 
         log('API Error: $errorMsg');
         hasError.value = true;
@@ -118,7 +134,7 @@ class SvpJobRequestTabController extends GetxController {
     } catch (e, stackTrace) {
       log('Error fetching job requests: $e', error: e, stackTrace: stackTrace);
       hasError.value = true;
-      errorMessage.value = 'Network error. Please check your connection.';
+      errorMessage.value = 'network_error_check_again'.tr;
       isLoading.value = false;
     }
   }
@@ -136,7 +152,8 @@ class SvpJobRequestTabController extends GetxController {
     }
 
     // Otherwise, construct full URL using base path
-    final cleanPath = imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
+    final cleanPath =
+        imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
     final fullUrl = '${AppUrl.imageBaseUrl}/$cleanPath';
     log('getImageUrl: Constructed URL - $fullUrl');
     return fullUrl;
@@ -160,8 +177,18 @@ class SvpJobRequestTabController extends GetxController {
 
   String _getMonthName(int month) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
     ];
     return months[month - 1];
   }
@@ -169,26 +196,27 @@ class SvpJobRequestTabController extends GetxController {
   String getAddress(Map<String, dynamic>? address) {
     if (address == null) {
       log('getAddress: Address is null');
-      return 'Address not available';
+      return 'address_not_available'.tr;
     }
 
     final englishAddress = address['en'];
     final banglaAddress = address['bn'];
     log('getAddress: English="$englishAddress", Bangla="$banglaAddress"');
 
-    return englishAddress ?? banglaAddress ?? 'Address not available';
+    return englishAddress ?? banglaAddress ?? 'address_not_available'.tr;
   }
 
   Future<void> cancelJobRequest(String bookingId, String userName) async {
     try {
       log('cancelJobRequest called for Booking ID: $bookingId, User: $userName');
-      Get.dialog(const Center(child: CircularProgressIndicator()), barrierDismissible: false);
+      Get.dialog(const Center(child: CircularProgressIndicator()),
+          barrierDismissible: false);
 
       final token = await SecureStorageService().read(AppConstants.accessToken);
       if (token == null) {
         log('No token found for cancel request');
         Get.back();
-        Get.snackbar('Error', 'Authentication required',
+        Get.snackbar('error'.tr, 'authentication_required'.tr,
             backgroundColor: Colors.red, colorText: Colors.white);
         return;
       }
@@ -224,6 +252,8 @@ class SvpJobRequestTabController extends GetxController {
           body: requestBody,
         );
         log('PUT request made with body: {} (as Map)');
+        controller.getServiceProviderHomeData();
+        log("🤖------------On Cancel Button Tapp -> controller.getServiceProviderHomeData(); is called!");
       } catch (e) {
         log('Error with body parameter as Map: $e - trying with null body');
         // Try alternative approach without body
@@ -237,7 +267,7 @@ class SvpJobRequestTabController extends GetxController {
         } catch (e2) {
           log('Both approaches failed: $e2');
           Get.back();
-          Get.snackbar('Error', 'Network error: ${e2.toString()}',
+          Get.snackbar('error'.tr, '${'network_error'.tr}: ${e2.toString()}',
               backgroundColor: Colors.red, colorText: Colors.white);
           return;
         }
@@ -256,19 +286,20 @@ class SvpJobRequestTabController extends GetxController {
 
       if (response.isSuccess) {
         log('Job cancelled successfully - status: ${response.statusCode}');
-        Get.snackbar('Success', 'Job request cancelled successfully',
+        Get.snackbar('success'.tr, 'job_request_cancelled_successfully'.tr,
             backgroundColor: Colors.green, colorText: Colors.white);
         fetchJobRequests(); // Refresh the list
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to cancel job request';
+            'failed_to_cancel_job_request'.tr;
         log('Cancel API Error: $errorMsg');
 
         // If we get JSON error, try a different body format
         if (errorMsg.contains('JSON') || errorMsg.contains('body')) {
           log('JSON parsing error. Trying alternative body formats...');
-          await tryAlternativeCancelBodyFormats(cancelUrl, headers, bookingId, userName);
+          await tryAlternativeCancelBodyFormats(
+              cancelUrl, headers, bookingId, userName);
           return;
         }
 
@@ -278,17 +309,13 @@ class SvpJobRequestTabController extends GetxController {
     } catch (e, stackTrace) {
       Get.back();
       log('Error cancelling job request: $e', error: e, stackTrace: stackTrace);
-      Get.snackbar('Error', 'Failed to cancel job request',
+      Get.snackbar('error'.tr, 'failed_to_cancel_job_request'.tr,
           backgroundColor: Colors.red, colorText: Colors.white);
     }
   }
 
-  Future<void> tryAlternativeCancelBodyFormats(
-      String cancelUrl,
-      Map<String, String> headers,
-      String bookingId,
-      String userName
-      ) async {
+  Future<void> tryAlternativeCancelBodyFormats(String cancelUrl,
+      Map<String, String> headers, String bookingId, String userName) async {
     log('Trying alternative body formats for PUT cancel request');
 
     // List of different body formats to try as Maps
@@ -312,7 +339,7 @@ class SvpJobRequestTabController extends GetxController {
 
         if (response.isSuccess) {
           log('SUCCESS with format: ${body == null ? "null" : jsonEncode(body)}');
-          Get.snackbar('Success', 'Job request cancelled successfully',
+          Get.snackbar('success'.tr, 'job_request_cancelled_successfully'.tr,
               backgroundColor: Colors.green, colorText: Colors.white);
           fetchJobRequests();
           return;
@@ -331,7 +358,8 @@ class SvpJobRequestTabController extends GetxController {
     }
 
     // If all formats failed
-    Get.snackbar('Error', 'Failed to cancel job request - Server configuration issue',
+    Get.snackbar('error'.tr,
+        'failed_to_cancel_job_request_server_configuration_issue'.tr,
         backgroundColor: Colors.red, colorText: Colors.white);
     log('All body format attempts failed for booking ID: $bookingId');
   }
@@ -339,13 +367,14 @@ class SvpJobRequestTabController extends GetxController {
   Future<void> acceptJobRequest(String bookingId, String userName) async {
     try {
       log('acceptJobRequest called for Booking ID: $bookingId, User: $userName');
-      Get.dialog(const Center(child: CircularProgressIndicator()), barrierDismissible: false);
+      Get.dialog(const Center(child: CircularProgressIndicator()),
+          barrierDismissible: false);
 
       final token = await SecureStorageService().read(AppConstants.accessToken);
       if (token == null) {
         log('No token found for accept request');
         Get.back();
-        Get.snackbar('Error', 'Authentication required',
+        Get.snackbar('error'.tr, 'authentication_required'.tr,
             backgroundColor: Colors.red, colorText: Colors.white);
         return;
       }
@@ -381,6 +410,8 @@ class SvpJobRequestTabController extends GetxController {
           body: requestBody,
         );
         log('PUT request made with body: {} (as Map)');
+        controller.getServiceProviderHomeData();
+        log("🤖------------On Accept Button Tapp -> controller.getServiceProviderHomeData(); is called!");
       } catch (e) {
         log('Error with body parameter as Map: $e - trying with null body');
         // Try alternative approach without body
@@ -394,7 +425,7 @@ class SvpJobRequestTabController extends GetxController {
         } catch (e2) {
           log('Both approaches failed: $e2');
           Get.back();
-          Get.snackbar('Error', 'Network error: ${e2.toString()}',
+          Get.snackbar('error'.tr, '${'network_error'.tr}: ${e2.toString()}',
               backgroundColor: Colors.red, colorText: Colors.white);
           return;
         }
@@ -413,39 +444,36 @@ class SvpJobRequestTabController extends GetxController {
 
       if (response.isSuccess) {
         log('Job accepted successfully - status: ${response.statusCode}');
-        Get.snackbar('Success', 'Job request accepted successfully',
+        Get.snackbar('success'.tr, 'job_request_accepted_successfully'.tr,
             backgroundColor: Colors.green, colorText: Colors.white);
         fetchJobRequests(); // Refresh the list
       } else {
         final errorMsg = response.jsonResponse?['message'] ??
             response.errorMessage ??
-            'Failed to accept job request';
+            'failed_to_accept_job_request'.tr;
         log('Accept API Error: $errorMsg');
 
         // If we still get JSON error, try a different body format
         if (errorMsg.contains('JSON') || errorMsg.contains('body')) {
           log('JSON parsing error still occurring. Trying alternative body formats...');
-          await tryAlternativeBodyFormats(acceptUrl, headers, bookingId, userName);
+          await tryAlternativeBodyFormats(
+              acceptUrl, headers, bookingId, userName);
           return;
         }
 
-        Get.snackbar('Error', errorMsg,
+        Get.snackbar('error'.tr, errorMsg,
             backgroundColor: Colors.red, colorText: Colors.white);
       }
     } catch (e, stackTrace) {
       Get.back();
       log('Error accepting job request: $e', error: e, stackTrace: stackTrace);
-      Get.snackbar('Error', 'Failed to accept job request',
+      Get.snackbar('error'.tr, 'failed_to_accept_job_request'.tr,
           backgroundColor: Colors.red, colorText: Colors.white);
     }
   }
 
-  Future<void> tryAlternativeBodyFormats(
-      String acceptUrl,
-      Map<String, String> headers,
-      String bookingId,
-      String userName
-      ) async {
+  Future<void> tryAlternativeBodyFormats(String acceptUrl,
+      Map<String, String> headers, String bookingId, String userName) async {
     log('Trying alternative body formats for PUT request');
 
     // List of different body formats to try as Maps
@@ -469,7 +497,7 @@ class SvpJobRequestTabController extends GetxController {
 
         if (response.isSuccess) {
           log('SUCCESS with format: ${body == null ? "null" : jsonEncode(body)}');
-          Get.snackbar('Success', 'Job request accepted successfully',
+          Get.snackbar('success'.tr, 'job_request_accepted_successfully'.tr,
               backgroundColor: Colors.green, colorText: Colors.white);
           fetchJobRequests();
           return;
@@ -488,7 +516,8 @@ class SvpJobRequestTabController extends GetxController {
     }
 
     // If all formats failed
-    Get.snackbar('Error', 'Failed to accept job request - Server configuration issue',
+    Get.snackbar('error'.tr,
+        'failed_to_accept_job_request_server_configuration_issue'.tr,
         backgroundColor: Colors.red, colorText: Colors.white);
     log('All body format attempts failed for booking ID: $bookingId');
   }
@@ -543,10 +572,10 @@ class SvpJobRequestTabController extends GetxController {
       dateTime: formatDateTime(bookingDateTime),
     );
   }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
 }
-
-
-
-
-
-

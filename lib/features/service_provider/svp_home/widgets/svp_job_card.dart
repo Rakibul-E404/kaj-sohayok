@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
@@ -69,11 +70,11 @@ class SvpJobCard extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: "Total ",
+                    text: "${'total'.tr} ",
                     style: TextFontStyle.headline14w500c4d4d4dStyleSatoshi,
                   ),
                   TextSpan(
-                    text: "(${totalJobs})",
+                    text: "($totalJobs)",
                     style: TextFontStyle.headline16w700c778bebStyleSatoshi,
                   ),
                 ],
