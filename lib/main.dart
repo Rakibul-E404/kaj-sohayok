@@ -2,10 +2,12 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:kaz_bd/constants/app_constant_text.dart';
+import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/di.dart';
 import 'package:kaz_bd/localization/presentation/languages.dart';
 import 'package:kaz_bd/routes/routes.dart';
@@ -17,9 +19,24 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'bindings/controllers_binding.dart';
 
 import 'firebase_options.dart';
+
 // List<CameraDescription>? cameras;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Set system UI overlay style immediately when the widget builds
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      // Status bar color (Android)
+      statusBarColor: AppColors.cf1f3fd, // Specific status bar color
+      statusBarIconBrightness:
+          Brightness.light, // Light icons for dark background
+      statusBarBrightness: Brightness.dark, // Brightness for iOS status bar
+      systemNavigationBarColor:
+          AppColors.scaffoldBackgroundColor, // Keep navigation bar consistent
+      systemNavigationBarIconBrightness:
+          Brightness.dark, // Navigation bar icons
+    ),
+  );
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -29,7 +46,6 @@ void main() async {
   await GetStorage.init();
   setInitialLanguagePreference();
   // await dotenv.load(fileName: ".env");
-
 
   await FCMService.initialize();
   if (Platform.isAndroid) {
