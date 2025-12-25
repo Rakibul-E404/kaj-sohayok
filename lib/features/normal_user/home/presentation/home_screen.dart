@@ -9,6 +9,7 @@ import 'package:kaz_bd/features/normal_user/home/models/home_page_data_model.dar
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/routes/routes.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../../controllers/home_page_controller.dart';
@@ -208,6 +209,11 @@ class HomeScreen extends StatelessWidget {
                               log("😀-------Provider tapped: $serviceTitle");
                               log("😀-------------Service Provider ID 👉🏻 $serviceProviderId");
                               log("😀-------------Provider ID 👉🏻 $serviceProviderId");
+
+                              LoggerUtils.debug(
+                                  "Service Provider ID Sent From Home to Details : $serviceProviderId");
+                              LoggerUtils.debug(
+                                  "Provider ID Sent From Home to Details : $providerID");
                               Get.toNamed(
                                 Routes.serviceDetailsScreen,
 

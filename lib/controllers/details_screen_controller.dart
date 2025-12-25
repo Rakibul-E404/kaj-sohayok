@@ -7,6 +7,7 @@ import 'package:kaz_bd/utilities/app_url.dart';
 import 'package:kaz_bd/utilities/app_constants.dart';
 import 'package:kaz_bd/service/secured_storage.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 import '../gen/colors.gen.dart';
 import '../features/normal_user/details/model/get_specific_service_model.dart';
 
@@ -40,6 +41,9 @@ class DetailsScreenController extends GetxController {
     log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
     serviceID.value = svcId;
+    LoggerUtils.debug(
+        "Service ID Received from Specifice Category Services Screen!");
+    LoggerUtils.debug("🫠🫠🫠🫠🫠🫠🫠🫠🫠Service ID : ${serviceID.value}");
   }
 
   void setServiceProviderId({required String svpId}) {
@@ -76,16 +80,16 @@ class DetailsScreenController extends GetxController {
     log('   Provider ID: ${serviceProviderId.value}');
     log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
-    if (serviceProviderId.isEmpty || serviceProviderId.value.isEmpty) {
-      log('❌ Service provider ID is empty');
-      Get.snackbar(
-        'Error',
-        'Failed to get details of the service: Provider ID is missing',
-        backgroundColor: AppColors.cee3333,
-        colorText: AppColors.cFFFFFF,
-      );
-      return;
-    }
+    // if (serviceProviderId.isEmpty || serviceProviderId.value.isEmpty) {
+    //   log('❌ Service provider ID is empty');
+    //   Get.snackbar(
+    //     'Error',
+    //     'Failed to get details of the service: Provider ID is missing',
+    //     backgroundColor: AppColors.cee3333,
+    //     colorText: AppColors.cFFFFFF,
+    //   );
+    //   return;
+    // }
 
     try {
       isLoading.value = true;
@@ -96,8 +100,10 @@ class DetailsScreenController extends GetxController {
       log('🔑 Token ${token.isNotEmpty ? "found" : "not found"}');
 
       // Build the API URL
-      final String apiUrl =
-          AppUrl.getSpecificServiceDetails(svcId: serviceID.value);
+      final String apiUrl = AppUrl.getSpecificServiceDetails(
+          svcId: serviceID.value.isNotEmpty
+              ? serviceID.value
+              : serviceProviderId.value);
       log('🌐 API URL: $apiUrl');
       log('📤 Making GET request...');
 
@@ -105,6 +111,12 @@ class DetailsScreenController extends GetxController {
         apiUrl,
         headers: token.isNotEmpty ? {'Authorization': 'Bearer $token'} : null,
       );
+
+      LoggerUtils.debug(
+          "Received IDDDD : ${serviceID.value.isNotEmpty ? serviceID.value : providerID.value}");
+      LoggerUtils.debug(
+          "Received IDDDD Service ID : ${serviceID.value.isNotEmpty ? serviceID.value : ''}");
+      LoggerUtils.debug("Received IDDDD Provider ID : ${providerID.value}");
 
       log('📥 Response received');
       log('   Status Code: ${response.statusCode}');
@@ -114,7 +126,9 @@ class DetailsScreenController extends GetxController {
       if (response.isSuccess) {
         if (response.jsonResponse != null) {
           serviceProviderProfileController?.setServiceId(
-              svcId: serviceID.value);
+              svcId: serviceID.value.isNotEmpty
+                  ? serviceID.value
+                  : serviceProviderId.value);
           log('✅ JSON response is not null');
           log('📋 Response structure check:');
           log('   Has "data": ${response.jsonResponse!.containsKey("data")}');

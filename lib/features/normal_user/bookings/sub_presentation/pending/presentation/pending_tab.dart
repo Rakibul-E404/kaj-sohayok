@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:kaz_bd/features/normal_user/bookings/widgets/bookings_details_card_widget.dart';
 import '../../../../../../constants/app_enums.dart';
 import '../../../../../../gen/assets.gen.dart';
+import '../../../../../../gen/colors.gen.dart';
 import '../../../../../../helpers/ui_helpers.dart';
 import '../../../../../../routes/routes.dart';
 import '../controller/pending_controller.dart';
@@ -26,7 +27,7 @@ class _PendingTabState extends State<PendingTab> {
       onRefresh: () => controller.getPendingBookings(),
       child: SingleChildScrollView(
         physics: AlwaysScrollableScrollPhysics(),
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.8,
           child: Obx(() {
             if (controller.isLoading.value) {

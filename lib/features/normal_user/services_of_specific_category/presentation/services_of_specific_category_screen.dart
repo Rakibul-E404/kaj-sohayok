@@ -68,7 +68,8 @@ class _ServicesOfSpecificCategoryScreenState
         arguments?['categoryName'] ?? 'failed_to_get_service_category_name'.tr;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      LoggerUtils.info('Setting category data in ServicesOfSpecificCategoryScreen');
+      LoggerUtils.info(
+          'Setting category data in ServicesOfSpecificCategoryScreen');
       LoggerUtils.info('Category ID: $categoryId');
       LoggerUtils.info('Category Name: $categoryName');
       LoggerUtils.info('Latitude: $latValue');
@@ -115,7 +116,8 @@ class _ServicesOfSpecificCategoryScreenState
             ///Section : Available Services
             Expanded(
               child: Obx(() {
-                LoggerUtils.debug('UI rebuild triggered. List length: ${controller.specificCategoryList.length}, Loading: ${controller.isLoading.value}');
+                LoggerUtils.debug(
+                    'UI rebuild triggered. List length: ${controller.specificCategoryList.length}, Loading: ${controller.isLoading.value}');
 
                 ///When Loading state is true
                 if (controller.isLoading.value) {
@@ -147,7 +149,8 @@ class _ServicesOfSpecificCategoryScreenState
                   );
                 }
 
-                LoggerUtils.debug('Showing list with ${controller.specificCategoryList.length} items');
+                LoggerUtils.debug(
+                    'Showing list with ${controller.specificCategoryList.length} items');
                 return RefreshIndicator(
                   onRefresh: () async {
                     controller.pageId.value = '1';
@@ -160,7 +163,8 @@ class _ServicesOfSpecificCategoryScreenState
                     itemBuilder: (context, index) {
                       // Check if we're on the last item and need to show a loading indicator
                       if (index >= controller.specificCategoryList.length) {
-                        LoggerUtils.debug('Showing loading indicator at index $index');
+                        LoggerUtils.debug(
+                            'Showing loading indicator at index $index');
                         return Padding(
                           padding: EdgeInsets.symmetric(vertical: 16.h),
                           child: Center(
@@ -170,7 +174,8 @@ class _ServicesOfSpecificCategoryScreenState
                       }
 
                       final service = controller.specificCategoryList[index];
-                      LoggerUtils.debug('Building item at index $index for service: ${controller.getServiceId(service)}');
+                      LoggerUtils.debug(
+                          'Building item at index $index for service: ${controller.getServiceId(service)}');
 
                       // Extract data using controller helper methods
                       final serviceName = controller.getServiceName(service);
@@ -181,16 +186,22 @@ class _ServicesOfSpecificCategoryScreenState
                       final providerImageUrl =
                           controller.getProviderImage(service);
 
-                      LoggerUtils.debug('Service: $serviceName, Provider: $providerName, Image: $imageUrl, Provider Image: $providerImageUrl');
+                      LoggerUtils.debug(
+                          'Service: $serviceName, Provider: $providerName, Image: $imageUrl, Provider Image: $providerImageUrl');
 
                       return Column(
                         children: [
                           SpecificServiceShowingWidget(
                             seeDetailsOnTap: () {
                               log("Specific Service Item tapped at index: $index");
+                              LoggerUtils.debug(
+                                  "🥶🥶🥶🥶🥶🥶🥶🥶🥶🥶🥶-----Service ID IS Required to see the details of the service!");
+                              LoggerUtils.debug(
+                                  "🥶🥶🥶🥶🥶🥶🥶-------Service ID : ${controller.getServiceId(service)}");
                               Get.toNamed(
                                 Routes.serviceDetailsScreen,
                                 arguments: {
+                                  ///
                                   'serviceId': controller.getServiceId(service),
                                   'providerID':
                                       controller.getProviderId(service),
