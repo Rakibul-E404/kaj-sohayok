@@ -105,6 +105,7 @@ class BookingDetailsCardWidget extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: 1.sw,
+        margin: EdgeInsets.only(bottom: 14),
         padding: EdgeInsets.all(12.sp),
         decoration: BoxDecoration(
           color: AppColors.cFFFFFF,

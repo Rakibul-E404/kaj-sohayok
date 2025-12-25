@@ -2,13 +2,22 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:kaz_bd/controllers/svp_home_screen_controller.dart';
+import 'package:kaz_bd/features/service_provider/svp_bookings/sub_presentation/svp_work_completed/controller/svp_work_completed_tab_controller.dart';
 import '../../../../../../service/network_caller.dart';
 import '../../../../../../service/network_response.dart';
 import '../../../../../../service/secured_storage.dart';
 import '../../../../../../utilities/app_constants.dart';
 import '../../../../../../utilities/app_url.dart';
+import '../../../../../service_provider/svp_bookings/sub_presentation/svp_payment_request/controller/svp_payment_request_tab_controller.dart';
 
 class PaymentRequestBookingsController extends GetxController {
+  SvpHomeScreenController svpHomeScreenController =
+      Get.find<SvpHomeScreenController>();
+  SvpPaymentRequestController svpPaymentRequestController =
+      Get.put(SvpPaymentRequestController());
+  SvpWorkCompletedController svpWorkCompletedController =
+      Get.put(SvpWorkCompletedController());
   final RxList<dynamic> paymentRequestBookings = <dynamic>[].obs;
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
@@ -27,7 +36,8 @@ class PaymentRequestBookingsController extends GetxController {
       log('🔑 [PAYMENT REQUEST CONTROLLER] Token retrieved: ${token != null ? 'Yes' : 'No'}');
 
       if (token == null) {
-        errorMessage.value = 'Authentication token not found. Please login again.';
+        errorMessage.value =
+            'Authentication token not found. Please login again.';
         isLoading.value = false;
         log('❌ [PAYMENT REQUEST CONTROLLER] No token found');
         return;
@@ -52,7 +62,8 @@ class PaymentRequestBookingsController extends GetxController {
         log('📋 [PAYMENT REQUEST CONTROLLER] Full API Response Data: ${response.jsonResponse}');
 
         if (response.jsonResponse!['success'] == true) {
-          List<dynamic> results = response.jsonResponse!['data']['attributes']['results'];
+          List<dynamic> results =
+              response.jsonResponse!['data']['attributes']['results'];
           log('✅ [PAYMENT REQUEST CONTROLLER] Found ${results.length} payment request bookings');
 
           // Log the structure of first booking for debugging
@@ -80,7 +91,8 @@ class PaymentRequestBookingsController extends GetxController {
           // Process image URLs for all bookings
           await _processBookingImages(results);
         } else {
-          String apiMessage = response.jsonResponse!['message'] ?? 'Failed to load bookings';
+          String apiMessage =
+              response.jsonResponse!['message'] ?? 'Failed to load bookings';
           errorMessage.value = apiMessage;
           log('❌ [PAYMENT REQUEST CONTROLLER] API returned error: $apiMessage');
         }
@@ -90,7 +102,8 @@ class PaymentRequestBookingsController extends GetxController {
         log('❌ [PAYMENT REQUEST CONTROLLER] Network error: $error');
       }
     } catch (e) {
-      errorMessage.value = 'Connection error: Please check your internet connection';
+      errorMessage.value =
+          'Connection error: Please check your internet connection';
       log('❌ [PAYMENT REQUEST CONTROLLER] Exception in getPaymentRequestBookings: $e');
     } finally {
       isLoading.value = false;
@@ -108,7 +121,8 @@ class PaymentRequestBookingsController extends GetxController {
       final token = await SecureStorageService().read(AppConstants.accessToken);
 
       if (token == null) {
-        paymentErrorMessage.value = 'Authentication token not found. Please login again.';
+        paymentErrorMessage.value =
+            'Authentication token not found. Please login again.';
         isProcessingPayment.value = false;
         log('❌ [PAYMENT REQUEST CONTROLLER] No token found for payment');
         return null;
@@ -120,7 +134,8 @@ class PaymentRequestBookingsController extends GetxController {
       };
 
       // Construct payment URL
-      String paymentUrl = '${AppUrl.baseUrl}v1/service-bookings/pay/create/$bookingId';
+      String paymentUrl =
+          '${AppUrl.baseUrl}v1/service-bookings/pay/create/$bookingId';
       log('🌐 [PAYMENT REQUEST CONTROLLER] Making POST call to: $paymentUrl');
 
       NetworkResponse response = await NetworkCaller().postRequest(
@@ -136,7 +151,12 @@ class PaymentRequestBookingsController extends GetxController {
         log('📋 [PAYMENT REQUEST CONTROLLER] Payment API Response Data: ${response.jsonResponse}');
 
         if (response.jsonResponse!['code'] == 200) {
-          Map<String, dynamic> paymentData = response.jsonResponse!['data']['attributes'];
+          svpHomeScreenController.getServiceProviderHomeData();
+          svpPaymentRequestController.fetchPaymentRequests();
+          svpWorkCompletedController.fetchCompletedBookings();
+
+          Map<String, dynamic> paymentData =
+              response.jsonResponse!['data']['attributes'];
           String paymentUrl = paymentData['url'];
           String transactionId = paymentData['transactionId'];
 
@@ -149,7 +169,8 @@ class PaymentRequestBookingsController extends GetxController {
             'bookingId': paymentData['bookingId'],
           };
         } else {
-          String apiMessage = response.jsonResponse!['message'] ?? 'Failed to process payment';
+          String apiMessage =
+              response.jsonResponse!['message'] ?? 'Failed to process payment';
           paymentErrorMessage.value = apiMessage;
           log('❌ [PAYMENT REQUEST CONTROLLER] Payment API returned error: $apiMessage');
 
@@ -179,7 +200,8 @@ class PaymentRequestBookingsController extends GetxController {
         return null;
       }
     } catch (e) {
-      paymentErrorMessage.value = 'Connection error: Please check your internet connection';
+      paymentErrorMessage.value =
+          'Connection error: Please check your internet connection';
       log('❌ [PAYMENT REQUEST CONTROLLER] Exception in processPayment: $e');
 
       Get.snackbar(
@@ -224,7 +246,9 @@ class PaymentRequestBookingsController extends GetxController {
         if (status == 'success' || status == 'valid' || status == 'completed') {
           backgroundColor = Colors.green;
           title = 'Payment Successful';
-        } else if (status == 'failed' || status == 'error' || status == 'cancelled') {
+        } else if (status == 'failed' ||
+            status == 'error' ||
+            status == 'cancelled') {
           backgroundColor = Colors.red;
           title = 'Payment Failed';
         } else if (status == 'pending' || status == 'processing') {
@@ -326,7 +350,8 @@ class PaymentRequestBookingsController extends GetxController {
     return fullUrl;
   }
 
-  Future<void> _verifyImageAccessibility(String bookingId, String imageUrl) async {
+  Future<void> _verifyImageAccessibility(
+      String bookingId, String imageUrl) async {
     try {
       log('🔍 [PAYMENT REQUEST CONTROLLER] Verifying image accessibility for: $imageUrl');
 
@@ -373,5 +398,3 @@ class PaymentRequestBookingsController extends GetxController {
     super.onInit();
   }
 }
-
-
