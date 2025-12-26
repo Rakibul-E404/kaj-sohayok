@@ -1,4 +1,7 @@
 import 'package:get/get.dart';
+import 'package:kaz_bd/features/service_provider/svp_accepted_bookings/controller/svp_accepted_bookings_screen_controller.dart';
+import 'package:kaz_bd/features/service_provider/svp_bookings/sub_presentation/svp_bookings_canceled/controller/svp_bookings_canceled_tab_controller.dart';
+import 'package:kaz_bd/features/service_provider/svp_job_request/controller/svp_job_request_screen_controller.dart';
 
 import '../controllers/change_password_screen_controller.dart';
 import '../controllers/chat_inbox_screen_controller.dart';
@@ -46,6 +49,10 @@ class ControllerBindings extends Bindings {
     Get.lazyPut(() => SvpEditProfileScreenController());
     Get.lazyPut(() => SvpProfileScreenDocumentsTabController());
     Get.lazyPut(() => SvpHomeScreenController());
+    Get.lazyPut(() => SvpBookingsCanceledController(), fenix: true);
+    Get.lazyPut(() => SvpJobRequestScreenController(), fenix: true);
+    Get.lazyPut(() => SvpAcceptedBookingsScreenController(), fenix: true);
+
     // Get.lazyPut(() => NormalUserAllCategoryScreenController());
   }
 }

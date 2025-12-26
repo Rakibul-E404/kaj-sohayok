@@ -309,6 +309,8 @@ class SvpHomeScreenController extends GetxController {
   List<RecentJobRequest> get recentJobRequests {
     if (homeData.isNotEmpty &&
         homeData.first.data?.attributes?.recentJobRequests != null) {
+      LoggerUtils.debug(
+          "Home Data Recent Request List : ${homeData.first.data!.attributes!.recentJobRequests!}");
       return homeData.first.data!.attributes!.recentJobRequests!;
     }
     return [];

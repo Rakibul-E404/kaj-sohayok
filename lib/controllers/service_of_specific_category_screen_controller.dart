@@ -96,7 +96,8 @@ class ServiceOfSpecificCategoryScreenController extends GetxController {
 
       LoggerUtils.info('API Response Status: ${response.statusCode}');
       LoggerUtils.info('API Response Success: ${response.isSuccess}');
-      LoggerUtils.info('API Response Error: ${response.errorMessage ?? 'No error'}');
+      LoggerUtils.info(
+          'API Response Error: ${response.errorMessage ?? 'No error'}');
 
       if (response.isSuccess) {
         // Parse the response
@@ -147,7 +148,8 @@ class ServiceOfSpecificCategoryScreenController extends GetxController {
           }
         }
       } else {
-        LoggerUtils.error('API call failed: ${response.errorMessage ?? 'Unknown error'}');
+        LoggerUtils.error(
+            'API call failed: ${response.errorMessage ?? 'Unknown error'}');
         Get.snackbar(
           'error'.tr,
           '${'failed_to_load_services'.tr}: ${response.errorMessage ?? 'Unknown error'}',

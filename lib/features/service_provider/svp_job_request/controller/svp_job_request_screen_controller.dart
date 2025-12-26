@@ -232,15 +232,6 @@ class SvpJobRequestScreenController extends GetxController {
   }
 }*/
 
-
-
-
-
-
-
-
-
-
 ///
 ///
 ///
@@ -250,14 +241,11 @@ class SvpJobRequestScreenController extends GetxController {
 ///
 ///
 
-
-
-
-
 import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kaz_bd/controllers/svp_home_screen_controller.dart';
 import '../../../../constants/app_enums.dart';
 import '../../../../custom_widgets/recent_job_request_status_widget.dart';
 import '../../../../routes/routes.dart';
@@ -266,8 +254,13 @@ import '../../../../service/network_response.dart';
 import '../../../../service/secured_storage.dart';
 import '../../../../utilities/app_constants.dart';
 import '../../../../utilities/app_url.dart';
+import '../../svp_bookings/sub_presentation/svp_bookings_canceled/controller/svp_bookings_canceled_tab_controller.dart';
 
 class SvpJobRequestScreenController extends GetxController {
+  SvpHomeScreenController svpHomeScreenController =
+      Get.find<SvpHomeScreenController>();
+  SvpBookingsCanceledController svpCanceledBookingsController =
+      Get.find<SvpBookingsCanceledController>();
   // Reactive state variables
   final jobRequests = <dynamic>[].obs;
   final isLoading = true.obs;
@@ -325,8 +318,8 @@ class SvpJobRequestScreenController extends GetxController {
             responseData['data'] != null &&
             responseData['data']['attributes'] != null &&
             responseData['data']['attributes']['results'] != null) {
-
-          final results = List<dynamic>.from(responseData['data']['attributes']['results']);
+          final results =
+              List<dynamic>.from(responseData['data']['attributes']['results']);
           log('Found ${results.length} job requests');
 
           // Log each job request for debugging
@@ -392,7 +385,8 @@ class SvpJobRequestScreenController extends GetxController {
     }
 
     // Otherwise, construct full URL using base path
-    final cleanPath = imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
+    final cleanPath =
+        imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
     final fullUrl = '${AppUrl.imageBaseUrl}/$cleanPath';
     log('getImageUrl: Constructed URL - $fullUrl');
     return fullUrl;
@@ -416,8 +410,18 @@ class SvpJobRequestScreenController extends GetxController {
 
   String _getMonthName(int month) {
     const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
     ];
     return months[month - 1];
   }
@@ -443,7 +447,8 @@ class SvpJobRequestScreenController extends GetxController {
       Get.dialog(
         AlertDialog(
           title: const Text('Cancel Job Request'),
-          content: Text('Are you sure you want to cancel the job request from $userName?'),
+          content: Text(
+              'Are you sure you want to cancel the job request from $userName?'),
           actions: [
             TextButton(
               onPressed: Get.back,
@@ -468,9 +473,11 @@ class SvpJobRequestScreenController extends GetxController {
     }
   }
 
-  Future<void> _performCancelJobRequest(String bookingId, String userName) async {
+  Future<void> _performCancelJobRequest(
+      String bookingId, String userName) async {
     try {
-      Get.dialog(const Center(child: CircularProgressIndicator()), barrierDismissible: false);
+      Get.dialog(const Center(child: CircularProgressIndicator()),
+          barrierDismissible: false);
 
       final token = await SecureStorageService().read(AppConstants.accessToken);
       if (token == null) {
@@ -543,7 +550,10 @@ class SvpJobRequestScreenController extends GetxController {
       }
 
       if (response.isSuccess) {
+        await svpHomeScreenController.getServiceProviderHomeData();
+        await svpCanceledBookingsController.fetchCanceledBookings();
         log('Job cancelled successfully - status: ${response.statusCode}');
+
         Get.snackbar('Success', 'Job request cancelled successfully',
             backgroundColor: Colors.green, colorText: Colors.white);
         fetchJobRequests(); // Refresh the list
@@ -556,7 +566,8 @@ class SvpJobRequestScreenController extends GetxController {
         // If we get JSON error, try a different body format
         if (errorMsg.contains('JSON') || errorMsg.contains('body')) {
           log('JSON parsing error. Trying alternative body formats...');
-          await tryAlternativeCancelBodyFormats(cancelUrl, headers, bookingId, userName);
+          await tryAlternativeCancelBodyFormats(
+              cancelUrl, headers, bookingId, userName);
           return;
         }
 
@@ -571,12 +582,8 @@ class SvpJobRequestScreenController extends GetxController {
     }
   }
 
-  Future<void> tryAlternativeCancelBodyFormats(
-      String cancelUrl,
-      Map<String, String> headers,
-      String bookingId,
-      String userName
-      ) async {
+  Future<void> tryAlternativeCancelBodyFormats(String cancelUrl,
+      Map<String, String> headers, String bookingId, String userName) async {
     log('Trying alternative body formats for PUT cancel request');
 
     // List of different body formats to try as Maps
@@ -619,7 +626,8 @@ class SvpJobRequestScreenController extends GetxController {
     }
 
     // If all formats failed
-    Get.snackbar('Error', 'Failed to cancel job request - Server configuration issue',
+    Get.snackbar(
+        'Error', 'Failed to cancel job request - Server configuration issue',
         backgroundColor: Colors.red, colorText: Colors.white);
     log('All body format attempts failed for booking ID: $bookingId');
   }
@@ -627,7 +635,8 @@ class SvpJobRequestScreenController extends GetxController {
   Future<void> acceptJobRequest(String bookingId, String userName) async {
     try {
       log('acceptJobRequest called for Booking ID: $bookingId, User: $userName');
-      Get.dialog(const Center(child: CircularProgressIndicator()), barrierDismissible: false);
+      Get.dialog(const Center(child: CircularProgressIndicator()),
+          barrierDismissible: false);
 
       final token = await SecureStorageService().read(AppConstants.accessToken);
       if (token == null) {
@@ -713,7 +722,8 @@ class SvpJobRequestScreenController extends GetxController {
         // If we still get JSON error, try a different body format
         if (errorMsg.contains('JSON') || errorMsg.contains('body')) {
           log('JSON parsing error still occurring. Trying alternative body formats...');
-          await tryAlternativeBodyFormats(acceptUrl, headers, bookingId, userName);
+          await tryAlternativeBodyFormats(
+              acceptUrl, headers, bookingId, userName);
           return;
         }
 
@@ -728,12 +738,8 @@ class SvpJobRequestScreenController extends GetxController {
     }
   }
 
-  Future<void> tryAlternativeBodyFormats(
-      String acceptUrl,
-      Map<String, String> headers,
-      String bookingId,
-      String userName
-      ) async {
+  Future<void> tryAlternativeBodyFormats(String acceptUrl,
+      Map<String, String> headers, String bookingId, String userName) async {
     log('Trying alternative body formats for PUT request');
 
     // List of different body formats to try as Maps
@@ -776,7 +782,8 @@ class SvpJobRequestScreenController extends GetxController {
     }
 
     // If all formats failed
-    Get.snackbar('Error', 'Failed to accept job request - Server configuration issue',
+    Get.snackbar(
+        'Error', 'Failed to accept job request - Server configuration issue',
         backgroundColor: Colors.red, colorText: Colors.white);
     log('All body format attempts failed for booking ID: $bookingId');
   }
@@ -816,13 +823,14 @@ class SvpJobRequestScreenController extends GetxController {
           },
         );
       },
-      cancelOnTap: () {
+      cancelOnTap: () async {
         log("Button Tapped -> Cancel for ID: $bookingId");
-        cancelJobRequest(bookingId, userName);
+        await cancelJobRequest(bookingId, userName);
       },
-      acceptOnTap: () {
+      acceptOnTap: () async {
         log("Button Tapped -> Accept for ID: $bookingId");
-        acceptJobRequest(bookingId, userName);
+        await acceptJobRequest(bookingId, userName);
+        await svpHomeScreenController.getServiceProviderHomeData();
       },
       userImage: getImageUrl(profileImage),
       userName: userName,
@@ -831,6 +839,3 @@ class SvpJobRequestScreenController extends GetxController {
     );
   }
 }
-
-
-

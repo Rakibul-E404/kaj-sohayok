@@ -9,6 +9,7 @@ import 'package:kaz_bd/features/normal_user/home/models/home_page_data_model.dar
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/routes/routes.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../../controllers/home_page_controller.dart';
@@ -44,196 +45,207 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackgroundColor,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ///Section : AppLogo & Notification Section
-            HomeSectionAppLogoAndNotification(
-              onTap: () {
-                log("Notification Icon taped!");
-                Get.toNamed(Routes.notificationScreen);
-              },
-            ),
-            UIHelper.verticalSpace(16.h),
-
-            ///Section : Hero Booking
-            Obx(() {
-              log(
-                '🏠------------ HOME SCREEN: Banners section - Loading: ${controller.isLoading.value}, Banner count: ${controller.banners.length}',
-              );
-
-              if (controller.isLoading.value) {
-                log(
-                  '⏳ ---------HOME SCREEN: Showing loading shimmer for banners',
-                );
-                return CustomShimmerEffect(height: 175, width: 1);
-              }
-
-              if (controller.banners.isNotEmpty) {
-                log(
-                  '✅ HOME SCREEN: Banners found, showing BannerCarosleSlider with ${controller.banners.length} banners',
-                );
-                return BannerCarosleSlider(controller: controller);
-              } else {
-                log('❌ HOME SCREEN: No banners available, showing placeholder');
-                return Container(
-                  height: 175,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: AppColors.c778beb, // Background color
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Flexible(
-                        child: Lottie.asset(
-                          height: 80.h,
-                          width: 80.w,
-                          Assets.lottie.emptyScreen,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      SizedBox(height: 8.h),
-                      Flexible(
-                        child: Text(
-                          'stay_tuned'.tr,
-                          style:
-                              TextFontStyle.headline16w700cFFFFFFStyleSatoshi,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Flexible(
-                        child: Text(
-                          'special_offers_comming_soon'.tr,
-                          style:
-                              TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }
-            }),
-
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: UIHelper.kDefaulutPadding(),
+      body: RefreshIndicator(
+        onRefresh: () =>
+            controller.handleHomePageData(), // Call the method to refresh data
+        child: SingleChildScrollView(
+          physics:
+              AlwaysScrollableScrollPhysics(), // Ensure the scroll view can be pulled for refresh
+          child: Column(
+            children: [
+              ///Section : AppLogo & Notification Section
+              HomeSectionAppLogoAndNotification(
+                onTap: () {
+                  log("Notification Icon taped!");
+                  Get.toNamed(Routes.notificationScreen);
+                },
               ),
-              child: Column(
-                children: [
-                  UIHelper.verticalSpace(24.h),
+              UIHelper.verticalSpace(16.h),
 
-                  ///Section : Select Category
-                  SectionDeclarationWidget(
-                    sectionTitle: 'select_category'.tr,
-                    textButtonName: 'see_all'.tr,
-                    onTap: () {
-                      log("See all button taped at Select Category section!");
-                      Get.toNamed(Routes.allCategoriesScreen);
-                    },
-                  ),
-                  UIHelper.verticalSpace(16.h),
+              ///Section : Hero Booking
+              Obx(() {
+                log(
+                  '🏠------------ HOME SCREEN: Banners section - Loading: ${controller.isLoading.value}, Banner count: ${controller.banners.length}',
+                );
 
-                  ///Section : Category Widget in pageView
-                  CategoryViewWidget(),
-                  UIHelper.verticalSpace(24.h),
+                if (controller.isLoading.value) {
+                  log(
+                    '⏳ ---------HOME SCREEN: Showing loading shimmer for banners',
+                  );
+                  return CustomShimmerEffect(height: 175, width: 1);
+                }
 
-                  ///Section : Popular Provider
-                  SectionDeclarationWidget(
-                    sectionTitle: 'popular_provider'.tr,
-                    textButtonName: 'see_all'.tr,
-                    onTap: () {
-                      log("See all button taped at Popular Provider section!");
-                      Get.toNamed(Routes.normalUserSeePopularProviderScreen);
-                    },
-                  ),
-                  UIHelper.verticalSpace(24.h),
-
-                  ///Section : Popular Providers
-                  SizedBox(
-                    height: 230.h,
-                    child: Obx(() {
-                      if (controller.isLoading.value) {
-                        return ListView.separated(
-                          itemCount: 10,
-                          separatorBuilder: (context, index) =>
-                              UIHelper.horizontalSpace(8.w),
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return CustomShimmerEffect(
-                              height: 180.h,
-                              width: 174.w,
-                            );
-                          },
-                        );
-                      }
-
-                      if (controller.providers.isEmpty) {
-                        return CustomShimmerEffect(
-                          height: 100.h,
-                          width: 1.sw,
+                if (controller.banners.isNotEmpty) {
+                  log(
+                    '✅ HOME SCREEN: Banners found, showing BannerCarosleSlider with ${controller.banners.length} banners',
+                  );
+                  return BannerCarosleSlider(controller: controller);
+                } else {
+                  log('❌ HOME SCREEN: No banners available, showing placeholder');
+                  return Container(
+                    height: 175,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: AppColors.c778beb, // Background color
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          child: Lottie.asset(
+                            height: 80.h,
+                            width: 80.w,
+                            Assets.lottie.emptyScreen,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        SizedBox(height: 8.h),
+                        Flexible(
                           child: Text(
-                            'no_provider_available'.tr,
+                            'stay_tuned'.tr,
+                            style:
+                                TextFontStyle.headline16w700cFFFFFFStyleSatoshi,
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Flexible(
+                          child: Text(
+                            'special_offers_comming_soon'.tr,
                             style:
                                 TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
                           ),
-                        );
-                      }
+                        ),
+                      ],
+                    ),
+                  );
+                }
+              }),
 
-                      return ListView.separated(
-                        itemCount: controller.providers.length,
-                        scrollDirection: Axis.horizontal,
-                        separatorBuilder: (context, index) =>
-                            UIHelper.horizontalSpace(8.w),
-                        itemBuilder: (context, index) {
-                          final provider = controller.providers[index];
-                          final String serviceTitle = _getProviderName(
-                            provider,
-                          );
-                          final String serviceProviderId =
-                              _getServiceProviderID(provider);
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: UIHelper.kDefaulutPadding(),
+                ),
+                child: Column(
+                  children: [
+                    UIHelper.verticalSpace(24.h),
 
-                          final String providerID = _getProviderID(provider);
-                          final double rating = _getProviderRating(provider);
-                          final int startPrice = _getProviderStartPrice(
-                            provider,
-                          );
+                    ///Section : Select Category
+                    SectionDeclarationWidget(
+                      sectionTitle: 'select_category'.tr,
+                      textButtonName: 'see_all'.tr,
+                      onTap: () {
+                        log("See all button taped at Select Category section!");
+                        Get.toNamed(Routes.allCategoriesScreen);
+                      },
+                    ),
+                    UIHelper.verticalSpace(16.h),
 
-                          // Get the first gallery image if available, or try for cover photo
-                          String? imageUrl = _getProviderImageUrl(provider);
+                    ///Section : Category Widget in pageView
+                    CategoryViewWidget(),
+                    UIHelper.verticalSpace(24.h),
 
-                          return ServiceWidget(
-                            onTap: () {
-                              log("😀-------Provider tapped: $serviceTitle");
-                              log("😀-------------Service Provider ID 👉🏻 $serviceProviderId");
-                              log("😀-------------Provider ID 👉🏻 $serviceProviderId");
-                              Get.toNamed(
-                                Routes.serviceDetailsScreen,
+                    ///Section : Popular Provider
+                    SectionDeclarationWidget(
+                      sectionTitle: 'popular_provider'.tr,
+                      textButtonName: 'see_all'.tr,
+                      onTap: () {
+                        log("See all button taped at Popular Provider section!");
+                        Get.toNamed(Routes.normalUserSeePopularProviderScreen);
+                      },
+                    ),
+                    UIHelper.verticalSpace(24.h),
 
-                                // arguments: {'providerId': serviceProviderId},
-                                arguments: {
-                                  'serviceProviderID': serviceProviderId,
-                                  'providerID': providerID,
-                                },
+                    ///Section : Popular Providers
+                    SizedBox(
+                      height: 230.h,
+                      child: Obx(() {
+                        if (controller.isLoading.value) {
+                          return ListView.separated(
+                            itemCount: 10,
+                            separatorBuilder: (context, index) =>
+                                UIHelper.horizontalSpace(8.w),
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return CustomShimmerEffect(
+                                height: 180.h,
+                                width: 174.w,
                               );
                             },
-                            imagePath:
-                                imageUrl ?? Assets.images.serviceImage.path,
-                            serviceTitle: serviceTitle,
-                            initialPayablePrice: startPrice.toDouble(),
-                            userRating: rating,
                           );
-                        },
-                      );
-                    }),
-                  ),
+                        }
 
-                  UIHelper.verticalSpace(150.h),
-                ],
+                        if (controller.providers.isEmpty) {
+                          return CustomShimmerEffect(
+                            height: 100.h,
+                            width: 1.sw,
+                            child: Text(
+                              'no_provider_available'.tr,
+                              style: TextFontStyle
+                                  .headline14w500cFFFFFFStyleSatoshi,
+                            ),
+                          );
+                        }
+
+                        return ListView.separated(
+                          itemCount: controller.providers.length,
+                          scrollDirection: Axis.horizontal,
+                          separatorBuilder: (context, index) =>
+                              UIHelper.horizontalSpace(8.w),
+                          itemBuilder: (context, index) {
+                            final provider = controller.providers[index];
+                            final String serviceTitle = _getProviderName(
+                              provider,
+                            );
+                            final String serviceProviderId =
+                                _getServiceProviderID(provider);
+
+                            final String providerID = _getProviderID(provider);
+                            final double rating = _getProviderRating(provider);
+                            final int startPrice = _getProviderStartPrice(
+                              provider,
+                            );
+
+                            // Get the first gallery image if available, or try for cover photo
+                            String? imageUrl = _getProviderImageUrl(provider);
+
+                            return ServiceWidget(
+                              onTap: () {
+                                log("😀-------Provider tapped: $serviceTitle");
+                                log("😀-------------Service Provider ID 👉🏻 $serviceProviderId");
+                                log("😀-------------Provider ID 👉🏻 $serviceProviderId");
+
+                                LoggerUtils.debug(
+                                    "Service Provider ID Sent From Home to Details : $serviceProviderId");
+                                LoggerUtils.debug(
+                                    "Provider ID Sent From Home to Details : $providerID");
+                                Get.toNamed(
+                                  Routes.serviceDetailsScreen,
+
+                                  // arguments: {'providerId': serviceProviderId},
+                                  arguments: {
+                                    'serviceProviderID': serviceProviderId,
+                                    'providerID': providerID,
+                                  },
+                                );
+                              },
+                              imagePath:
+                                  imageUrl ?? Assets.images.serviceImage.path,
+                              serviceTitle: serviceTitle,
+                              initialPayablePrice: startPrice.toDouble(),
+                              userRating: rating,
+                            );
+                          },
+                        );
+                      }),
+                    ),
+
+                    UIHelper.verticalSpace(150.h),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

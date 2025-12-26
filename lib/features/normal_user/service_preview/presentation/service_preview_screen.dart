@@ -7,9 +7,11 @@ import 'package:get/get.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/features/normal_user/service_preview/widgets/booking_placed_bottomsheet_widget.dart';
+import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/routes/routes.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 
 import '../../../../controllers/normal_user_service_preview_screen_controller.dart';
 import '../../../../custom_widgets/custom_shimmer_effect.dart';
@@ -164,56 +166,79 @@ class ServicesPreviewScreen extends StatelessWidget {
                     // Image container with rounded corners and fit image
 
                     /// --- Service Image ---
-                    Obx(() {
-                      // Get the first gallery attachment from service details if available
-                      String? imageUrl;
-                      if (controller.serviceImage != null) {
-                        imageUrl = controller.serviceImage;
-                      }
+                    Stack(
+                      children: [
+                        Obx(() {
+                          // Get the first gallery attachment from service details if available
+                          String? imageUrl;
+                          if (controller.serviceImage != null) {
+                            imageUrl = controller.serviceImage;
+                          }
 
-                      // Show network image if URL is available, otherwise show placeholder
-                      if (imageUrl != null && imageUrl.isNotEmpty) {
-                        // Make sure the URL is properly formatted
-                        String fullImageUrl = imageUrl;
-                        if (!imageUrl.startsWith('http')) {
-                          // If it's a relative path, prepend the base URL
-                          fullImageUrl = '${AppUrl.imageBaseUrl}$imageUrl';
-                        }
+                          // Show network image if URL is available, otherwise show placeholder
+                          if (imageUrl != null && imageUrl.isNotEmpty) {
+                            // Make sure the URL is properly formatted
+                            String fullImageUrl = imageUrl;
+                            if (!imageUrl.startsWith('http')) {
+                              // If it's a relative path, prepend the base URL
+                              fullImageUrl = '${AppUrl.imageBaseUrl}$imageUrl';
+                            }
 
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(24.r),
-                          child: Image.network(
-                            fullImageUrl,
-                            height: 170.h,
-                            width: 1.sw,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              // If network image fails, show placeholder
-                              return CustomShimmerEffect(
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(12.r),
+                              child: Image.network(
+                                fullImageUrl,
                                 height: 170.h,
                                 width: 1.sw,
-                              );
-                            },
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return CustomShimmerEffect(
-                                height: 170.h,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  // If network image fails, show placeholder
+                                  return CustomShimmerEffect(
+                                    height: 170.h,
+                                    width: 1.sw,
+                                  );
+                                },
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  if (loadingProgress == null) return child;
+                                  return CustomShimmerEffect(
+                                    height: 170.h,
+                                    width: 1.sw,
+                                  );
+                                },
+                              ),
+                            );
+                          } else {
+                            // Show placeholder if no image is available
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(24.r),
+                              child: Image.asset(
+                                Assets.images.errorImage.path,
                                 width: 1.sw,
-                              );
+                                height: 170.h,
+                                fit: BoxFit.contain,
+                              ),
+                            );
+                          }
+                        }),
+                        Positioned(
+                          right: 10.w,
+                          top: 10.h,
+                          child: GestureDetector(
+                            onTap: () {
+                              LoggerUtils.info("Date/Time Edit Button Taped!");
+                              Get.toNamed(Routes.bookingDateScreen, arguments: {
+                                'providerID': providerID,
+                              });
                             },
+                            child: Icon(
+                              Icons.pending,
+                              color: Colors.blue,
+                            ),
                           ),
-                        );
-                      } else {
-                        // Show placeholder if no image is available
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(24.r),
-                          child: CustomShimmerEffect(
-                            height: 170.h,
-                            width: 1.sw,
-                          ),
-                        );
-                      }
-                    }),
+                        )
+                      ],
+                    ),
                     const SizedBox(height: 12),
 
                     // Section : Service title
@@ -283,10 +308,10 @@ class ServicesPreviewScreen extends StatelessWidget {
 
                     // Location card with icon, text, and edit button
                     ServicePreviewDetailsCardWidget(
-                      onTap: () {
-                        log("Location Edit Button Taped!");
-                        Get.back();
-                      },
+                      // onTap: () {
+                      //   log("Location Edit Button Taped!");
+                      //   Get.back();
+                      // },
                       title: 'location'.tr,
                       data: address,
                       icon: Icons.location_on,
@@ -296,12 +321,12 @@ class ServicesPreviewScreen extends StatelessWidget {
 
                     // Date/time card with icon, text, and edit button
                     ServicePreviewDetailsCardWidget(
-                      onTap: () {
-                        log("Date/Time Edit Button Taped!");
-                        Get.toNamed(Routes.bookingDateScreen, arguments: {
-                          'providerID': providerID,
-                        });
-                      },
+                      // onTap: () {
+                      //   log("Date/Time Edit Button Taped!");
+                      //   Get.toNamed(Routes.bookingDateScreen, arguments: {
+                      //     'providerID': providerID,
+                      //   });
+                      // },
                       title: 'date_time'.tr,
                       data: bookingDateTime.isNotEmpty
                           ? _formatDisplayDateTime(bookingDateTime)
@@ -316,16 +341,21 @@ class ServicesPreviewScreen extends StatelessWidget {
               /// Confirm Booking button
               Obx(() {
                 return CustomElevatedButton(
-                  onTap: () async {
-                    // Call the API
-                    await controller.confirmServiceBooking();
+                  onTap: controller.isCSBLoading.value
+                      ? null
+                      : () async {
+                          LoggerUtils.info(
+                              "🤒🤒🤒🤒🤒🤒🤒-------Confirm Booking Button Tapped!!!");
+                          // Call the API
+                          await controller.confirmServiceBooking();
 
-                    // Check if booking was successful
-                    if (controller.serviceBookingModel.value?.success == true) {
-                      // Show success bottom sheet
-                      _showBottomModal(context);
-                    }
-                  },
+                          // Check if booking was successful
+                          if (controller.serviceBookingModel.value?.success ==
+                              true) {
+                            // Show success bottom sheet
+                            _showBottomModal(context);
+                          }
+                        },
                   buttonTitle: controller.isCSBLoading.value
                       ? 'confirming_your_order'.tr
                       : 'confirm_booking'.tr,
@@ -344,6 +374,7 @@ class ServicesPreviewScreen extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      isDismissible: false,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30.r),

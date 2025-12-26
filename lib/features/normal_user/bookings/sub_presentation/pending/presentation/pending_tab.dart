@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:kaz_bd/features/normal_user/bookings/widgets/bookings_details_card_widget.dart';
 import '../../../../../../constants/app_enums.dart';
 import '../../../../../../gen/assets.gen.dart';
+import '../../../../../../gen/colors.gen.dart';
 import '../../../../../../helpers/ui_helpers.dart';
 import '../../../../../../routes/routes.dart';
 import '../controller/pending_controller.dart';
@@ -26,7 +27,7 @@ class _PendingTabState extends State<PendingTab> {
       onRefresh: () => controller.getPendingBookings(),
       child: SingleChildScrollView(
         physics: AlwaysScrollableScrollPhysics(),
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.8,
           child: Obx(() {
             if (controller.isLoading.value) {
@@ -98,71 +99,79 @@ class _PendingTabState extends State<PendingTab> {
               );
             }
 
-            return ListView.separated(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.only(top: 16.sp),
-              itemCount: controller.pendingBookings.length,
-              separatorBuilder: (context, index) =>
-                  UIHelper.verticalSpace(16.h),
-              itemBuilder: (context, index) {
-                final booking = controller.pendingBookings[index];
-                final bookingId =
-                    booking['_ServiceBookingId']?.toString() ?? '';
+            return Container(
+              padding: EdgeInsets.only(
+                  bottom:
+                      100.h), // Add padding to account for bottom navigation
+              child: ListView.separated(
+                shrinkWrap: true,
+                physics: AlwaysScrollableScrollPhysics(),
+                padding: EdgeInsets.only(top: 16.sp),
+                itemCount: controller.pendingBookings.length,
+                separatorBuilder: (context, index) =>
+                    UIHelper.verticalSpace(16.h),
+                itemBuilder: (context, index) {
+                  final booking = controller.pendingBookings[index];
+                  final bookingId =
+                      booking['_ServiceBookingId']?.toString() ?? '';
 
-                // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
-                final serviceProviderId = _getServiceProviderId(booking);
-                final providerId = _getProviderUserId(booking);
+                  // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
+                  final serviceProviderId = _getServiceProviderId(booking);
+                  final providerId = _getProviderUserId(booking);
 
-                // 🔍 DEBUG: Log what IDs are extracted for this card
-                log('🧾 [PENDING TAB] Card #$index →');
-                log('   Booking ID: "$bookingId"');
-                log('   Service Provider ID: "$serviceProviderId"');
-                log('   Provider User ID: "$providerId"');
+                  // 🔍 DEBUG: Log what IDs are extracted for this card
+                  log('🧾 [PENDING TAB] Card #$index →');
+                  log('   Booking ID: "$bookingId"');
+                  log('   Service Provider ID: "$serviceProviderId"');
+                  log('   Provider User ID: "$providerId"');
 
-                final serviceName = booking['providerDetailsId']?['serviceName']
-                    as Map<String, dynamic>?;
-                final address = booking['address'] as Map<String, dynamic>?;
-                final provider = booking['providerId'] as Map<String, dynamic>?;
+                  final serviceName = booking['providerDetailsId']
+                      ?['serviceName'] as Map<String, dynamic>?;
+                  final address = booking['address'] as Map<String, dynamic>?;
+                  final provider =
+                      booking['providerId'] as Map<String, dynamic>?;
 
-                final imageUrl = _getImageUrl(bookingId, controller);
-                final isNetworkImage = _isNetworkImage(bookingId, controller);
+                  final imageUrl = _getImageUrl(bookingId, controller);
+                  final isNetworkImage = _isNetworkImage(bookingId, controller);
 
-                return BookingDetailsCardWidget(
-                  // ➤ CARD TAP → Navigate with ALL required parameters
-                  onTap: () {
-                    _navigateToDetailsScreen(
-                        bookingId, serviceProviderId, providerId);
-                  },
+                  return BookingDetailsCardWidget(
+                    // ➤ CARD TAP → Navigate with ALL required parameters
+                    onTap: () {
+                      _navigateToDetailsScreen(
+                          bookingId, serviceProviderId, providerId);
+                    },
 
-                  // Cancel action
-                  isPendingTab: true,
-                  isPendingTabCancelOnTap: () {
-                    showCancelBookingBottomSheet(
-                      bookingId: bookingId,
-                      onCancelConfirmed: () async {
-                        final success =
-                            await controller.cancelBooking(bookingId);
-                        if (success) {
-                          log('✅ [PENDING TAB] Booking $bookingId cancelled successfully');
-                        }
-                      },
-                    );
-                  },
+                    // Cancel action
+                    isPendingTab: true,
+                    isPendingTabCancelOnTap: () {
+                      showCancelBookingBottomSheet(
+                        bookingId: bookingId,
+                        onCancelConfirmed: () async {
+                          final success =
+                              await controller.cancelBooking(bookingId);
+                          if (success) {
+                            log('✅ [PENDING TAB] Booking $bookingId cancelled successfully');
+                          }
+                        },
+                      );
+                    },
 
-                  // Data
-                  title: _getServiceName(serviceName),
-                  initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
-                  location: _getAddress(address),
-                  dateTime: _formatDateTime(
-                      booking['bookingDateTime']?.toString() ?? ''),
-                  serviceProviderProfileImage:
-                      imageUrl ?? Assets.images.userImage.path,
-                  serviceProviderName: provider?['name'] ?? 'Unknown Provider',
-                  serviceProviderDesignation: 'services_provider'.tr,
-                  isNetworkImage: isNetworkImage,
-                );
-              },
+                    // Data
+                    title: _getServiceName(serviceName),
+                    initialPayablePrice:
+                        (booking['startPrice'] ?? 0).toString(),
+                    location: _getAddress(address),
+                    dateTime: _formatDateTime(
+                        booking['bookingDateTime']?.toString() ?? ''),
+                    serviceProviderProfileImage:
+                        imageUrl ?? Assets.images.userImage.path,
+                    serviceProviderName:
+                        provider?['name'] ?? 'Unknown Provider',
+                    serviceProviderDesignation: 'services_provider'.tr,
+                    isNetworkImage: isNetworkImage,
+                  );
+                },
+              ),
             );
           }),
         ),

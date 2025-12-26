@@ -794,9 +794,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/constants/app_enums.dart';
+import 'package:kaz_bd/controllers/svp_home_screen_controller.dart';
+import 'package:kaz_bd/features/service_provider/svp_bookings/sub_presentation/svp_bookings_canceled/controller/svp_bookings_canceled_tab_controller.dart';
+import 'package:kaz_bd/features/service_provider/svp_job_request/controller/svp_job_request_screen_controller.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 
 import '../../../../constants/app_constant_text.dart';
 import '../../../../constants/text_font_style.dart';
@@ -828,8 +832,20 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
   bool isLoading = true;
   bool hasError = false;
   String errorMessage = '';
+  String requestedJobID = '';
 
   final NetworkCaller _networkCaller = NetworkCaller();
+  SvpHomeScreenController svpHomeScreenController =
+      Get.find<SvpHomeScreenController>();
+  SvpBookingsCanceledController svpBookingsCanceledController =
+      Get.find<SvpBookingsCanceledController>();
+  SvpJobRequestScreenController svpJobRequestScreenController =
+      Get.find<SvpJobRequestScreenController>();
+  // SvpAcceptedBookingsController svpAcceptedBookingsController =
+  //     Get.find<SvpAcceptedBookingsController>();
+
+  SvpAcceptedBookingsController svpAcceptedBookingsController =
+      Get.put(SvpAcceptedBookingsController());
   bool isStartingWork = false;
   bool isWorkStarted = false;
   bool isCancelling = false;
@@ -846,6 +862,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
     status = arguments?["status"] as JobRequestStatusEnum?;
     bookingId = arguments?["bookingId"] as String? ?? '';
     userId = arguments?["userId"] as String? ?? '';
+    requestedJobID = arguments?['requestedJobID'] ?? '';
 
     // Initialize jobDetails with empty map
     jobDetails = {};
@@ -856,14 +873,14 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
 
   // ====================== FETCH JOB DETAILS ======================
   Future<void> fetchJobDetails() async {
-    if (bookingId.isEmpty) {
-      setState(() {
-        isLoading = false;
-        hasError = true;
-        errorMessage = 'booking_id_not_found'.tr;
-      });
-      return;
-    }
+    // if (bookingId.isEmpty) {
+    //   setState(() {
+    //     isLoading = false;
+    //     hasError = true;
+    //     errorMessage = 'booking_id_not_found'.tr;
+    //   });
+    //   return;
+    // }
 
     setState(() {
       isLoading = true;
@@ -885,7 +902,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
 
       // Make GET request to fetch job details
       final NetworkResponse response = await _networkCaller.getRequest(
-        AppUrl.providerJobDetailsApi(bookingId),
+        AppUrl.providerJobDetailsApi(
+            bookingId.isNotEmpty ? bookingId : requestedJobID),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -898,6 +916,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
         if (responseData['code'] == 200 && responseData['data'] != null) {
           final data =
               responseData['data']['attributes'] as Map<String, dynamic>? ?? {};
+          LoggerUtils.debug("Svp Job Details Data : $data");
 
           setState(() {
             jobDetails = data;
@@ -979,7 +998,14 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
       if (response.isSuccess && response.jsonResponse != null) {
         final responseData = response.jsonResponse!;
 
+        LoggerUtils.info(
+            "Job Request Canceled Button Taped : ${responseData['code']} Api Response : ${response.isSuccess}");
+
         if (responseData['code'] == 200 || response.isSuccess) {
+          await svpBookingsCanceledController.fetchCanceledBookings();
+          await svpHomeScreenController.getServiceProviderHomeData();
+          await svpJobRequestScreenController.fetchJobRequests();
+          Get.back();
           // Show success message
           Get.snackbar(
             'success'.tr,
@@ -1081,6 +1107,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
       );
 
       if (response.isSuccess && response.jsonResponse != null) {
+        await svpHomeScreenController.getServiceProviderHomeData();
         final responseData = response.jsonResponse!;
 
         if (responseData['code'] == 200 || response.isSuccess) {
@@ -1191,6 +1218,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
       );
 
       if (response.isSuccess && response.jsonResponse != null) {
+        await svpAcceptedBookingsController.fetchAcceptedBookings();
+        await svpHomeScreenController.getServiceProviderHomeData();
         final responseData = response.jsonResponse!;
 
         if (responseData['code'] == 200) {
@@ -1272,6 +1301,12 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
     }
   }
 
+  // Helper methods to extract data from jobDetails
+  String getUserName() {
+    final userData = jobDetails['userId'] as Map<String, dynamic>? ?? {};
+    return userData['name'] as String? ?? 'unknown_user'.tr;
+  }
+
   // Method to fetch accepted bookings in the accepted tab screen
   void _fetchAcceptedBookingsInTab() {
     try {
@@ -1283,12 +1318,6 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
       // Controller might not be initialized yet, that's okay
       print('Accepted bookings controller not found: $e');
     }
-  }
-
-  // Helper methods to extract data from jobDetails
-  String getUserName() {
-    final userData = jobDetails['userId'] as Map<String, dynamic>? ?? {};
-    return userData['name'] as String? ?? 'unknown_user'.tr;
   }
 
   String getUserProfileImage() {

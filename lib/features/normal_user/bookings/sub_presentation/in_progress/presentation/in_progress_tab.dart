@@ -97,115 +97,122 @@ class InProgressTab extends StatelessWidget {
               );
             }
 
-            return ListView.separated(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.only(top: 16.sp),
-              itemCount: controller.inProgressBookings.length,
-              separatorBuilder: (context, index) =>
-                  UIHelper.verticalSpace(16.h),
-              itemBuilder: (context, index) {
-                final booking = controller.inProgressBookings[index];
-                final bookingId =
-                    booking['_ServiceBookingId']?.toString() ?? '';
+            return Container(
+              padding: EdgeInsets.only(bottom: 100.h),
+              child: ListView.separated(
+                shrinkWrap: false,
+                physics: AlwaysScrollableScrollPhysics(),
+                padding: EdgeInsets.only(top: 16.sp),
+                itemCount: controller.inProgressBookings.length,
+                separatorBuilder: (context, index) =>
+                    UIHelper.verticalSpace(16.h),
+                itemBuilder: (context, index) {
+                  final booking = controller.inProgressBookings[index];
+                  final bookingId =
+                      booking['_ServiceBookingId']?.toString() ?? '';
 
-                // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
-                final serviceProviderId = _getServiceProviderId(booking);
-                final providerId = _getProviderUserId(booking);
+                  // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
+                  final serviceProviderId = _getServiceProviderId(booking);
+                  final providerId = _getProviderUserId(booking);
 
-                // 🔍 DEBUG: Log what IDs are extracted
-                log('🧾 [IN PROGRESS TAB] Card #$index →');
-                log('   Booking ID: "$bookingId"');
-                log('   Service Provider ID: "$serviceProviderId"');
-                log('   Provider User ID: "$providerId"');
+                  // 🔍 DEBUG: Log what IDs are extracted
+                  log('🧾 [IN PROGRESS TAB] Card #$index →');
+                  log('   Booking ID: "$bookingId"');
+                  log('   Service Provider ID: "$serviceProviderId"');
+                  log('   Provider User ID: "$providerId"');
 
-                final serviceName = booking['providerDetailsId']?['serviceName']
-                    as Map<String, dynamic>?;
-                final address = booking['address'] as Map<String, dynamic>?;
-                final provider = booking['providerId'] as Map<String, dynamic>?;
+                  final serviceName = booking['providerDetailsId']
+                      ?['serviceName'] as Map<String, dynamic>?;
+                  final address = booking['address'] as Map<String, dynamic>?;
+                  final provider =
+                      booking['providerId'] as Map<String, dynamic>?;
 
-                final imageUrl = _getImageUrl(bookingId, controller);
-                final isNetworkImage = _isNetworkImage(bookingId, controller);
+                  final imageUrl = _getImageUrl(bookingId, controller);
+                  final isNetworkImage = _isNetworkImage(bookingId, controller);
 
-                return BookingDetailsCardWidget(
-                  // ➤ CARD TAP → Navigate with ALL required parameters
-                  onTap: () {
-                    _navigateToDetailsScreen(
-                        bookingId, serviceProviderId, providerId);
-                  },
+                  return BookingDetailsCardWidget(
+                    // ➤ CARD TAP → Navigate with ALL required parameters
+                    onTap: () {
+                      _navigateToDetailsScreen(
+                          bookingId, serviceProviderId, providerId);
+                    },
 
-                  isInProgressTab: true,
+                    isInProgressTab: true,
 
-                  ///Button OnTap -> Message
-                  isInProgressTabMessageOnTap: () async {
-                    log("💬 [IN PROGRESS TAB] Message button tapped for booking: $bookingId");
+                    ///Button OnTap -> Message
+                    isInProgressTabMessageOnTap: () async {
+                      log("💬 [IN PROGRESS TAB] Message button tapped for booking: $bookingId");
 
-                    // 🔴 ADDED: Use providerId for message (user ID)
-                    final messageProviderId = providerId.isNotEmpty
-                        ? providerId
-                        : _getProviderUserId(booking);
+                      // 🔴 ADDED: Use providerId for message (user ID)
+                      final messageProviderId = providerId.isNotEmpty
+                          ? providerId
+                          : _getProviderUserId(booking);
 
-                    // 🔴 ADDED: Debug logging
-                    log('   📊 provider object: ${provider?.toString()}');
-                    log('   🆔 providerId from args: $providerId');
-                    log('   🔍 Extracted provider userId: ${_getProviderUserId(booking)}');
-                    log('   ✅ Final messageProviderId to use: $messageProviderId');
+                      // 🔴 ADDED: Debug logging
+                      log('   📊 provider object: ${provider?.toString()}');
+                      log('   🆔 providerId from args: $providerId');
+                      log('   🔍 Extracted provider userId: ${_getProviderUserId(booking)}');
+                      log('   ✅ Final messageProviderId to use: $messageProviderId');
 
-                    if (messageProviderId.isEmpty) {
-                      log('❌ [IN PROGRESS TAB] Cannot send message: Provider ID is empty');
-                      Get.snackbar(
-                        'error'.tr,
-                        'cannot_send_message'.tr,
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Colors.red,
-                        colorText: Colors.white,
-                      );
-                      return;
-                    }
+                      if (messageProviderId.isEmpty) {
+                        log('❌ [IN PROGRESS TAB] Cannot send message: Provider ID is empty');
+                        Get.snackbar(
+                          'error'.tr,
+                          'cannot_send_message'.tr,
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                        );
+                        return;
+                      }
 
-                    try {
-                      // 🔴 ADDED: Check if MessageScreenController exists
-                      final msgController = Get.find<MessageScreenController>();
+                      try {
+                        // 🔴 ADDED: Check if MessageScreenController exists
+                        final msgController =
+                            Get.find<MessageScreenController>();
 
-                      LoggerUtils.info(imageUrl);
-                      msgController.createMessage(
-                        participantId: messageProviderId,
-                        name: provider?['name'] ?? 'unknown_provider'.tr,
-                        imageUrl: imageUrl ?? '',
-                      );
+                        LoggerUtils.info(imageUrl);
+                        msgController.createMessage(
+                          participantId: messageProviderId,
+                          name: provider?['name'] ?? 'unknown_provider'.tr,
+                          imageUrl: imageUrl ?? '',
+                        );
 
-                      log('   ✅ createMessage called successfully');
-                    } catch (e) {
-                      log('❌ [IN PROGRESS TAB] Error with MessageScreenController: $e');
-                      Get.snackbar(
-                        'error'.tr,
-                        'messaging_service_not_available'.tr,
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Colors.red,
-                        colorText: Colors.white,
-                      );
-                    }
-                  },
+                        log('   ✅ createMessage called successfully');
+                      } catch (e) {
+                        log('❌ [IN PROGRESS TAB] Error with MessageScreenController: $e');
+                        Get.snackbar(
+                          'error'.tr,
+                          'messaging_service_not_available'.tr,
+                          snackPosition: SnackPosition.BOTTOM,
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                        );
+                      }
+                    },
 
-                  ///Button OnTap -> View
-                  isInProgressTabViewOnTap: () {
-                    _navigateToDetailsScreen(
-                        bookingId, serviceProviderId, providerId);
-                  },
+                    ///Button OnTap -> View
+                    isInProgressTabViewOnTap: () {
+                      _navigateToDetailsScreen(
+                          bookingId, serviceProviderId, providerId);
+                    },
 
-                  // Data
-                  title: _getServiceName(serviceName),
-                  initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
-                  location: _getAddress(address),
-                  dateTime: _formatDateTime(
-                      booking['bookingDateTime']?.toString() ?? ''),
-                  serviceProviderProfileImage:
-                      imageUrl ?? Assets.images.userImage.path,
-                  serviceProviderName: provider?['name'] ?? 'Unknown Provider',
-                  serviceProviderDesignation: 'services_provider'.tr,
-                  isNetworkImage: isNetworkImage,
-                );
-              },
+                    // Data
+                    title: _getServiceName(serviceName),
+                    initialPayablePrice:
+                        (booking['startPrice'] ?? 0).toString(),
+                    location: _getAddress(address),
+                    dateTime: _formatDateTime(
+                        booking['bookingDateTime']?.toString() ?? ''),
+                    serviceProviderProfileImage:
+                        imageUrl ?? Assets.images.userImage.path,
+                    serviceProviderName:
+                        provider?['name'] ?? 'Unknown Provider',
+                    serviceProviderDesignation: 'services_provider'.tr,
+                    isNetworkImage: isNetworkImage,
+                  );
+                },
+              ),
             );
           }),
         ),

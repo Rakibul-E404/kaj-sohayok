@@ -203,7 +203,6 @@ class NavigationScreen extends StatefulWidget {
 
 class _NavigationScreenState extends State<NavigationScreen>
     with TickerProviderStateMixin {
-
   int _selectedIndex = 0;
   late PageController _pageController;
   late AnimationController _backgroundAnimationController;
@@ -282,9 +281,8 @@ class _NavigationScreenState extends State<NavigationScreen>
         child: PageView(
           controller: _pageController,
           onPageChanged: _onPageChanged,
-          children: currentRole == UserRole.user.name
-              ? userPages
-              : providerPages,
+          children:
+              currentRole == UserRole.user.name ? userPages : providerPages,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

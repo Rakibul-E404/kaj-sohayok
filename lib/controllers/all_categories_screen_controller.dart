@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/features/normal_user/all_categories/models/normal_user_all_category_model.dart';
 
+import '../service/location/location_controller.dart';
 import '../service/network_caller.dart';
 import '../service/network_response.dart';
 import '../utilities/app_url.dart';
 
 class NormalUserAllCategoryScreenController extends GetxController {
+  LocationController locationController = Get.put(LocationController());
+  String latitudeValue = '';
+  String longitudeValue = '';
   RxBool isLoading = false.obs;
   RxList<Result> categories = <Result>[].obs;
 
@@ -23,6 +27,14 @@ class NormalUserAllCategoryScreenController extends GetxController {
         AppUrl.getNormalUserAllCategory,
       );
       if (response.isSuccess && response.jsonResponse != null) {
+        ///Get Location Latitud And Longitude
+        await locationController.fetchCurrentLocation();
+        latitudeValue =
+            locationController.currentPosition.value?.latitude.toString() ?? '';
+        longitudeValue =
+            locationController.currentPosition.value?.longitude.toString() ??
+                '';
+
         final model = NormalUserAllCategoryModel.fromJson(
           response.jsonResponse!,
         );

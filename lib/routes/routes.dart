@@ -24,6 +24,7 @@ import 'package:kaz_bd/features/normal_user/work_completed_details/presentation/
 import 'package:kaz_bd/features/service_provider/join_as_service_provider/presentation/join_as_service_provider_screen.dart';
 import 'package:kaz_bd/features/service_provider/more_information/presentation/more_information_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_accepted_bookings/presentation/svp_accepted_bookings_screen.dart';
+import 'package:kaz_bd/features/service_provider/svp_bookings/presentation/svp_bookings_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_edit_profile/presentation/svp_edit_profile_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_home/presentation/svp_home_screen.dart';
 import 'package:kaz_bd/features/service_provider/svp_in_progress/presentation/svp_in_progress_screen.dart';
@@ -44,7 +45,7 @@ import '../bindings/route_bindings/normal_user_booking_date_screen_binding.dart'
 import '../bindings/route_bindings/normal_user_service_details_screen_binding.dart';
 import '../bindings/route_bindings/normal_user_service_preview_screen_binding.dart';
 import '../bindings/route_bindings/service_of_specific_category_screen_binding.dart';
-import '../controllers/service_of_specific_category_screen_controller.dart';
+import '../bindings/route_bindings/svp_pending_job_requests_binding.dart';
 import '../features/auth/verify_otp/verify_otp_screen.dart';
 import '../features/call/presentation/screen/call_screen.dart';
 import '../features/normal_user/search_location/presentation/search_location_screen.dart';
@@ -108,6 +109,7 @@ class Routes {
   static const String svpEditDocumentScreen = '/svp_edit_document_screen';
   static const String normalUserSeePopularProviderScreen =
       '/normal_user_see_popular_provider_screen';
+  static const String svpBookingsScreen = '/svp_bookings_screen';
 
   static final appRoutes = [
     ///Section : Normal User Screens & Common Screens
@@ -392,6 +394,7 @@ class Routes {
     GetPage(
       name: svpJobRequestScreen,
       page: () => SvpJobRequestScreen(),
+      binding: SvpPendingJobRequestsBinding(),
       transition: _transition(),
       customTransition: _customTransition(),
       transitionDuration: _duration(),
@@ -495,6 +498,13 @@ class Routes {
     GetPage(
       name: '/call-screen',
       page: () => const CallScreen(),
+      // binding: CallBinding(),
+      transition: Transition.fadeIn,
+      transitionDuration: Duration(milliseconds: 300),
+    ),
+    GetPage(
+      name: svpBookingsScreen,
+      page: () => const SvpBookingsScreen(),
       // binding: CallBinding(),
       transition: Transition.fadeIn,
       transitionDuration: Duration(milliseconds: 300),

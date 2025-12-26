@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:kaz_bd/controllers/all_categories_screen_controller.dart';
 import 'package:kaz_bd/features/normal_user/home/widgets/category_showing_widget.dart';
 import 'package:kaz_bd/routes/routes.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 
 import '../../../../custom_widgets/reusable_appbar.dart';
 
@@ -53,8 +54,13 @@ class AllCategoriesScreen extends StatelessWidget {
                       arguments: {
                         'categoryId': categoryId,
                         'categoryName': categoryName,
+                        'lat_value': controller.latitudeValue,
+                        'long_value': controller.longitudeValue,
                       },
                     );
+
+                    LoggerUtils.info("👽👽-----Category ID : $categoryId");
+                    LoggerUtils.info("👽👽------Category Name : $categoryName");
                   },
                   categoryName: categoryName,
                   imageUrl: imageUrl,

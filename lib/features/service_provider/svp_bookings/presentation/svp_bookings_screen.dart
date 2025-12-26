@@ -85,13 +85,6 @@ class SvpBookingsScreen extends StatelessWidget {
 }
 */
 
-
-
-
-
-
-
-
 ///
 ///
 ///
@@ -99,9 +92,6 @@ class SvpBookingsScreen extends StatelessWidget {
 ///
 ///
 ///
-
-
-
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -219,4 +209,3 @@ class _SvpBookingsScreenState extends State<SvpBookingsScreen>
     );
   }
 }
-

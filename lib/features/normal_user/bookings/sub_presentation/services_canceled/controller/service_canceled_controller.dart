@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:kaz_bd/utilities/logger_util.dart';
 import '../../../../../../service/network_caller.dart';
 import '../../../../../../service/network_response.dart';
 import '../../../../../../service/secured_storage.dart';
@@ -22,6 +23,8 @@ class CanceledBookingsController extends GetxController {
 
       final token = await SecureStorageService().read(AppConstants.accessToken);
       log('🔑 [CANCELED CONTROLLER] Token retrieved: ${token != null ? 'Yes' : 'No'}');
+
+      LoggerUtils.info("Authentication Token Check : $token");
 
       if (token == null) {
         errorMessage.value =

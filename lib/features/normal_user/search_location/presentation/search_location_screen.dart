@@ -10,8 +10,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:http/http.dart' as http;
 import 'package:kaz_bd/constants/text_font_style.dart';
+import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 
 import '../../../../routes/routes.dart';
 
@@ -1529,17 +1531,19 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
                         left: UIHelper.kDefaulutPadding(),
                         right: UIHelper.kDefaulutPadding(),
                       ),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          debugPrint('✅ [BUTTON] Confirm Location pressed');
-                          debugPrint('📋 [BUTTON] Data to pass:');
-                          debugPrint('   Provider ID: $providerID');
-                          debugPrint('   Booking Date Time: $bookingDateTime');
-                          debugPrint(
+                      child: CustomElevatedButton(
+                        onTap: () {
+                          LoggerUtils.debug(
+                              '✅ [BUTTON] Confirm Location pressed');
+                          LoggerUtils.debug('📋 [BUTTON] Data to pass:');
+                          LoggerUtils.debug('   Provider ID: $providerID');
+                          LoggerUtils.debug(
+                              '   Booking Date Time: $bookingDateTime');
+                          LoggerUtils.debug(
                               '   Latitude: ${_selectedLocation!.latitude}');
-                          debugPrint(
+                          LoggerUtils.debug(
                               '   Longitude: ${_selectedLocation!.longitude}');
-                          debugPrint('   Address: $_selectedAddress');
+                          LoggerUtils.debug('   Address: $_selectedAddress');
 
                           // Navigate to service preview with selected location data
                           Get.toNamed(
@@ -1553,24 +1557,52 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
                             },
                           );
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.c5c5c5c,
-                          minimumSize: const Size(double.infinity, 50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: Text(
-                          'confirm_location'.tr,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.sp,
-                          ),
-                        ),
+                        buttonTitle: 'confirm_location'.tr,
+                        buttonColor: AppColors.c778beb,
                       ),
                     ),
                   ),
+
+                // ElevatedButton(
+                //       onPressed: () {
+                //         debugPrint('✅ [BUTTON] Confirm Location pressed');
+                //         debugPrint('📋 [BUTTON] Data to pass:');
+                //         debugPrint('   Provider ID: $providerID');
+                //         debugPrint('   Booking Date Time: $bookingDateTime');
+                //         debugPrint(
+                //             '   Latitude: ${_selectedLocation!.latitude}');
+                //         debugPrint(
+                //             '   Longitude: ${_selectedLocation!.longitude}');
+                //         debugPrint('   Address: $_selectedAddress');
+
+                //         // Navigate to service preview with selected location data
+                //         Get.toNamed(
+                //           Routes.servicePreviewScreen,
+                //           arguments: {
+                //             'providerID': providerID,
+                //             'bookingDateTime': bookingDateTime,
+                //             'lat': _selectedLocation!.latitude,
+                //             'long': _selectedLocation!.longitude,
+                //             'address': _selectedAddress,
+                //           },
+                //         );
+                //       },
+                //       style: ElevatedButton.styleFrom(
+                //         backgroundColor: AppColors.c778beb,
+                //         minimumSize: const Size(double.infinity, 50),
+                //         shape: RoundedRectangleBorder(
+                //           borderRadius: BorderRadius.circular(8),
+                //         ),
+                //       ),
+                //       child: Text(
+                //         'confirm_location'.tr,
+                //         style: TextStyle(
+                //           color: Colors.white,
+                //           fontWeight: FontWeight.bold,
+                //           fontSize: 16.sp,
+                //         ),
+                //       ),
+                //     )
 
                 // Loading overlay - only show when truly loading and map is not ready
                 if (_isLoadingLocation && _markers.isEmpty)

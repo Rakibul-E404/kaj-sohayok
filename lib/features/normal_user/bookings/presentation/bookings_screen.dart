@@ -73,7 +73,6 @@ class BookingsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                UIHelper.verticalSpace(100.h),
               ],
             ),
           ),

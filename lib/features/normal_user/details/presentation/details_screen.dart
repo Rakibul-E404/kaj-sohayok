@@ -72,20 +72,20 @@ class _DetailsScreenState extends State<DetailsScreen>
     log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
     // Validate provider ID
-    if (serviceID.isEmpty) {
-      log('❌ ERROR: Service Provider ID is empty!');
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Get.snackbar(
-          'Error',
-          'Service ID is missing. Cannot load service details.',
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 3),
-        );
-      });
-      return;
-    }
+    // if (serviceID.isEmpty) {
+    //   log('❌ ERROR: Service Provider ID is empty!');
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     Get.snackbar(
+    //       'Error',
+    //       'Service ID is missing. Cannot load service details.',
+    //       backgroundColor: Colors.red,
+    //       colorText: Colors.white,
+    //       snackPosition: SnackPosition.BOTTOM,
+    //       duration: Duration(seconds: 3),
+    //     );
+    //   });
+    //   return;
+    // }
 
     // Set provider ID and fetch data
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -94,6 +94,7 @@ class _DetailsScreenState extends State<DetailsScreen>
 
         ///set service ID
         detailsController?.setServiceId(svcId: serviceID);
+        // detailsController?.setServiceId(svcId: serviceProviderID);
 
         // Set provider ID for both controllers
         detailsController?.setServiceProviderId(svpId: serviceProviderID);

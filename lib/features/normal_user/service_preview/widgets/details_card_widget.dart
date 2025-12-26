@@ -12,14 +12,14 @@ class ServicePreviewDetailsCardWidget extends StatelessWidget {
   final IconData icon;
   final String title;
   final String data;
-  final VoidCallback? onTap;
+  // final VoidCallback? onTap;
 
   const ServicePreviewDetailsCardWidget({
     super.key,
     required this.icon,
     required this.title,
     required this.data,
-    this.onTap,
+    // this.onTap,
   });
 
   @override
@@ -53,23 +53,23 @@ class ServicePreviewDetailsCardWidget extends StatelessWidget {
               ),
 
               /// Edit Button
-              InkWell(
-                onTap: onTap,
-                borderRadius: BorderRadius.circular(6.r),
-                child: Row(
-                  children: [
-                    Text(
-                      "Edit",
-                      style: TextFontStyle.headline10w700c8b8b8bStyleSatoshi,
-                    ),
-                    UIHelper.horizontalSpace(2.w),
-                    SvgPicture.asset(
-                      Assets.icons.penEditIcon,
-                      color: AppColors.c8b8b8b,
-                    ),
-                  ],
-                ),
-              ),
+              // InkWell(
+              //   onTap: onTap,
+              //   borderRadius: BorderRadius.circular(6.r),
+              //   child: Row(
+              //     children: [
+              //       Text(
+              //         "Edit",
+              //         style: TextFontStyle.headline10w700c8b8b8bStyleSatoshi,
+              //       ),
+              //       UIHelper.horizontalSpace(2.w),
+              //       SvgPicture.asset(
+              //         Assets.icons.penEditIcon,
+              //         color: AppColors.c8b8b8b,
+              //       ),
+              //     ],
+              //   ),
+              // ),
             ],
           ),
         ],

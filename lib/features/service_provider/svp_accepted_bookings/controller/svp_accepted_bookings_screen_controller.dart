@@ -172,6 +172,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kaz_bd/controllers/svp_home_screen_controller.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 import '../../../../constants/app_enums.dart';
 import '../../../../custom_widgets/recent_job_request_status_widget.dart';
 import '../../../../routes/routes.dart';
@@ -182,6 +184,8 @@ import '../../../../utilities/app_constants.dart';
 import '../../../../utilities/app_url.dart';
 
 class SvpAcceptedBookingsScreenController extends GetxController {
+  SvpHomeScreenController svpHomeScreenController =
+      Get.find<SvpHomeScreenController>();
   final jobRequests = <dynamic>[].obs;
   final isLoading = true.obs;
   final hasError = false.obs;
@@ -227,12 +231,15 @@ class SvpAcceptedBookingsScreenController extends GetxController {
       log('Accepted Bookings API Success: ${response.isSuccess}');
 
       if (response.jsonResponse != null) {
-        log('Accepted Bookings API Response Body: ${jsonEncode(response.jsonResponse)}');
+        LoggerUtils.info(
+            'Accepted Bookings API Response Body: ${jsonEncode(response.jsonResponse)}');
       } else {
         log('Accepted Bookings API Response Body is null');
       }
 
       if (response.isSuccess && response.jsonResponse != null) {
+        await svpHomeScreenController.getServiceProviderHomeData();
+
         final responseData = response.jsonResponse!;
         log('Parsing accepted bookings data...');
 

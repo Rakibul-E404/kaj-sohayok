@@ -100,7 +100,7 @@ class _AcceptedBookingTabState extends State<AcceptedBookingTab> {
 
             return ListView.separated(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.only(top: 16.sp),
               itemCount: controller.acceptedBookings.length,
               separatorBuilder: (context, index) =>
