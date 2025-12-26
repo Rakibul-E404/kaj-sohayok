@@ -832,6 +832,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
   bool isLoading = true;
   bool hasError = false;
   String errorMessage = '';
+  String requestedJobID = '';
 
   final NetworkCaller _networkCaller = NetworkCaller();
   SvpHomeScreenController svpHomeScreenController =
@@ -861,6 +862,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
     status = arguments?["status"] as JobRequestStatusEnum?;
     bookingId = arguments?["bookingId"] as String? ?? '';
     userId = arguments?["userId"] as String? ?? '';
+    requestedJobID = arguments?['requestedJobID'] ?? '';
 
     // Initialize jobDetails with empty map
     jobDetails = {};
@@ -871,14 +873,14 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
 
   // ====================== FETCH JOB DETAILS ======================
   Future<void> fetchJobDetails() async {
-    if (bookingId.isEmpty) {
-      setState(() {
-        isLoading = false;
-        hasError = true;
-        errorMessage = 'booking_id_not_found'.tr;
-      });
-      return;
-    }
+    // if (bookingId.isEmpty) {
+    //   setState(() {
+    //     isLoading = false;
+    //     hasError = true;
+    //     errorMessage = 'booking_id_not_found'.tr;
+    //   });
+    //   return;
+    // }
 
     setState(() {
       isLoading = true;
@@ -900,7 +902,8 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
 
       // Make GET request to fetch job details
       final NetworkResponse response = await _networkCaller.getRequest(
-        AppUrl.providerJobDetailsApi(bookingId),
+        AppUrl.providerJobDetailsApi(
+            bookingId.isNotEmpty ? bookingId : requestedJobID),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -913,6 +916,7 @@ class _SvpJobDetailsScreenState extends State<SvpJobDetailsScreen> {
         if (responseData['code'] == 200 && responseData['data'] != null) {
           final data =
               responseData['data']['attributes'] as Map<String, dynamic>? ?? {};
+          LoggerUtils.debug("Svp Job Details Data : $data");
 
           setState(() {
             jobDetails = data;

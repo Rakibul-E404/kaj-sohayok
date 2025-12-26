@@ -7,6 +7,7 @@ import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/custom_widgets/custom_shimmer_effect.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:intl/intl.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../../controllers/svp_home_screen_controller.dart';
@@ -45,8 +46,8 @@ class SvpHomeScreen extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.only(top: UIHelper.kDefaulutPadding()),
           child: RefreshIndicator(
-            onRefresh: () =>
-                controller.refreshData(), // 🔄 RISK HANDLING: Using dedicated refresh method to properly handle loading states
+            onRefresh: () => controller
+                .refreshData(), // 🔄 RISK HANDLING: Using dedicated refresh method to properly handle loading states
             child: SingleChildScrollView(
               physics:
                   AlwaysScrollableScrollPhysics(), // ⚡ RISK HANDLING: Ensures scroll physics allow pull-to-refresh
@@ -55,7 +56,10 @@ class SvpHomeScreen extends StatelessWidget {
                   ///Section : AppLogo & Notification Section
                   Obx(() {
                     if (controller.isHomeDataLoading.value) {
-                      return CustomShimmerEffect(height: 40.h, width: 1.sw); // 📶 RISK HANDLING: Shows shimmer loading state to indicate data is being refreshed
+                      return CustomShimmerEffect(
+                          height: 40.h,
+                          width: 1
+                              .sw); // 📶 RISK HANDLING: Shows shimmer loading state to indicate data is being refreshed
                     }
 
                     return HomeSectionAppLogoAndNotification(
@@ -76,7 +80,9 @@ class SvpHomeScreen extends StatelessWidget {
                         ///Section : Graph Chart
                         Obx(() {
                           if (controller.isHomeDataLoading.value) {
-                            return const Center(child: IncomeCardLoader()); // 📶 RISK HANDLING: Shows loading state during refresh
+                            return const Center(
+                                child:
+                                    IncomeCardLoader()); // 📶 RISK HANDLING: Shows loading state during refresh
                           }
 
                           return IncomeChartCard();
@@ -237,6 +243,9 @@ class SvpHomeScreen extends StatelessWidget {
                               final userId = request.userId;
                               final address = request.address;
 
+                              LoggerUtils.debug(
+                                  "Svp Home Screen Recent Request : ${request.id}");
+
                               // Get the profile image URL from profileImage.imageUrl
                               String? profileImageUrl;
                               if (userId?.profileImage?.imageUrl != null &&
@@ -246,10 +255,11 @@ class SvpHomeScreen extends StatelessWidget {
 
                               return RecentJobRequestStatusWidget(
                                 onTap: () {
-                                  log("Tapped on -> Card ${request.id}");
+                                  LoggerUtils.info(
+                                      "Tapped on -> Svp Home recent request card : ${request.id}");
                                   Get.toNamed(
                                     Routes.svpJobDetailsScreen,
-                                    arguments: {"jobRequestId": request.id},
+                                    arguments: {'requestedJobID': request.id},
                                   );
                                 },
                                 cancelOnTap: () {
