@@ -32,7 +32,7 @@
     
     
     <application
-        android:label="kaz_bd"
+        android:label="Kaaj Bd"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
