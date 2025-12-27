@@ -736,6 +736,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   ),
                   UIHelper.verticalSpace(16.h),
 
+
                   /// Section: Completion Date
                   InkWell(
                     onTap: () async {
@@ -746,9 +747,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                         lastDate: DateTime(2100),
                       );
                       if (picked != null) {
-                        final formatted =
-                            DateFormat('MM-dd-yyyy').format(picked);
-                        controller.completionDateController.text = formatted;
+                        controller.onCompletionDateSelected(picked);
                       }
                     },
                     child: MoreInfoWidgetTile(
@@ -758,15 +757,18 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                       controller: controller.completionDateController,
                     ),
                   ),
+
                   UIHelper.verticalSpace(16.h),
 
-                  /// Section: Duration Time
+                  /// Section: Duration Time (Auto-calculated)
                   MoreInfoWidgetTile(
                     title: 'duration_time'.tr,
-                    hintText: 'type_days_in_numbers'.tr,
-                    keyboardType: TextInputType.number,
+                    hintText: 'auto_calculated_after_selecting_completion_date'.tr,
+                    isEnabled: false, // 👈 Makes it non-editable
                     controller: controller.durationTimeController,
                   ),
+
+
                   UIHelper.verticalSpace(24.h),
 
                   /// Section: Existing API Attachments
