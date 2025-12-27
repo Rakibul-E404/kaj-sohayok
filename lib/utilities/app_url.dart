@@ -136,6 +136,10 @@ class AppUrl {
     return '${baseUrl}v1/service-bookings/update-status/$bookingId/status/paymentRequest';
   }
 
+  static String providerPaymentRequestDetails(String bookingId) {
+    return '${baseUrl}v1/service-bookings/with-costs-summary/$bookingId';
+  }
+
   static const String additionalCost = '${baseUrl}v1/additional-cost';
 
   static String deleteUser(String userId) {
