@@ -579,4 +579,6 @@ Map<String, String> banglaLanguage = {
   'failed_to_load_services': 'সার্ভিস লোড করতে ব্যর্থ হয়েছে',
   'somthing_went_wrong': 'কিছু সমস্যা হয়েছে',
   'failed_to_load_home_data': 'হোম ডেটা লোড করতে ব্যর্থ হয়েছে',
+  'password_must_be_at_lease_eight_charecters':
+      'পাসওয়ার্ড অন্তত ৮ অক্ষরের হতে হবে',
 };

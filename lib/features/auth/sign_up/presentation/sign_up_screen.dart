@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:kaz_bd/constants/validator.dart';
 import 'package:kaz_bd/controllers/sign_up_screen_controller.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/features/auth/sign_up/widgets/gender_selection.dart';
@@ -230,10 +231,10 @@ class SignUpScreen extends StatelessWidget {
                         ),
                       ),
                       validator: (String? value) {
-                        if (value?.isEmpty ?? true) {
-                          return 'please_enter_password'.tr;
-                        }
-                        return null;
+                        // if (value?.isEmpty ?? true) {
+                        //   return 'please_enter_password'.tr;
+                        // }
+                        return passwordValidator(value);
                       },
                     );
                   }),
@@ -317,7 +318,7 @@ class SignUpScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-              /*    UIHelper.verticalSpace(32.h),
+                  /*    UIHelper.verticalSpace(32.h),
 
                   /// Section : Text -> OR
                   Text(

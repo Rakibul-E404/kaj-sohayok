@@ -70,7 +70,7 @@ Map<String, String> englishLanguage = {
   ///----------> Verify OTP
   'verify_otp': 'Verify OTP',
   'check_your_number_and_enter_the_code':
-      'Please check your phone number and enter the code',
+      'Please check your email and enter the code',
   'verify_email': 'Verify Email',
   'didn\'t_receive_code': 'Didn’t receive code? ',
   'resend_code': 'Resend Code',
@@ -579,4 +579,6 @@ Map<String, String> englishLanguage = {
   'failed_to_load_services': 'Failed to load services',
   'somthing_went_wrong': 'Something went wrong',
   'failed_to_load_home_data': 'Failed to load home data',
+  'password_must_be_at_lease_eight_charecters':
+      'Password must be at least 8 characters',
 };
