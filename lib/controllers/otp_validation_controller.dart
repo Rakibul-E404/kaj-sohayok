@@ -107,11 +107,9 @@ class OtpValidationController extends GetxController {
         //   textColor: AppColors.white,
         //   icon: const Icon(CupertinoIcons.info, color: AppColors.white),
         // );
-        Get.snackbar(
-          'title',
-          postResponse.jsonResponse?['message'],
-          backgroundColor: Colors.red,
-        );
+        LoggerUtils.debug(registrationOTPForm);
+        Get.snackbar('Error', postResponse.jsonResponse?['message'],
+            backgroundColor: Colors.red, colorText: Colors.white);
       }
     } catch (e) {
       // ToastManager.show(

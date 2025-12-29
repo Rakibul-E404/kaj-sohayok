@@ -232,6 +232,8 @@ class SignUpScreen extends StatelessWidget {
                       validator: (String? value) {
                         if (value?.isEmpty ?? true) {
                           return 'please_enter_password'.tr;
+                        } else if (value!.length < 8) {
+                          return "password_must_be_at_least_8_characters".tr;
                         }
                         return null;
                       },
@@ -317,7 +319,7 @@ class SignUpScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-              /*    UIHelper.verticalSpace(32.h),
+                  /*    UIHelper.verticalSpace(32.h),
 
                   /// Section : Text -> OR
                   Text(

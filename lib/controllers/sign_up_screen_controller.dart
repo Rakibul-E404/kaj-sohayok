@@ -108,6 +108,7 @@ class UserSignUpController extends GetxController {
         AppUrl.registerUser,
         body: registrationForm,
       );
+      LoggerUtils.debug(postResponse.jsonResponse);
       if (postResponse.isSuccess) {
         LoggerUtils.debug(postResponse.jsonResponse);
         final bool hasVerificationToken = await SecureStorageService()

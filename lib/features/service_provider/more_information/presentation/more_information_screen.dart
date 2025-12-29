@@ -121,6 +121,20 @@ class MoreInformationScreen extends StatelessWidget {
                           return null;
                         },
                       ),
+                      SizedBox(height: 24.h), // Start from Work Price
+                      _buildLabel('NID Number*'),
+                      SizedBox(height: 8.h),
+                      _buildTextField(
+                        controller: controller.nidNumberTEController ,
+                        hintText: 'Type now',
+                        keyboardType: TextInputType.text,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the NID number';
+                          }
+                          return null;
+                        },
+                      ),
                       SizedBox(height: 24.h),
 
                       // Upload Front Side

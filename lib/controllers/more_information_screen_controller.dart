@@ -25,6 +25,7 @@ class MoreInformationScreenController extends GetxController {
   final TextEditingController yearsOfExperienceController =
       TextEditingController();
   final TextEditingController workPriceController = TextEditingController();
+  final TextEditingController nidNumberTEController = TextEditingController();
   final TextEditingController otherServiceController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -63,7 +64,7 @@ class MoreInformationScreenController extends GetxController {
         AppUrl.serviceFormCategories,
         headers: {'Authorization': 'Bearer $token'},
       );
-
+      LoggerUtils.debug(response.jsonResponse);
       await Future.delayed(const Duration(seconds: 1));
 
       if (response.jsonResponse != null) {
@@ -271,6 +272,7 @@ class MoreInformationScreenController extends GetxController {
           "lng":
               locationController.currentPosition.value?.longitude.toString() ??
                   '',
+          "nidNumber": nidNumberTEController.text.trim() ?? ''
         };
       } else {
         fields = {
@@ -286,6 +288,7 @@ class MoreInformationScreenController extends GetxController {
           "lng":
               locationController.currentPosition.value?.longitude.toString() ??
                   '',
+          "nidNumber": nidNumberTEController.text.trim() ?? ''
         };
       }
 
@@ -329,6 +332,15 @@ class MoreInformationScreenController extends GetxController {
         // Get.offNamed(Routes.navigationScreen);
         await SecureStorageService().clear();
         Get.offAllNamed(Routes.chooseRoleScreen);
+      } else if (response.statusCode == 409) {
+        Get.snackbar(
+          'Submission Failed',
+          response.jsonResponse?['message'] ??
+              response.errorMessage ??
+              'Unknown error',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
       } else {
         Get.snackbar(
           'Submission Failed',

@@ -30,10 +30,11 @@ class AppUrl {
   static String userTermsAndConditions =
       '${baseUrl}v1/settings?type=termsAndConditions';
   static String userAboutUs = '${baseUrl}v1/settings?type=aboutUs';
-  static String userContactUs = '${baseUrl}v1/settings?type=contactUs';
+  static String userContactUs = '${baseUrl}v1/contact-us/';
 
   // ==========> Service Form ==========>
-  static String serviceFormCategories = '${baseUrl}v1/service-categories/';
+  // static String serviceFormCategories = '${baseUrl}v1/service-categories/';
+  static String serviceFormCategories = '${baseUrl}v1/service-categories/paginate?isVisible=true&isDeleted=false&limit=2000';
 
   // static String serviceProviderFormSubmit = '${baseUrl}v1/service-providers';
   static String serviceProviderFormSubmit =
