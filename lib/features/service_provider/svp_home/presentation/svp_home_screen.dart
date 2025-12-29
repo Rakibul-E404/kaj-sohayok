@@ -7,6 +7,7 @@ import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/custom_widgets/custom_shimmer_effect.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:intl/intl.dart';
+import 'package:kaz_bd/helpers/loading_helper.dart';
 import 'package:kaz_bd/utilities/logger_util.dart';
 import 'package:lottie/lottie.dart';
 
@@ -262,11 +263,22 @@ class SvpHomeScreen extends StatelessWidget {
                                     arguments: {'requestedJobID': request.id},
                                   );
                                 },
-                                cancelOnTap: () {
+                                cancelOnTap: () async {
                                   log("Button Tapped -> Cancel for ${request.id}");
+                                  controller.setServiceID(
+                                      servID: request.id ?? '');
+                                  await controller
+                                      .getCancelButtonApi()
+                                      .waitingForFutureWithoutBg();
                                 },
-                                acceptOnTap: () {
+                                acceptOnTap: () async {
                                   log("Button Tapped -> Accept for ${request.id}");
+                                  // serviceID = request.id ?? '';
+                                  controller.setServiceID(
+                                      servID: request.id ?? '');
+                                  await controller
+                                      .getSvpAcceptButtonApi()
+                                      .waitingForFutureWithoutBg();
                                 },
                                 userImage: profileImageUrl ?? '',
                                 userName: userId?.name ?? 'Unknown User',

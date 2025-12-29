@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kaz_bd/controllers/forget_password_controller.dart';
+import 'package:kaz_bd/controllers/sign_up_screen_controller.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:get/get.dart';
@@ -74,9 +76,15 @@ class VerifyOtpScreen extends StatelessWidget {
                 ///Section : OTP Form Field
                 CustomPinInput(
                   resend: () {
-                    otpValidationController.handleSendOtpSignUp(
-                      email: email ?? '',
-                    );
+                    // otpValidationController.handleSendOtpSignUp(
+                    //   email: email ?? '',
+                    // );
+                    if (forForgetPassword == false) {
+                      Get.find<UserSignUpController>().handleSignUp();
+                    } else {
+                      Get.find<ForgetPasswordController>()
+                          .handleForgetPassword();
+                    }
                   },
                 ),
                 UIHelper.verticalSpace(32.h),

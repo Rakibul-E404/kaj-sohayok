@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
+import 'package:kaz_bd/constants/validator.dart';
 import 'package:kaz_bd/controllers/sign_in_screen_controller.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
@@ -107,10 +108,10 @@ class SignInScreen extends StatelessWidget {
                                   ? Icons.visibility_off
                                   : Icons.visibility)),
                       validator: (String? value) {
-                        if (value?.isEmpty ?? true) {
-                          return 'please_enter_password'.tr;
-                        }
-                        return null;
+                        // if (value?.isEmpty ?? true) {
+                        //   return 'please_enter_password'.tr;
+                        // }
+                        return passwordValidator(value);
                       },
                     );
                   }),

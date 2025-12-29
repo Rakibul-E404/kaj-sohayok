@@ -1,3 +1,5 @@
+import 'package:get/get_utils/get_utils.dart';
+
 String? emailValidator(String? value) {
   if (value == null || value.isEmpty) {
     return 'Please enter your email';
@@ -11,10 +13,10 @@ String? emailValidator(String? value) {
 
 String? passwordValidator(String? value) {
   if (value == null || value.isEmpty) {
-    return 'Enter Password';
+    return 'please_enter_password'.tr;
   }
   if (value.length < 8) {
-    return 'Password must be at least 8 characters';
+    return 'password_must_be_at_lease_eight_charecters'.tr;
   }
   return null;
 }

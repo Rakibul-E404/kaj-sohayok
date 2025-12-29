@@ -108,6 +108,7 @@ class UserSignUpController extends GetxController {
         AppUrl.registerUser,
         body: registrationForm,
       );
+      LoggerUtils.debug(postResponse.jsonResponse);
       if (postResponse.isSuccess) {
         LoggerUtils.debug(postResponse.jsonResponse);
         final bool hasVerificationToken = await SecureStorageService()
@@ -132,11 +133,11 @@ class UserSignUpController extends GetxController {
             arguments: <String, String>{'email': emailTEController.text},
           );
         } else if (currentRole == UserRole.provider.name) {
-          Get.offAllNamed(Routes.signInScreen);
-          // Get.toNamed(
-          //   Routes.verifyOtpScreen,
-          //   arguments: <String, String>{'email': emailTEController.text},
-          // );
+          // Get.offAllNamed(Routes.signInScreen);
+          Get.toNamed(
+            Routes.verifyOtpScreen,
+            arguments: <String, String>{'email': emailTEController.text},
+          );
         }
         Get.snackbar(
           'Success',

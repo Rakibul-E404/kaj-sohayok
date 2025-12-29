@@ -110,6 +110,16 @@ class SignInScreenController extends GetxController {
             AppConstants.currentRole,
             UserRole.provider.name,
           );
+
+          /// ================> For Provider Email Verification =============>
+          if (signedProfile.value!.isEmailVerified == false) {
+            Get.toNamed(
+              Routes.verifyOtpScreen,
+              arguments: <String, String>{'email': emailTEController.text},
+            );
+            return;
+          }
+
           if (signedProfile.value!.isServiceProviderDetailsFound == true) {
             /// Profile  completed ===========>
             GetStorageModel().saveBool(
