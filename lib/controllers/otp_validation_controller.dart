@@ -35,7 +35,7 @@ class OtpValidationController extends GetxController {
   // Start countdown timer
   void startTimer() {
     _timer?.cancel();
-    secondsRemaining.value = 10;
+    secondsRemaining.value = 120;
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (secondsRemaining.value > 0) {
         secondsRemaining.value--;
