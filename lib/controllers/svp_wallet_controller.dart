@@ -16,18 +16,29 @@ class SvpWalletController extends GetxController {
   final RxList<ServiceWalletTransactionModel> serviceWalletTransactions =
       <ServiceWalletTransactionModel>[].obs;
   final Rxn<ServiceWalletAccount> serviceWalletAccount =
-      Rxn<ServiceWalletAccount>();
+  Rxn<ServiceWalletAccount>();
+
+  // Withdrawal method selection
+  final RxString withdrawalMethod = 'bank'.obs; // 'bank' or 'mobile'
+
+  // Bank fields
   final TextEditingController bankNameController = TextEditingController();
   final TextEditingController accountTypeController = TextEditingController();
   final TextEditingController accountNumberController = TextEditingController();
   final TextEditingController amountController = TextEditingController();
   final TextEditingController bankBranchController = TextEditingController();
   final TextEditingController accountHolderNameController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController bankAccountHolderNameController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController bankRoutingNumberController =
-      TextEditingController();
+  TextEditingController();
+
+  // Mobile banking fields
+  final TextEditingController mobileTypeController = TextEditingController(); // bkash, nagad, rocket
+  final TextEditingController mobileNoController = TextEditingController();
+  final TextEditingController mobileAccountTypeController = TextEditingController(); // personal, merchant
+
   final formKey = GlobalKey<FormState>();
 
   Future<void> fetchProviderWallet() async {
@@ -49,17 +60,15 @@ class SvpWalletController extends GetxController {
 
         serviceWalletTransactions.clear();
         for (final ServiceWalletTransactionModel transaction
-            in walletTransactionList) {
+        in walletTransactionList) {
           serviceWalletTransactions.add(transaction);
         }
         serviceWalletAccount.value = ServiceWalletAccount.fromJson(
           getResponse.jsonResponse?['data']['attributes']['wallet'],
         );
-        // LoggerUtils.debug(serviceWalletAccount.value?.amount);
         LoggerUtils.debug(
           getResponse.jsonResponse?['data']['attributes']['wallet'],
         );
-        // LoggerUtils.debug(uerProfileModel.value?.email);
       } else {
         Get.snackbar(
           'Failed',
@@ -83,15 +92,31 @@ class SvpWalletController extends GetxController {
       loader.value = true;
       final String token =
           await SecureStorageService().read(AppConstants.accessToken) ?? '';
-      final Map<String, dynamic> loginForm = <String, dynamic>{
+
+      Map<String, dynamic> loginForm = <String, dynamic>{
         "requestedAmount": int.parse(amountController.text),
-        "bankAccountNumber": "${accountNumberController.text.trim()}",
-        "bankRoutingNumber": "${bankRoutingNumberController.text.trim()}",
-        "bankAccountHolderName": "${accountHolderNameController.text.trim()}",
-        "bankAccountType": "${accountTypeController.text.trim()}",
-        "bankBranch": "${bankBranchController.text.trim()}",
-        "bankName": "${bankNameController.text.trim()}",
       };
+
+      // Add fields based on withdrawal method
+      if (withdrawalMethod.value == 'bank') {
+        loginForm.addAll({
+          "type": "bank",
+          "bankAccountNumber": accountNumberController.text.trim(),
+          "bankRoutingNumber": bankRoutingNumberController.text.trim(),
+          "bankAccountHolderName": accountHolderNameController.text.trim(),
+          "bankAccountType": accountTypeController.text.trim(),
+          "bankBranch": bankBranchController.text.trim(),
+          "bankName": bankNameController.text.trim(),
+        });
+      } else {
+        // Mobile banking
+        loginForm.addAll({
+          "type": mobileTypeController.text.trim(), // bkash, nagad, rocket
+          "mobileNo": mobileNoController.text.trim(),
+          "accountType": mobileAccountTypeController.text.trim(), // personal, merchant
+        });
+      }
+
       LoggerUtils.debug(loginForm);
       final NetworkResponse postResponse = await NetworkCaller().postRequest(
         AppUrl.serviceProviderWithdrawalRequest,
@@ -110,10 +135,6 @@ class SvpWalletController extends GetxController {
 
         Navigator.pop(Get.context!);
         clearControllers();
-        // Get.toNamed(
-        //   Routes.verifyOtpScreen,
-        //
-        // );
       } else {
         LoggerUtils.debug(postResponse.jsonResponse?['message']);
 
@@ -124,14 +145,8 @@ class SvpWalletController extends GetxController {
         );
       }
     } catch (e) {
-      // ToastManager.show(
-      //   message: e.toString(),
-      //   backgroundColor: AppColors.red,
-      //   textColor: AppColors.white,
-      // );
       LoggerUtils.debug("Exception : ${e.toString()}");
     } finally {
-      // clearTextFields();
       loader.value = false;
     }
   }
@@ -145,5 +160,9 @@ class SvpWalletController extends GetxController {
     accountHolderNameController.clear();
     bankAccountHolderNameController.clear();
     bankRoutingNumberController.clear();
+    mobileTypeController.clear();
+    mobileNoController.clear();
+    mobileAccountTypeController.clear();
+    withdrawalMethod.value = 'bank'; // Reset to default
   }
 }

@@ -231,10 +231,12 @@ class SignUpScreen extends StatelessWidget {
                         ),
                       ),
                       validator: (String? value) {
-                        // if (value?.isEmpty ?? true) {
-                        //   return 'please_enter_password'.tr;
-                        // }
-                        return passwordValidator(value);
+                        if (value?.isEmpty ?? true) {
+                          return 'please_enter_password'.tr;
+                        } else if (value!.length < 8) {
+                          return "password_must_be_at_least_8_characters".tr;
+                        }
+                        return null;
                       },
                     );
                   }),
