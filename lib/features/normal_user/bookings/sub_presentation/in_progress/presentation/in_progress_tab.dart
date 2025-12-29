@@ -207,7 +207,7 @@ class InProgressTab extends StatelessWidget {
                     serviceProviderProfileImage:
                         imageUrl ?? Assets.images.userImage.path,
                     serviceProviderName:
-                        provider?['name'] ?? 'Unknown Provider',
+                        provider?['name'] ?? 'unknown_provider'.tr,
                     serviceProviderDesignation: 'services_provider'.tr,
                     isNetworkImage: isNetworkImage,
                   );

@@ -155,8 +155,8 @@ class _AcceptedBookingTabState extends State<AcceptedBookingTab> {
                     if (messageProviderId.isEmpty) {
                       log('❌ [ACCEPTED TAB] Cannot send message: Provider ID is empty');
                       Get.snackbar(
-                        'Error',
-                        'Cannot send message: Provider information not available',
+                        'error'.tr,
+                        'cannot_send_message'.tr,
                         snackPosition: SnackPosition.BOTTOM,
                         backgroundColor: Colors.red,
                         colorText: Colors.white,
@@ -178,8 +178,9 @@ class _AcceptedBookingTabState extends State<AcceptedBookingTab> {
                       booking['bookingDateTime']?.toString() ?? ''),
                   serviceProviderProfileImage:
                       imageUrl ?? Assets.images.userImage.path,
-                  serviceProviderName: provider?['name'] ?? 'Unknown Provider',
-                  serviceProviderDesignation: 'Service Provider',
+                  serviceProviderName:
+                      provider?['name'] ?? 'unknown_provider'.tr,
+                  serviceProviderDesignation: 'services_provider'.tr,
                   isNetworkImage: isNetworkImage,
                 );
 

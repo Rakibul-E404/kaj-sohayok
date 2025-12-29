@@ -146,7 +146,8 @@ class ServicesCanceledTab extends StatelessWidget {
                       booking['bookingDateTime']?.toString() ?? ''),
                   serviceProviderProfileImage:
                       imageUrl ?? Assets.images.userImage.path,
-                  serviceProviderName: provider?['name'] ?? 'Unknown Provider',
+                  serviceProviderName:
+                      provider?['name'] ?? 'unknown_provider'.tr,
                   serviceProviderDesignation: 'services_provider'.tr,
                   isNetworkImage: isNetworkImage,
                 );

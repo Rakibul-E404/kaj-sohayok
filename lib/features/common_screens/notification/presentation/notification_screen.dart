@@ -1,6 +1,5 @@
 // notification_screen.dart
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -46,16 +45,17 @@ class NotificationScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.error_outline, size: 48, color: Colors.grey.shade500),
+                Icon(Icons.error_outline,
+                    size: 48, color: Colors.grey.shade500),
                 SizedBox(height: 16.h),
                 Text(
-                  'Failed to load notifications',
+                  'failed_to_load_exception'.tr,
                   style: TextStyle(color: Colors.grey.shade600),
                 ),
                 SizedBox(height: 16.h),
                 ElevatedButton(
                   onPressed: controller.retry,
-                   child: const Text('Retry'),
+                  child: Text('retry'.tr),
                 ),
               ],
             ),
@@ -70,7 +70,7 @@ class NotificationScreen extends StatelessWidget {
         return RefreshIndicator(
           onRefresh: () => controller.fetchNotification(isRefresh: true),
           child: ListView.separated(
-             padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),
+            padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),
             itemCount: controller.notificationList.length,
             separatorBuilder: (context, index) => SizedBox(height: 16.h),
             itemBuilder: (context, index) {
@@ -89,11 +89,11 @@ class NotificationScreen extends StatelessWidget {
 
   // Helper to format DateTime (add this if not already available)
   String formatDate(DateTime? dateTime) {
-    if (dateTime == null) return 'Just now';
+    if (dateTime == null) return 'just_now'.tr;
     final now = DateTime.now();
     final difference = now.difference(dateTime);
 
-    if (difference.inSeconds < 60) return 'Just now';
+    if (difference.inSeconds < 60) return 'just_now'.tr;
     if (difference.inMinutes < 60) return '${difference.inMinutes}m ago';
     if (difference.inHours < 24) return '${difference.inHours}h ago';
     return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
