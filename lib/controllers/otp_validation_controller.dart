@@ -35,7 +35,7 @@ class OtpValidationController extends GetxController {
   // Start countdown timer
   void startTimer() {
     _timer?.cancel();
-    secondsRemaining.value = 30;
+    secondsRemaining.value = 10;
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (secondsRemaining.value > 0) {
         secondsRemaining.value--;
@@ -68,18 +68,18 @@ class OtpValidationController extends GetxController {
       if (postResponse.isSuccess) {
         // LoggerUtils.debug(registrationOTPForm);
 
-        await SecureStorageService().write(
-          AppConstants.accessToken,
-          postResponse.jsonResponse?['data']['attributes']['result']['tokens']
-                  ['accessToken'] ??
-              '',
-        );
-        await SecureStorageService().write(
-          AppConstants.refreshToken,
-          postResponse.jsonResponse?['data']['attributes']['result']['tokens']
-                  ['refreshToken'] ??
-              '',
-        );
+        // await SecureStorageService().write(
+        //   AppConstants.accessToken,
+        //   postResponse.jsonResponse?['data']['attributes']['result']['tokens']
+        //           ['accessToken'] ??
+        //       '',
+        // );
+        // await SecureStorageService().write(
+        //   AppConstants.refreshToken,
+        //   postResponse.jsonResponse?['data']['attributes']['result']['tokens']
+        //           ['refreshToken'] ??
+        //       '',
+        // );
 
         /// ======================= SOCKET =====================>
         SocketServices().disconnect();

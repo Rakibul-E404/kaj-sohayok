@@ -236,10 +236,11 @@ class MoreInformationScreenController extends GetxController {
     }
 
     try {
+      isLoading.value = true;
+
       LocationController locationController = Get.put(LocationController());
       await locationController.fetchCurrentLocation();
 
-      isLoading.value = true;
       Map<String, String> fields;
 
       if (locationController.currentPosition.value == null ||

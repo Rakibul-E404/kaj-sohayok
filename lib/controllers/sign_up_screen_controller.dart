@@ -133,11 +133,11 @@ class UserSignUpController extends GetxController {
             arguments: <String, String>{'email': emailTEController.text},
           );
         } else if (currentRole == UserRole.provider.name) {
-          Get.offAllNamed(Routes.signInScreen);
-          // Get.toNamed(
-          //   Routes.verifyOtpScreen,
-          //   arguments: <String, String>{'email': emailTEController.text},
-          // );
+          // Get.offAllNamed(Routes.signInScreen);
+          Get.toNamed(
+            Routes.verifyOtpScreen,
+            arguments: <String, String>{'email': emailTEController.text},
+          );
         }
         Get.snackbar(
           'Success',
