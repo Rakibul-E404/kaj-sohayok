@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
@@ -8,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:video_player/video_player.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
@@ -1270,6 +1267,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                       additionalCostList: controller.additionalCosts.toList(),
                       totalPayment: controller.calculateTotalPayment(),
                       isAddAdditionalCostButtonVisible: true,
+                      enableDelete: true,
                       onTap: () {
                         _showAddAdditionalCostDialog();
                       },
@@ -1325,6 +1323,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextFormField(
+                  maxLength: 25,
                   controller: additionalCostTitle,
                   decoration: InputDecoration(
                     hintText: 'enter_cost_title'.tr,
