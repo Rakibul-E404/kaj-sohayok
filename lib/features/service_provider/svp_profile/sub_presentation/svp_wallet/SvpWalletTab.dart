@@ -33,7 +33,7 @@ class SvpWalletTab extends StatelessWidget {
             WalletCardTileWidget(
               title: 'total_balance'.tr,
               amount:
-                  "${svpWalletController.serviceWalletAccount.value?.totalBalance.toStringAsFixed(2)}",
+              "${svpWalletController.serviceWalletAccount.value?.totalBalance.toStringAsFixed(2)}",
             ),
             UIHelper.verticalSpace(16.h),
 
@@ -42,7 +42,7 @@ class SvpWalletTab extends StatelessWidget {
               isWithdrawlCard: true,
               title: 'total_withdrawl_balance'.tr,
               amount:
-                  "${svpWalletController.serviceWalletAccount.value?.amount.toStringAsFixed(2)}",
+              "${svpWalletController.serviceWalletAccount.value?.amount.toStringAsFixed(2)}",
             ),
             UIHelper.verticalSpace(24.h),
 
@@ -55,7 +55,7 @@ class SvpWalletTab extends StatelessWidget {
                   style: TextFontStyle.headline18w700c202020StyleSatoshi,
                 ),
                 Obx(
-                  () => Visibility(
+                      () => Visibility(
                     visible: svpWalletController
                         .serviceWalletTransactions.isNotEmpty,
                     replacement: SizedBox.shrink(),
@@ -86,29 +86,27 @@ class SvpWalletTab extends StatelessWidget {
                                   padding: EdgeInsets.only(top: 40),
                                   child: ListView.separated(
                                     shrinkWrap: true,
-                                    // physics: const NeverScrollableScrollPhysics(),
                                     itemCount: svpWalletController
                                         .serviceWalletTransactions.length,
                                     separatorBuilder: (_, __) =>
                                         SizedBox(height: 12),
                                     itemBuilder: (context, index) {
                                       final ServiceWalletTransactionModel item =
-                                          svpWalletController
-                                              .serviceWalletTransactions[index];
+                                      svpWalletController
+                                          .serviceWalletTransactions[index];
                                       return Padding(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 12,
                                         ),
                                         child: TransectionHistoryCard(
                                           transactionType:
-                                              '${item.type.toUpperCase()} ',
+                                          '${item.type.toUpperCase()} ',
                                           totalAmount: '${item.amount}',
                                           paymentDate:
-                                              '${formatDate(item.createdAt)}',
-                                          // Replace with real date
+                                          '${formatDate(item.createdAt)}',
                                           currency: ' ${item.currency}',
                                           transactionStatus:
-                                              '${item.status.toUpperCase()} ',
+                                          '${item.status.toUpperCase()} ',
                                         ),
                                       );
                                     },
@@ -132,21 +130,21 @@ class SvpWalletTab extends StatelessWidget {
             UIHelper.verticalSpace(24.h),
 
             Obx(
-              () => Visibility(
+                  () => Visibility(
                 visible:
-                    svpWalletController.serviceWalletTransactions.isNotEmpty,
+                svpWalletController.serviceWalletTransactions.isNotEmpty,
                 replacement: Text('${'no_transaction_history_available'.tr} '),
                 child: ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount:
-                      svpWalletController.serviceWalletTransactions.length <= 2
-                          ? svpWalletController.serviceWalletTransactions.length
-                          : 2,
+                  svpWalletController.serviceWalletTransactions.length <= 2
+                      ? svpWalletController.serviceWalletTransactions.length
+                      : 2,
                   separatorBuilder: (_, __) => SizedBox(height: 12),
                   itemBuilder: (context, index) {
                     final ServiceWalletTransactionModel item =
-                        svpWalletController.serviceWalletTransactions[index];
+                    svpWalletController.serviceWalletTransactions[index];
                     return TransectionHistoryCard(
                       transactionType: '${item.type.toUpperCase()}',
                       totalAmount: '${item.amount}',
@@ -162,10 +160,10 @@ class SvpWalletTab extends StatelessWidget {
 
             ///Section : Button -> Withdraw Balance
             Obx(
-              () => Visibility(
+                  () => Visibility(
                 visible:
-                    svpWalletController.serviceWalletAccount.value?.amount !=
-                        0.0,
+                svpWalletController.serviceWalletAccount.value?.amount !=
+                    0.0,
                 replacement: SizedBox.shrink(),
                 child: CustomElevatedButton(
                   onTap: () {
@@ -192,7 +190,7 @@ class SvpWalletTab extends StatelessWidget {
       ),
       builder: (context) {
         final SvpWalletController svpWalletController =
-            Get.find<SvpWalletController>();
+        Get.find<SvpWalletController>();
         return Padding(
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -225,122 +223,46 @@ class SvpWalletTab extends StatelessWidget {
                     ),
                     UIHelper.verticalSpace(24.h),
 
-                    // Bank Name Field
-                    _buildTextField(
-                      controller: svpWalletController.bankNameController,
-                      label: 'bank_name'.tr,
-                      icon: Icons.account_balance,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'please_enter_bank_name'.tr;
-                        }
-                        return null;
-                      },
-                      context: context,
-                    ),
-                    UIHelper.verticalSpace(16.h),
-                    _buildTextField(
-                      controller: svpWalletController.bankBranchController,
-                      label: 'bank_branch_name'.tr,
-                      icon: Icons.account_balance,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'please_enter_bank_branch_name'.tr;
-                        }
-                        return null;
-                      },
-                      context: context,
-                    ),
-                    UIHelper.verticalSpace(16.h),
-
-                    _buildTextField(
-                      controller:
-                          svpWalletController.bankRoutingNumberController,
-                      label: 'bank_routing_number'.tr,
-                      icon: Icons.account_balance,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'please_enter_account_holder_number'.tr;
-                        }
-                        if (double.tryParse(value) == null) {
-                          return 'please_enter_valid_amount'.tr;
-                        }
-                        return null;
-                      },
-                      context: context,
-                    ),
-                    UIHelper.verticalSpace(16.h),
-                    _buildTextField(
-                      controller:
-                          svpWalletController.accountHolderNameController,
-                      label: 'account_holder_name'.tr,
-                      icon: Icons.account_balance,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'please_enter_account_holder_name'.tr;
-                        }
-                        return null;
-                      },
-                      context: context,
-                    ),
-                    UIHelper.verticalSpace(16.h),
-
-                    // Account Type Field
-                    // Account Type Dropdown
-                    DropdownButtonFormField<String>(
-                      value:
-                          svpWalletController.accountTypeController.text.isEmpty
-                              ? null
-                              : svpWalletController.accountTypeController.text,
+                    // Withdrawal Method Selection Dropdown
+                    Obx(() => DropdownButtonFormField<String>(
+                      value: svpWalletController.withdrawalMethod.value,
                       items: [
                         DropdownMenuItem(
-                          value: 'savings',
-                          child: Text('svings'.tr),
+                          value: 'bank',
+                          child: Text('bank_transfer'.tr),
                         ),
                         DropdownMenuItem(
-                          value: 'current',
-                          child: Text('current'.tr),
+                          value: 'mobile',
+                          child: Text('mobile_banking'.tr),
                         ),
                       ],
                       onChanged: (String? newValue) {
-                        svpWalletController.accountTypeController.text =
-                            newValue ?? '';
-                        svpWalletController.accountHolderNameController.text
-                            .toLowerCase();
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'please_select_account_type'.tr;
+                        if (newValue != null) {
+                          svpWalletController.withdrawalMethod.value = newValue;
                         }
-                        return null;
                       },
                       decoration: InputDecoration(
-                        labelText: 'account_type'.tr,
-                        prefixIcon: Icon(Icons.person_outline),
+                        labelText: 'withdrawal_method'.tr,
+                        prefixIcon: Icon(Icons.account_balance_wallet),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.r),
+                          borderRadius: BorderRadius.circular(12.r),
                         ),
+                        filled: true,
+                        fillColor: Colors.grey[50],
                       ),
-                    ),
+                    )),
                     UIHelper.verticalSpace(16.h),
 
-                    // Account Number Field
-                    _buildTextField(
-                      controller: svpWalletController.accountNumberController,
-                      label: 'account_number'.tr,
-                      icon: Icons.credit_card,
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'please_enter_account_number'.tr;
-                        }
-                        return null;
-                      },
-                      context: context,
-                    ),
-                    UIHelper.verticalSpace(16.h),
+                    // Conditional Fields based on withdrawal method
+                    Obx(() {
+                      if (svpWalletController.withdrawalMethod.value == 'bank') {
+                        return _buildBankFields(context, svpWalletController);
+                      } else {
+                        return _buildMobileBankingFields(context, svpWalletController);
+                      }
+                    }),
 
-                    // Withdrawal Amount Field
+                    // Withdrawal Amount Field (Common for both)
                     _buildTextField(
                       controller: svpWalletController.amountController,
                       label: 'withdrawl_amount'.tr,
@@ -378,6 +300,222 @@ class SvpWalletTab extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildBankFields(BuildContext context, SvpWalletController controller) {
+    return Column(
+      children: [
+        // Bank Name Field
+        _buildTextField(
+          controller: controller.bankNameController,
+          label: 'bank_name'.tr,
+          icon: Icons.account_balance,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'please_enter_bank_name'.tr;
+            }
+            return null;
+          },
+          context: context,
+        ),
+        UIHelper.verticalSpace(16.h),
+
+        _buildTextField(
+          controller: controller.bankBranchController,
+          label: 'bank_branch_name'.tr,
+          icon: Icons.account_balance,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'please_enter_bank_branch_name'.tr;
+            }
+            return null;
+          },
+          context: context,
+        ),
+        UIHelper.verticalSpace(16.h),
+
+        _buildTextField(
+          controller: controller.bankRoutingNumberController,
+          label: 'bank_routing_number'.tr,
+          icon: Icons.account_balance,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'please_enter_account_holder_number'.tr;
+            }
+            if (double.tryParse(value) == null) {
+              return 'please_enter_valid_amount'.tr;
+            }
+            return null;
+          },
+          context: context,
+        ),
+        UIHelper.verticalSpace(16.h),
+
+        _buildTextField(
+          controller: controller.accountHolderNameController,
+          label: 'account_holder_name'.tr,
+          icon: Icons.account_balance,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'please_enter_account_holder_name'.tr;
+            }
+            return null;
+          },
+          context: context,
+        ),
+        UIHelper.verticalSpace(16.h),
+
+        // Account Type Dropdown
+        DropdownButtonFormField<String>(
+          value: controller.accountTypeController.text.isEmpty
+              ? null
+              : controller.accountTypeController.text,
+          items: [
+            DropdownMenuItem(
+              value: 'savings',
+              child: Text('svings'.tr),
+            ),
+            DropdownMenuItem(
+              value: 'current',
+              child: Text('current'.tr),
+            ),
+          ],
+          onChanged: (String? newValue) {
+            controller.accountTypeController.text = newValue ?? '';
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'please_select_account_type'.tr;
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            labelText: 'account_type'.tr,
+            prefixIcon: Icon(Icons.person_outline),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            filled: true,
+            fillColor: Colors.grey[50],
+          ),
+        ),
+        UIHelper.verticalSpace(16.h),
+
+        // Account Number Field
+        _buildTextField(
+          controller: controller.accountNumberController,
+          label: 'account_number'.tr,
+          icon: Icons.credit_card,
+          keyboardType: TextInputType.number,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'please_enter_account_number'.tr;
+            }
+            return null;
+          },
+          context: context,
+        ),
+        UIHelper.verticalSpace(16.h),
+      ],
+    );
+  }
+
+  Widget _buildMobileBankingFields(BuildContext context, SvpWalletController controller) {
+    return Column(
+      children: [
+        // Mobile Banking Type Dropdown (bkash, nagad, rocket)
+        DropdownButtonFormField<String>(
+          value: controller.mobileTypeController.text.isEmpty
+              ? null
+              : controller.mobileTypeController.text,
+          items: [
+            DropdownMenuItem(
+              value: 'bkash',
+              child: Text('bKash'.tr),
+            ),
+            DropdownMenuItem(
+              value: 'nagad',
+              child: Text('Nagad'.tr),
+            ),
+            DropdownMenuItem(
+              value: 'rocket'.tr,
+              child: Text('Rocket'),
+            ),
+          ],
+          onChanged: (String? newValue) {
+            controller.mobileTypeController.text = newValue ?? '';
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please select mobile banking type';
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            labelText: 'mobile_banking_type'.tr,
+            prefixIcon: Icon(Icons.phone_android),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            filled: true,
+            fillColor: Colors.grey[50],
+          ),
+        ),
+        UIHelper.verticalSpace(16.h),
+
+        // Mobile Number Field
+        _buildTextField(
+          controller: controller.mobileNoController,
+          label: 'mobile_number'.tr,
+          icon: Icons.phone,
+          keyboardType: TextInputType.phone,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'please_enter_mobile_number'.tr;
+            }
+            return null;
+          },
+          context: context,
+        ),
+        UIHelper.verticalSpace(16.h),
+
+        // Account Type Dropdown (personal, merchant)
+        DropdownButtonFormField<String>(
+          value: controller.mobileAccountTypeController.text.isEmpty
+              ? null
+              : controller.mobileAccountTypeController.text,
+          items: [
+            DropdownMenuItem(
+              value: 'personal',
+              child: Text('personal'.tr),
+            ),
+            DropdownMenuItem(
+              value: 'merchant',
+              child: Text('merchant'.tr),
+            ),
+          ],
+          onChanged: (String? newValue) {
+            controller.mobileAccountTypeController.text = newValue ?? '';
+          },
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'please_select_account_type'.tr;
+            }
+            return null;
+          },
+          decoration: InputDecoration(
+            labelText: 'account_type'.tr,
+            prefixIcon: Icon(Icons.account_circle),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            filled: true,
+            fillColor: Colors.grey[50],
+          ),
+        ),
+        UIHelper.verticalSpace(16.h),
+      ],
     );
   }
 
@@ -419,11 +557,7 @@ class SvpWalletTab extends StatelessWidget {
 }
 
 String formatDate(String createdAt) {
-  // Parse the incoming date string into a DateTime object
   DateTime dateTime = DateTime.parse(createdAt);
-
-  // Format the date as "12 Jan 25, 8:00 AM"
   String formattedDate = DateFormat('d MMM yy, h:mm a').format(dateTime);
-
   return formattedDate;
 }

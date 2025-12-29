@@ -49,6 +49,8 @@ Map<String, String> englishLanguage = {
   'select_gender': 'Select gender',
   'male': 'Male',
   'female': 'Female',
+  'password_must_be_at_least_8_characters':
+      "Password must be at least 8 characters",
 
   ///----------> Forgot Password Screen
   'password_forgot': 'Forgot Password',
@@ -453,6 +455,20 @@ Map<String, String> englishLanguage = {
   'delete_message': 'Delete Message',
   'profile_view': 'Profile View',
   'write_your_message': 'Write your message',
+  'we_here_to_help': 'We’re here to help!',
+  'bank_transfer': 'Bank Transfer',
+  'mobile_banking': 'Mobile Banking',
+  'withdrawal_method': 'Withdrawal Method',
+  'nagad': 'Nagad',
+  'bKash': 'bKash',
+  'rocket': 'Rocket',
+  'mobile_banking_type': 'Mobile Banking Type',
+  'mobile_number': 'Mobile Number',
+  'personal': 'Personal',
+  'merchant': 'Merchant',
+  'please_enter_mobile_number': 'Please enter mobile number',
+    'have_ques_or_need': 'Have questions or need assistance? Reach out to our support team.',
+
 
   ///Screen--------------->> Svp Home Screen
   'total_income': 'Total Income',

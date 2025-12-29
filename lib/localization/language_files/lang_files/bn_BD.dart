@@ -50,6 +50,8 @@ Map<String, String> banglaLanguage = {
   'select_gender': 'লিঙ্গ নির্বাচন করুন',
   'male': 'পুরুষ',
   'female': 'মহিলা',
+  'password_must_be_at_least_8_characters': 'পাসওয়ার্ড কমপক্ষে ৮ অক্ষর হতে হবে।',
+
 
   ///----------> Forgot Password Screen
   'password_forgot': 'পাসওয়ার্ড ভুলে গেছি',
@@ -76,6 +78,8 @@ Map<String, String> banglaLanguage = {
   'verify_email': 'ইমেল যাচাই করুন',
   'didn\'t_receive_code': 'কোড পাননি? ',
   'resend_code': 'কোড আবার পাঠান',
+  'we_here_to_help': ' আমরা সাহায্য করার জন্য এখানে আছি!',
+  'have_ques_or_need': 'কোন প্রশ্ন আছে অথবা সাহায্যের প্রয়োজন? আমাদের সহায়তা দলের সাথে যোগাযোগ করুন।',
 
   ///----------> Normal User
   ///----------> Home Screen
@@ -97,6 +101,7 @@ Map<String, String> banglaLanguage = {
   'all_categories': 'সমস্ত বিভাগ',
   'no_categories_found': 'কোন বিভাগ পাওয়া যায়নি.',
   'category': 'শ্রেণী',
+  'bank_transfer': 'ব্যাংক ট্রান্সফার',
 
   ///----------> All Popular Providers
   'all_popular_providers': 'সমস্ত জনপ্রিয় প্রদানকারী',
@@ -116,7 +121,18 @@ Map<String, String> banglaLanguage = {
   'about': 'সম্পর্কে',
   'gallery': 'গ্যালারি',
   'reviews': 'রিভিউ',
+  'mobile_banking': 'মোবাইল ব্যাংকিং',
+  'withdrawal_method': 'উত্তোলন পদ্ধতি',
   'service_description': 'পরিষেবার বিবরণ',
+  'bKash': 'বিকাশ',
+  'nagad': 'নগদ',
+  'rocket': 'রকেট',
+  'mobile_banking_type': 'মোবাইল ব্যাংকিং ধরন',
+   'mobile_number': 'মোবাইল নম্বর',
+  'personal': 'পার্সোনাল',
+  'merchant': "মার্চেন্ট",
+  'please_enter_mobile_number': 'দয়া করে মোবাইল নম্বরটি দিন !',
+
   'service_provider': 'সেবা প্রদানকারী',
 
   ///----------> Details Screen to Service Provider Profile Details Screen

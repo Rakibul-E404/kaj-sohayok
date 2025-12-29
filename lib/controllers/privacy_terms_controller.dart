@@ -13,7 +13,7 @@ class PrivacyTermsController extends GetxController {
   final RxString privacyPolicy = ''.obs;
   final RxString aboutUs = ''.obs;
   final RxString termsCondition = ''.obs;
-  final RxString contactUs = ''.obs;
+  final RxMap  contactUs = {}.obs;
 
   Future<void> fetchPrivacyPolicy() async {
     try {
@@ -27,7 +27,6 @@ class PrivacyTermsController extends GetxController {
       if (getResponse.isSuccess) {
         privacyPolicy.value =
             getResponse.jsonResponse?['data']['attributes'][0]['details'];
-        LoggerUtils.debug(privacyPolicy.value);
       } else {
         // Get.snackbar(
         //   'Error',
@@ -50,9 +49,10 @@ class PrivacyTermsController extends GetxController {
         AppUrl.userAboutUs,
         headers: <String, String>{'Authorization': 'Bearer $token'},
       );
+      LoggerUtils.info("${getResponse.jsonResponse} Polnnnnnn");
       if (getResponse.isSuccess) {
         aboutUs.value =
-            getResponse.jsonResponse?['data']['attributes'][0]['content'];
+            getResponse.jsonResponse?['data']['attributes'][0]['details'];
       } else {
         // Get.snackbar(
         //   'Error',
@@ -77,7 +77,7 @@ class PrivacyTermsController extends GetxController {
       );
       if (getResponse.isSuccess) {
         termsCondition.value =
-            getResponse.jsonResponse?['data']['attributes'][0]['content'];
+            getResponse.jsonResponse?['data']['attributes'][0]['details'];
       } else {
         // Get.snackbar(
         //   'Error',
@@ -100,9 +100,11 @@ class PrivacyTermsController extends GetxController {
         AppUrl.userContactUs,
         headers: <String, String>{'Authorization': 'Bearer $token'},
       );
+      LoggerUtils.debug(getResponse.jsonResponse);
       if (getResponse.isSuccess) {
+        LoggerUtils.debug(getResponse.jsonResponse);
         contactUs.value =
-            getResponse.jsonResponse?['data']['attributes'][0]['content'];
+            getResponse.jsonResponse?['data']['attributes'][0] ?? {};
       } else {
         // Get.snackbar(
         //   'Error',
@@ -121,6 +123,7 @@ class PrivacyTermsController extends GetxController {
     fetchPrivacyPolicy();
     fetchAboutUs();
     fetchTermsCondition();
+    fetchContactUst();
     super.onInit();
   }
 }

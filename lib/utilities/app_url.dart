@@ -3,7 +3,8 @@ class AppUrl {
 
   static const String baseUrl = 'https://newsheakh6737.sobhoy.com/api/';
   static const String imageBaseUrl = 'https://newsheakh6737.sobhoy.com';
-  static const String socketBaseUrl = "https://newsheakh6737.sobhoy.com";
+  // static const String socketBaseUrl = "https://newsheakh6737.sobhoy.com";
+  static const String socketBaseUrl = "https://sheakh6738.sobhoy.com";
 
   static String registerUser = '${baseUrl}v1/auth/register';
   static String registerUserEmailVerify = '${baseUrl}v1/auth/verify-email';
@@ -30,10 +31,11 @@ class AppUrl {
   static String userTermsAndConditions =
       '${baseUrl}v1/settings?type=termsAndConditions';
   static String userAboutUs = '${baseUrl}v1/settings?type=aboutUs';
-  static String userContactUs = '${baseUrl}v1/settings?type=contactUs';
+  static String userContactUs = '${baseUrl}v1/contact-us/';
 
   // ==========> Service Form ==========>
-  static String serviceFormCategories = '${baseUrl}v1/service-categories/';
+  // static String serviceFormCategories = '${baseUrl}v1/service-categories/';
+  static String serviceFormCategories = '${baseUrl}v1/service-categories/paginate?isVisible=true&isDeleted=false&limit=2000';
 
   // static String serviceProviderFormSubmit = '${baseUrl}v1/service-providers';
   static String serviceProviderFormSubmit =

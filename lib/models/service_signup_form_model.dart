@@ -49,21 +49,32 @@ class ServiceCategoryResponse {
   final int code;
   final String message;
   final List<ServiceFormCategoryModel> categories;
+  final int page;
+  final int totalPages;
+  final int totalResults;
 
   ServiceCategoryResponse({
     required this.code,
     required this.message,
     required this.categories,
+    required this.page,
+    required this.totalPages,
+    required this.totalResults,
   });
 
   factory ServiceCategoryResponse.fromJson(Map<String, dynamic> json) {
+    final attributes = json['data']?['attributes'] ?? {};
+    final results = attributes['results'] as List? ?? [];
+
     return ServiceCategoryResponse(
       code: json['code'] ?? 200,
       message: json['message'] ?? '',
-      categories: (json['data']?['attributes'] as List?)
-          ?.map((e) => ServiceFormCategoryModel.fromJson(e))
-          .toList() ??
-          [],
+      categories: results
+          .map((e) => ServiceFormCategoryModel.fromJson(e))
+          .toList(),
+      page: attributes['page'] ?? 1,
+      totalPages: attributes['totalPages'] ?? 1,
+      totalResults: attributes['totalResults'] ?? 0,
     );
   }
 }
