@@ -619,4 +619,50 @@ Map<String, String> englishLanguage = {
   'format_and_file_size_text': 'Format: .jpeg, .png & Max file size: 25 MB',
   'make_sure_your_face_and_id_are_visible':
       'Make sure your face and ID are visible',
+  'call_ended_by_other_user': 'Call ended by other user',
+  'calling...': 'Calling...',
+  'call_failed': 'Call failed',
+  'invalid_call_token_please_try_again':
+      'Invalid call token. Please try again.',
+  'call_token_expired_please_try_again':
+      'Call token expired. Please try again.',
+  'network_connection_failed': 'Network connection failed.',
+  'call_connected': 'Call connected',
+  'call_accepted_connecting': 'Call accepted, connecting...',
+  'camera_and_michro_phone_permission_are_required':
+      'Camera and microphone permissions are required',
+  'failed_to_get_call_token_please_try_again':
+      'Failed to get call token. Please try again.',
+  'failed_to_join_call': 'Failed to join call',
+  'cannot_initiate_call_invalid_conversation':
+      'Cannot initiate call - invalid conversation',
+  'unknown': 'Unknown',
+  'failed_to_start_the_call_please_try_again':
+      'Failed to start the call. Please try again.',
+  'accepting_call': 'Accepting call...',
+  'call_rejected': 'Call rejected',
+  'michrophone_muted': 'Microphone muted',
+  'michrophone_unmuted': 'Microphone unmuted',
+  'camera_off': 'Camera off',
+  'camera_on': 'Camera on',
+  'camera_switched': 'Camera switched',
+  'speaker_on': 'Speaker on',
+  'earpiece_mode': 'Earpiece mode',
+  'call_error': 'Call Error',
+  'waiting_for_other_user': 'Waiting for other user...',
+  'ringing': 'Ringing...',
+  'connecting': 'Connecting...',
+  'call_ended': 'Call Ended',
+  'michrophone_is_muted': 'Microphone is muted',
+  'video_call': 'Video Call',
+  'voice_call': 'Voice Call',
+  'reject': 'Reject',
+  'unmute': 'Unmute',
+  'mute': 'Mute',
+  'speaker': 'Speaker',
+  'end': 'End',
+  'end_call': 'End Call?',
+  'are_you_sure_you_want_to_end_this_call':
+      'Are you sure you want to end this call?',
+  'end_calll': 'End Call',
 };

@@ -619,4 +619,50 @@ Map<String, String> banglaLanguage = {
       'ফরম্যাট: .jpeg, .png এবং সর্বোচ্চ ফাইলের আকার: ২৫ এমবি',
   'make_sure_your_face_and_id_are_visible':
       'নিশ্চিত করুন যে আপনার মুখ এবং পরিচয়পত্রটি স্পষ্টভাবে দেখা যাচ্ছে',
+  'call_ended_by_other_user': 'অন্য ব্যবহারকারীর দ্বারা কল শেষ হয়েছে',
+  'calling...': 'কল করা হচ্ছে...',
+  'call_failed': 'কল ব্যর্থ হয়েছে',
+  'invalid_call_token_please_try_again':
+      'অবৈধ কল টোকেন। দয়া করে আবার চেষ্টা করুন।',
+  'call_token_expired_please_try_again':
+      'কল টোকেনের মেয়াদ শেষ হয়েছে। দয়া করে আবার চেষ্টা করুন।',
+  'network_connection_failed': 'নেটওয়ার্ক সংযোগ ব্যর্থ হয়েছে।',
+  'call_connected': 'কল সংযুক্ত হয়েছে',
+  'call_accepted_connecting': 'কল গ্রহণ করা হয়েছে, সংযোগ করা হচ্ছে...',
+  'camera_and_michro_phone_permission_are_required':
+      'ক্যামেরা এবং মাইক্রোফোন অনুমতিগুলি প্রয়োজন',
+  'failed_to_get_call_token_please_try_again':
+      'কল টোকেন পাওয়া ব্যর্থ হয়েছে। দয়া করে আবার চেষ্টা করুন।',
+  'failed_to_join_call': 'কল যোগদানে ব্যর্থ হয়েছে',
+  'cannot_initiate_call_invalid_conversation':
+      'কল শুরু করা যায়নি - অবৈধ কথোপকথন',
+  'unknown': 'অজানা',
+  'failed_to_start_the_call_please_try_again':
+      'কল শুরু করতে ব্যর্থ হয়েছে। দয়া করে আবার চেষ্টা করুন।',
+  'accepting_call': 'কল গ্রহণ করা হচ্ছে...',
+  'call_rejected': 'কল প্রত্যাখ্যান করা হয়েছে',
+  'michrophone_muted': 'মাইক্রোফোন মিউট করা হয়েছে',
+  'michrophone_unmuted': 'মাইক্রোফোন আনমিউট করা হয়েছে',
+  'camera_off': 'ক্যামেরা বন্ধ',
+  'camera_on': 'ক্যামেরা চালু',
+  'camera_switched': 'ক্যামেরা পরিবর্তন করা হয়েছে',
+  'speaker_on': 'স্পিকার চালু',
+  'earpiece_mode': 'ইয়ারপিস মোড',
+  'call_error': 'কল ত্রুটি',
+  'waiting_for_other_user': 'অন্য ব্যবহারকারীর জন্য অপেক্ষা করা হচ্ছে...',
+  'ringing': 'রিং করা হচ্ছে...',
+  'connecting': 'সংযোগ করা হচ্ছে...',
+  'call_ended': 'কল শেষ হয়েছে',
+  'michrophone_is_muted': 'মাইক্রোফোন মিউট করা আছে',
+  'video_call': 'ভিডিও কল',
+  'voice_call': 'ভয়েস কল',
+  'reject': 'প্রত্যাখ্যান',
+  'unmute': 'আনমিউট',
+  'mute': 'মিউট',
+  'speaker': 'স্পিকার',
+  'end': 'শেষ',
+  'end_call': 'কল শেষ করবেন?',
+  'are_you_sure_you_want_to_end_this_call':
+      'আপনি কি নিশ্চিত যে আপনি এই কলটি শেষ করতে চান?',
+  'end_calll': 'কল শেষ করুন',
 };
