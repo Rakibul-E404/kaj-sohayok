@@ -586,4 +586,37 @@ Map<String, String> banglaLanguage = {
   'more_information': 'আরও তথ্য',
   'wrok_type': 'কাজের ধরন*',
   'select_work_type': 'কাজের ধরন নির্বাচন করুন',
+  'business_name': 'ব্যবসার নাম*',
+  'enter_business_name': 'ব্যবসার নাম লিখুন',
+  'please_enter_business_name': 'অনুগ্রহ করে ব্যবসায়ের নাম লিখুন',
+  'years_of_experiencee': 'অভিজ্ঞতার বছর*',
+  'enter_ears_of_experience': 'অভিজ্ঞতার বছর লিখুন',
+  'please_enter_years_of_experience': 'অনুগ্রহ করে অভিজ্ঞতার বছর লিখুন',
+  'please_enter_a_valid_number': 'অনুগ্রহ করে একটি বৈধ সংখ্যা লিখুন',
+  'years_of_experience_cannot_be_negetive':
+      'অভিজ্ঞতার বছর নেতিবাচক হতে পারে না',
+  'start_from_work_price*': 'কাজের মূল্য থেকে শুরু করুন*',
+  'type_now': 'এখন টাইপ করুন',
+  'please_enter_the_work_price': 'অনুগ্রহ করে কাজের মূল্য লিখুন',
+  'please_enter_a_work_price': 'অনুগ্রহ করে একটি কাজের মূল্য লিখুন',
+  'work_price_cannot_be_negetive': 'কাজের মূল্য নেতিবাচক হতে পারে না !!!',
+  'nid_number': 'জাতীয় পরিচয়পত্র নম্বর*',
+  'please_enter_the_nid_number': 'অনুগ্রহ করে জাতীয় পরিচয়পত্র নম্বরটি লিখুন',
+  'upload_driving_nid_documents_front_side':
+      'জাতীয় পরিচয়পত্র/ড্রাইভিং লাইসেন্স/পাসপোর্ট (সামনের দিক) আপলোড করুন*',
+  'choose_file': 'ফাইল নির্বাচন করুন',
+  'upload_nid_document_back_side':
+      'জাতীয় পরিচয়পত্র/ড্রাইভিং লাইসেন্স/পাসপোর্ট (পিছনের দিক) আপলোড করুন*',
+  'take_selfi_with_nid': 'আপনার পরিচয়পত্র নিয়ে একটি সেলফি তুলুন*',
+  'take_selfie': 'সেলফি তুলুন',
+  'back': 'পিছনে',
+  'next': 'পরবর্তী',
+  'other': 'অন্যান্য',
+  'enter_service_name': 'সেবার নাম লিখুন',
+  'browse': 'ব্রাউজ করুন',
+  'tap_to_take_a_selfie': 'সেলফি তুলতে ট্যাপ করুন',
+  'format_and_file_size_text':
+      'ফরম্যাট: .jpeg, .png এবং সর্বোচ্চ ফাইলের আকার: ২৫ এমবি',
+  'make_sure_your_face_and_id_are_visible':
+      'নিশ্চিত করুন যে আপনার মুখ এবং পরিচয়পত্রটি স্পষ্টভাবে দেখা যাচ্ছে',
 };
