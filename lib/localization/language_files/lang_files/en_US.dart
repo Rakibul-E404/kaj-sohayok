@@ -49,6 +49,8 @@ Map<String, String> englishLanguage = {
   'select_gender': 'Select gender',
   'male': 'Male',
   'female': 'Female',
+  'password_must_be_at_least_8_characters':
+      "Password must be at least 8 characters",
 
   ///----------> Forgot Password Screen
   'password_forgot': 'Forgot Password',
@@ -70,7 +72,7 @@ Map<String, String> englishLanguage = {
   ///----------> Verify OTP
   'verify_otp': 'Verify OTP',
   'check_your_number_and_enter_the_code':
-      'Please check your phone number and enter the code',
+      'Please check your email and enter the code',
   'verify_email': 'Verify Email',
   'didn\'t_receive_code': 'Didn’t receive code? ',
   'resend_code': 'Resend Code',
@@ -453,6 +455,20 @@ Map<String, String> englishLanguage = {
   'delete_message': 'Delete Message',
   'profile_view': 'Profile View',
   'write_your_message': 'Write your message',
+  'we_here_to_help': 'We’re here to help!',
+  'bank_transfer': 'Bank Transfer',
+  'mobile_banking': 'Mobile Banking',
+  'withdrawal_method': 'Withdrawal Method',
+  'nagad': 'Nagad',
+  'bKash': 'bKash',
+  'rocket': 'Rocket',
+  'mobile_banking_type': 'Mobile Banking Type',
+  'mobile_number': 'Mobile Number',
+  'personal': 'Personal',
+  'merchant': 'Merchant',
+  'please_enter_mobile_number': 'Please enter mobile number',
+    'have_ques_or_need': 'Have questions or need assistance? Reach out to our support team.',
+
 
   ///Screen--------------->> Svp Home Screen
   'total_income': 'Total Income',
@@ -579,4 +595,6 @@ Map<String, String> englishLanguage = {
   'failed_to_load_services': 'Failed to load services',
   'somthing_went_wrong': 'Something went wrong',
   'failed_to_load_home_data': 'Failed to load home data',
+  'password_must_be_at_lease_eight_charecters':
+      'Password must be at least 8 characters',
 };
