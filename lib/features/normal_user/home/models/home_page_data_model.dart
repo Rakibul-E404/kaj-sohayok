@@ -22,11 +22,11 @@ class HomePageDataModel {
       );
 
   Map<String, dynamic> toJson() => {
-    "code": code,
-    "message": message,
-    "data": data?.toJson(),
-    "success": success,
-  };
+        "code": code,
+        "message": message,
+        "data": data?.toJson(),
+        "success": success,
+      };
 }
 
 class Data {
@@ -39,10 +39,10 @@ class Data {
   String toRawJson() => json.encode(toJson());
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-    attributes: json["attributes"] == null
-        ? null
-        : Attributes.fromJson(json["attributes"]),
-  );
+        attributes: json["attributes"] == null
+            ? null
+            : Attributes.fromJson(json["attributes"]),
+      );
 
   Map<String, dynamic> toJson() => {"attributes": attributes?.toJson()};
 }
@@ -60,32 +60,33 @@ class Attributes {
   String toRawJson() => json.encode(toJson());
 
   factory Attributes.fromJson(Map<String, dynamic> json) => Attributes(
-    categories: json["categories"] == null
-        ? []
-        : List<Category>.from(
-            json["categories"]!.map((x) => Category.fromJson(x)),
-          ),
-    providers: json["providers"] == null
-        ? []
-        : List<Provider>.from(
-            json["providers"]!.map((x) => Provider.fromJson(x)),
-          ),
-    banners: json["banners"] == null
-        ? []
-        : List<Banner>.from(json["banners"]!.map((x) => Banner.fromJson(x))),
-  );
+        categories: json["categories"] == null
+            ? []
+            : List<Category>.from(
+                json["categories"]!.map((x) => Category.fromJson(x)),
+              ),
+        providers: json["providers"] == null
+            ? []
+            : List<Provider>.from(
+                json["providers"]!.map((x) => Provider.fromJson(x)),
+              ),
+        banners: json["banners"] == null
+            ? []
+            : List<Banner>.from(
+                json["banners"]!.map((x) => Banner.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "categories": categories == null
-        ? []
-        : List<dynamic>.from(categories!.map((x) => x.toJson())),
-    "providers": providers == null
-        ? []
-        : List<dynamic>.from(providers!.map((x) => x.toJson())),
-    "banners": banners == null
-        ? []
-        : List<dynamic>.from(banners!.map((x) => x.toJson())),
-  };
+        "categories": categories == null
+            ? []
+            : List<dynamic>.from(categories!.map((x) => x.toJson())),
+        "providers": providers == null
+            ? []
+            : List<dynamic>.from(providers!.map((x) => x.toJson())),
+        "banners": banners == null
+            ? []
+            : List<dynamic>.from(banners!.map((x) => x.toJson())),
+      };
 }
 
 class Banner {
@@ -99,20 +100,20 @@ class Banner {
   String toRawJson() => json.encode(toJson());
 
   factory Banner.fromJson(Map<String, dynamic> json) => Banner(
-    attachments: json["attachments"] == null
-        ? []
-        : List<BannerAttachment>.from(
-            json["attachments"]!.map((x) => BannerAttachment.fromJson(x)),
-          ),
-    bannerId: json["_BannerId"],
-  );
+        attachments: json["attachments"] == null
+            ? []
+            : List<BannerAttachment>.from(
+                json["attachments"]!.map((x) => BannerAttachment.fromJson(x)),
+              ),
+        bannerId: json["_BannerId"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "attachments": attachments == null
-        ? []
-        : List<dynamic>.from(attachments!.map((x) => x.toJson())),
-    "_BannerId": bannerId,
-  };
+        "attachments": attachments == null
+            ? []
+            : List<dynamic>.from(attachments!.map((x) => x.toJson())),
+        "_BannerId": bannerId,
+      };
 }
 
 class BannerAttachment {
@@ -133,9 +134,9 @@ class BannerAttachment {
       );
 
   Map<String, dynamic> toJson() => {
-    "attachment": attachment,
-    "_attachmentId": attachmentId,
-  };
+        "attachment": attachment,
+        "_attachmentId": attachmentId,
+      };
 }
 
 class Category {
@@ -151,24 +152,24 @@ class Category {
   String toRawJson() => json.encode(toJson());
 
   factory Category.fromJson(Map<String, dynamic> json) => Category(
-    name: json["name"] == null ? null : Name.fromJson(json["name"]),
-    attachments: json["attachments"] == null
-        ? []
-        : List<AttachmentsForGalleryElement>.from(
-            json["attachments"]!.map(
-              (x) => AttachmentsForGalleryElement.fromJson(x),
-            ),
-          ),
-    serviceCategoryId: json["_ServiceCategoryId"],
-  );
+        name: json["name"] == null ? null : Name.fromJson(json["name"]),
+        attachments: json["attachments"] == null
+            ? []
+            : List<AttachmentsForGalleryElement>.from(
+                json["attachments"]!.map(
+                  (x) => AttachmentsForGalleryElement.fromJson(x),
+                ),
+              ),
+        serviceCategoryId: json["_ServiceCategoryId"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "name": name?.toJson(),
-    "attachments": attachments == null
-        ? []
-        : List<dynamic>.from(attachments!.map((x) => x.toJson())),
-    "_ServiceCategoryId": serviceCategoryId,
-  };
+        "name": name?.toJson(),
+        "attachments": attachments == null
+            ? []
+            : List<dynamic>.from(attachments!.map((x) => x.toJson())),
+        "_ServiceCategoryId": serviceCategoryId,
+      };
 }
 
 class AttachmentsForGalleryElement {
@@ -195,10 +196,10 @@ class AttachmentsForGalleryElement {
       );
 
   Map<String, dynamic> toJson() => {
-    "attachment": attachment,
-    "attachmentType": attachmentType,
-    "_attachmentId": attachmentId,
-  };
+        "attachment": attachment,
+        "attachmentType": attachmentType,
+        "_attachmentId": attachmentId,
+      };
 }
 
 class Name {
@@ -225,7 +226,8 @@ class Provider {
   String? serviceCategoryId;
   String? providerApprovalStatus;
   int? startPrice;
-  int? rating;
+  // int? rating;
+  double? rating;
   List<AttachmentsForGalleryElement>? attachmentsForGallery;
   List<dynamic>? attachmentsForCoverPhoto;
   int? yearsOfExperience;
@@ -252,50 +254,52 @@ class Provider {
   String toRawJson() => json.encode(toJson());
 
   factory Provider.fromJson(Map<String, dynamic> json) => Provider(
-    serviceName: json["serviceName"] == null
-        ? null
-        : Name.fromJson(json["serviceName"]),
-    introOrBio: json["introOrBio"] == null
-        ? null
-        : Name.fromJson(json["introOrBio"]),
-    description: json["description"] == null
-        ? null
-        : Name.fromJson(json["description"]),
-    providerId: json["providerId"],
-    serviceCategoryId: json["serviceCategoryId"],
-    providerApprovalStatus: json["providerApprovalStatus"],
-    startPrice: json["startPrice"],
-    rating: json["rating"],
-    attachmentsForGallery: json["attachmentsForGallery"] == null
-        ? []
-        : List<AttachmentsForGalleryElement>.from(
-            json["attachmentsForGallery"]!.map(
-              (x) => AttachmentsForGalleryElement.fromJson(x),
-            ),
-          ),
-    attachmentsForCoverPhoto: json["attachmentsForCoverPhoto"] == null
-        ? []
-        : List<dynamic>.from(json["attachmentsForCoverPhoto"]!.map((x) => x)),
-    yearsOfExperience: json["yearsOfExperience"],
-    serviceProviderId: json["_ServiceProviderId"],
-  );
+        serviceName: json["serviceName"] == null
+            ? null
+            : Name.fromJson(json["serviceName"]),
+        introOrBio: json["introOrBio"] == null
+            ? null
+            : Name.fromJson(json["introOrBio"]),
+        description: json["description"] == null
+            ? null
+            : Name.fromJson(json["description"]),
+        providerId: json["providerId"],
+        serviceCategoryId: json["serviceCategoryId"],
+        providerApprovalStatus: json["providerApprovalStatus"],
+        startPrice: json["startPrice"],
+        // rating: json["rating"],
+        rating: (json["rating"] ?? 0 as num).toDouble(),
+        attachmentsForGallery: json["attachmentsForGallery"] == null
+            ? []
+            : List<AttachmentsForGalleryElement>.from(
+                json["attachmentsForGallery"]!.map(
+                  (x) => AttachmentsForGalleryElement.fromJson(x),
+                ),
+              ),
+        attachmentsForCoverPhoto: json["attachmentsForCoverPhoto"] == null
+            ? []
+            : List<dynamic>.from(
+                json["attachmentsForCoverPhoto"]!.map((x) => x)),
+        yearsOfExperience: json["yearsOfExperience"],
+        serviceProviderId: json["_ServiceProviderId"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "serviceName": serviceName?.toJson(),
-    "introOrBio": introOrBio?.toJson(),
-    "description": description?.toJson(),
-    "providerId": providerId,
-    "serviceCategoryId": serviceCategoryId,
-    "providerApprovalStatus": providerApprovalStatus,
-    "startPrice": startPrice,
-    "rating": rating,
-    "attachmentsForGallery": attachmentsForGallery == null
-        ? []
-        : List<dynamic>.from(attachmentsForGallery!.map((x) => x.toJson())),
-    "attachmentsForCoverPhoto": attachmentsForCoverPhoto == null
-        ? []
-        : List<dynamic>.from(attachmentsForCoverPhoto!.map((x) => x)),
-    "yearsOfExperience": yearsOfExperience,
-    "_ServiceProviderId": serviceProviderId,
-  };
+        "serviceName": serviceName?.toJson(),
+        "introOrBio": introOrBio?.toJson(),
+        "description": description?.toJson(),
+        "providerId": providerId,
+        "serviceCategoryId": serviceCategoryId,
+        "providerApprovalStatus": providerApprovalStatus,
+        "startPrice": startPrice,
+        "rating": rating,
+        "attachmentsForGallery": attachmentsForGallery == null
+            ? []
+            : List<dynamic>.from(attachmentsForGallery!.map((x) => x.toJson())),
+        "attachmentsForCoverPhoto": attachmentsForCoverPhoto == null
+            ? []
+            : List<dynamic>.from(attachmentsForCoverPhoto!.map((x) => x)),
+        "yearsOfExperience": yearsOfExperience,
+        "_ServiceProviderId": serviceProviderId,
+      };
 }

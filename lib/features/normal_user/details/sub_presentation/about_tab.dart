@@ -101,10 +101,7 @@ class AboutTab extends StatelessWidget {
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             // If network image fails, show placeholder
-                            return CustomShimmerEffect(
-                              height: 40.h,
-                              width: 0.1.sw,
-                            );
+                            return Image.asset(Assets.images.errorImage.path);
                           },
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
@@ -197,7 +194,9 @@ class AboutTab extends StatelessWidget {
                                       '',
                                   name: detailsScreenController.providerName ??
                                       "",
-                                  imageUrl: detailsScreenController.providerProfileImage ?? '');
+                                  imageUrl: detailsScreenController
+                                          .providerProfileImage ??
+                                      '');
                             },
                             child: Container(
                               padding: EdgeInsets.all(6.sp),

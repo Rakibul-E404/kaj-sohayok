@@ -481,7 +481,7 @@ class DetailsScreenController extends GetxController {
   /// Safely converts dynamic number to int
   /// Handles both int and double from API responses
   int? _safeToInt(dynamic value) {
-     if (value == null) return null;
+    if (value == null) return null;
 
     if (value is int) {
       return value;
@@ -590,8 +590,7 @@ class DetailsScreenController extends GetxController {
 
       LoggerUtils.debug(
           "Received IDDDD : ${serviceID.value.isNotEmpty ? serviceID.value : providerID.value}");
-      LoggerUtils.debug(
-          "Received IDDDD :--> ${providerID.value}");
+      LoggerUtils.debug("Received IDDDD :--> ${providerID.value}");
       LoggerUtils.debug(
           "Received IDDDD Service ID : ${serviceID.value.isNotEmpty ? serviceID.value : ''}");
       LoggerUtils.debug("Received IDDDD Provider ID : ${providerID.value}");
@@ -751,7 +750,7 @@ class DetailsScreenController extends GetxController {
   String get serviceBio =>
       serviceDetails.value?.introOrBio?.en ?? 'No bio available';
 
-  int get serviceRating => serviceDetails.value?.rating ?? 0;
+  double get serviceRating => serviceDetails.value?.rating ?? 0.0;
 
   int get startPrice => serviceDetails.value?.startPrice ?? 0;
 
@@ -834,8 +833,9 @@ class DetailsScreenController extends GetxController {
         serviceCategoryId: data['serviceCategoryId'] as String?,
         providerApprovalStatus: data['providerApprovalStatus'] as String?,
         startPrice: _safeToInt(data['startPrice']),
-    // 🔴 FIXED: Safe conversion
-        rating: _safeToInt(data['rating']),
+        // 🔴 FIXED: Safe conversion
+        // rating: _safeToInt(data['rating']),
+        rating: _safeToDouble(data['rating']),
         // 🔴 FIXED: Safe conversion
         attachmentsForGallery:
             _parseAttachmentsForGallery(data['attachmentsForGallery']),
@@ -912,7 +912,7 @@ class DetailsScreenController extends GetxController {
         review: _parseDescription(data['review']),
         originalLanguage: data['originalLanguage'] as String?,
         rating: _safeToInt(data['rating']),
-         // 🔴 FIXED: Safe conversion
+        // 🔴 FIXED: Safe conversion
         userId: userIdData?['_userId'] as String?,
         serviceProviderDetailsId: data['serviceProviderDetailsId'] as String?,
         serviceBookingId: data['serviceBookingId'] as String?,
