@@ -24,7 +24,8 @@ class InProgressBookingsController extends GetxController {
       log('🔑 [IN PROGRESS CONTROLLER] Token retrieved: ${token != null ? 'Yes' : 'No'}');
 
       if (token == null) {
-        errorMessage.value = 'Authentication token not found. Please login again.';
+        errorMessage.value =
+            'Authentication token not found. Please login again.';
         isLoading.value = false;
         log('❌ [IN PROGRESS CONTROLLER] No token found');
         return;
@@ -49,7 +50,8 @@ class InProgressBookingsController extends GetxController {
         log('📋 [IN PROGRESS CONTROLLER] Full API Response Data: ${response.jsonResponse}');
 
         if (response.jsonResponse!['success'] == true) {
-          List<dynamic> results = response.jsonResponse!['data']['attributes']['results'];
+          List<dynamic> results =
+              response.jsonResponse!['data']['attributes']['results'];
           log('✅ [IN PROGRESS CONTROLLER] Found ${results.length} in-progress bookings');
 
           // Log the structure of first booking for debugging
@@ -77,17 +79,18 @@ class InProgressBookingsController extends GetxController {
           // Process image URLs for all bookings
           await _processBookingImages(results);
         } else {
-          String apiMessage = response.jsonResponse!['message'] ?? 'Failed to load bookings';
+          String apiMessage =
+              response.jsonResponse!['message'] ?? 'failed_to_load_bookings'.tr;
           errorMessage.value = apiMessage;
           log('❌ [IN PROGRESS CONTROLLER] API returned error: $apiMessage');
         }
       } else {
-        String error = response.errorMessage ?? 'Something went wrong';
+        String error = response.errorMessage ?? 'something_went_wrong'.tr;
         errorMessage.value = error;
         log('❌ [IN PROGRESS CONTROLLER] Network error: $error');
       }
     } catch (e) {
-      errorMessage.value = 'Connection error: Please check your internet connection';
+      errorMessage.value = 'connection_error_check_your_internet'.tr;
       log('❌ [IN PROGRESS CONTROLLER] Exception in getInProgressBookings: $e');
     } finally {
       isLoading.value = false;
@@ -155,7 +158,8 @@ class InProgressBookingsController extends GetxController {
     return fullUrl;
   }
 
-  Future<void> _verifyImageAccessibility(String bookingId, String imageUrl) async {
+  Future<void> _verifyImageAccessibility(
+      String bookingId, String imageUrl) async {
     try {
       log('🔍 [IN PROGRESS CONTROLLER] Verifying image accessibility for: $imageUrl');
 
@@ -202,4 +206,3 @@ class InProgressBookingsController extends GetxController {
     super.onInit();
   }
 }
-

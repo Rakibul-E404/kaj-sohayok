@@ -81,7 +81,7 @@ class CallController extends GetxController {
             callState.value == CallState.ringing) {
           callState.value = CallState.connected;
           _startCallTimer();
-          _showSnackbar('Call connected');
+          _showSnackbar('call_connected'.tr);
         }
       },
       onUserOffline: (connection, remoteUserId, reason) {
@@ -90,7 +90,7 @@ class CallController extends GetxController {
           isRemoteUserJoined.value = false;
           remoteUid.value = 0;
           // Remote user left, end the call
-          _endCall(showMessage: true, message: 'Call ended by other user');
+          _endCall(showMessage: true, message: 'call_ended_by_other_user'.tr);
         }
       },
       onLeaveChannel: (connection, stats) {
@@ -103,7 +103,7 @@ class CallController extends GetxController {
         // If we're in ringing state (outgoing call), move to connecting
         if (callState.value == CallState.ringing) {
           callState.value = CallState.connecting;
-          _showSnackbar('Calling...');
+          _showSnackbar('calling...'.tr);
         }
       },
       onRemoteVideoStats: (connection, uid, stats) {
@@ -116,13 +116,13 @@ class CallController extends GetxController {
           callState.value = CallState.failed;
 
           // Provide user-friendly error message
-          String errorMessage = 'Call failed';
+          String errorMessage = 'call_failed'.tr;
           if (err == ErrorCodeType.errInvalidToken) {
-            errorMessage = 'Invalid call token. Please try again.';
+            errorMessage = 'invalid_call_token_please_try_again'.tr;
           } else if (err == ErrorCodeType.errTokenExpired) {
-            errorMessage = 'Call token expired. Please try again.';
+            errorMessage = 'call_token_expired_please_try_again'.tr;
           } else if (err == ErrorCodeType.errNetDown) {
-            errorMessage = 'Network connection failed.';
+            errorMessage = 'network_connection_failed'.tr;
           }
 
           _showErrorDialog(errorMessage);
@@ -145,7 +145,7 @@ class CallController extends GetxController {
       LoggerUtils.debug('✅ Call accepted: $data');
       if (callState.value == CallState.ringing ||
           callState.value == CallState.connecting) {
-        _showSnackbar('Call accepted, connecting...');
+        _showSnackbar('call_accepted_connecting'.tr);
         _handleCallAccepted(data);
       }
     });
@@ -182,7 +182,7 @@ class CallController extends GetxController {
     // Request permissions
     final hasPermissions = await _agoraService.requestPermissions();
     if (!hasPermissions) {
-      _showErrorDialog('Camera and microphone permissions are required');
+      _showErrorDialog('camera_and_michro_phone_permission_are_required'.tr);
       return;
     }
 
@@ -198,7 +198,7 @@ class CallController extends GetxController {
 
     if (tokenResponse == null) {
       callState.value = CallState.failed;
-      _showErrorDialog('Failed to get call token. Please try again.');
+      _showErrorDialog('failed_to_get_call_token_please_try_again'.tr);
       _resetCallState();
       return;
     }
@@ -229,7 +229,7 @@ class CallController extends GetxController {
 
     if (!joined) {
       callState.value = CallState.failed;
-      _showErrorDialog('Failed to join call');
+      _showErrorDialog('failed_to_join_call'.tr);
       _resetCallState();
       return;
     }
@@ -251,8 +251,8 @@ class CallController extends GetxController {
   }) async {
     if (conversationId == null || conversationId.isEmpty) {
       Get.snackbar(
-        'Error',
-        'Cannot initiate call - invalid conversation',
+        'error'.tr,
+        'cannot_initiate_call_invalid_conversation'.tr,
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -277,7 +277,7 @@ class CallController extends GetxController {
         'isIncoming': false,
         'conversationId': conversationId,
         'callType': CallType.audio,
-        'userName': receiverProfile?.name ?? 'Unknown',
+        'userName': receiverProfile?.name ?? 'unknown'.tr,
         'userImage': receiverProfile?.profileImage?.imageUrl ?? '',
       });
     } catch (e) {
@@ -288,8 +288,8 @@ class CallController extends GetxController {
 
       LoggerUtils.debug('❌ Failed to initiate call: $e');
       Get.snackbar(
-        'Call Failed',
-        'Failed to start the call. Please try again.',
+        'call_failed'.tr,
+        'failed_to_start_the_call_please_try_again'.tr,
         snackPosition: SnackPosition.TOP,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -365,13 +365,13 @@ class CallController extends GetxController {
     // Request permissions
     final hasPermissions = await _agoraService.requestPermissions();
     if (!hasPermissions) {
-      _showErrorDialog('Camera and microphone permissions are required');
+      _showErrorDialog('camera_and_michro_phone_permission_are_required'.tr);
       rejectCall();
       return;
     }
 
     callState.value = CallState.connecting;
-    _showSnackbar('Accepting call...');
+    _showSnackbar('accepting_call'.tr);
 
     // Get Agora token with role "publisher"
     final tokenResponse = await _getAgoraToken(
@@ -381,7 +381,7 @@ class CallController extends GetxController {
 
     if (tokenResponse == null) {
       callState.value = CallState.failed;
-      _showErrorDialog('Failed to get call token. Please try again.');
+      _showErrorDialog('failed_to_get_call_token_please_try_again'.tr);
       _resetCallState();
       return;
     }
@@ -409,7 +409,7 @@ class CallController extends GetxController {
 
     if (!joined) {
       callState.value = CallState.failed;
-      _showErrorDialog('Failed to join call');
+      _showErrorDialog('failed_to_join_call'.tr);
       _resetCallState();
       return;
     }
@@ -451,7 +451,7 @@ class CallController extends GetxController {
     });
 
     callState.value = CallState.rejected;
-    _showSnackbar('Call rejected');
+    _showSnackbar('call_rejected'.tr);
     _endCall(showMessage: false);
   }
 
@@ -503,20 +503,21 @@ class CallController extends GetxController {
   Future<void> toggleMicrophone() async {
     isMicMuted.value = !isMicMuted.value;
     await _agoraService.toggleMicrophone(isMicMuted.value);
-    _showSnackbar(isMicMuted.value ? 'Microphone muted' : 'Microphone unmuted');
+    _showSnackbar(
+        isMicMuted.value ? 'michrophone_muted'.tr : 'michrophone_unmuted'.tr);
   }
 
   /// Toggle camera
   Future<void> toggleCamera() async {
     isCameraOff.value = !isCameraOff.value;
     await _agoraService.toggleCamera(isCameraOff.value);
-    _showSnackbar(isCameraOff.value ? 'Camera off' : 'Camera on');
+    _showSnackbar(isCameraOff.value ? 'camera_off'.tr : 'camera_on'.tr);
   }
 
   /// Switch camera (front/back)
   Future<void> switchCamera() async {
     await _agoraService.switchCamera();
-    _showSnackbar('Camera switched');
+    _showSnackbar('camera_switched'.tr);
   }
 
   /// Toggle speaker
@@ -524,7 +525,7 @@ class CallController extends GetxController {
     isSpeakerOn.value = enable;
     try {
       await _agoraService.toggleSpeaker(enable);
-      _showSnackbar(enable ? 'Speaker on' : 'Earpiece mode');
+      _showSnackbar(enable ? 'speaker_on'.tr : 'earpiece_mode'.tr);
     } catch (e) {
       LoggerUtils.debug('⚠️ Speaker toggle error (non-critical): $e');
       // This error is non-critical and can be ignored
@@ -623,7 +624,7 @@ class CallController extends GetxController {
 
     Get.dialog(
       AlertDialog(
-        title: const Text('Call Error'),
+        title: Text('call_error'.tr),
         content: Text(message),
         actions: [
           TextButton(
@@ -633,7 +634,7 @@ class CallController extends GetxController {
                 Get.back(); // Go back to previous screen
               }
             },
-            child: const Text('OK'),
+            child: Text('ok'.tr),
           ),
         ],
       ),

@@ -50,8 +50,6 @@ Map<String, String> banglaLanguage = {
   'select_gender': 'লিঙ্গ নির্বাচন করুন',
   'male': 'পুরুষ',
   'female': 'মহিলা',
-  'password_must_be_at_least_8_characters': 'পাসওয়ার্ড কমপক্ষে ৮ অক্ষর হতে হবে।',
-
 
   ///----------> Forgot Password Screen
   'password_forgot': 'পাসওয়ার্ড ভুলে গেছি',
@@ -78,8 +76,6 @@ Map<String, String> banglaLanguage = {
   'verify_email': 'ইমেল যাচাই করুন',
   'didn\'t_receive_code': 'কোড পাননি? ',
   'resend_code': 'কোড আবার পাঠান',
-  'we_here_to_help': ' আমরা সাহায্য করার জন্য এখানে আছি!',
-  'have_ques_or_need': 'কোন প্রশ্ন আছে অথবা সাহায্যের প্রয়োজন? আমাদের সহায়তা দলের সাথে যোগাযোগ করুন।',
 
   ///----------> Normal User
   ///----------> Home Screen
@@ -101,7 +97,6 @@ Map<String, String> banglaLanguage = {
   'all_categories': 'সমস্ত বিভাগ',
   'no_categories_found': 'কোন বিভাগ পাওয়া যায়নি.',
   'category': 'শ্রেণী',
-  'bank_transfer': 'ব্যাংক ট্রান্সফার',
 
   ///----------> All Popular Providers
   'all_popular_providers': 'সমস্ত জনপ্রিয় প্রদানকারী',
@@ -121,18 +116,7 @@ Map<String, String> banglaLanguage = {
   'about': 'সম্পর্কে',
   'gallery': 'গ্যালারি',
   'reviews': 'রিভিউ',
-  'mobile_banking': 'মোবাইল ব্যাংকিং',
-  'withdrawal_method': 'উত্তোলন পদ্ধতি',
   'service_description': 'পরিষেবার বিবরণ',
-  'bKash': 'বিকাশ',
-  'nagad': 'নগদ',
-  'rocket': 'রকেট',
-  'mobile_banking_type': 'মোবাইল ব্যাংকিং ধরন',
-   'mobile_number': 'মোবাইল নম্বর',
-  'personal': 'পার্সোনাল',
-  'merchant': "মার্চেন্ট",
-  'please_enter_mobile_number': 'দয়া করে মোবাইল নম্বরটি দিন !',
-
   'service_provider': 'সেবা প্রদানকারী',
 
   ///----------> Details Screen to Service Provider Profile Details Screen
@@ -587,8 +571,7 @@ Map<String, String> banglaLanguage = {
   'no_canceled_bookings': 'কোনো বাতিল বুকিং নেই',
   'canceled_jobs_will_appear_here': 'বাতিল কাজগুলি এখানে দেখা যাবে',
   'failed_to_load_canceled_bookings': 'বাতিল বুকিং লোড করতে ব্যর্থ হয়েছে',
-  'failed_to_load_completed_bookings':
-      'সম্পন্ন বুকিং লোড করতে ব্যর্থ হয়েছে'.tr,
+  'failed_to_load_completed_bookings': 'সম্পন্ন বুকিং লোড করতে ব্যর্থ হয়েছে',
   'category_id_is_missing': 'বিষয়শ্রেণী আইডি অনুপস্থিত',
   'no_services_for_specific_category':
       'এই বিষয়শ্রেণীর জন্য কোনো সার্ভিস পাওয়া যায়নি',
@@ -597,4 +580,89 @@ Map<String, String> banglaLanguage = {
   'failed_to_load_home_data': 'হোম ডেটা লোড করতে ব্যর্থ হয়েছে',
   'password_must_be_at_lease_eight_charecters':
       'পাসওয়ার্ড অন্তত ৮ অক্ষরের হতে হবে',
+  'could_not_launch': 'চালু করা যায়নি',
+  'failed_to_load_exception': 'বিজ্ঞপ্তি লোড করা যায়নি',
+  'just_now': 'এক্ষুনি',
+  'more_information': 'আরও তথ্য',
+  'wrok_type': 'কাজের ধরন*',
+  'select_work_type': 'কাজের ধরন নির্বাচন করুন',
+  'business_name': 'ব্যবসার নাম*',
+  'enter_business_name': 'ব্যবসার নাম লিখুন',
+  'please_enter_business_name': 'অনুগ্রহ করে ব্যবসায়ের নাম লিখুন',
+  'years_of_experiencee': 'অভিজ্ঞতার বছর*',
+  'enter_ears_of_experience': 'অভিজ্ঞতার বছর লিখুন',
+  'please_enter_years_of_experience': 'অনুগ্রহ করে অভিজ্ঞতার বছর লিখুন',
+  'please_enter_a_valid_number': 'অনুগ্রহ করে একটি বৈধ সংখ্যা লিখুন',
+  'years_of_experience_cannot_be_negetive':
+      'অভিজ্ঞতার বছর নেতিবাচক হতে পারে না',
+  'start_from_work_price*': 'কাজের মূল্য থেকে শুরু করুন*',
+  'type_now': 'এখন টাইপ করুন',
+  'please_enter_the_work_price': 'অনুগ্রহ করে কাজের মূল্য লিখুন',
+  'please_enter_a_work_price': 'অনুগ্রহ করে একটি কাজের মূল্য লিখুন',
+  'work_price_cannot_be_negetive': 'কাজের মূল্য নেতিবাচক হতে পারে না !!!',
+  'nid_number': 'জাতীয় পরিচয়পত্র নম্বর*',
+  'please_enter_the_nid_number': 'অনুগ্রহ করে জাতীয় পরিচয়পত্র নম্বরটি লিখুন',
+  'upload_driving_nid_documents_front_side':
+      'জাতীয় পরিচয়পত্র/ড্রাইভিং লাইসেন্স/পাসপোর্ট (সামনের দিক) আপলোড করুন*',
+  'choose_file': 'ফাইল নির্বাচন করুন',
+  'upload_nid_document_back_side':
+      'জাতীয় পরিচয়পত্র/ড্রাইভিং লাইসেন্স/পাসপোর্ট (পিছনের দিক) আপলোড করুন*',
+  'take_selfi_with_nid': 'আপনার পরিচয়পত্র নিয়ে একটি সেলফি তুলুন*',
+  'take_selfie': 'সেলফি তুলুন',
+  'back': 'পিছনে',
+  'next': 'পরবর্তী',
+  'other': 'অন্যান্য',
+  'enter_service_name': 'সেবার নাম লিখুন',
+  'browse': 'ব্রাউজ করুন',
+  'tap_to_take_a_selfie': 'সেলফি তুলতে ট্যাপ করুন',
+  'format_and_file_size_text':
+      'ফরম্যাট: .jpeg, .png এবং সর্বোচ্চ ফাইলের আকার: ২৫ এমবি',
+  'make_sure_your_face_and_id_are_visible':
+      'নিশ্চিত করুন যে আপনার মুখ এবং পরিচয়পত্রটি স্পষ্টভাবে দেখা যাচ্ছে',
+  'call_ended_by_other_user': 'অন্য ব্যবহারকারীর দ্বারা কল শেষ হয়েছে',
+  'calling...': 'কল করা হচ্ছে...',
+  'call_failed': 'কল ব্যর্থ হয়েছে',
+  'invalid_call_token_please_try_again':
+      'অবৈধ কল টোকেন। দয়া করে আবার চেষ্টা করুন।',
+  'call_token_expired_please_try_again':
+      'কল টোকেনের মেয়াদ শেষ হয়েছে। দয়া করে আবার চেষ্টা করুন।',
+  'network_connection_failed': 'নেটওয়ার্ক সংযোগ ব্যর্থ হয়েছে।',
+  'call_connected': 'কল সংযুক্ত হয়েছে',
+  'call_accepted_connecting': 'কল গ্রহণ করা হয়েছে, সংযোগ করা হচ্ছে...',
+  'camera_and_michro_phone_permission_are_required':
+      'ক্যামেরা এবং মাইক্রোফোন অনুমতিগুলি প্রয়োজন',
+  'failed_to_get_call_token_please_try_again':
+      'কল টোকেন পাওয়া ব্যর্থ হয়েছে। দয়া করে আবার চেষ্টা করুন।',
+  'failed_to_join_call': 'কল যোগদানে ব্যর্থ হয়েছে',
+  'cannot_initiate_call_invalid_conversation':
+      'কল শুরু করা যায়নি - অবৈধ কথোপকথন',
+  'unknown': 'অজানা',
+  'failed_to_start_the_call_please_try_again':
+      'কল শুরু করতে ব্যর্থ হয়েছে। দয়া করে আবার চেষ্টা করুন।',
+  'accepting_call': 'কল গ্রহণ করা হচ্ছে...',
+  'call_rejected': 'কল প্রত্যাখ্যান করা হয়েছে',
+  'michrophone_muted': 'মাইক্রোফোন মিউট করা হয়েছে',
+  'michrophone_unmuted': 'মাইক্রোফোন আনমিউট করা হয়েছে',
+  'camera_off': 'ক্যামেরা বন্ধ',
+  'camera_on': 'ক্যামেরা চালু',
+  'camera_switched': 'ক্যামেরা পরিবর্তন করা হয়েছে',
+  'speaker_on': 'স্পিকার চালু',
+  'earpiece_mode': 'ইয়ারপিস মোড',
+  'call_error': 'কল ত্রুটি',
+  'waiting_for_other_user': 'অন্য ব্যবহারকারীর জন্য অপেক্ষা করা হচ্ছে...',
+  'ringing': 'রিং করা হচ্ছে...',
+  'connecting': 'সংযোগ করা হচ্ছে...',
+  'call_ended': 'কল শেষ হয়েছে',
+  'michrophone_is_muted': 'মাইক্রোফোন মিউট করা আছে',
+  'video_call': 'ভিডিও কল',
+  'voice_call': 'ভয়েস কল',
+  'reject': 'প্রত্যাখ্যান',
+  'unmute': 'আনমিউট',
+  'mute': 'মিউট',
+  'speaker': 'স্পিকার',
+  'end': 'শেষ',
+  'end_call': 'কল শেষ করবেন?',
+  'are_you_sure_you_want_to_end_this_call':
+      'আপনি কি নিশ্চিত যে আপনি এই কলটি শেষ করতে চান?',
+  'end_calll': 'কল শেষ করুন',
 };
