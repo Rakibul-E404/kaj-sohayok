@@ -591,6 +591,8 @@ class DetailsScreenController extends GetxController {
       LoggerUtils.debug(
           "Received IDDDD : ${serviceID.value.isNotEmpty ? serviceID.value : providerID.value}");
       LoggerUtils.debug(
+          "Received IDDDD :--> ${providerID.value}");
+      LoggerUtils.debug(
           "Received IDDDD Service ID : ${serviceID.value.isNotEmpty ? serviceID.value : ''}");
       LoggerUtils.debug("Received IDDDD Provider ID : ${providerID.value}");
 

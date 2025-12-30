@@ -110,7 +110,7 @@ class Attributes {
         : ServiceCategoryId.fromJson(json["serviceCategoryId"]),
     providerApprovalStatus: json["providerApprovalStatus"],
     startPrice: json["startPrice"],
-    rating: json["rating"],
+    rating: (json["rating"] ?? 0 as num).toDouble(),
     introOrBio: json["introOrBio"] == null
         ? null
         : Description.fromJson(json["introOrBio"]),

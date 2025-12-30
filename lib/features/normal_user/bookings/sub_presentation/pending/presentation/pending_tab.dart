@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/features/normal_user/bookings/widgets/bookings_details_card_widget.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 import '../../../../../../constants/app_enums.dart';
 import '../../../../../../gen/assets.gen.dart';
 import '../../../../../../gen/colors.gen.dart';
@@ -137,6 +138,9 @@ class _PendingTabState extends State<PendingTab> {
                   return BookingDetailsCardWidget(
                     // ➤ CARD TAP → Navigate with ALL required parameters
                     onTap: () {
+                          LoggerUtils.debug(" bookingId:------: $bookingId",);
+                          LoggerUtils.debug(" serviceProviderId:------: $serviceProviderId",);
+                          LoggerUtils.debug(" providerId:------: $providerId",);
                       _navigateToDetailsScreen(
                           bookingId, serviceProviderId, providerId);
                     },
