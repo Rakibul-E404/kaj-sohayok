@@ -29,6 +29,7 @@ class GetNrmUserServiceProviderProfileInfoController extends GetxController {
     log('   New Service ID: $svcId');
     log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     svcID.value = svcId;
+    log('   New text:----:>> ${svcID.value}');
   }
 
   void setServiceProviderId({required String svpId}) {
