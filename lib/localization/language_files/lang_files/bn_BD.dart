@@ -249,7 +249,7 @@ Map<String, String> banglaLanguage = {
   'proceed_to_payment': 'পেমেন্ট করতে এগিয়ে যান',
   'you_will_be_redirected_to_ssl_commerce':
       'আপনার পেমেন্ট সম্পূর্ণ করার জন্য আপনাকে আপনার ব্রাউজারে SSLCommerz-এ পুনঃনির্দেশিত করা হবে।',
-  'open_in_browser': 'ব্রাউজারে খুলুন',
+  'open_in_browser': 'পেমেন্ট করুন',
   'preparing_payment': 'অর্থপ্রদানের প্রস্তুতি চলছে...',
   'payment_page_opened': 'পেমেন্ট পৃষ্ঠা খোলা হয়েছে',
   'complete_your_payment_and_return_to_app':
