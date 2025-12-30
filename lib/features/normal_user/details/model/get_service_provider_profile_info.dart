@@ -60,7 +60,7 @@ class Attributes {
   ServiceCategoryId? serviceCategoryId;
   String? providerApprovalStatus;
   int? startPrice;
-  int? rating;
+  double? rating;
   Description? introOrBio;
   Description? description;
   List<String>? attachmentsForGallery;

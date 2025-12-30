@@ -229,7 +229,7 @@ Map<String, String> englishLanguage = {
   'proceed_to_payment': 'Proceed to Payment',
   'you_will_be_redirected_to_ssl_commerce':
       'You will be redirected to SSLCommerz in your browser to complete your payment.',
-  'open_in_browser': 'Open in Browser',
+  'open_in_browser': 'Make Payment',
   'preparing_payment': 'Preparing payment...',
   'payment_page_opened': 'Payment Page Opened',
   'complete_your_payment_and_return_to_app':

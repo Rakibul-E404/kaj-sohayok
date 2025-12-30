@@ -223,6 +223,7 @@ class HomeScreen extends StatelessWidget {
                                   Routes.serviceDetailsScreen,
 
                                   // arguments: {'providerId': serviceProviderId},
+
                                   arguments: {
                                     'serviceProviderID': serviceProviderId,
                                     'providerID': providerID,
