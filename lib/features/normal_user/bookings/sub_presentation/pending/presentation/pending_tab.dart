@@ -138,9 +138,15 @@ class _PendingTabState extends State<PendingTab> {
                   return BookingDetailsCardWidget(
                     // ➤ CARD TAP → Navigate with ALL required parameters
                     onTap: () {
-                          LoggerUtils.debug(" bookingId:------: $bookingId",);
-                          LoggerUtils.debug(" serviceProviderId:------: $serviceProviderId",);
-                          LoggerUtils.debug(" providerId:------: $providerId",);
+                      LoggerUtils.debug(
+                        " bookingId:------: $bookingId",
+                      );
+                      LoggerUtils.debug(
+                        " serviceProviderId:------: $serviceProviderId",
+                      );
+                      LoggerUtils.debug(
+                        " providerId:------: $providerId",
+                      );
                       _navigateToDetailsScreen(
                           bookingId, serviceProviderId, providerId);
                     },
@@ -168,7 +174,7 @@ class _PendingTabState extends State<PendingTab> {
                     dateTime: _formatDateTime(
                         booking['bookingDateTime']?.toString() ?? ''),
                     serviceProviderProfileImage:
-                        imageUrl ?? Assets.images.userImage.path,
+                        imageUrl ?? Assets.images.errorImage.path,
                     serviceProviderName:
                         provider?['name'] ?? 'Unknown Provider',
                     serviceProviderDesignation: 'services_provider'.tr,
@@ -237,6 +243,7 @@ class _PendingTabState extends State<PendingTab> {
   static String? _getImageUrl(
       String bookingId, PendingBookingsController controller) {
     final url = controller.getImageUrl(bookingId);
+    LoggerUtils.debug("Pending Tab Services Profile Image Path : $url");
     if (url.isEmpty) return null;
 
     if (url.toLowerCase().contains('amazonaws')) {

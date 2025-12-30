@@ -1,4 +1,3 @@
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,7 +19,7 @@ import '../../../call/presentation/controller/call_controller.dart';
 import '../../chat_list/model/chat_list_response_model.dart';
 
 class ProviderDetailsScreen extends StatelessWidget {
-  const   ProviderDetailsScreen({super.key});
+  const ProviderDetailsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -114,12 +113,25 @@ class ProviderDetailsScreen extends StatelessWidget {
                                       );
                                     } else {
                                       // Show placeholder if no image is available
-                                      return CustomShimmerEffect(
-                                        height: 94.h,
-                                        width: 94.w,
-                                        isShapUsed: true,
-                                        shapType: BoxShape.circle,
-                                      );
+                                      if (svpProfileDetailsController
+                                              .isLoading.value ==
+                                          true) {
+                                        return CustomShimmerEffect(
+                                          height: 94.h,
+                                          width: 94.w,
+                                          isShapUsed: true,
+                                          shapType: BoxShape.circle,
+                                        );
+                                      } else {
+                                        return ClipOval(
+                                          child: Image.asset(
+                                            Assets.images.errorImage.path,
+                                            height: 94.h,
+                                            width: 94.w,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        );
+                                      }
                                     }
                                   }),
 
