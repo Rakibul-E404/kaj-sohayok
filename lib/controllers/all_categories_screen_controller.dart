@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/features/normal_user/all_categories/models/normal_user_all_category_model.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 
 import '../service/location/location_controller.dart';
 import '../service/network_caller.dart';
@@ -13,6 +14,7 @@ class NormalUserAllCategoryScreenController extends GetxController {
   String longitudeValue = '';
   RxBool isLoading = false.obs;
   RxList<Result> categories = <Result>[].obs;
+  final RxString errorMessage = ''.obs;
 
   @override
   void onInit() {
@@ -23,6 +25,7 @@ class NormalUserAllCategoryScreenController extends GetxController {
   Future<void> fetchAllCategories() async {
     try {
       isLoading.value = true;
+      errorMessage.value = '';
       final NetworkResponse response = await NetworkCaller().getRequest(
         AppUrl.getNormalUserAllCategory,
       );
@@ -42,14 +45,24 @@ class NormalUserAllCategoryScreenController extends GetxController {
           categories.value = model.data!.attributes!.results!;
         }
       } else {
+        String apiMessage =
+            response.jsonResponse!['message'] ?? 'Failed to load Categories';
+        errorMessage.value = apiMessage;
+        LoggerUtils.error(
+            '❌ [PENDING CONTROLLER] API returned error: $apiMessage');
         Get.snackbar(
-          'Error',
-          'Failed to load categories',
+          'error'.tr,
+          apiMessage,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
       }
     } catch (e) {
+      // errorMessage.value =
+      //     'Connection error: Please check your internet connection';
+      LoggerUtils.error(
+          '❌ [PENDING CONTROLLER] Exception in getPendingBookings: $e');
+
       Get.snackbar(
         'Error',
         'Something went wrong: $e',
@@ -59,5 +72,9 @@ class NormalUserAllCategoryScreenController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  Future<void> refreshData() async {
+    await fetchAllCategories();
   }
 }

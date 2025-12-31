@@ -665,4 +665,5 @@ Map<String, String> englishLanguage = {
   'are_you_sure_you_want_to_end_this_call':
       'Are you sure you want to end this call?',
   'end_calll': 'End Call',
+  'loading_all_categories...': 'Loading all categories...',
 };

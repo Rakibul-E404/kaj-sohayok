@@ -44,67 +44,76 @@ class _PendingTabState extends State<PendingTab> {
         }
 
         if (controller.errorMessage.isNotEmpty) {
-          return Center(
-            child: Padding(
-              padding: EdgeInsets.all(20.sp),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64.sp,
-                    color: Colors.red,
-                  ),
-                  UIHelper.verticalSpace(16.h),
-                  Text(
-                    controller.errorMessage.value,
-                    style: TextStyle(
-                      fontSize: 16.sp,
+          // 🔄 FIXED: Wrap error state in a SingleChildScrollView so RefreshIndicator works even when showing error
+          return SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(), // Ensures the refresh indicator works
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.all(20.sp),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 64.sp,
                       color: Colors.red,
-                      fontWeight: FontWeight.w500,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  UIHelper.verticalSpace(20.h),
-                  ElevatedButton(
-                    onPressed: () => controller.getPendingBookings(),
-                    child: Text('retry'.tr),
-                  ),
-                ],
+                    UIHelper.verticalSpace(16.h),
+                    Text(
+                      controller.errorMessage.value,
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: Colors.red,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    UIHelper.verticalSpace(20.h),
+                    ElevatedButton(
+                      onPressed: () => controller.getPendingBookings(),
+                      child: Text('retry'.tr),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
         }
 
         if (controller.pendingBookings.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.event_note_outlined,
-                  size: 64.sp,
-                  color: Colors.grey,
-                ),
-                UIHelper.verticalSpace(16.h),
-                Text(
-                  'no_pending_bookings_found'.tr,
-                  style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-                ),
-              ],
+          // 🔄 FIXED: Wrap empty state in a SingleChildScrollView so RefreshIndicator works even when no data
+          return SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(), // Ensures the refresh indicator works
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  UIHelper.verticalSpace(100.h), // Add some top spacing to make refresh more visible
+                  Icon(
+                    Icons.event_note_outlined,
+                    size: 64.sp,
+                    color: Colors.grey,
+                  ),
+                  UIHelper.verticalSpace(16.h),
+                  Text(
+                    'no_pending_bookings_found'.tr,
+                    style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                  ),
+                  UIHelper.verticalSpace(100.h), // Add bottom spacing to allow for pull-to-refresh
+                ],
+              ),
             ),
           );
         }
 
         return ListView.separated(
-          padding: EdgeInsets.only(top: 16.sp, bottom: 100.h), // Add bottom padding here
+          padding: EdgeInsets.only(
+              top: 16.sp, bottom: 100.h), // Add bottom padding here
           itemCount: controller.pendingBookings.length,
-          separatorBuilder: (context, index) =>
-              UIHelper.verticalSpace(16.h),
+          separatorBuilder: (context, index) => UIHelper.verticalSpace(16.h),
           itemBuilder: (context, index) {
             final booking = controller.pendingBookings[index];
-            final bookingId =
-                booking['_ServiceBookingId']?.toString() ?? '';
+            final bookingId = booking['_ServiceBookingId']?.toString() ?? '';
 
             // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
             final serviceProviderId = _getServiceProviderId(booking);
@@ -116,11 +125,10 @@ class _PendingTabState extends State<PendingTab> {
             log('   Service Provider ID: "$serviceProviderId"');
             log('   Provider User ID: "$providerId"');
 
-            final serviceName = booking['providerDetailsId']
-                ?['serviceName'] as Map<String, dynamic>?;
+            final serviceName = booking['providerDetailsId']?['serviceName']
+                as Map<String, dynamic>?;
             final address = booking['address'] as Map<String, dynamic>?;
-            final provider =
-                booking['providerId'] as Map<String, dynamic>?;
+            final provider = booking['providerId'] as Map<String, dynamic>?;
 
             final imageUrl = _getImageUrl(bookingId, controller);
             final isNetworkImage = _isNetworkImage(bookingId, controller);
@@ -147,8 +155,9 @@ class _PendingTabState extends State<PendingTab> {
                 showCancelBookingBottomSheet(
                   bookingId: bookingId,
                   onCancelConfirmed: () async {
-                    final success =
-                        await controller.cancelBooking(bookingId);
+                    final success = await controller.cancelBooking(bookingId);
+                    LoggerUtils.debug(
+                        "Service ID From Cancel Button : $bookingId");
                     if (success) {
                       log('✅ [PENDING TAB] Booking $bookingId cancelled successfully');
                     }
@@ -158,15 +167,13 @@ class _PendingTabState extends State<PendingTab> {
 
               // Data
               title: _getServiceName(serviceName),
-              initialPayablePrice:
-                  (booking['startPrice'] ?? 0).toString(),
+              initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
               location: _getAddress(address),
-              dateTime: _formatDateTime(
-                  booking['bookingDateTime']?.toString() ?? ''),
+              dateTime:
+                  _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
               serviceProviderProfileImage:
                   imageUrl ?? Assets.images.errorImage.path,
-              serviceProviderName:
-                  provider?['name'] ?? 'Unknown Provider',
+              serviceProviderName: provider?['name'] ?? 'Unknown Provider',
               serviceProviderDesignation: 'services_provider'.tr,
               isNetworkImage: isNetworkImage,
             );
