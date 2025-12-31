@@ -27,7 +27,9 @@ class ContactTileWidget extends StatelessWidget {
             color: AppColors.cf1f3fd,
             border: Border.all(color: AppColors.c92a2ef),
             borderRadius: BorderRadius.circular(10.r)),
+        alignment: Alignment.center,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircleAvatar(
               radius: 30.r,
