@@ -312,8 +312,8 @@ class ServiceOfSpecificCategoryScreenController extends GetxController {
   }
 
   // 11. Get rating as integer
-  int getServiceRatingInt(Result service) {
-    return service.rating ?? 0;
+  double getServiceRatingInt(Result service) {
+    return service.rating ?? 0.0;
   }
 
   // 12. Get formatted price with currency

@@ -60,7 +60,7 @@ class Attributes {
   ServiceCategoryId? serviceCategoryId;
   String? providerApprovalStatus;
   int? startPrice;
-  int? rating;
+  double? rating;
   Description? introOrBio;
   Description? description;
   List<String>? attachmentsForGallery;
@@ -110,7 +110,7 @@ class Attributes {
         : ServiceCategoryId.fromJson(json["serviceCategoryId"]),
     providerApprovalStatus: json["providerApprovalStatus"],
     startPrice: json["startPrice"],
-    rating: json["rating"],
+    rating: (json["rating"] ?? 0 as num).toDouble(),
     introOrBio: json["introOrBio"] == null
         ? null
         : Description.fromJson(json["introOrBio"]),

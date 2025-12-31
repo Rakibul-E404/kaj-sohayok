@@ -26,7 +26,7 @@ class WorkCompletedTab extends StatelessWidget {
               // CircularProgressIndicator(),
               UIHelper.verticalSpace(16.h),
               Text(
-                'Loading work completed bookings...',
+                'loading_work_completed_bookings'.tr,
                 style: TextStyle(fontSize: 16.sp, color: Colors.grey),
               ),
             ],
@@ -55,7 +55,7 @@ class WorkCompletedTab extends StatelessWidget {
                 UIHelper.verticalSpace(20.h),
                 ElevatedButton(
                   onPressed: () => controller.getWorkCompletedBookings(),
-                  child: const Text('Retry'),
+                  child: Text('retry'.tr),
                 ),
               ],
             ),
@@ -71,7 +71,7 @@ class WorkCompletedTab extends StatelessWidget {
               Icon(Icons.work_outline, size: 64.sp, color: Colors.grey),
               UIHelper.verticalSpace(16.h),
               Text(
-                'No work completed bookings found',
+                'no_works_completed_bookings_found'.tr,
                 style: TextStyle(fontSize: 16.sp, color: Colors.grey),
               ),
             ],
@@ -88,7 +88,8 @@ class WorkCompletedTab extends StatelessWidget {
           itemBuilder: (context, index) {
             final booking = controller.workCompletedBookings[index];
             final bookingId = booking['_ServiceBookingId']?.toString() ?? '';
-            final serviceName = booking['providerDetailsId']?['serviceName'] as Map<String, dynamic>?;
+            final serviceName = booking['providerDetailsId']?['serviceName']
+                as Map<String, dynamic>?;
             final address = booking['address'] as Map<String, dynamic>?;
             final provider = booking['providerId'] as Map<String, dynamic>?;
 
@@ -102,11 +103,13 @@ class WorkCompletedTab extends StatelessWidget {
               onTap: () => _handleCardTap(booking),
               isWorkCompletedTab: true,
               isReviewGiven: isReviewGiven,
-              isWorkCompletedTabGiveReviewOnTap: () => _handleReviewButton(booking),
+              isWorkCompletedTabGiveReviewOnTap: () =>
+                  _handleReviewButton(booking),
               title: _getServiceName(serviceName),
               initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
               location: _getAddress(address),
-              dateTime: _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
+              dateTime:
+                  _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
               serviceProviderProfileImage: imageUrl,
               serviceProviderName: provider?['name'] ?? 'unknown_provider'.tr,
               serviceProviderDesignation: 'services_provider'.tr,

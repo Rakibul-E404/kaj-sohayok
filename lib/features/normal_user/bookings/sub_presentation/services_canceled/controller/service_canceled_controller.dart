@@ -27,8 +27,7 @@ class CanceledBookingsController extends GetxController {
       LoggerUtils.info("Authentication Token Check : $token");
 
       if (token == null) {
-        errorMessage.value =
-            'Authentication token not found. Please login again.';
+        errorMessage.value = 'auth_token_not_found_login_again'.tr;
         isLoading.value = false;
         log('❌ [CANCELED CONTROLLER] No token found');
         return;
@@ -93,8 +92,7 @@ class CanceledBookingsController extends GetxController {
         log('❌ [CANCELED CONTROLLER] Network error: $error');
       }
     } catch (e) {
-      errorMessage.value =
-          'Connection error: Please check your internet connection';
+      errorMessage.value = 'connection_error_check_your_internet'.tr;
       log('❌ [CANCELED CONTROLLER] Exception in getCanceledBookings: $e');
     } finally {
       isLoading.value = false;

@@ -1,14 +1,4 @@
-
-
-
-
-
-
-
-
-
 import 'dart:developer';
-// import 'dart:log';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +55,7 @@ void showCancelBookingBottomSheet({
           ///Section : Text -> You can cancel the order within.......
           Text(
             "You can cancel the order within 12 hours before it is accepted, "
-                "but you cannot cancel it after the order has been accepted. Thank you.",
+            "but you cannot cancel it after the order has been accepted. Thank you.",
             textAlign: TextAlign.center,
             style: TextFontStyle.headline14w500cfb3f3fStyleSatoshi,
           ),
@@ -101,7 +91,8 @@ void showCancelBookingBottomSheet({
                 },
                 buttonTitle: "Yes",
                 buttonWidth: 136.w,
-                buttonColor: AppColors.ce73d3d, // Red color for destructive action
+                buttonColor:
+                    AppColors.ce73d3d, // Red color for destructive action
               ),
             ],
           ),
@@ -112,4 +103,3 @@ void showCancelBookingBottomSheet({
     enableDrag: true,
   );
 }
-

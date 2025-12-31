@@ -49,8 +49,6 @@ Map<String, String> englishLanguage = {
   'select_gender': 'Select gender',
   'male': 'Male',
   'female': 'Female',
-  'password_must_be_at_least_8_characters':
-      "Password must be at least 8 characters",
 
   ///----------> Forgot Password Screen
   'password_forgot': 'Forgot Password',
@@ -231,7 +229,7 @@ Map<String, String> englishLanguage = {
   'proceed_to_payment': 'Proceed to Payment',
   'you_will_be_redirected_to_ssl_commerce':
       'You will be redirected to SSLCommerz in your browser to complete your payment.',
-  'open_in_browser': 'Open in Browser',
+  'open_in_browser': 'Make Payment',
   'preparing_payment': 'Preparing payment...',
   'payment_page_opened': 'Payment Page Opened',
   'complete_your_payment_and_return_to_app':
@@ -455,20 +453,6 @@ Map<String, String> englishLanguage = {
   'delete_message': 'Delete Message',
   'profile_view': 'Profile View',
   'write_your_message': 'Write your message',
-  'we_here_to_help': 'We’re here to help!',
-  'bank_transfer': 'Bank Transfer',
-  'mobile_banking': 'Mobile Banking',
-  'withdrawal_method': 'Withdrawal Method',
-  'nagad': 'Nagad',
-  'bKash': 'bKash',
-  'rocket': 'Rocket',
-  'mobile_banking_type': 'Mobile Banking Type',
-  'mobile_number': 'Mobile Number',
-  'personal': 'Personal',
-  'merchant': 'Merchant',
-  'please_enter_mobile_number': 'Please enter mobile number',
-    'have_ques_or_need': 'Have questions or need assistance? Reach out to our support team.',
-
 
   ///Screen--------------->> Svp Home Screen
   'total_income': 'Total Income',
@@ -597,4 +581,89 @@ Map<String, String> englishLanguage = {
   'failed_to_load_home_data': 'Failed to load home data',
   'password_must_be_at_lease_eight_charecters':
       'Password must be at least 8 characters',
+  'could_not_launch': 'Could not launch',
+  'failed_to_load_exception': 'Failed to load notifications',
+  'just_now': 'Just now',
+  'more_information': 'More Information',
+  'wrok_type': 'Work Type*',
+  'select_work_type': 'Select work type',
+  'business_name': 'Business Name*',
+  'enter_business_name': 'Enter business name',
+  'please_enter_business_name': 'Please enter the business name',
+  'years_of_experiencee': 'Years of Experience*',
+  'enter_ears_of_experience': 'Enter years of experience',
+  'please_enter_years_of_experience': 'Please enter the years of experience',
+  'please_enter_a_valid_number': 'Please enter a valid number',
+  'years_of_experience_cannot_be_negetive':
+      'Years of experience cannot be negative',
+  'start_from_work_price*': 'Start from Work Price*',
+  'type_now': 'Type now',
+  'please_enter_the_work_price': 'Please enter the work price',
+  'please_enter_a_work_price': 'Please enter a work price',
+  'work_price_cannot_be_negetive': 'Work price can not be negative !!! ',
+  'nid_number': 'NID Number*',
+  'please_enter_the_nid_number': 'Please enter the NID number',
+  'upload_driving_nid_documents_front_side':
+      'Upload NID/Driving License/Passport (Front Side)*',
+  'choose_file': 'Choose File',
+  'upload_nid_document_back_side':
+      'Upload NID/Driving License/Passport (Back Side)*',
+  'take_selfi_with_nid': 'Take a Selfie with Your ID*',
+  'take_selfie': 'Take Selfie',
+  'back': 'Back',
+  'next': 'Next',
+  'other': 'Other',
+  'enter_service_name': 'Enter service name',
+  'browse': 'Browse',
+  'tap_to_take_a_selfie': 'Tap to Take a Selfie',
+  'format_and_file_size_text': 'Format: .jpeg, .png & Max file size: 25 MB',
+  'make_sure_your_face_and_id_are_visible':
+      'Make sure your face and ID are visible',
+  'call_ended_by_other_user': 'Call ended by other user',
+  'calling...': 'Calling...',
+  'call_failed': 'Call failed',
+  'invalid_call_token_please_try_again':
+      'Invalid call token. Please try again.',
+  'call_token_expired_please_try_again':
+      'Call token expired. Please try again.',
+  'network_connection_failed': 'Network connection failed.',
+  'call_connected': 'Call connected',
+  'call_accepted_connecting': 'Call accepted, connecting...',
+  'camera_and_michro_phone_permission_are_required':
+      'Camera and microphone permissions are required',
+  'failed_to_get_call_token_please_try_again':
+      'Failed to get call token. Please try again.',
+  'failed_to_join_call': 'Failed to join call',
+  'cannot_initiate_call_invalid_conversation':
+      'Cannot initiate call - invalid conversation',
+  'unknown': 'Unknown',
+  'failed_to_start_the_call_please_try_again':
+      'Failed to start the call. Please try again.',
+  'accepting_call': 'Accepting call...',
+  'call_rejected': 'Call rejected',
+  'michrophone_muted': 'Microphone muted',
+  'michrophone_unmuted': 'Microphone unmuted',
+  'camera_off': 'Camera off',
+  'camera_on': 'Camera on',
+  'camera_switched': 'Camera switched',
+  'speaker_on': 'Speaker on',
+  'earpiece_mode': 'Earpiece mode',
+  'call_error': 'Call Error',
+  'waiting_for_other_user': 'Waiting for other user...',
+  'ringing': 'Ringing...',
+  'connecting': 'Connecting...',
+  'call_ended': 'Call Ended',
+  'michrophone_is_muted': 'Microphone is muted',
+  'video_call': 'Video Call',
+  'voice_call': 'Voice Call',
+  'reject': 'Reject',
+  'unmute': 'Unmute',
+  'mute': 'Mute',
+  'speaker': 'Speaker',
+  'end': 'End',
+  'end_call': 'End Call?',
+  'are_you_sure_you_want_to_end_this_call':
+      'Are you sure you want to end this call?',
+  'end_calll': 'End Call',
+  'loading_all_categories...': 'Loading all categories...',
 };

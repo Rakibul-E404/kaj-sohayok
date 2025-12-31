@@ -105,7 +105,8 @@ class Result {
   Description? serviceName;
   String? serviceCategoryId;
   int? startPrice;
-  int? rating;
+  // int? rating;
+  double? rating;
   Description? introOrBio;
   Description? description;
   int? yearsOfExperience;
@@ -146,7 +147,8 @@ class Result {
             : Description.fromJson(json["serviceName"]),
         serviceCategoryId: json["serviceCategoryId"],
         startPrice: json["startPrice"],
-        rating: json["rating"],
+        // rating: json["rating"],
+        rating: (json["rating"] ?? 0 as num).toDouble(),
         introOrBio: json["introOrBio"] == null
             ? null
             : Description.fromJson(json["introOrBio"]),
