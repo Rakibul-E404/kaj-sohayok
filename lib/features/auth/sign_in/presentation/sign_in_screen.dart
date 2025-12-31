@@ -196,7 +196,7 @@ class SignInScreen extends StatelessWidget {
                       // const String whatsappUrl =
                       //     "https://wa.me/message/DCVHOMCO4WI7F1";
                       try {
-                        final Uri uri = Uri.parse(whatsappUrl);
+                        final Uri uri = Uri.parse(whatsappUrlLink);
                         if (await canLaunchUrl(uri)) {
                           await launchUrl(
                             uri,
