@@ -74,6 +74,7 @@ class ServicesCanceledTab extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  UIHelper.verticalSpace(0.2.sh),
                   Icon(
                     Icons.cancel_outlined,
                     size: 64.sp,
