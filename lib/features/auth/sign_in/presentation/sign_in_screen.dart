@@ -7,12 +7,16 @@ import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/constants/validator.dart';
 import 'package:kaz_bd/controllers/sign_in_screen_controller.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
+import 'package:kaz_bd/features/common_screens/contact_us/widgets/social_icons_widget.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/custom_widgets/custom_text_form_field.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/helpers/waiting_widget.dart';
 import 'package:kaz_bd/routes/routes.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../../../constants/app_constant_text.dart';
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
@@ -179,6 +183,56 @@ class SignInScreen extends StatelessWidget {
                     ],
                   ),
                   UIHelper.verticalSpace(20.h),
+
+                  GestureDetector(
+                    onTap: () async {
+                      // SocialIconsWidget(
+                      //   iconPath: Assets.icons.whatsAppIcon,
+                      //   socialHandalerName: "WhatsApp",
+                      //   url: "https://wa.me/message/DCVHOMCO4WI7F1",
+                      // );
+
+                      // Launch WhatsApp URL directly
+                      // const String whatsappUrl =
+                      //     "https://wa.me/message/DCVHOMCO4WI7F1";
+                      try {
+                        final Uri uri = Uri.parse(whatsappUrlLink);
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(
+                            uri,
+                            mode: LaunchMode.externalApplication,
+                          );
+                        } else {
+                          // Fallback: Try to open in browser
+                          final Uri webUri =
+                              Uri.parse("https://web.whatsapp.com");
+                          if (await canLaunchUrl(webUri)) {
+                            await launchUrl(
+                              webUri,
+                              mode: LaunchMode.externalApplication,
+                            );
+                          } else {
+                            // Show error
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Could not open WhatsApp'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        }
+                      } catch (e) {
+                        log('Error launching WhatsApp: $e');
+                      }
+                    },
+                    child: Text(
+                      "Need Help?",
+                      style: TextFontStyle.headline14w400c000000StyleSatoshi
+                          .copyWith(
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),

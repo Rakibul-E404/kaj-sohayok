@@ -7,6 +7,7 @@ import 'package:kaz_bd/helpers/ui_helpers.dart';
 import 'package:kaz_bd/utilities/logger_util.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../constants/app_constant_text.dart';
 import '../../../../constants/text_font_style.dart';
 import '../../../../gen/colors.gen.dart';
 import '../widgets/contact_tile_widget.dart';
@@ -219,24 +220,20 @@ class ContactUsScreen extends StatelessWidget {
                 Row(
                   children: [
                     // 👇 Email Tile
-                    Expanded(
-                      child: ContactTileWidget(
-                        onTap: email.isNotEmpty ? _launchEmail : null,
-                        icon: Icons.email_outlined,
-                        data: email.isNotEmpty ? email : 'No email available',
-                      ),
+                    ContactTileWidget(
+                      onTap: email.isNotEmpty ? _launchEmail : null,
+                      icon: Icons.email_outlined,
+                      data: email.isNotEmpty ? email : 'No email available',
                     ),
                     SizedBox(width: 16.w),
 
                     // 👇 Phone Tile
-                    Expanded(
-                      child: ContactTileWidget(
-                        onTap: phoneNumbers.isNotEmpty
-                            ? () => _showPhoneSelectionDialog(context)
-                            : null,
-                        icon: Icons.phone_outlined,
-                        data: _buildPhoneDisplayText(),
-                      ),
+                    ContactTileWidget(
+                      onTap: phoneNumbers.isNotEmpty
+                          ? () => _showPhoneSelectionDialog(context)
+                          : null,
+                      icon: Icons.phone_outlined,
+                      data: _buildPhoneDisplayText(),
                     ),
                   ],
                 ),
@@ -246,7 +243,7 @@ class ContactUsScreen extends StatelessWidget {
                 SocialIconsWidget(
                   iconPath: Assets.icons.faceBookIcon,
                   socialHandalerName: "Facebook",
-                  url: "www.facebook.com/kaajbd",
+                  url: faceBookLink,
                 ),
                 UIHelper.verticalSpace(14.h),
 
@@ -254,7 +251,7 @@ class ContactUsScreen extends StatelessWidget {
                 SocialIconsWidget(
                   iconPath: Assets.icons.instagramIcon,
                   socialHandalerName: "Instagram",
-                  url: "www.instagram.com/kaajbdofficial",
+                  url: instagramLink,
                 ),
                 UIHelper.verticalSpace(14.h),
 
@@ -262,7 +259,7 @@ class ContactUsScreen extends StatelessWidget {
                 SocialIconsWidget(
                   iconPath: Assets.icons.whatsAppIcon,
                   socialHandalerName: "WhatsApp",
-                  url: "https://wa.me/message/DCVHOMCO4WI7F1",
+                  url: whatsappUrlLink,
                 ),
                 UIHelper.verticalSpace(14.h),
 
@@ -270,7 +267,7 @@ class ContactUsScreen extends StatelessWidget {
                 SocialIconsWidget(
                   iconPath: Assets.icons.youtubeIcon,
                   socialHandalerName: "YouTube",
-                  url: "www.youtube.com/@kaajbdofficial",
+                  url: youtubeLink,
                 ),
                 UIHelper.verticalSpace(14.h),
 

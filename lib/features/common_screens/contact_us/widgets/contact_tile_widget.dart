@@ -24,9 +24,10 @@ class ContactTileWidget extends StatelessWidget {
         height: 200.h,
         padding: EdgeInsets.all(20.sp),
         decoration: BoxDecoration(
-            color: AppColors.cf1f3fd,
-            border: Border.all(color: AppColors.c92a2ef),
-            borderRadius: BorderRadius.circular(10.r)),
+          color: AppColors.cf1f3fd,
+          border: Border.all(color: AppColors.c92a2ef),
+          borderRadius: BorderRadius.circular(10.r),
+        ),
         alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

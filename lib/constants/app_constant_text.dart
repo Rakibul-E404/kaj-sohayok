@@ -16,3 +16,4 @@ class AppText {
 
 const String kKeyEnglish = 'english';
 const String kKeyBangla = 'bangla';
+const String whatsappUrl = "https://wa.me/message/DCVHOMCO4WI7F1";
