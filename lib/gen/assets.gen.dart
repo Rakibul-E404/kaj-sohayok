@@ -49,6 +49,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/edit_icon.svg
   String get editIcon => 'assets/icons/edit_icon.svg';
 
+  /// File path: assets/icons/face_book_icon.svg
+  String get faceBookIcon => 'assets/icons/face_book_icon.svg';
+
   /// File path: assets/icons/gender_logo.svg
   String get genderLogo => 'assets/icons/gender_logo.svg';
 
@@ -60,6 +63,9 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/home_icon.svg
   String get homeIcon => 'assets/icons/home_icon.svg';
+
+  /// File path: assets/icons/instagram_icon.svg
+  String get instagramIcon => 'assets/icons/instagram_icon.svg';
 
   /// File path: assets/icons/keyIcon.svg
   String get keyIcon => 'assets/icons/keyIcon.svg';
@@ -125,6 +131,12 @@ class $AssetsIconsGen {
   /// File path: assets/icons/wallet_icon.svg
   String get walletIcon => 'assets/icons/wallet_icon.svg';
 
+  /// File path: assets/icons/whats_app_icon.svg
+  String get whatsAppIcon => 'assets/icons/whats_app_icon.svg';
+
+  /// File path: assets/icons/youtube_icon.svg
+  String get youtubeIcon => 'assets/icons/youtube_icon.svg';
+
   /// List of all assets
   List<String> get values => [
         aboutUsIcon,
@@ -134,10 +146,12 @@ class $AssetsIconsGen {
         callIcon,
         chatIcon,
         editIcon,
+        faceBookIcon,
         genderLogo,
         googleIcon,
         helpIcon,
         homeIcon,
+        instagramIcon,
         keyIcon,
         locationLogo,
         lockIcon,
@@ -158,7 +172,9 @@ class $AssetsIconsGen {
         termsConditionsIcon,
         userLogoGray,
         verifiedIcon,
-        walletIcon
+        walletIcon,
+        whatsAppIcon,
+        youtubeIcon
       ];
 }
 

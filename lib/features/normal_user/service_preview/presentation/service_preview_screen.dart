@@ -4,6 +4,7 @@ import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:kaz_bd/constants/app_constant_text.dart';
 import 'package:kaz_bd/constants/text_font_style.dart';
 import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/features/normal_user/service_preview/widgets/booking_placed_bottomsheet_widget.dart';
@@ -272,12 +273,12 @@ class ServicesPreviewScreen extends StatelessWidget {
                           }
                           return RichText(
                             text: TextSpan(
-                              text: '${'start_from'.tr} ',
+                              text: '${AppText.bdTkSign} ${'start_from'.tr} ',
                               style: TextFontStyle
                                   .headline12w500c6a6a6aStyleSatoshi,
                               children: [
                                 TextSpan(
-                                  text: '\$${controller.serviceStartPrice}',
+                                  text: '${controller.serviceStartPrice}',
                                   style: TextFontStyle
                                       .headline16w700c778bebStyleSatoshi,
                                 ),

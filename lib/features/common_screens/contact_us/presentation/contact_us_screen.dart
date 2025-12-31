@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../constants/text_font_style.dart';
 import '../../../../gen/colors.gen.dart';
 import '../widgets/contact_tile_widget.dart';
+import '../widgets/social_icons_widget.dart';
 
 class ContactUsScreen extends StatelessWidget {
   const ContactUsScreen({super.key});
@@ -241,38 +242,37 @@ class ContactUsScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 16.h),
 
-                Container(
-                  width: 1.sw,
-                  padding: EdgeInsets.all(10.sp),
-                  decoration: BoxDecoration(
-                    color: AppColors.cf1f3fd,
-                    border: Border.all(color: AppColors.c92a2ef),
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: ListTile(
-                    leading: Container(
-                      padding: EdgeInsets.all(10.sp),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 194, 203, 248),
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                      child: Image.asset(
-                        width: 20.w,
-                        height: 20.h,
-                        fit: BoxFit.cover,
-                        Assets.images.emailIconImage.path,
-                      ),
-                    ),
-                    title: Text(
-                      "Facebook",
-                      style: TextFontStyle.headline14w400c000000StyleSatoshi,
-                    ),
-                    subtitle: Text(
-                      "Email",
-                      style: TextFontStyle.headline14w400c000000StyleSatoshi,
-                    ),
-                  ),
+                ///FaceBook
+                SocialIconsWidget(
+                  iconPath: Assets.icons.faceBookIcon,
+                  socialHandalerName: "Facebook",
+                  url: "www.facebook.com/kaajbd",
                 ),
+                UIHelper.verticalSpace(14.h),
+
+                ///Instagram
+                SocialIconsWidget(
+                  iconPath: Assets.icons.instagramIcon,
+                  socialHandalerName: "Instagram",
+                  url: "www.instagram.com/kaajbdofficial",
+                ),
+                UIHelper.verticalSpace(14.h),
+
+                ///WhatsApp
+                SocialIconsWidget(
+                  iconPath: Assets.icons.whatsAppIcon,
+                  socialHandalerName: "WhatsApp",
+                  url: "https://wa.me/message/DCVHOMCO4WI7F1",
+                ),
+                UIHelper.verticalSpace(14.h),
+
+                ///Youtube
+                SocialIconsWidget(
+                  iconPath: Assets.icons.youtubeIcon,
+                  socialHandalerName: "YouTube",
+                  url: "www.youtube.com/@kaajbdofficial",
+                ),
+                UIHelper.verticalSpace(14.h),
 
                 // Add some bottom padding for visual balance
                 SizedBox(height: 40.h),

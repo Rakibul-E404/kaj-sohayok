@@ -17,75 +17,75 @@ class WorkCompletedTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(booking_ctrl.WorkCompletedBookingsController());
 
-    return Obx(() {
-      if (controller.isLoading.value) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // CircularProgressIndicator(),
-              UIHelper.verticalSpace(16.h),
-              Text(
-                'loading_work_completed_bookings'.tr,
-                style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-              ),
-            ],
-          ),
-        );
-      }
-
-      if (controller.errorMessage.isNotEmpty) {
-        return Center(
-          child: Padding(
-            padding: EdgeInsets.all(20.sp),
+    return RefreshIndicator(
+      onRefresh: () => controller.getWorkCompletedBookings(),
+      child: Obx(() {
+        if (controller.isLoading.value) {
+          return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.error_outline, size: 64.sp, color: Colors.red),
+                // CircularProgressIndicator(),
                 UIHelper.verticalSpace(16.h),
                 Text(
-                  controller.errorMessage.value,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    color: Colors.red,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                UIHelper.verticalSpace(20.h),
-                ElevatedButton(
-                  onPressed: () => controller.getWorkCompletedBookings(),
-                  child: Text('retry'.tr),
-                ),
-              ],
-            ),
-          ),
-        );
-      }
-
-      if (controller.workCompletedBookings.isEmpty) {
-        return SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                UIHelper.verticalSpace(0.2.sh),
-                Icon(Icons.work_outline, size: 64.sp, color: Colors.grey),
-                UIHelper.verticalSpace(16.h),
-                Text(
-                  'no_works_completed_bookings_found'.tr,
+                  'loading_work_completed_bookings'.tr,
                   style: TextStyle(fontSize: 16.sp, color: Colors.grey),
                 ),
               ],
             ),
-          ),
-        );
-      }
+          );
+        }
 
-      return RefreshIndicator(
-        onRefresh: () => controller.getWorkCompletedBookings(),
-        child: ListView.separated(
+        if (controller.errorMessage.isNotEmpty) {
+          return Center(
+            child: Padding(
+              padding: EdgeInsets.all(20.sp),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.error_outline, size: 64.sp, color: Colors.red),
+                  UIHelper.verticalSpace(16.h),
+                  Text(
+                    controller.errorMessage.value,
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      color: Colors.red,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  UIHelper.verticalSpace(20.h),
+                  ElevatedButton(
+                    onPressed: () => controller.getWorkCompletedBookings(),
+                    child: Text('retry'.tr),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        if (controller.workCompletedBookings.isEmpty) {
+          return SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  UIHelper.verticalSpace(0.2.sh),
+                  Icon(Icons.work_outline, size: 64.sp, color: Colors.grey),
+                  UIHelper.verticalSpace(16.h),
+                  Text(
+                    'no_works_completed_bookings_found'.tr,
+                    style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        return ListView.separated(
           padding: EdgeInsets.only(top: 16.sp),
           itemCount: controller.workCompletedBookings.length,
           separatorBuilder: (context, index) => UIHelper.verticalSpace(16.h),
@@ -120,9 +120,9 @@ class WorkCompletedTab extends StatelessWidget {
               isNetworkImage: isNetworkImage,
             );
           },
-        ),
-      );
-    });
+        );
+      }),
+    );
   }
 
   // ═══════════════════════════════════════════════════════════════

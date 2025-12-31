@@ -20,6 +20,8 @@ class ContactTileWidget extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
+        width: 0.4.sw,
+        height: 200.h,
         padding: EdgeInsets.all(20.sp),
         decoration: BoxDecoration(
             color: AppColors.cf1f3fd,
