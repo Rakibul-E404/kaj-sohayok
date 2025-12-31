@@ -95,14 +95,15 @@ class _AcceptedBookingTabState extends State<AcceptedBookingTab> {
         }
 
         return ListView.separated(
-          padding: EdgeInsets.only(top: 16.sp, bottom: 100.h), // Add bottom padding to account for bottom navigation
+          padding: EdgeInsets.only(
+              top: 16.sp,
+              bottom:
+                  100.h), // Add bottom padding to account for bottom navigation
           itemCount: controller.acceptedBookings.length,
-          separatorBuilder: (context, index) =>
-              UIHelper.verticalSpace(16.h),
+          separatorBuilder: (context, index) => UIHelper.verticalSpace(16.h),
           itemBuilder: (context, index) {
             final booking = controller.acceptedBookings[index];
-            final bookingId =
-                booking['_ServiceBookingId']?.toString() ?? '';
+            final bookingId = booking['_ServiceBookingId']?.toString() ?? '';
 
             // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
             final serviceProviderId = _getServiceProviderId(booking);
@@ -168,12 +169,11 @@ class _AcceptedBookingTabState extends State<AcceptedBookingTab> {
               title: _getServiceName(serviceName),
               initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
               location: _getAddress(address),
-              dateTime: _formatDateTime(
-                  booking['bookingDateTime']?.toString() ?? ''),
+              dateTime:
+                  _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
               serviceProviderProfileImage:
                   imageUrl ?? Assets.images.userImage.path,
-              serviceProviderName:
-                  provider?['name'] ?? 'unknown_provider'.tr,
+              serviceProviderName: provider?['name'] ?? 'unknown_provider'.tr,
               serviceProviderDesignation: 'services_provider'.tr,
               isNetworkImage: isNetworkImage,
             );
