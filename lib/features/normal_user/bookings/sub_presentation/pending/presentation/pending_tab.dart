@@ -46,7 +46,8 @@ class _PendingTabState extends State<PendingTab> {
         if (controller.errorMessage.isNotEmpty) {
           // 🔄 FIXED: Wrap error state in a SingleChildScrollView so RefreshIndicator works even when showing error
           return SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(), // Ensures the refresh indicator works
+            physics:
+                const AlwaysScrollableScrollPhysics(), // Ensures the refresh indicator works
             child: Center(
               child: Padding(
                 padding: EdgeInsets.all(20.sp),
@@ -83,12 +84,14 @@ class _PendingTabState extends State<PendingTab> {
         if (controller.pendingBookings.isEmpty) {
           // 🔄 FIXED: Wrap empty state in a SingleChildScrollView so RefreshIndicator works even when no data
           return SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(), // Ensures the refresh indicator works
+            physics:
+                const AlwaysScrollableScrollPhysics(), // Ensures the refresh indicator works
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  UIHelper.verticalSpace(100.h), // Add some top spacing to make refresh more visible
+                  UIHelper.verticalSpace(0.2
+                      .sh), // Add some top spacing to make refresh more visible
                   Icon(
                     Icons.event_note_outlined,
                     size: 64.sp,
@@ -99,7 +102,8 @@ class _PendingTabState extends State<PendingTab> {
                     'no_pending_bookings_found'.tr,
                     style: TextStyle(fontSize: 16.sp, color: Colors.grey),
                   ),
-                  UIHelper.verticalSpace(100.h), // Add bottom spacing to allow for pull-to-refresh
+                  UIHelper.verticalSpace(
+                      100.h), // Add bottom spacing to allow for pull-to-refresh
                 ],
               ),
             ),
