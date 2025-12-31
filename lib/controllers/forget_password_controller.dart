@@ -17,7 +17,7 @@ class ForgetPasswordController extends GetxController {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  Future<void> handleForgetPassword() async {
+  Future<void> handleForgetPassword({bool isResend = false}) async {
     try {
       if (!formKey.currentState!.validate()) {
         return;
@@ -40,10 +40,15 @@ class ForgetPasswordController extends GetxController {
           postResponse.jsonResponse?['message'],
           backgroundColor: AppColors.c778beb,
         );
-        Get.toNamed(
-          Routes.verifyOtpScreen,
-          arguments: {'email': emailTEController.text, 'forgetPassword': true},
-        );
+        if (isResend == false) {
+          Get.toNamed(
+            Routes.verifyOtpScreen,
+            arguments: {
+              'email': emailTEController.text,
+              'forgetPassword': true
+            },
+          );
+        }
       } else {
         LoggerUtils.debug(postResponse.jsonResponse?['message']);
 
