@@ -614,13 +614,13 @@ class PaymentRequestBookingsController extends GetxController {
 
         if (response.jsonResponse!['code'] == 200) {
           // 🔴 FIXED: Use lazy getters to avoid initialization issues
-          try {
-            svpHomeScreenController.getServiceProviderHomeData();
-            svpPaymentRequestController.fetchPaymentRequests();
-            svpWorkCompletedController.fetchCompletedBookings();
-          } catch (e) {
-            log('⚠️ [PAYMENT REQUEST CONTROLLER] Error refreshing other controllers: $e');
-          }
+          // try {
+          //   svpHomeScreenController.getServiceProviderHomeData();
+          //   svpPaymentRequestController.fetchPaymentRequests();
+          //   svpWorkCompletedController.fetchCompletedBookings();
+          // } catch (e) {
+          //   log('⚠️ [PAYMENT REQUEST CONTROLLER] Error refreshing other controllers: $e');
+          // }
 
           Map<String, dynamic> paymentData = response.jsonResponse!['data']['attributes'];
           String paymentUrl = paymentData['url'];
