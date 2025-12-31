@@ -141,7 +141,7 @@ class SignInScreenController extends GetxController {
 
         Get.snackbar('Success', postResponse.jsonResponse?['message']);
       } else {
-        LoggerUtils.debug(postResponse.jsonResponse?['message']);
+        LoggerUtils.debug(postResponse.jsonResponse);
         // passwordTEController.clear();
         await SecureStorageService().clear();
         Get.snackbar(
