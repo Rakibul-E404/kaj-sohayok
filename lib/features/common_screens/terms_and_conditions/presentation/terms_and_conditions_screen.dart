@@ -39,7 +39,7 @@ class TermsAndConditionsScreen extends StatelessWidget {
 
                 ///Section : Text -> Privacy policy
                 Text(
-                  "Terms & conditions",
+                  'terms_and_condition'.tr,
                   style: TextFontStyle.headline18w700c000000StyleSatoshi,
                 ),
                 UIHelper.verticalSpace(24.h),

@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:kaz_bd/constants/app_enums.dart';
 import 'package:kaz_bd/features/normal_user/bookings/widgets/bookings_details_card_widget.dart';
@@ -22,7 +23,7 @@ class PaymentRequestTab extends StatelessWidget {
       onRefresh: () => bookingController.getPaymentRequestBookings(),
       child: SingleChildScrollView(
         physics: AlwaysScrollableScrollPhysics(),
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.8,
           child: Obx(() {
             if (bookingController.isLoading.value) {
@@ -132,7 +133,10 @@ class PaymentRequestTab extends StatelessWidget {
 
                   return BookingDetailsCardWidget(
                     // ➤ CARD TAP → Navigate with ALL required parameters
+
                     onTap: () {
+                      LoggerUtils.debug(
+                          "bookingId: ${bookingId} , serviceId : ${serviceProviderId} , providerId :${providerId}");
                       _navigateToDetailsScreen(
                           bookingId, serviceProviderId, providerId);
                     },
@@ -260,21 +264,21 @@ class PaymentRequestTab extends StatelessWidget {
     log('   ➤ serviceProviderId = "$serviceProviderId"');
     log('   ➤ providerId = "$providerId"');
 
-    if (serviceProviderId.isEmpty) {
-      log('❌ [PAYMENT REQUEST TAB] Navigation ABORTED: serviceProviderId is empty!');
-      Get.snackbar(
-        'navigation_error'.tr,
-        'service_provider_details_unavilable'.tr,
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-      return;
-    }
-
-    if (providerId.isEmpty) {
-      log('⚠️ [PAYMENT REQUEST TAB] Warning: providerId is empty (may cause issues in details screen)');
-    }
+    // if (serviceProviderId.isEmpty) {
+    //   log('❌ [PAYMENT REQUEST TAB] Navigation ABORTED: serviceProviderId is empty!');
+    //   Get.snackbar(
+    //     'navigation_error'.tr,
+    //     'service_provider_details_unavilable'.tr,
+    //     snackPosition: SnackPosition.BOTTOM,
+    //     backgroundColor: Colors.red,
+    //     colorText: Colors.white,
+    //   );
+    //   return;
+    // }
+    //
+    // if (providerId.isEmpty) {
+    //   log('⚠️ [PAYMENT REQUEST TAB] Warning: providerId is empty (may cause issues in details screen)');
+    // }
 
     log('✅ [PAYMENT REQUEST TAB] Navigating to service details screen with required IDs');
 

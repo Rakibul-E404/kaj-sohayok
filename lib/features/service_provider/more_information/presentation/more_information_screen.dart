@@ -31,7 +31,7 @@ class MoreInformationScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         title: Text(
-          'More Information',
+          'more_information'.tr,
           style: TextStyle(
             color: Colors.black,
             fontSize: 18.sp,
@@ -53,7 +53,7 @@ class MoreInformationScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Work Type (Interactive)
-                      _buildLabel('Work Type*'),
+                      _buildLabel('wrok_type'.tr),
                       SizedBox(height: 8.h),
                       Obx(
                         () => InkWell(
@@ -62,21 +62,21 @@ class MoreInformationScreen extends StatelessWidget {
                             controller.isOtherSelected.value
                                 ? controller.otherServiceText.value.trim()
                                 : controller.selectedCategory.value?.nameEn ??
-                                    'Select work type',
+                                    'select_work_type'.tr,
                           ),
                         ),
                       ),
                       SizedBox(height: 20.h),
 
                       // Business Name
-                      _buildLabel('Business Name*'),
+                      _buildLabel('business_name'.tr),
                       SizedBox(height: 8.h),
                       _buildTextField(
                         controller: controller.businessNameController,
-                        hintText: 'Enter business name',
+                        hintText: 'enter_business_name'.tr,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter the business name';
+                            return 'please_enter_business_name'.tr;
                           }
                           return null;
                         },
@@ -84,19 +84,19 @@ class MoreInformationScreen extends StatelessWidget {
                       SizedBox(height: 20.h),
 
                       // Years of Experience
-                      _buildLabel('Years of Experience*'),
+                      _buildLabel('years_of_experiencee'.tr),
                       SizedBox(height: 8.h),
                       _buildTextField(
                         controller: controller.yearsOfExperienceController,
-                        hintText: 'Enter years of experience',
+                        hintText: 'enter_ears_of_experience'.tr,
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter the years of experience';
+                            return 'please_enter_years_of_experience'.tr;
                           } else if (int.tryParse(value) == null) {
-                            return 'Please enter a valid number';
+                            return 'please_enter_a_valid_number'.tr;
                           } else if (int.parse(value) < 0) {
-                            return 'Years of experience cannot be negative';
+                            return 'years_of_experience_cannot_be_negetive'.tr;
                           }
                           return null;
                         },
@@ -104,33 +104,33 @@ class MoreInformationScreen extends StatelessWidget {
                       SizedBox(height: 20.h),
 
                       // Start from Work Price
-                      _buildLabel('Start from Work Price*'),
+                      _buildLabel('start_from_work_price*'.tr),
                       SizedBox(height: 8.h),
                       _buildTextField(
                         controller: controller.workPriceController,
-                        hintText: 'Type now',
+                        hintText: 'type_now'.tr,
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter the work price';
+                            return 'please_enter_the_work_price'.tr;
                           } else if (int.tryParse(value) == null) {
-                            return 'Please enter a work price';
+                            return 'please_enter_a_work_price'.tr;
                           } else if (int.parse(value) < 0) {
-                            return 'Work price can not be negative !!! ';
+                            return 'work_price_cannot_be_negetive'.tr;
                           }
                           return null;
                         },
                       ),
                       SizedBox(height: 24.h), // Start from Work Price
-                      _buildLabel('NID Number*'),
+                      _buildLabel('nid_number'.tr),
                       SizedBox(height: 8.h),
                       _buildTextField(
-                        controller: controller.nidNumberTEController ,
-                        hintText: 'Type now',
+                        controller: controller.nidNumberTEController,
+                        hintText: 'type_now'.tr,
                         keyboardType: TextInputType.text,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter the NID number';
+                            return 'please_enter_the_nid_number'.tr;
                           }
                           return null;
                         },
@@ -162,7 +162,7 @@ class MoreInformationScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             _buildLabel(
-                              'Upload NID/Driving License/Passport (Front Side)*',
+                              'upload_driving_nid_documents_front_side'.tr,
                             ),
                             SizedBox(height: 16),
                             Obx(
@@ -172,7 +172,7 @@ class MoreInformationScreen extends StatelessWidget {
                                     .showImageSourceDialog(isFront: true),
                                 onRemove: () =>
                                     controller.removeImage(isFront: true),
-                                buttonText: 'Choose File',
+                                buttonText: 'choose_file'.tr,
                                 showDragText: true,
                               ),
                             ),
@@ -206,7 +206,7 @@ class MoreInformationScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             _buildLabel(
-                              'Upload NID/Driving License/Passport (Back Side)*',
+                              'upload_nid_document_back_side'.tr,
                             ),
                             SizedBox(height: 16),
                             Obx(
@@ -216,7 +216,7 @@ class MoreInformationScreen extends StatelessWidget {
                                     .showImageSourceDialog(isFront: false),
                                 onRemove: () =>
                                     controller.removeImage(isFront: false),
-                                buttonText: 'Choose File',
+                                buttonText: 'choose_file'.tr,
                                 showDragText: true,
                               ),
                             ),
@@ -249,7 +249,7 @@ class MoreInformationScreen extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
-                            _buildLabel('Take a Selfie with Your ID*'),
+                            _buildLabel('take_selfi_with_nid'.tr),
                             SizedBox(height: 16),
                             Obx(
                               () => _buildImageUploadWidget(
@@ -257,7 +257,7 @@ class MoreInformationScreen extends StatelessWidget {
                                 onBrowse: () =>
                                     controller.captureSelfieWithFrontCamera(),
                                 onRemove: () => controller.removeSelfie(),
-                                buttonText: 'Take Selfie',
+                                buttonText: 'take_selfie'.tr,
                                 showDragText: false, // 👈 hide "drag or choose"
                               ),
                             ),
@@ -298,7 +298,7 @@ class MoreInformationScreen extends StatelessWidget {
                             ),
                           ),
                           child: Text(
-                            'Back',
+                            'back'.tr,
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
@@ -335,7 +335,7 @@ class MoreInformationScreen extends StatelessWidget {
                                     ),
                                   )
                                 : Text(
-                                    'Next',
+                                    'next'.tr,
                                     style: TextStyle(
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.w600,
@@ -383,7 +383,7 @@ class MoreInformationScreen extends StatelessWidget {
                     padding: EdgeInsets.only(top: 24.h, bottom: 12),
                     child: Center(
                       child: Text(
-                        'Select Work Type',
+                        'select_work_type'.tr,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -408,7 +408,7 @@ class MoreInformationScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     RadioListTile<bool>(
-                                      title: const Text('Other'),
+                                      title: Text('other'.tr),
                                       value: true,
                                       groupValue: isOther,
                                       onChanged: (value) {
@@ -437,7 +437,7 @@ class MoreInformationScreen extends StatelessWidget {
                                           controller:
                                               controller.otherServiceController,
                                           decoration: InputDecoration(
-                                            hintText: 'Enter service name',
+                                            hintText: 'enter_service_name'.tr,
                                             filled: true,
                                             fillColor: Colors.grey[50],
                                             border: OutlineInputBorder(
@@ -523,7 +523,7 @@ class MoreInformationScreen extends StatelessWidget {
 
                   if (isOther)
                     CustomElevatedButton(
-                      buttonTitle: 'Done',
+                      buttonTitle: 'done'.tr,
                       onTap: () {
                         Get.back();
                       },
@@ -559,7 +559,7 @@ class MoreInformationScreen extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              text.isEmpty ? 'Select work type' : text,
+              text.isEmpty ? 'select_work_type'.tr : text,
               style: TextStyle(
                 fontSize: 14.sp,
                 color: text.isEmpty ? Colors.grey[400] : Colors.black87,
@@ -673,7 +673,7 @@ class MoreInformationScreen extends StatelessWidget {
                   SizedBox(height: 12.h),
                   if (showDragText)
                     Text(
-                      'Drag File Or Browse',
+                      'browse'.tr,
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
@@ -682,7 +682,7 @@ class MoreInformationScreen extends StatelessWidget {
                     ),
                   if (!showDragText)
                     Text(
-                      'Tap to Take a Selfie',
+                      'tap_to_take_a_selfie'.tr,
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
@@ -691,8 +691,8 @@ class MoreInformationScreen extends StatelessWidget {
                     ),
                   Text(
                     showDragText
-                        ? 'Format: .jpeg, .png & Max file size: 25 MB'
-                        : 'Make sure your face and ID are visible',
+                        ? 'format_and_file_size_text'.tr
+                        : 'make_sure_your_face_and_id_are_visible'.tr,
                     style: TextStyle(fontSize: 12.sp, color: Color(0xFF6C606C)),
                   ),
                   SizedBox(height: 16.h),

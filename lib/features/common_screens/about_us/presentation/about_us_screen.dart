@@ -39,7 +39,7 @@ class AboutUsScreen extends StatelessWidget {
 
                 ///Section : Text -> Privacy policy
                 Text(
-                  "About us",
+                  'about_us'.tr,
                   style: TextFontStyle.headline18w700c000000StyleSatoshi,
                 ),
                 UIHelper.verticalSpace(24.h),

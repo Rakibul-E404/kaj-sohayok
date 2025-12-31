@@ -115,9 +115,9 @@ class _CallScreenState extends State<CallScreen> {
           else
             Container(
               color: Colors.grey[900],
-              child: const Center(
+              child: Center(
                 child: Text(
-                  'Waiting for other user...',
+                  'waiting_for_other_user'.tr,
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               ),
@@ -241,11 +241,11 @@ class _CallScreenState extends State<CallScreen> {
 
             switch (state) {
               case CallState.ringing:
-                statusText = 'Ringing...';
+                statusText = 'ringing'.tr;
                 statusColor = Colors.blue;
                 break;
               case CallState.connecting:
-                statusText = 'Connecting...';
+                statusText = 'connecting'.tr;
                 statusColor = Colors.orange;
                 break;
               case CallState.connected:
@@ -253,19 +253,19 @@ class _CallScreenState extends State<CallScreen> {
                 statusColor = Colors.green;
                 break;
               case CallState.ended:
-                statusText = 'Call Ended';
+                statusText = 'call_ended'.tr;
                 statusColor = Colors.grey;
                 break;
               case CallState.rejected:
-                statusText = 'Call Rejected';
+                statusText = 'call_rejected'.tr;
                 statusColor = Colors.red;
                 break;
               case CallState.failed:
-                statusText = 'Call Failed';
+                statusText = 'call_failed'.tr;
                 statusColor = Colors.red;
                 break;
               default:
-                statusText = 'Calling...';
+                statusText = 'calling...'.tr;
                 statusColor = Colors.white;
             }
 
@@ -311,7 +311,7 @@ class _CallScreenState extends State<CallScreen> {
                     Icon(Icons.mic_off, color: Colors.red, size: 16),
                     SizedBox(width: 6),
                     Text(
-                      'Microphone is muted',
+                      'michrophone_is_muted'.tr,
                       style: TextStyle(
                         color: Colors.red,
                         fontSize: 12,
@@ -360,7 +360,7 @@ class _CallScreenState extends State<CallScreen> {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    isVideo ? 'Video Call' : 'Voice Call',
+                    isVideo ? 'video_call'.tr : 'voice_call'.tr,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -408,7 +408,7 @@ class _CallScreenState extends State<CallScreen> {
         // Reject button
         _buildControlButton(
           icon: Icons.call_end,
-          label: 'Reject',
+          label: 'reject'.tr,
           color: Colors.red,
           size: 70,
           iconSize: 35,
@@ -418,7 +418,7 @@ class _CallScreenState extends State<CallScreen> {
         // Accept button
         _buildControlButton(
           icon: Icons.call,
-          label: 'Accept',
+          label: 'accept'.tr,
           color: Colors.green,
           size: 70,
           iconSize: 35,
@@ -438,7 +438,7 @@ class _CallScreenState extends State<CallScreen> {
             Obx(() => _buildControlButton(
                   icon:
                       _controller.isMicMuted.value ? Icons.mic_off : Icons.mic,
-                  label: _controller.isMicMuted.value ? 'Unmute' : 'Mute',
+                  label: _controller.isMicMuted.value ? 'unmute'.tr : 'mute'.tr,
                   color:
                       _controller.isMicMuted.value ? Colors.red : Colors.white,
                   onTap: () => _controller.toggleMicrophone(),
@@ -453,7 +453,7 @@ class _CallScreenState extends State<CallScreen> {
                     icon: _controller.isSpeakerOn.value
                         ? Icons.volume_up
                         : Icons.volume_off,
-                    label: 'Speaker',
+                    label: 'speaker'.tr,
                     color: _controller.isSpeakerOn.value
                         ? Colors.blue
                         : Colors.white,
@@ -467,7 +467,7 @@ class _CallScreenState extends State<CallScreen> {
                     icon: _controller.isCameraOff.value
                         ? Icons.videocam_off
                         : Icons.videocam,
-                    label: 'Camera',
+                    label: 'camera'.tr,
                     color: _controller.isCameraOff.value
                         ? Colors.red
                         : Colors.white,
@@ -493,7 +493,7 @@ class _CallScreenState extends State<CallScreen> {
   Widget _buildEndCallButton() {
     return _buildControlButton(
       icon: Icons.call_end,
-      label: 'End',
+      label: 'end'.tr,
       color: Colors.red,
       size: 70,
       iconSize: 35,
@@ -545,20 +545,20 @@ class _CallScreenState extends State<CallScreen> {
   void _showEndCallDialog() {
     Get.dialog(
       AlertDialog(
-        title: const Text('End Call?'),
-        content: const Text('Are you sure you want to end this call?'),
+        title: Text('end_call'.tr),
+        content: Text('are_you_sure_you_want_to_end_this_call'.tr),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Cancel'),
+            child: Text('cancel'.tr),
           ),
           TextButton(
             onPressed: () {
               Get.back();
               _controller.endCall();
             },
-            child: const Text(
-              'End Call',
+            child: Text(
+              'end_calll'.tr,
               style: TextStyle(color: Colors.red),
             ),
           ),

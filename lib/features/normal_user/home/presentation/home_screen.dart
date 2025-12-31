@@ -72,6 +72,7 @@ class HomeScreen extends StatelessWidget {
                   log(
                     '⏳ ---------HOME SCREEN: Showing loading shimmer for banners',
                   );
+                  LoggerUtils.debug("Banner Not loading previously");
                   return CustomShimmerEffect(height: 175, width: 1);
                 }
 
@@ -223,6 +224,7 @@ class HomeScreen extends StatelessWidget {
                                   Routes.serviceDetailsScreen,
 
                                   // arguments: {'providerId': serviceProviderId},
+
                                   arguments: {
                                     'serviceProviderID': serviceProviderId,
                                     'providerID': providerID,

@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
@@ -220,10 +221,12 @@ class SvpSubmitWorkFormScreenController extends GetxController {
               costName = rawName.toString();
             }
 
+            final additionalCostId = cost['_AdditionalCostId']?.toString();
+
             final costPrice =
                 double.tryParse(cost['price']?.toString() ?? '0') ?? 0.0;
             additionalCosts
-                .add(AdditionalCostModel(title: costName, price: costPrice));
+                .add(AdditionalCostModel(title: costName, price: costPrice, id: additionalCostId));
           }
         }
       }
@@ -402,17 +405,17 @@ class SvpSubmitWorkFormScreenController extends GetxController {
       // 🔥 CRITICAL FIX: Get authentication token
       final token = await SecureStorageService().read(AppConstants.accessToken);
 
-      if (token == null || token.isEmpty) {
-        log("❌ No auth token found for API call");
-        Get.snackbar("Error", "Session expired. Please log in again.",
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            duration: Duration(seconds: 2));
-        isLoadingWorkDetails.value = false;
-        return;
-      }
+      // if (token == null || token.isEmpty) {
+      //   log("❌ No auth token found for API call");
+      //   Get.snackbar("Error", "Session expired. Please log in again.",
+      //       backgroundColor: Colors.red,
+      //       colorText: Colors.white,
+      //       duration: Duration(seconds: 2));
+      //   isLoadingWorkDetails.value = false;
+      //   return;
+      // }
 
-      log("🔑 Auth token found, length: ${token.length} characters");
+      // log("🔑 Auth token found, length: ${token.length} characters");
 
       // 🔥 CRITICAL FIX: Prepare headers with authentication
       final headers = {
@@ -605,69 +608,6 @@ class SvpSubmitWorkFormScreenController extends GetxController {
           backgroundColor: Colors.red, colorText: Colors.white);
     }
   }
-
-  // void showMediaSourceDialog() {
-  //   Get.dialog(
-  //     Dialog(
-  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-  //       child: Container(
-  //         padding: EdgeInsets.all(16),
-  //         decoration: BoxDecoration(
-  //             color: Colors.white, borderRadius: BorderRadius.circular(10)),
-  //         child: Column(
-  //           mainAxisSize: MainAxisSize.min,
-  //           children: [
-  //             Text("Add Proof Files",
-  //                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-  //             SizedBox(height: 16),
-  //             ListTile(
-  //               leading: Icon(Icons.camera_alt, color: Colors.blue),
-  //               title: Text("Take Photo"),
-  //               onTap: () {
-  //                 Get.back();
-  //                 pickPhotoFromCamera();
-  //               },
-  //             ),
-  //             ListTile(
-  //               leading: Icon(Icons.videocam, color: Colors.red),
-  //               title: Text("Record Video"),
-  //               onTap: () {
-  //                 Get.back();
-  //                 pickVideoFromCamera();
-  //               },
-  //             ),
-  //             ListTile(
-  //               leading: Icon(Icons.photo_library, color: Colors.green),
-  //               title: Text("Choose from Gallery"),
-  //               subtitle: Text("Images & Videos"),
-  //               onTap: () {
-  //                 Get.back();
-  //                 pickMediaFromGallery();
-  //               },
-  //             ),
-  //             SizedBox(height: 8),
-  //             Text(
-  //               "Supported formats: JPG, PNG, MP4, MOV",
-  //               style: TextStyle(fontSize: 12, color: Colors.grey),
-  //             ),
-  //             SizedBox(height: 16),
-  //             Row(
-  //               mainAxisAlignment: MainAxisAlignment.end,
-  //               children: [
-  //                 TextButton(
-  //                     onPressed: Get.back,
-  //                     child:
-  //                         Text("Cancel", style: TextStyle(color: Colors.red))),
-  //               ],
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
-
 
 
   void showMediaSourceDialog() {
@@ -1416,3 +1356,6 @@ class ApiAttachment {
   @override
   String toString() => 'ApiAttachment(url: $url, type: $type, id: $id)';
 }
+
+
+

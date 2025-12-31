@@ -12,6 +12,7 @@ import 'package:kaz_bd/custom_widgets/tab_showing_widget.dart';
 import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/helpers/ui_helpers.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 import '../../../../constants/text_font_style.dart';
 import '../../../../controllers/details_screen_controller.dart';
 import '../../../../controllers/get_nrm_user_service_provider_profile_info.dart';
@@ -101,6 +102,7 @@ class _DetailsScreenState extends State<DetailsScreen>
         svpProfileInfoController?.setServiceProviderId(
             svpId: serviceProviderID);
         detailsController?.setProviderID(pvID: providerID);
+        LoggerUtils.debug("providerID:------:==> $providerID");
 
         log('⏳ Fetching service details...');
         await detailsController?.showSpecificServiceDetails();

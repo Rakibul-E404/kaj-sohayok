@@ -138,11 +138,22 @@ class AppUrl {
     return '${baseUrl}v1/service-bookings/update-status/$bookingId/status/paymentRequest';
   }
 
+  static String providerPaymentRequestDetails(String bookingId) {
+    return '${baseUrl}v1/service-bookings/with-costs-summary/$bookingId';
+  }
+
   static const String additionalCost = '${baseUrl}v1/additional-cost';
+
+  static String deleteAdditionalCost(String additionalCostId) {
+    return '${baseUrl}v1/additional-cost/$additionalCostId';
+  }
+
 
   static String deleteUser(String userId) {
     return '${baseUrl}v1/users/softDelete/$userId';
   }
+
+
 
   // static String additionalCost(String bookingId) {
   //   return '${baseUrl}v1/additional-cost';
@@ -216,6 +227,7 @@ class AppUrl {
   static String getServiceProviderHomeData({required String dataType}) {
     return '${baseUrl}v1/users/home-page/for-provider?type=$dataType';
   }
+
 
   ///-------------///Imtiaz Chowdhury End///------------------
 }

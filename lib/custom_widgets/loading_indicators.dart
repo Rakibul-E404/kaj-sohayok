@@ -5,7 +5,9 @@ import 'package:lottie/lottie.dart';
 import '../gen/assets.gen.dart';
 
 /// Ultra-fast loading indicator using .lottie file
-Widget loadingIndicatorCircle({double? size}) {
+Widget loadingIndicatorCircle({
+  double? size,
+}) {
   double loaderSize = size ?? 200.sp;
   return DotLottieLoader.fromAsset(
     Assets.lottie.waiting,
@@ -15,7 +17,9 @@ Widget loadingIndicatorCircle({double? size}) {
           child: SizedBox(
             width: loaderSize,
             height: loaderSize,
-            child: Lottie.memory(dotlottie.animations.values.first),
+            child: Lottie.memory(
+              dotlottie.animations.values.first,
+            ),
           ),
         );
       } else {
