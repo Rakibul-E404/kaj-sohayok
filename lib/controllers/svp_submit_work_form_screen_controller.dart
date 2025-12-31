@@ -405,17 +405,17 @@ class SvpSubmitWorkFormScreenController extends GetxController {
       // 🔥 CRITICAL FIX: Get authentication token
       final token = await SecureStorageService().read(AppConstants.accessToken);
 
-      if (token == null || token.isEmpty) {
-        log("❌ No auth token found for API call");
-        Get.snackbar("Error", "Session expired. Please log in again.",
-            backgroundColor: Colors.red,
-            colorText: Colors.white,
-            duration: Duration(seconds: 2));
-        isLoadingWorkDetails.value = false;
-        return;
-      }
+      // if (token == null || token.isEmpty) {
+      //   log("❌ No auth token found for API call");
+      //   Get.snackbar("Error", "Session expired. Please log in again.",
+      //       backgroundColor: Colors.red,
+      //       colorText: Colors.white,
+      //       duration: Duration(seconds: 2));
+      //   isLoadingWorkDetails.value = false;
+      //   return;
+      // }
 
-      log("🔑 Auth token found, length: ${token.length} characters");
+      // log("🔑 Auth token found, length: ${token.length} characters");
 
       // 🔥 CRITICAL FIX: Prepare headers with authentication
       final headers = {
