@@ -21,7 +21,7 @@ class SocialIconsWidget extends StatelessWidget {
     this.url,
   });
 
-  Future<void> _launchURL(BuildContext context) async {
+  Future<void> launchURL(BuildContext context) async {
     if (url == null || url!.isEmpty) {
       onTap?.call();
       return;
@@ -97,7 +97,7 @@ class SocialIconsWidget extends StatelessWidget {
       child: ListTile(
         onTap: () {
           if (url != null) {
-            _launchURL(context);
+            launchURL(context);
           } else {
             onTap?.call();
           }

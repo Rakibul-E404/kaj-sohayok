@@ -219,24 +219,20 @@ class ContactUsScreen extends StatelessWidget {
                 Row(
                   children: [
                     // 👇 Email Tile
-                    Expanded(
-                      child: ContactTileWidget(
-                        onTap: email.isNotEmpty ? _launchEmail : null,
-                        icon: Icons.email_outlined,
-                        data: email.isNotEmpty ? email : 'No email available',
-                      ),
+                    ContactTileWidget(
+                      onTap: email.isNotEmpty ? _launchEmail : null,
+                      icon: Icons.email_outlined,
+                      data: email.isNotEmpty ? email : 'No email available',
                     ),
                     SizedBox(width: 16.w),
 
                     // 👇 Phone Tile
-                    Expanded(
-                      child: ContactTileWidget(
-                        onTap: phoneNumbers.isNotEmpty
-                            ? () => _showPhoneSelectionDialog(context)
-                            : null,
-                        icon: Icons.phone_outlined,
-                        data: _buildPhoneDisplayText(),
-                      ),
+                    ContactTileWidget(
+                      onTap: phoneNumbers.isNotEmpty
+                          ? () => _showPhoneSelectionDialog(context)
+                          : null,
+                      icon: Icons.phone_outlined,
+                      data: _buildPhoneDisplayText(),
                     ),
                   ],
                 ),
