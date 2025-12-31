@@ -49,6 +49,7 @@ class SignInScreenController extends GetxController {
       final NetworkResponse postResponse = await NetworkCaller().postRequest(
         AppUrl.userLogin,
         body: loginForm,
+        isLogin: true
       );
       if (postResponse.isSuccess) {
         LoggerUtils.debug(postResponse.jsonResponse);

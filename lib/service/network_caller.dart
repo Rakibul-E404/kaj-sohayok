@@ -117,7 +117,8 @@ class NetworkCaller {
       // Handle 401 Unauthorized - Token expired or invalid
       if (response.statusCode == 401 && !isLogin) {
         debugPrint('Unauthorized: Token expired or invalid');
-        await _handleUnauthorized(message: 'Session Expired');
+        LoggerUtils.error(response.body) ;
+        // await _handleUnauthorized(message: 'Session Expired');
         return NetworkResponse(
           isSuccess: false,
           statusCode: response.statusCode,
