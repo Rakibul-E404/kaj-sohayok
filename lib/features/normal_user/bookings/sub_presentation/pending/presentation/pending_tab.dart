@@ -26,166 +26,153 @@ class _PendingTabState extends State<PendingTab> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () => controller.getPendingBookings(),
-      child: SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.8,
-          child: Obx(() {
-            if (controller.isLoading.value) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // CircularProgressIndicator(),
-                    UIHelper.verticalSpace(16.h),
-                    Text(
-                      'Loading Bookings...'.tr,
-                      style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-                    ),
-                  ],
+      child: Obx(() {
+        if (controller.isLoading.value) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // CircularProgressIndicator(),
+                UIHelper.verticalSpace(16.h),
+                Text(
+                  'Loading Bookings...'.tr,
+                  style: TextStyle(fontSize: 16.sp, color: Colors.grey),
                 ),
-              );
-            }
+              ],
+            ),
+          );
+        }
 
-            if (controller.errorMessage.isNotEmpty) {
-              return Center(
-                child: Padding(
-                  padding: EdgeInsets.all(20.sp),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.error_outline,
-                        size: 64.sp,
-                        color: Colors.red,
-                      ),
-                      UIHelper.verticalSpace(16.h),
-                      Text(
-                        controller.errorMessage.value,
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          color: Colors.red,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      UIHelper.verticalSpace(20.h),
-                      ElevatedButton(
-                        onPressed: () => controller.getPendingBookings(),
-                        child: Text('retry'.tr),
-                      ),
-                    ],
+        if (controller.errorMessage.isNotEmpty) {
+          return Center(
+            child: Padding(
+              padding: EdgeInsets.all(20.sp),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.error_outline,
+                    size: 64.sp,
+                    color: Colors.red,
                   ),
-                ),
-              );
-            }
-
-            if (controller.pendingBookings.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.event_note_outlined,
-                      size: 64.sp,
-                      color: Colors.grey,
+                  UIHelper.verticalSpace(16.h),
+                  Text(
+                    controller.errorMessage.value,
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      color: Colors.red,
+                      fontWeight: FontWeight.w500,
                     ),
-                    UIHelper.verticalSpace(16.h),
-                    Text(
-                      'no_pending_bookings_found'.tr,
-                      style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-                    ),
-                  ],
-                ),
-              );
-            }
-
-            return Container(
-              padding: EdgeInsets.only(
-                  bottom:
-                      100.h), // Add padding to account for bottom navigation
-              child: ListView.separated(
-                shrinkWrap: true,
-                physics: AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsets.only(top: 16.sp),
-                itemCount: controller.pendingBookings.length,
-                separatorBuilder: (context, index) =>
-                    UIHelper.verticalSpace(16.h),
-                itemBuilder: (context, index) {
-                  final booking = controller.pendingBookings[index];
-                  final bookingId =
-                      booking['_ServiceBookingId']?.toString() ?? '';
-
-                  // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
-                  final serviceProviderId = _getServiceProviderId(booking);
-                  final providerId = _getProviderUserId(booking);
-
-                  // 🔍 DEBUG: Log what IDs are extracted for this card
-                  log('🧾 [PENDING TAB] Card #$index →');
-                  log('   Booking ID: "$bookingId"');
-                  log('   Service Provider ID: "$serviceProviderId"');
-                  log('   Provider User ID: "$providerId"');
-
-                  final serviceName = booking['providerDetailsId']
-                      ?['serviceName'] as Map<String, dynamic>?;
-                  final address = booking['address'] as Map<String, dynamic>?;
-                  final provider =
-                      booking['providerId'] as Map<String, dynamic>?;
-
-                  final imageUrl = _getImageUrl(bookingId, controller);
-                  final isNetworkImage = _isNetworkImage(bookingId, controller);
-
-                  return BookingDetailsCardWidget(
-                    // ➤ CARD TAP → Navigate with ALL required parameters
-                    onTap: () {
-                      LoggerUtils.debug(
-                        " bookingId:------: $bookingId",
-                      );
-                      LoggerUtils.debug(
-                        " serviceProviderId:------: $serviceProviderId",
-                      );
-                      LoggerUtils.debug(
-                        " providerId:------: $providerId",
-                      );
-                      _navigateToDetailsScreen(
-                          bookingId, serviceProviderId, providerId);
-                    },
-
-                    // Cancel action
-                    isPendingTab: true,
-                    isPendingTabCancelOnTap: () {
-                      showCancelBookingBottomSheet(
-                        bookingId: bookingId,
-                        onCancelConfirmed: () async {
-                          final success =
-                              await controller.cancelBooking(bookingId);
-                          if (success) {
-                            log('✅ [PENDING TAB] Booking $bookingId cancelled successfully');
-                          }
-                        },
-                      );
-                    },
-
-                    // Data
-                    title: _getServiceName(serviceName),
-                    initialPayablePrice:
-                        (booking['startPrice'] ?? 0).toString(),
-                    location: _getAddress(address),
-                    dateTime: _formatDateTime(
-                        booking['bookingDateTime']?.toString() ?? ''),
-                    serviceProviderProfileImage:
-                        imageUrl ?? Assets.images.errorImage.path,
-                    serviceProviderName:
-                        provider?['name'] ?? 'Unknown Provider',
-                    serviceProviderDesignation: 'services_provider'.tr,
-                    isNetworkImage: isNetworkImage,
-                  );
-                },
+                    textAlign: TextAlign.center,
+                  ),
+                  UIHelper.verticalSpace(20.h),
+                  ElevatedButton(
+                    onPressed: () => controller.getPendingBookings(),
+                    child: Text('retry'.tr),
+                  ),
+                ],
               ),
+            ),
+          );
+        }
+
+        if (controller.pendingBookings.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.event_note_outlined,
+                  size: 64.sp,
+                  color: Colors.grey,
+                ),
+                UIHelper.verticalSpace(16.h),
+                Text(
+                  'no_pending_bookings_found'.tr,
+                  style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return ListView.separated(
+          padding: EdgeInsets.only(top: 16.sp, bottom: 100.h), // Add bottom padding here
+          itemCount: controller.pendingBookings.length,
+          separatorBuilder: (context, index) =>
+              UIHelper.verticalSpace(16.h),
+          itemBuilder: (context, index) {
+            final booking = controller.pendingBookings[index];
+            final bookingId =
+                booking['_ServiceBookingId']?.toString() ?? '';
+
+            // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
+            final serviceProviderId = _getServiceProviderId(booking);
+            final providerId = _getProviderUserId(booking);
+
+            // 🔍 DEBUG: Log what IDs are extracted for this card
+            log('🧾 [PENDING TAB] Card #$index →');
+            log('   Booking ID: "$bookingId"');
+            log('   Service Provider ID: "$serviceProviderId"');
+            log('   Provider User ID: "$providerId"');
+
+            final serviceName = booking['providerDetailsId']
+                ?['serviceName'] as Map<String, dynamic>?;
+            final address = booking['address'] as Map<String, dynamic>?;
+            final provider =
+                booking['providerId'] as Map<String, dynamic>?;
+
+            final imageUrl = _getImageUrl(bookingId, controller);
+            final isNetworkImage = _isNetworkImage(bookingId, controller);
+
+            return BookingDetailsCardWidget(
+              // ➤ CARD TAP → Navigate with ALL required parameters
+              onTap: () {
+                LoggerUtils.debug(
+                  " bookingId:------: $bookingId",
+                );
+                LoggerUtils.debug(
+                  " serviceProviderId:------: $serviceProviderId",
+                );
+                LoggerUtils.debug(
+                  " providerId:------: $providerId",
+                );
+                _navigateToDetailsScreen(
+                    bookingId, serviceProviderId, providerId);
+              },
+
+              // Cancel action
+              isPendingTab: true,
+              isPendingTabCancelOnTap: () {
+                showCancelBookingBottomSheet(
+                  bookingId: bookingId,
+                  onCancelConfirmed: () async {
+                    final success =
+                        await controller.cancelBooking(bookingId);
+                    if (success) {
+                      log('✅ [PENDING TAB] Booking $bookingId cancelled successfully');
+                    }
+                  },
+                );
+              },
+
+              // Data
+              title: _getServiceName(serviceName),
+              initialPayablePrice:
+                  (booking['startPrice'] ?? 0).toString(),
+              location: _getAddress(address),
+              dateTime: _formatDateTime(
+                  booking['bookingDateTime']?.toString() ?? ''),
+              serviceProviderProfileImage:
+                  imageUrl ?? Assets.images.errorImage.path,
+              serviceProviderName:
+                  provider?['name'] ?? 'Unknown Provider',
+              serviceProviderDesignation: 'services_provider'.tr,
+              isNetworkImage: isNetworkImage,
             );
-          }),
-        ),
-      ),
+          },
+        );
+      }),
     );
   }
 

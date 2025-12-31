@@ -23,7 +23,7 @@ class PaymentRequestTab extends StatelessWidget {
       onRefresh: () => bookingController.getPaymentRequestBookings(),
       child: SingleChildScrollView(
         physics: AlwaysScrollableScrollPhysics(),
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.8,
           child: Obx(() {
             if (bookingController.isLoading.value) {
@@ -263,7 +263,6 @@ class PaymentRequestTab extends StatelessWidget {
     log('   ➤ bookingId = "$bookingId"');
     log('   ➤ serviceProviderId = "$serviceProviderId"');
     log('   ➤ providerId = "$providerId"');
-
 
     // if (serviceProviderId.isEmpty) {
     //   log('❌ [PAYMENT REQUEST TAB] Navigation ABORTED: serviceProviderId is empty!');
