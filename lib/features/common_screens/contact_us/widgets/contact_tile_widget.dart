@@ -19,18 +19,27 @@ class ContactTileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 30.r,
-            backgroundColor: AppColors.c778beb,
-            child: Icon(icon, size: 24.sp, color: AppColors.cFFFFFF),
-          ),
-          UIHelper.verticalSpace(16.h),
+      child: Container(
+        padding: EdgeInsets.all(20.sp),
+        decoration: BoxDecoration(
+            color: AppColors.cf1f3fd,
+            border: Border.all(color: AppColors.c92a2ef),
+            borderRadius: BorderRadius.circular(10.r)),
+        child: Column(
+          children: [
+            CircleAvatar(
+              radius: 30.r,
+              backgroundColor: AppColors.c778beb,
+              child: Icon(icon, size: 24.sp, color: AppColors.cFFFFFF),
+            ),
+            UIHelper.verticalSpace(16.h),
 
-          ///Section : contact data
-          Text(data, style: TextFontStyle.headline16w500c000000StyleSatoshi),
-        ],
+            ///Section : contact data
+            Text(data,
+                textAlign: TextAlign.center,
+                style: TextFontStyle.headline14w400c000000StyleSatoshi),
+          ],
+        ),
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/constants/app_enums.dart';
 import 'package:kaz_bd/features/normal_user/bookings/widgets/bookings_details_card_widget.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 import '../../../../../../controllers/message_screen_controller.dart';
 import '../../../../../../gen/assets.gen.dart';
 import '../../../../../../helpers/ui_helpers.dart';
@@ -75,21 +76,25 @@ class _AcceptedBookingTabState extends State<AcceptedBookingTab> {
         }
 
         if (controller.acceptedBookings.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.event_available_outlined,
-                  size: 64.sp,
-                  color: Colors.grey,
-                ),
-                UIHelper.verticalSpace(16.h),
-                Text(
-                  'no_accepted_bookings_found'.tr,
-                  style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-                ),
-              ],
+          return SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  UIHelper.verticalSpace(0.2.sh),
+                  Icon(
+                    Icons.event_available_outlined,
+                    size: 64.sp,
+                    color: Colors.grey,
+                  ),
+                  UIHelper.verticalSpace(16.h),
+                  Text(
+                    'no_accepted_bookings_found'.tr,
+                    style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
           );
         }
@@ -136,6 +141,12 @@ class _AcceptedBookingTabState extends State<AcceptedBookingTab> {
               isAcceptedBookingTabViewOnTap: () {
                 _navigateToDetailsScreen(
                     bookingId, serviceProviderId, providerId);
+                LoggerUtils.debug(
+                    "Booking ID  from Accepted Bookings : $bookingId");
+                LoggerUtils.debug(
+                    "Service Provider ID  from Accepted Bookings : $serviceProviderId");
+                LoggerUtils.debug(
+                    "Provider ID  from Accepted Bookings : $providerId");
               },
 
               ///Button OnTap : Message

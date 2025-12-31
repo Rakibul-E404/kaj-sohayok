@@ -127,39 +127,39 @@ class $AssetsIconsGen {
 
   /// List of all assets
   List<String> get values => [
-    aboutUsIcon,
-    bellIcon,
-    bookingsIcon,
-    calendarLogo,
-    callIcon,
-    chatIcon,
-    editIcon,
-    genderLogo,
-    googleIcon,
-    helpIcon,
-    homeIcon,
-    keyIcon,
-    locationLogo,
-    lockIcon,
-    logOutIcon,
-    mailIcon,
-    messageIcon,
-    penEditIcon,
-    pencilEditIcon,
-    personIcon,
-    personIconWhiteBackground,
-    privacyPolicyIcon,
-    profileIcon,
-    removeIcon,
-    rocket,
-    searchIcon,
-    searchIconFat,
-    serviceProviderLogo,
-    termsConditionsIcon,
-    userLogoGray,
-    verifiedIcon,
-    walletIcon,
-  ];
+        aboutUsIcon,
+        bellIcon,
+        bookingsIcon,
+        calendarLogo,
+        callIcon,
+        chatIcon,
+        editIcon,
+        genderLogo,
+        googleIcon,
+        helpIcon,
+        homeIcon,
+        keyIcon,
+        locationLogo,
+        lockIcon,
+        logOutIcon,
+        mailIcon,
+        messageIcon,
+        penEditIcon,
+        pencilEditIcon,
+        personIcon,
+        personIconWhiteBackground,
+        privacyPolicyIcon,
+        profileIcon,
+        removeIcon,
+        rocket,
+        searchIcon,
+        searchIconFat,
+        serviceProviderLogo,
+        termsConditionsIcon,
+        userLogoGray,
+        verifiedIcon,
+        walletIcon
+      ];
 }
 
 class $AssetsImagesGen {
@@ -167,7 +167,6 @@ class $AssetsImagesGen {
 
   /// File path: assets/images/app_logo.png
   AssetGenImage get appLogo =>
-      // const AssetGenImage('assets/images/name.jpg');
       const AssetGenImage('assets/images/app_logo.png');
 
   /// File path: assets/images/bell_image.png
@@ -190,6 +189,10 @@ class $AssetsImagesGen {
   AssetGenImage get doneImage =>
       const AssetGenImage('assets/images/done_image.png');
 
+  /// File path: assets/images/email_icon_image.png
+  AssetGenImage get emailIconImage =>
+      const AssetGenImage('assets/images/email_icon_image.png');
+
   /// File path: assets/images/error_image.png
   AssetGenImage get errorImage =>
       const AssetGenImage('assets/images/error_image.png');
@@ -210,6 +213,9 @@ class $AssetsImagesGen {
   AssetGenImage get medalImage =>
       const AssetGenImage('assets/images/medal_image.png');
 
+  /// File path: assets/images/name.jpg
+  AssetGenImage get name => const AssetGenImage('assets/images/name.jpg');
+
   /// File path: assets/images/onboarding_image.png
   AssetGenImage get onboardingImage =>
       const AssetGenImage('assets/images/onboarding_image.png');
@@ -217,6 +223,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/reset_done_image.png
   AssetGenImage get resetDoneImage =>
       const AssetGenImage('assets/images/reset_done_image.png');
+
+  /// File path: assets/images/rosdeb.jpg
+  AssetGenImage get rosdeb => const AssetGenImage('assets/images/rosdeb.jpg');
 
   /// File path: assets/images/service_Image.png
   AssetGenImage get serviceImage =>
@@ -256,29 +265,32 @@ class $AssetsImagesGen {
 
   /// List of all assets
   List<AssetGenImage> get values => [
-    appLogo,
-    bellImage,
-    belowIndicator,
-    coloredClockImage,
-    deleteImage,
-    doneImage,
-    errorImage,
-    faceVerificationImage,
-    heroBannerImage,
-    logOutImage,
-    medalImage,
-    onboardingImage,
-    resetDoneImage,
-    serviceImage,
-    serviceProviderImage,
-    specificServiceImage,
-    svpJobTypeImage,
-    uploadIcon,
-    userImage,
-    userImageBlank,
-    verifiedCheckIcon,
-    walletImage,
-  ];
+        appLogo,
+        bellImage,
+        belowIndicator,
+        coloredClockImage,
+        deleteImage,
+        doneImage,
+        emailIconImage,
+        errorImage,
+        faceVerificationImage,
+        heroBannerImage,
+        logOutImage,
+        medalImage,
+        name,
+        onboardingImage,
+        resetDoneImage,
+        rosdeb,
+        serviceImage,
+        serviceProviderImage,
+        specificServiceImage,
+        svpJobTypeImage,
+        uploadIcon,
+        userImage,
+        userImageBlank,
+        verifiedCheckIcon,
+        walletImage
+      ];
 }
 
 class $AssetsLottieGen {
@@ -310,15 +322,15 @@ class $AssetsLottieGen {
 
   /// List of all assets
   List<String> get values => [
-    addToCart,
-    emptyScreen,
-    hamburger,
-    imageShimmer,
-    notFound,
-    removeFromCart,
-    success,
-    waiting,
-  ];
+        addToCart,
+        emptyScreen,
+        hamburger,
+        imageShimmer,
+        notFound,
+        removeFromCart,
+        success,
+        waiting
+      ];
 }
 
 class Assets {
@@ -397,8 +409,15 @@ class AssetGenImage {
     );
   }
 
-  ImageProvider provider({AssetBundle? bundle, String? package}) {
-    return AssetImage(_assetName, bundle: bundle, package: package);
+  ImageProvider provider({
+    AssetBundle? bundle,
+    String? package,
+  }) {
+    return AssetImage(
+      _assetName,
+      bundle: bundle,
+      package: package,
+    );
   }
 
   String get path => _assetName;

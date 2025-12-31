@@ -74,21 +74,25 @@ class InProgressTab extends StatelessWidget {
         }
 
         if (controller.inProgressBookings.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.build_circle_outlined,
-                  size: 64.sp,
-                  color: Colors.grey,
-                ),
-                UIHelper.verticalSpace(16.h),
-                Text(
-                  'no_in_progress_bookings_found'.tr,
-                  style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-                ),
-              ],
+          return SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  UIHelper.verticalSpace(0.2.sh),
+                  Icon(
+                    Icons.build_circle_outlined,
+                    size: 64.sp,
+                    color: Colors.grey,
+                  ),
+                  UIHelper.verticalSpace(16.h),
+                  Text(
+                    'no_in_progress_bookings_found'.tr,
+                    style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
           );
         }

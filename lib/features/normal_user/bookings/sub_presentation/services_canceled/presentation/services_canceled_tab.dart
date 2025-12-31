@@ -68,28 +68,32 @@ class ServicesCanceledTab extends StatelessWidget {
         }
 
         if (controller.canceledBookings.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.cancel_outlined,
-                  size: 64.sp,
-                  color: Colors.grey,
-                ),
-                UIHelper.verticalSpace(16.h),
-                Text(
-                  'no_canceled_bookings_found'.tr,
-                  style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-                ),
-              ],
+          return SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.cancel_outlined,
+                    size: 64.sp,
+                    color: Colors.grey,
+                  ),
+                  UIHelper.verticalSpace(16.h),
+                  Text(
+                    'no_canceled_bookings_found'.tr,
+                    style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
           );
         }
 
         // ✅ SCROLLABLE LIST — NO NESTED SCROLL CONFLICT
         return ListView.separated(
-          padding: EdgeInsets.only(top: 16.sp, bottom: 100.h), // Bottom padding for safe area / FAB
+          padding: EdgeInsets.only(
+              top: 16.sp, bottom: 100.h), // Bottom padding for safe area / FAB
           itemCount: controller.canceledBookings.length,
           separatorBuilder: (context, index) => UIHelper.verticalSpace(16.h),
           itemBuilder: (context, index) {
@@ -104,8 +108,8 @@ class ServicesCanceledTab extends StatelessWidget {
             log('   Service Provider ID: "$serviceProviderId"');
             log('   Provider User ID: "$providerId"');
 
-            final serviceName =
-            booking['providerDetailsId']?['serviceName'] as Map<String, dynamic>?;
+            final serviceName = booking['providerDetailsId']?['serviceName']
+                as Map<String, dynamic>?;
             final address = booking['address'] as Map<String, dynamic>?;
             final provider = booking['providerId'] as Map<String, dynamic>?;
 
@@ -114,7 +118,8 @@ class ServicesCanceledTab extends StatelessWidget {
 
             return BookingDetailsCardWidget(
               onTap: () {
-                _navigateToDetailsScreen(bookingId, serviceProviderId, providerId);
+                _navigateToDetailsScreen(
+                    bookingId, serviceProviderId, providerId);
               },
               isCanceledTab: true,
               isCanceledTabCancelOnTap: () {
@@ -127,7 +132,8 @@ class ServicesCanceledTab extends StatelessWidget {
               dateTime: _formatDateTime(
                 booking['bookingDateTime']?.toString() ?? '',
               ),
-              serviceProviderProfileImage: imageUrl ?? Assets.images.userImage.path,
+              serviceProviderProfileImage:
+                  imageUrl ?? Assets.images.userImage.path,
               serviceProviderName: provider?['name'] ?? 'Unknown Provider',
               serviceProviderDesignation: 'services_provider'.tr,
               isNetworkImage: isNetworkImage,
@@ -161,7 +167,8 @@ class ServicesCanceledTab extends StatelessWidget {
   }
 
   static String _getServiceProviderId(Map<String, dynamic> booking) {
-    final providerDetails = booking['providerDetailsId'] as Map<String, dynamic>?;
+    final providerDetails =
+        booking['providerDetailsId'] as Map<String, dynamic>?;
     if (providerDetails?['_ServiceProviderId'] != null) {
       final id = providerDetails!['_ServiceProviderId'].toString();
       log('✅ [CANCELED TAB] Service Provider ID from providerDetailsId._ServiceProviderId: $id');
@@ -190,7 +197,8 @@ class ServicesCanceledTab extends StatelessWidget {
     return '';
   }
 
-  static String? _getImageUrl(String bookingId, CanceledBookingsController controller) {
+  static String? _getImageUrl(
+      String bookingId, CanceledBookingsController controller) {
     final url = controller.getImageUrl(bookingId);
     if (url.isEmpty) return null;
 
@@ -201,7 +209,8 @@ class ServicesCanceledTab extends StatelessWidget {
     return controller.hasImage(bookingId) ? url : null;
   }
 
-  static bool _isNetworkImage(String bookingId, CanceledBookingsController controller) {
+  static bool _isNetworkImage(
+      String bookingId, CanceledBookingsController controller) {
     final url = controller.getImageUrl(bookingId);
     if (url.isEmpty) return false;
 
