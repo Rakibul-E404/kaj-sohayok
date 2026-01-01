@@ -184,20 +184,26 @@ class AboutTab extends StatelessWidget {
                           );
                         } else {
                           return InkWell(
-                            onTap: () {
-                              Get.find<MessageScreenController>().createMessage(
-                                  participantId: detailsScreenController
-                                          .serviceDetails
-                                          .value
-                                          ?.providerId
-                                          ?.userId ??
-                                      '',
-                                  name: detailsScreenController.providerName ??
-                                      "",
-                                  imageUrl: detailsScreenController
-                                          .providerProfileImage ??
-                                      '');
-                            },
+                            onTap: detailsScreenController.pvdApprovalStatus ==
+                                    "pending"
+                                ? null
+                                : () {
+                                    Get.find<MessageScreenController>()
+                                        .createMessage(
+                                            participantId:
+                                                detailsScreenController
+                                                        .serviceDetails
+                                                        .value
+                                                        ?.providerId
+                                                        ?.userId ??
+                                                    '',
+                                            name: detailsScreenController
+                                                    .providerName ??
+                                                "",
+                                            imageUrl: detailsScreenController
+                                                    .providerProfileImage ??
+                                                '');
+                                  },
                             child: Container(
                               padding: EdgeInsets.all(6.sp),
                               decoration: BoxDecoration(
@@ -229,7 +235,10 @@ class AboutTab extends StatelessWidget {
                                     CallState.idle;
 
                             return InkWell(
-                              onTap: isCallInProgress
+                              onTap: isCallInProgress ||
+                                      detailsScreenController
+                                              .pvdApprovalStatus ==
+                                          "pending"
                                   ? null
                                   : () {
                                       // Call the controller method

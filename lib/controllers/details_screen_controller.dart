@@ -760,6 +760,8 @@ class DetailsScreenController extends GetxController {
 
   String? get providerProfileImage =>
       serviceDetails.value?.providerId?.profileImage?.imageUrl;
+  String? get pvdApprovalStatus =>
+      serviceDetails.value?.providerApprovalStatus ?? '';
 
   // Get gallery images
   List<AttachmentsForGallery> get galleryImages =>
@@ -911,7 +913,8 @@ class DetailsScreenController extends GetxController {
       return Review(
         review: _parseDescription(data['review']),
         originalLanguage: data['originalLanguage'] as String?,
-        rating: _safeToInt(data['rating']),
+        // rating: _safeToInt(data['rating']),
+        rating: _safeToDouble(data['rating']),
         // 🔴 FIXED: Safe conversion
         userId: userIdData?['_userId'] as String?,
         serviceProviderDetailsId: data['serviceProviderDetailsId'] as String?,
