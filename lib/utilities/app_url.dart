@@ -35,7 +35,8 @@ class AppUrl {
 
   // ==========> Service Form ==========>
   // static String serviceFormCategories = '${baseUrl}v1/service-categories/';
-  static String serviceFormCategories = '${baseUrl}v1/service-categories/paginate?isVisible=true&isDeleted=false&limit=2000';
+  static String serviceFormCategories =
+      '${baseUrl}v1/service-categories/paginate?isVisible=true&isDeleted=false&limit=2000';
 
   // static String serviceProviderFormSubmit = '${baseUrl}v1/service-providers';
   static String serviceProviderFormSubmit =
@@ -148,12 +149,9 @@ class AppUrl {
     return '${baseUrl}v1/additional-cost/$additionalCostId';
   }
 
-
   static String deleteUser(String userId) {
     return '${baseUrl}v1/users/softDelete/$userId';
   }
-
-
 
   // static String additionalCost(String bookingId) {
   //   return '${baseUrl}v1/additional-cost';
@@ -228,6 +226,9 @@ class AppUrl {
     return '${baseUrl}v1/users/home-page/for-provider?type=$dataType';
   }
 
+  static String getCompletedWorksDetails({required String srvBookingId}) {
+    return '${baseUrl}v1/service-bookings/with-costs-summary/$srvBookingId';
+  }
 
   ///-------------///Imtiaz Chowdhury End///------------------
 }

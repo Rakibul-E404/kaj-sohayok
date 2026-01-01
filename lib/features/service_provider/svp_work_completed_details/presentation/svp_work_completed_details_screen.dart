@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:get/utils.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 
@@ -11,9 +12,35 @@ import '../../../../custom_widgets/ratings_showing_widget.dart';
 import '../../../../custom_widgets/work_address_and_date_widget.dart';
 import '../../../../gen/assets.gen.dart';
 import '../../../../helpers/ui_helpers.dart';
+import '../controller/svp_work_completed_details_screen_controller.dart';
 
-class SvpWorkCompletedDetailsScreen extends StatelessWidget {
+class SvpWorkCompletedDetailsScreen extends StatefulWidget {
   const SvpWorkCompletedDetailsScreen({super.key});
+
+  @override
+  State<SvpWorkCompletedDetailsScreen> createState() =>
+      _SvpWorkCompletedDetailsScreenState();
+}
+
+class _SvpWorkCompletedDetailsScreenState
+    extends State<SvpWorkCompletedDetailsScreen> {
+  String srvBookingId = '';
+  SvpWorkCompletedDetailsScreenController?
+      svpWorkCompletedDetailsScreenController;
+  @override
+  void initState() {
+    super.initState();
+    svpWorkCompletedDetailsScreenController =
+        Get.find<SvpWorkCompletedDetailsScreenController>();
+    // Get arguments
+    final arguments = Get.arguments as Map<String, dynamic>?;
+    srvBookingId = arguments?["bookingId"]?.toString() ?? '';
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      svpWorkCompletedDetailsScreenController?.setSrvBookingId(
+          srvBookingID: srvBookingId);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,6 +146,22 @@ class SvpWorkCompletedDetailsScreen extends StatelessWidget {
                 ///Section : Work Image
                 ProofOfWorkShowingWidget(
                   title: 'proof_of_image'.tr,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4.r),
+                    child: Image.asset(
+                      Assets.images.userImage.path,
+                      width: 1.sw,
+                      height: 200.h,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                UIHelper.verticalSpace(24.h),
+
+                ///Section : Text -> Proof of Video
+                ///Section : Work Video
+                ProofOfWorkShowingWidget(
+                  title: 'proof_of_video'.tr,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(4.r),
                     child: Image.asset(
