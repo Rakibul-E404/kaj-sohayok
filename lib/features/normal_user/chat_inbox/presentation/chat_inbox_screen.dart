@@ -47,6 +47,8 @@ class _PersonalInboxState extends State<PersonalInbox> {
     } else {
       callController = Get.put(CallController(), permanent: true);
     }
+    callController.socketService
+        .emit("join", {"conversationId": "695511b71e6fbeebb69bad0a"});
   }
 
   @override
@@ -227,5 +229,12 @@ class _PersonalInboxState extends State<PersonalInbox> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    callController.socketService
+        .emit("leave", {"conversationId": "695511b71e6fbeebb69bad0a"});
+    super.dispose();
   }
 }
