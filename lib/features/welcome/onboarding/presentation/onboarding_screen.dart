@@ -50,81 +50,82 @@ class _OnboardingScreenState extends State<OnboardingScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.cFFFFFF,
-      body: SafeArea(
-        child: Container(
-          width: 1.sw,
-          height: 1.sh,
-          padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.cover,
+      body: Container(
+        width: 1.sw,
+        height: 1.sh,
+        padding: EdgeInsets.all(UIHelper.kDefaulutPadding()),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            fit: BoxFit.cover,
 
-              ///Section: Background Image
-              image: AssetImage(Assets.images.onboardingImage.path),
+            ///Section: Background Image
+            image: AssetImage(Assets.images.onboardingImage.path),
+          ),
+        ),
+        child: Column(
+          children: [
+            UIHelper.verticalSpace(68.h),
+
+            // TabBar with custom indicator and styling
+            ///Section : Button -> English, Bangla
+            SelectLanguage(
+              tabController: _tabController,
+              tabIndex: onboardingController.tabIndex,
+              onTabChange: onboardingController.changeTab,
+              leftTabTitle: "English",
+              rightTabTitle: "বাংলা",
             ),
-          ),
-          child: Column(
-            children: [
-              UIHelper.verticalSpace(68.h),
 
-              // TabBar with custom indicator and styling
-              ///Section : Button -> English, Bangla
-              SelectLanguage(
-                tabController: _tabController,
-                tabIndex: onboardingController.tabIndex,
-                onTabChange: onboardingController.changeTab,
-                leftTabTitle: "English",
-                rightTabTitle: "বাংলা",
+            Spacer(),
+
+            ///Section : Bottom Container
+            Container(
+              width: 1.sw,
+              padding: EdgeInsets.all(24.sp),
+              decoration: BoxDecoration(
+                color: AppColors.c4b4d51.withAlpha(150),
+                border: Border.all(color: AppColors.c778beb),
+                borderRadius: BorderRadius.circular(32.r),
               ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ///Section : AppLogo
+                  Image.asset(
+                    Assets.images.appLogo.path,
+                    width: 0.8.sw,
+                    height: 120,
+                    fit: BoxFit.contain,
+                  ),
 
-              ///Section : AppLogo
-              Image.asset(
-                Assets.images.appLogo.path,
-                // width: 170.w,
-                height: 120,
-                fit: BoxFit.cover,
+                  ///Section : Text -> Your home's Best Friend
+                  Text(
+                    // "Your Home's Best Friend",
+                    'your_home_best_friend'.tr,
+                    textAlign: TextAlign.center,
+                    style: TextFontStyle.headline26w700cFFFFFFStyleSatoshi,
+                  ),
+                  UIHelper.verticalSpace(16.h),
+
+                  Text(
+                    'get_your_home_services_done'.tr,
+                    textAlign: TextAlign.center,
+                    style: TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
+                  ),
+                  UIHelper.verticalSpace(16.h),
+
+                  ///Section: Button -> GetStarted
+                  GetStartedButton(
+                    onTap: () {
+                      onboardingController.checkAuthNavigate();
+                    },
+                    buttonTitle: 'get_started'.tr,
+                  ),
+                ],
               ),
-              Spacer(),
-
-              ///Section : Bottom Container
-              Container(
-                width: 1.sw,
-                padding: EdgeInsets.all(24.sp),
-                decoration: BoxDecoration(
-                  color: AppColors.c4b4d51.withAlpha(150),
-                  border: Border.all(color: AppColors.c778beb),
-                  borderRadius: BorderRadius.circular(32.r),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ///Section : Text -> Your home's Best Friend
-                    Text(
-                      // "Your Home's Best Friend",
-                      'your_home_best_friend'.tr,
-                      style: TextFontStyle.headline26w700cFFFFFFStyleSatoshi,
-                    ),
-                    UIHelper.verticalSpace(16.h),
-
-                    Text(
-                      'get_your_home_services_done'.tr,
-                      style: TextFontStyle.headline14w500cFFFFFFStyleSatoshi,
-                    ),
-                    UIHelper.verticalSpace(16.h),
-
-                    ///Section: Button -> GetStarted
-                    GetStartedButton(
-                      onTap: () {
-                        onboardingController.checkAuthNavigate();
-                      },
-                      buttonTitle: 'get_started'.tr,
-                    ),
-                  ],
-                ),
-              ),
-              UIHelper.verticalSpace(20.h),
-            ],
-          ),
+            ),
+            UIHelper.verticalSpace(20.h),
+          ],
         ),
       ),
     );
