@@ -12,6 +12,7 @@ import '../../../../helpers/ui_helpers.dart';
 class CustomPinInput extends StatelessWidget {
   final VoidCallback resend;
   final OtpValidationController controller = Get.put(OtpValidationController());
+  final TextEditingController _pinController = TextEditingController();
 
   CustomPinInput({super.key, required this.resend});
 
@@ -42,6 +43,7 @@ class CustomPinInput extends StatelessWidget {
     return Column(
       children: [
         Pinput(
+          controller: _pinController,
           length: 6,
           defaultPinTheme: defaultPinTheme,
           focusedPinTheme: focusedPinTheme,
@@ -71,7 +73,11 @@ class CustomPinInput extends StatelessWidget {
                 WidgetSpan(
                   alignment: PlaceholderAlignment.middle,
                   child: InkWell(
-                    onTap: resend,
+                    onTap: (){
+                      _pinController.clear();
+                      controller.pin.value = ''; // Also clear the controller's pin
+                      resend();
+                    },
                     child: Text(
                       'resend_code'.tr,
                       style: TextFontStyle

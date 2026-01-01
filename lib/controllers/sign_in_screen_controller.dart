@@ -49,6 +49,7 @@ class SignInScreenController extends GetxController {
       final NetworkResponse postResponse = await NetworkCaller().postRequest(
         AppUrl.userLogin,
         body: loginForm,
+        isLogin: true
       );
       if (postResponse.isSuccess) {
         LoggerUtils.debug(postResponse.jsonResponse);
@@ -141,7 +142,7 @@ class SignInScreenController extends GetxController {
 
         Get.snackbar('Success', postResponse.jsonResponse?['message']);
       } else {
-        LoggerUtils.debug(postResponse.jsonResponse?['message']);
+        LoggerUtils.debug(postResponse.jsonResponse);
         // passwordTEController.clear();
         await SecureStorageService().clear();
         Get.snackbar(

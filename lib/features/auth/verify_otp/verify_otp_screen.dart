@@ -8,6 +8,7 @@ import 'package:kaz_bd/custom_widgets/custom_elevated_button.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:get/get.dart';
 import 'package:kaz_bd/routes/routes.dart';
+import 'package:pinput/pinput.dart';
 
 import '../../../constants/text_font_style.dart';
 import '../../../controllers/otp_validation_controller.dart';
@@ -79,11 +80,12 @@ class VerifyOtpScreen extends StatelessWidget {
                     // otpValidationController.handleSendOtpSignUp(
                     //   email: email ?? '',
                     // );
+
                     if (forForgetPassword == false) {
                       Get.find<UserSignUpController>().handleSignUp();
                     } else {
                       Get.find<ForgetPasswordController>()
-                          .handleForgetPassword();
+                          .handleForgetPassword(isResend: true);
                     }
                   },
                 ),

@@ -8,6 +8,7 @@ import 'package:kaz_bd/service/network_response.dart';
 import 'package:kaz_bd/utilities/app_constants.dart';
 import 'package:kaz_bd/utilities/app_url.dart';
 import 'package:kaz_bd/utilities/logger_util.dart';
+import 'package:logger/logger.dart';
 
 import '../features/service_provider/svp_home/model/service_provider_home_view_model.dart';
 import '../service/secured_storage.dart';
@@ -83,6 +84,7 @@ class SvpHomeScreenController extends GetxController {
         }
       } else {
         hasError(true);
+        LoggerUtils.error('Manush aibe');
         errorMessage.value = 'Network error: ${response.errorMessage}';
         log('Network error: ${response.errorMessage}');
       }
