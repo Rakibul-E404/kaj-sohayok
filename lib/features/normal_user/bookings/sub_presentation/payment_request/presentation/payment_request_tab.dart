@@ -320,7 +320,7 @@ class PaymentRequestTab extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () => Get.back(result: true),
-                child: Text('open_in_browser'.tr),
+                child: Text('pay'.tr),
               ),
             ],
           ),
