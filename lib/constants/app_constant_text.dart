@@ -16,4 +16,7 @@ class AppText {
 
 const String kKeyEnglish = 'english';
 const String kKeyBangla = 'bangla';
-const String whatsappUrl = "https://wa.me/message/DCVHOMCO4WI7F1";
+const String whatsappUrlLink = "https://wa.me/message/DCVHOMCO4WI7F1";
+const String instagramLink = 'www.instagram.com/kaajbdofficial';
+const String faceBookLink = 'www.facebook.com/kaajbd';
+const String youtubeLink = 'www.youtube.com/@kaajbdofficial';
