@@ -1251,7 +1251,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                 onTap: _uploadMediaFiles,
                                 buttonWidth: 120.w,
                                 buttonHeight: 36.h,
-                                buttonTitle: 'done'.tr,
+                                buttonTitle: 'Upload'.tr,
                               ),
                           ],
                         ),

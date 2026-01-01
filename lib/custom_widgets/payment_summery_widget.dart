@@ -53,17 +53,17 @@ class _PaymentSummeryWidgetState extends State<PaymentSummeryWidget> {
   int? _activeDeleteIndex;
   bool _isDeleting = false;
 
-  void _toggleDeleteButton(int index) {
-    setState(() {
-      if (_activeDeleteIndex == index) {
-        _activeDeleteIndex = null;
-        log('Hiding delete button for index: $index');
-      } else {
-        _activeDeleteIndex = index;
-        log('Showing delete button for index: $index');
-      }
-    });
-  }
+  // void _toggleDeleteButton(int index) {
+  //   setState(() {
+  //     if (_activeDeleteIndex == index) {
+  //       _activeDeleteIndex = null;
+  //       log('Hiding delete button for index: $index');
+  //     } else {
+  //       _activeDeleteIndex = index;
+  //       log('Showing delete button for index: $index');
+  //     }
+  //   });
+  // }
 
   void _confirmDelete(int index) {
     final item = widget.additionalCostList[index];
@@ -105,9 +105,9 @@ class _PaymentSummeryWidgetState extends State<PaymentSummeryWidget> {
                   _activeDeleteIndex = null;
                 });
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Item deleted locally')),
-                );
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   const SnackBar(content: Text('Item deleted locally')),
+                // );
 
                 widget.onDelete?.call();
               }
@@ -247,9 +247,9 @@ class _PaymentSummeryWidgetState extends State<PaymentSummeryWidget> {
               return InkWell(
                 onTap: () {
 
-                  if (widget.enableDelete) {
-                    _toggleDeleteButton(index);
-                  }
+                  // if (widget.enableDelete) {
+                    // _toggleDeleteButton(index);
+                  // }
                 },
                 borderRadius: BorderRadius.circular(8.r),
                 child: Container(

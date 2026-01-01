@@ -278,6 +278,7 @@ Map<String, String> banglaLanguage = {
   'your_feedback_means_a_lot':
       'আপনার প্রতিক্রিয়া পরিষেবার রেটিং এবং উন্নতির জন্য অনেক গুরুত্বপূর্ণ।',
   'done': 'সম্পন্ন',
+  'Upload': 'আপলোড করুন',
   'rate_the_service': 'সেবা রেট',
   'add_a_comment': 'একটি মন্তব্য যোগ করুন...',
   'please_select_a_rating': 'একটি রেটিং নির্বাচন করুন',
