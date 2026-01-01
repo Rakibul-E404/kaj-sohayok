@@ -284,31 +284,7 @@ class _PaymentSummeryWidgetState extends State<PaymentSummeryWidget> {
                             "${AppText.bdTkSign}${item.price}",
                             style: TextFontStyle.headline16w700c202020StyleSatoshi,
                           ),
-                          // if (isDeleteActive && widget.enableDelete)
-//   Padding(
-//     padding: EdgeInsets.only(left: 8.w),
-//     child: _isDeleting
-//         ? SizedBox(
-//       width: 24.w,
-//       height: 24.h,
-//       child: CircularProgressIndicator(
-//         strokeWidth: 2,
-//         color: Colors.red,
-//       ),
-//     )
-//         : IconButton(
-//       icon: Icon(
-//         Icons.delete_forever_outlined,
-//         color: Colors.red,
-//         size: 24.sp,
-//       ),
-//       onPressed: () {
-//         _confirmDelete(index);
-//       },
-//     ),
-//   ),
-
-
+                    
                           if (widget.enableDelete)
                             Padding(
                               padding: EdgeInsets.only(left: 8.w),
