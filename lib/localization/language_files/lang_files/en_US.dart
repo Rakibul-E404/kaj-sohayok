@@ -274,6 +274,7 @@ Map<String, String> englishLanguage = {
   'your_feedback_means_a_lot':
       'Your feedback means a lot for the retting and improvement for services',
   'done': 'Done',
+  'Upload': 'Upload',
   'rate_the_service': 'Rate the service',
   'add_a_comment': 'Add a Comment...',
   'please_select_a_rating': 'Please select a rating',
