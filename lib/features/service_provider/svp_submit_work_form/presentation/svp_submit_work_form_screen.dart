@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
@@ -33,6 +34,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
   // Store video controllers for different videos
   VideoPlayerController? _currentVideoController;
   ChewieController? _currentChewieController;
+  bool _isVideoInitializing = false;
 
   @override
   void initState() {
@@ -41,12 +43,10 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
     log("📦 Arguments received: ${Get.arguments}");
     log("📦 Arguments type: ${Get.arguments.runtimeType}");
 
-    // Check if controller has booking ID after initialization
     SchedulerBinding.instance.addPostFrameCallback((_) {
       log("🎯 Controller bookingId: ${controller.bookingId.value}");
       log("🎯 Controller storedBookingId: ${controller.storedBookingId}");
 
-      // If no booking ID, try to load from controller
       if (controller.bookingId.value.isEmpty) {
         log("⚠️ No booking ID found, calling loadWorkDetails...");
         controller.loadWorkDetails();
@@ -56,19 +56,29 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
 
   @override
   void dispose() {
-    // Dispose video controllers when screen is disposed
-    _currentVideoController?.dispose();
-    _currentChewieController?.dispose();
+    // Dispose all video controllers
+    _disposeVideoControllers();
     super.dispose();
+  }
+
+  void _disposeVideoControllers() {
+    log("🗑️ Disposing video controllers");
+    _currentChewieController?.pause();
+    _currentChewieController?.dispose();
+    _currentChewieController = null;
+
+    _currentVideoController?.pause();
+    _currentVideoController?.dispose();
+    _currentVideoController = null;
+
+    _isVideoInitializing = false;
   }
 
   // Function to show media in fullscreen dialog
   void _showMediaInDialog(String mediaUrl, String? title, String mediaType) {
     if (mediaType == 'video') {
-      // Show video player dialog
       _showVideoDialog(mediaUrl, title);
     } else {
-      // Show image dialog (existing code)
       _showImageDialog(mediaUrl, title);
     }
   }
@@ -113,7 +123,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                         borderRadius: BorderRadius.circular(12.r),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.3),
+                            color: Colors.black.withOpacity(0.3),
                             blurRadius: 20,
                             spreadRadius: 5,
                           ),
@@ -174,63 +184,128 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
           ],
         ),
       ),
-      barrierColor: Colors.black.withValues(alpha: 0.7),
+      barrierColor: Colors.black.withOpacity(0.7),
     );
   }
 
   void _showVideoDialog(String videoUrl, String? title) async {
+    if (_isVideoInitializing) {
+      log("⏳ Video already initializing, skipping...");
+      return;
+    }
+
+    _isVideoInitializing = true;
+
     try {
-      // Dispose previous controllers
-      _currentChewieController?.dispose();
-      _currentVideoController?.dispose();
-
-      // Initialize video player
-      _currentVideoController = VideoPlayerController.networkUrl(Uri.parse(videoUrl));
-      await _currentVideoController!.initialize();
-
-      _currentChewieController = ChewieController(
-        videoPlayerController: _currentVideoController!,
-        autoPlay: true,
-        looping: false,
-        showControls: true,
-        materialProgressColors: ChewieProgressColors(
-          playedColor: AppColors.c000e08,
-          handleColor: AppColors.c000e08,
-          backgroundColor: Colors.grey.shade300,
-          bufferedColor: Colors.grey.shade400,
-        ),
-        placeholder: Container(
-          color: Colors.black,
-          child: Center(
-            child: CircularProgressIndicator(color: Colors.white),
+      // Show loading dialog first
+      Get.dialog(
+        Dialog(
+          backgroundColor: Colors.black,
+          child: Container(
+            padding: EdgeInsets.all(40.w),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(color: Colors.white),
+                SizedBox(height: 20.h),
+                Text(
+                  'loading_video'.tr,
+                  style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                ),
+              ],
+            ),
           ),
         ),
-        errorBuilder: (context, errorMessage) {
-          return Container(
-            color: Colors.black,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error, color: Colors.white, size: 48),
-                  SizedBox(height: 16),
-                  Text(
-                    'failed_to_load_video'.tr,
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    errorMessage ?? 'unknown_error'.tr,
-                    style: TextStyle(color: Colors.grey),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+        barrierDismissible: false,
+        barrierColor: Colors.black.withOpacity(0.8),
       );
 
+      // Dispose previous controllers
+      _disposeVideoControllers();
+
+      // Initialize video player
+      log("🎬 Initializing video player for URL: $videoUrl");
+      _currentVideoController = VideoPlayerController.networkUrl(
+        Uri.parse(videoUrl),
+        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: false),
+      );
+
+      // Set up error handling
+      _currentVideoController!.addListener(() {
+        if (_currentVideoController!.value.hasError) {
+          log("❌ Video player error: ${_currentVideoController!.value.errorDescription}");
+        }
+      });
+
+      // Initialize with timeout
+      final initialization = _currentVideoController!.initialize();
+      final timeout = Future.delayed(Duration(seconds: 30), () {
+        throw TimeoutException("Video initialization timed out");
+      });
+
+      await Future.any([initialization, timeout]);
+
+      // Close loading dialog
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
+
+      _currentChewieController = ChewieController(
+          videoPlayerController: _currentVideoController!,
+          autoPlay: true,
+          looping: false,
+          showControls: true,
+          allowFullScreen: true,
+          allowMuting: true,
+          allowPlaybackSpeedChanging: true,
+          aspectRatio: _currentVideoController!.value.aspectRatio,
+          materialProgressColors: ChewieProgressColors(
+            playedColor: AppColors.c000e08,
+            handleColor: AppColors.c000e08,
+            backgroundColor: Colors.grey.shade300,
+            bufferedColor: Colors.grey.shade400,
+          ),
+          placeholder: Container(
+            color: Colors.black,
+            child: Center(
+              child: CircularProgressIndicator(color: Colors.white),
+            ),
+          ),
+          errorBuilder: (context, errorMessage) {
+            return Container(
+              color: Colors.black,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error, color: Colors.white, size: 48.h),
+                    SizedBox(height: 16.h),
+                    Text(
+                      'failed_to_load_video'.tr,
+                      style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                    ),
+                    SizedBox(height: 8.h),
+                    Text(
+                      errorMessage ?? 'unknown_error'.tr,
+                      style: TextStyle(color: Colors.grey, fontSize: 14.sp),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 16.h),
+                    ElevatedButton(
+                      onPressed: () {
+                        Get.back();
+                        _isVideoInitializing = false;
+                        _showVideoDialog(videoUrl, title);
+                      },
+                      child: Text('retry'.tr),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          });
+
+      // Show the video dialog
       Get.dialog(
         Dialog(
           backgroundColor: Colors.black,
@@ -256,9 +331,9 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.close, color: Colors.white),
+                      icon: Icon(Icons.close, color: Colors.white, size: 24.h),
                       onPressed: () {
-                        _currentChewieController?.pause();
+                        _disposeVideoControllers();
                         Get.back();
                       },
                     ),
@@ -278,7 +353,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                 padding: EdgeInsets.all(16.w),
                 child: Row(
                   children: [
-                    Icon(Icons.videocam, color: Colors.white70, size: 16),
+                    Icon(Icons.videocam, color: Colors.white70, size: 20.h),
                     SizedBox(width: 8.w),
                     Text(
                       'video_file'.tr,
@@ -295,33 +370,89 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
             ],
           ),
         ),
-        barrierDismissible: false,
-      );
-    } catch (e) {
+        barrierDismissible: true,
+        barrierColor: Colors.black.withOpacity(0.8),
+      ).then((_) {
+        // Clean up when dialog is closed
+        _disposeVideoControllers();
+      });
+    } catch (e, stackTrace) {
+      // Close loading dialog if it's open
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
+
+      log("❌ Error loading video: $e");
+      log("📋 Stack trace: $stackTrace");
+
+      _disposeVideoControllers();
+
       Get.snackbar(
         'error'.tr,
-        "${'failed_to_load_video'.tr} ${e.toString()}",
+        "${'failed_to_load_video'.tr}: ${e.toString().split(':').first}",
         backgroundColor: Colors.red,
         colorText: Colors.white,
+        duration: Duration(seconds: 4),
       );
+    } finally {
+      _isVideoInitializing = false;
     }
   }
 
   // Function to show local video file
   void _showLocalVideoDialog(File videoFile, String? title) async {
-    try {
-      // Dispose previous controllers
-      _currentChewieController?.dispose();
-      _currentVideoController?.dispose();
+    if (_isVideoInitializing) {
+      log("⏳ Video already initializing, skipping...");
+      return;
+    }
 
+    _isVideoInitializing = true;
+
+    try {
+      // Show loading dialog
+      Get.dialog(
+        Dialog(
+          backgroundColor: Colors.black,
+          child: Container(
+            padding: EdgeInsets.all(40.w),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(color: Colors.white),
+                SizedBox(height: 20.h),
+                Text(
+                  'loading_video'.tr,
+                  style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                ),
+              ],
+            ),
+          ),
+        ),
+        barrierDismissible: false,
+        barrierColor: Colors.black.withOpacity(0.8),
+      );
+
+      // Dispose previous controllers
+      _disposeVideoControllers();
+
+      log("🎬 Initializing local video player for file: ${videoFile.path}");
       _currentVideoController = VideoPlayerController.file(videoFile);
       await _currentVideoController!.initialize();
+
+      // Close loading dialog
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
 
       _currentChewieController = ChewieController(
         videoPlayerController: _currentVideoController!,
         autoPlay: true,
         looping: false,
         showControls: true,
+        allowFullScreen: true,
+        allowMuting: true,
+        allowPlaybackSpeedChanging: true,
+        aspectRatio: _currentVideoController!.value.aspectRatio,
         materialProgressColors: ChewieProgressColors(
           playedColor: AppColors.c000e08,
           handleColor: AppColors.c000e08,
@@ -360,9 +491,9 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                       ),
                     ),
                     IconButton(
-                      icon: Icon(Icons.close, color: Colors.white),
+                      icon: Icon(Icons.close, color: Colors.white, size: 24.h),
                       onPressed: () {
-                        _currentChewieController?.pause();
+                        _disposeVideoControllers();
                         Get.back();
                       },
                     ),
@@ -378,7 +509,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                 padding: EdgeInsets.all(16.w),
                 child: Row(
                   children: [
-                    Icon(Icons.videocam, color: Colors.white70, size: 16),
+                    Icon(Icons.videocam, color: Colors.white70, size: 20.h),
                     SizedBox(width: 8.w),
                     Text(
                       'local_video'.tr,
@@ -395,15 +526,32 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
             ],
           ),
         ),
-        barrierDismissible: false,
-      );
-    } catch (e) {
+        barrierDismissible: true,
+        barrierColor: Colors.black.withOpacity(0.8),
+      ).then((_) {
+        // Clean up when dialog is closed
+        _disposeVideoControllers();
+      });
+    } catch (e, stackTrace) {
+      // Close loading dialog if open
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
+
+      log("❌ Error loading local video: $e");
+      log("📋 Stack trace: $stackTrace");
+
+      _disposeVideoControllers();
+
       Get.snackbar(
         'error'.tr,
-        "${'failed_to_load_video'.tr} ${e.toString()}",
+        "${'failed_to_load_video'.tr}: ${e.toString()}",
         backgroundColor: Colors.red,
         colorText: Colors.white,
+        duration: Duration(seconds: 4),
       );
+    } finally {
+      _isVideoInitializing = false;
     }
   }
 
@@ -433,7 +581,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.close, color: Colors.white),
+                    icon: Icon(Icons.close, color: Colors.white, size: 24.h),
                     onPressed: () => Get.back(),
                   ),
                 ],
@@ -448,7 +596,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
               padding: EdgeInsets.all(16.w),
               child: Row(
                 children: [
-                  Icon(Icons.image, color: Colors.white70, size: 16),
+                  Icon(Icons.image, color: Colors.white70, size: 20.h),
                   SizedBox(width: 8.w),
                   Text(
                     'Local Image',
@@ -465,7 +613,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
           ],
         ),
       ),
-      barrierDismissible: false,
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.8),
     );
   }
 
@@ -507,9 +656,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
         fileName.endsWith('.gif');
   }
 
-
   Future<void> _uploadMediaFiles() async {
-    // Get booking ID from controller
     String bookingIdToUse = controller.bookingId.value.isNotEmpty
         ? controller.bookingId.value
         : controller.storedBookingId;
@@ -537,7 +684,6 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
     try {
       final List<File> fileObjects = [];
 
-      // Collect all valid files
       for (final mediaFile in controller.mediaFiles) {
         final file = File(mediaFile.path);
         if (file.existsSync()) {
@@ -557,7 +703,6 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
 
       log("📤 Uploading ${fileObjects.length} media files for Booking ID: $bookingIdToUse");
 
-      // Call the method that handles multiple files
       final response = await controller.uploadMultipleMediaFiles(
         bookingId: bookingIdToUse,
         files: fileObjects,
@@ -565,8 +710,6 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
 
       if (response.isSuccess) {
         isMediaCompleted.value = true;
-
-        // ✅ Clear media files after successful upload
         controller.clearMediaFilesAfterUpload();
 
         Get.snackbar(
@@ -577,7 +720,6 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
           duration: Duration(seconds: 3),
         );
 
-        // Refresh to get updated attachments
         await _handleRefresh();
       } else {
         final errorMsg = response.errorMessage ?? "Failed to upload files";
@@ -599,21 +741,17 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
     }
   }
 
-  // ✅ FIXED: Refresh handler that properly hits the GET API
   Future<void> _handleRefresh() async {
     log("🔄 Pull-to-refresh started...");
 
     try {
-      // Step 1: Try to get booking ID from controller
       String bookingIdToUse = controller.bookingId.value;
 
-      // Step 2: If empty, try stored ID
       if (bookingIdToUse.isEmpty) {
         bookingIdToUse = controller.storedBookingId;
         log("🔄 Using stored booking ID: $bookingIdToUse");
       }
 
-      // Step 3: If still empty, try to extract from arguments
       if (bookingIdToUse.isEmpty) {
         final args = Get.arguments;
         if (args != null) {
@@ -634,28 +772,19 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
 
       if (bookingIdToUse.isEmpty) {
         log("⚠️ No booking ID available for refresh");
-        Get.snackbar(
-            "Info",
-            "No booking information found",
+        Get.snackbar("Info", "No booking information found",
             backgroundColor: Colors.orange,
             colorText: Colors.white,
-            duration: Duration(seconds: 2)
-        );
+            duration: Duration(seconds: 2));
         return;
       }
 
       log("📡 Refreshing with Booking ID: $bookingIdToUse");
-
-      // ✅ THIS IS THE CRITICAL LINE: Call loadWorkDetails which uses AppUrl.providerWorkSubmitForm
-      // This will hit: ${baseUrl}v1/service-bookings/with-costs-summary/$bookingIdToUse
       await controller.loadWorkDetails();
-
       log("✅ Refresh completed successfully");
-
     } catch (e, stackTrace) {
       log("❌ Refresh error: $e", error: e, stackTrace: stackTrace);
 
-      // Show user-friendly error message based on error type
       String errorMessage = "Failed to refresh data";
       if (e is SocketException) {
         errorMessage = "No internet connection";
@@ -665,15 +794,11 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
         errorMessage = "Server error";
       }
 
-      Get.snackbar(
-          "Error",
-          errorMessage,
+      Get.snackbar("Error", errorMessage,
           backgroundColor: Colors.red,
           colorText: Colors.white,
-          duration: Duration(seconds: 3)
-      );
+          duration: Duration(seconds: 3));
 
-      // Re-throw to let refresh indicator know about the error
       throw e;
     }
   }
@@ -693,13 +818,14 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
         backgroundColor: AppColors.scaffoldBackgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: Colors.black, size: 24.h),
           onPressed: () => Get.back(),
         ),
       ),
       body: Obx(() {
         if (controller.isLoadingWorkDetails.value) {
-          return Center(child: CircularProgressIndicator(color: AppColors.c000e08));
+          return Center(
+              child: CircularProgressIndicator(color: AppColors.c000e08));
         }
 
         return RefreshIndicator(
@@ -733,7 +859,6 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   ),
                   UIHelper.verticalSpace(16.h),
 
-
                   /// Section: Completion Date
                   InkWell(
                     onTap: () async {
@@ -760,11 +885,11 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                   /// Section: Duration Time (Auto-calculated)
                   MoreInfoWidgetTile(
                     title: 'duration_time'.tr,
-                    hintText: 'auto_calculated_after_selecting_completion_date'.tr,
-                    isEnabled: false, // 👈 Makes it non-editable
+                    hintText:
+                        'auto_calculated_after_selecting_completion_date'.tr,
+                    isEnabled: false,
                     controller: controller.durationTimeController,
                   ),
-
 
                   UIHelper.verticalSpace(24.h),
 
@@ -820,19 +945,122 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                       .map((entry) {
                                     final index = entry.key;
                                     final attachment = entry.value;
-                                    final mediaUrl = controller.getImageUrl(attachment.url);
-                                    final isVideo = attachment.type == 'video' ||
-                                        attachment.url.toLowerCase().contains('.mp4') ||
-                                        attachment.url.toLowerCase().contains('.mov') ||
-                                        attachment.url.toLowerCase().contains('.avi') ||
-                                        attachment.url.toLowerCase().contains('.mkv');
+                                    final mediaUrl =
+                                        controller.getImageUrl(attachment.url);
+                                    final isVideo =
+                                        attachment.type == 'video' ||
+                                            attachment.url
+                                                .toLowerCase()
+                                                .contains('.mp4') ||
+                                            attachment.url
+                                                .toLowerCase()
+                                                .contains('.mov') ||
+                                            attachment.url
+                                                .toLowerCase()
+                                                .contains('.avi') ||
+                                            attachment.url
+                                                .toLowerCase()
+                                                .contains('.mkv');
 
+                                    // Video thumbnail
+                                    if (isVideo) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          log("🎬 Playing API video: $mediaUrl");
+                                          _showVideoDialog(mediaUrl,
+                                              "${'proof_file'.tr} ${index + 1}");
+                                        },
+                                        child: Stack(
+                                          children: [
+                                            Container(
+                                              width: 80.w,
+                                              height: 80.h,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(8.r),
+                                                border: Border.all(
+                                                    color:
+                                                        Colors.grey.shade300),
+                                                color: Colors.black,
+                                              ),
+                                              child: Center(
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                      width: 40.w,
+                                                      height: 40.h,
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.black
+                                                            .withOpacity(0.7),
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: Icon(
+                                                        Icons.play_arrow,
+                                                        color: Colors.white,
+                                                        size: 24.h,
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 4.h),
+                                                    Text(
+                                                      'VIDEO',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 10.sp,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              bottom: 4,
+                                              left: 4,
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 4.w,
+                                                    vertical: 2.h),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black
+                                                      .withOpacity(0.6),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          4.r),
+                                                ),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Icon(Icons.videocam,
+                                                        color: Colors.white,
+                                                        size: 10),
+                                                    SizedBox(width: 2.w),
+                                                    Text(
+                                                      '${index + 1}',
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 10.sp,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }
+
+                                    // Image thumbnail
                                     return GestureDetector(
                                       onTap: () {
-                                        _showMediaInDialog(
-                                            mediaUrl,
-                                            "${'proof_file'.tr} ${index + 1}",
-                                            isVideo ? 'video' : 'image');
+                                        _showImageDialog(mediaUrl,
+                                            "${'proof_file'.tr} ${index + 1}");
                                       },
                                       child: Stack(
                                         children: [
@@ -845,27 +1073,27 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                               border: Border.all(
                                                   color: Colors.grey.shade300),
                                             ),
-                                            child: isVideo
-                                                ? _buildVideoThumbnail(mediaUrl, index)  // 🆕 Use the new method
-                                                : ClipRRect(
-                                              borderRadius: BorderRadius.circular(8.r),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.r),
                                               child: CachedNetworkImage(
                                                 imageUrl: mediaUrl,
                                                 fit: BoxFit.cover,
-                                                placeholder: (context, url) => Center(
-                                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                                placeholder: (context, url) =>
+                                                    Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                          strokeWidth: 2),
                                                 ),
-                                                errorWidget: (context, url, error) => Center(
-                                                  child: Icon(Icons.error, color: Colors.red, size: 24),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        Center(
+                                                  child: Icon(Icons.error,
+                                                      color: Colors.red,
+                                                      size: 24),
                                                 ),
                                               ),
                                             ),
-
-
-
-
-
-
                                           ),
                                           Positioned(
                                             bottom: 4,
@@ -875,19 +1103,17 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                                   horizontal: 4.w,
                                                   vertical: 2.h),
                                               decoration: BoxDecoration(
-                                                color: Colors.black.withValues(alpha: 0.6),
-                                                borderRadius: BorderRadius.circular(4.r),
+                                                color: Colors.black
+                                                    .withOpacity(0.6),
+                                                borderRadius:
+                                                    BorderRadius.circular(4.r),
                                               ),
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
-                                                  isVideo
-                                                      ? Icon(Icons.videocam,
-                                                          color: Colors.white,
-                                                          size: 10)
-                                                      : Icon(Icons.image,
-                                                          color: Colors.white,
-                                                          size: 10),
+                                                  Icon(Icons.image,
+                                                      color: Colors.white,
+                                                      size: 10),
                                                   SizedBox(width: 2.w),
                                                   Text(
                                                     '${index + 1}',
@@ -963,6 +1189,90 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                             _isVideoFile(mediaFile.path);
                                         final isImage =
                                             _isImageFile(mediaFile.path);
+                                        final fileName =
+                                            mediaFile.path.split('/').last;
+
+                                        Widget previewWidget;
+
+                                        if (isImage) {
+                                          previewWidget = GestureDetector(
+                                            onTap: () {
+                                              final file = File(mediaFile.path);
+                                              _showLocalImageDialog(
+                                                  file, fileName);
+                                            },
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(6.r),
+                                              child: Container(
+                                                width: 60.w,
+                                                height: 60.h,
+                                                color: Colors.grey.shade200,
+                                                child: Image.file(
+                                                  File(mediaFile.path),
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return Container(
+                                                      color:
+                                                          Colors.grey.shade300,
+                                                      child: Icon(Icons.image,
+                                                          color: Colors.grey,
+                                                          size: 24.h),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        } else if (isVideo) {
+                                          previewWidget = GestureDetector(
+                                            onTap: () {
+                                              final file = File(mediaFile.path);
+                                              log("🎬 Playing local video: ${file.path}");
+                                              _showLocalVideoDialog(
+                                                  file, fileName);
+                                            },
+                                            child: Container(
+                                              width: 60.w,
+                                              height: 60.h,
+                                              decoration: BoxDecoration(
+                                                color: Colors.black87,
+                                                borderRadius:
+                                                    BorderRadius.circular(6.r),
+                                              ),
+                                              child: Center(
+                                                child: Container(
+                                                  width: 30.w,
+                                                  height: 30.h,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.black
+                                                        .withOpacity(0.7),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.play_arrow,
+                                                    color: Colors.white,
+                                                    size: 18.h,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          previewWidget = GestureDetector(
+                                            onTap: () {
+                                              Get.snackbar(
+                                                'Info',
+                                                'This file type cannot be previewed',
+                                                backgroundColor: Colors.blue,
+                                                colorText: Colors.white,
+                                              );
+                                            },
+                                            child: _getFileTypeIcon(
+                                                mediaFile.path),
+                                          );
+                                        }
 
                                         return Container(
                                           padding: EdgeInsets.all(12.w),
@@ -975,7 +1285,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                           ),
                                           child: Row(
                                             children: [
-                                              _getFileTypeIcon(mediaFile.path),
+                                              previewWidget,
                                               SizedBox(width: 12.w),
                                               Expanded(
                                                 child: Column(
@@ -983,9 +1293,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      mediaFile.path
-                                                          .split('/')
-                                                          .last,
+                                                      fileName,
                                                       style: TextStyle(
                                                         fontSize: 14.sp,
                                                         fontWeight:
@@ -997,82 +1305,25 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                                           TextOverflow.ellipsis,
                                                     ),
                                                     SizedBox(height: 4.h),
-                                                    Row(
-                                                      children: [
-                                                        Text(
-                                                          isVideo
-                                                              ? 'Video'
-                                                              : isImage
-                                                                  ? 'Image'
-                                                                  : 'File',
-                                                          style: TextStyle(
-                                                            fontSize: 12.sp,
-                                                            color: Colors
-                                                                .grey.shade600,
-                                                          ),
-                                                        ),
-                                                        SizedBox(width: 8.w),
-                                                        if (isVideo || isImage)
-                                                          GestureDetector(
-                                                            onTap: () {
-                                                              final file = File(
-                                                                  mediaFile
-                                                                      .path);
-                                                              if (isVideo) {
-                                                                _showLocalVideoDialog(
-                                                                    file,
-                                                                    'preview_video'
-                                                                        .tr);
-                                                              } else if (isImage) {
-                                                                // For local images, you might need to use Image.file
-                                                                // Or convert to base64/network URL
-                                                                Get.snackbar(
-                                                                  'preview'.tr,
-                                                                  'image_preview_for_loacal_files_needs_implementation'
-                                                                      .tr,
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .blue,
-                                                                  colorText:
-                                                                      Colors
-                                                                          .white,
-                                                                );
-                                                              }
-                                                            },
-                                                            child: Row(
-                                                              children: [
-                                                                Icon(
-                                                                    Icons
-                                                                        .remove_red_eye,
-                                                                    color: Colors
-                                                                        .blue,
-                                                                    size: 14),
-                                                                SizedBox(
-                                                                    width: 4.w),
-                                                                Text(
-                                                                  'preview'.tr,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        11.sp,
-                                                                    color: Colors
-                                                                        .blue,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                      ],
+                                                    Text(
+                                                      isVideo
+                                                          ? 'Video file'
+                                                          : isImage
+                                                              ? 'Image file'
+                                                              : 'Document',
+                                                      style: TextStyle(
+                                                        fontSize: 11.sp,
+                                                        color: Colors
+                                                            .grey.shade600,
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
                                               IconButton(
                                                 icon: Icon(Icons.delete,
-                                                    color: Colors.red),
+                                                    color: Colors.red,
+                                                    size: 20.h),
                                                 onPressed: () async {
                                                   await controller
                                                       .removeMediaFile(index);
@@ -1087,7 +1338,7 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                   ],
                                 ),
 
-                              // ALWAYS show "Add New Files" button regardless of media state
+                              // Add New Files button
                               Container(
                                 decoration: BoxDecoration(
                                   border: Border.all(
@@ -1126,58 +1377,6 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                                   ),
                                 ),
                               ),
-
-                              // Show success state when files are uploaded and isMediaCompleted is true
-                              if (isMediaCompleted.value)
-                                Column(
-                                  children: [
-                                    UIHelper.verticalSpace(16.h),
-                                    Container(
-                                      padding: EdgeInsets.all(16.w),
-                                      decoration: BoxDecoration(
-                                        color: Colors.green.shade50,
-                                        borderRadius: BorderRadius.circular(12.r),
-                                        border: Border.all(color: Colors.green.shade100),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.check_circle, color: Colors.green, size: 24.h),
-                                          SizedBox(width: 12.w),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Files uploaded successfully!",
-                                                  style: TextStyle(
-                                                    fontSize: 14.sp,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.green,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 4.h),
-                                                Text(
-                                                  "All files have been uploaded to the server.",
-                                                  style: TextStyle(
-                                                    fontSize: 12.sp,
-                                                    color: Colors.grey.shade600,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          IconButton(
-                                            icon: Icon(Icons.close, color: Colors.grey),
-                                            onPressed: () {
-                                              isMediaCompleted.value = false;
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-
                               // File type hint
                               UIHelper.verticalSpace(12.h),
                               Text(
@@ -1194,9 +1393,6 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                       ],
                     );
                   }),
-
-
-
 
                   UIHelper.verticalSpace(16.h),
 
@@ -1268,8 +1464,14 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
                       totalPayment: controller.calculateTotalPayment(),
                       isAddAdditionalCostButtonVisible: true,
                       enableDelete: true,
-                      onTap: () {
+                      onTap: () async{
                         _showAddAdditionalCostDialog();
+                      },
+
+                      onDelete: () async {
+                        // Refresh after delete
+                        await _handleRefresh();
+                        await _handleRefresh();
                       },
                     );
                   }),
@@ -1462,14 +1664,14 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
               Divider(),
               SizedBox(height: 12.h),
               _buildDetailRow("${'initial_cost'.tr}:",
-                  "\$${controller.initialCost.value.toStringAsFixed(2)}"),
+                  "\${controller.initialCost.value.toStringAsFixed(2)}"),
               if (controller.additionalCosts.isNotEmpty)
                 _buildDetailRow("${'additional_cost'.tr}:",
-                    "\$${(controller.calculateTotalPayment() - controller.initialCost.value).toStringAsFixed(2)}"),
+                    "\${(controller.calculateTotalPayment() - controller.initialCost.value).toStringAsFixed(2)}"),
               SizedBox(height: 8.h),
               _buildDetailRow(
                 "${'total_payment'.tr}:",
-                "\$${controller.calculateTotalPayment().toStringAsFixed(2)}",
+                "\${controller.calculateTotalPayment().toStringAsFixed(2)}",
                 isBold: true,
               ),
               SizedBox(height: 16.h),
@@ -1504,7 +1706,8 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.c778beb,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.r)),
             ),
             child: Text('send_request'.tr,
                 style: TextStyle(
@@ -1543,110 +1746,6 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
               ),
             ),
           ],
-        )
-    );
-  }
-
-
-  // ADD THIS METHOD in your _SvpSubmitWorkFormScreenState class
-// (Add it after your existing _showLocalImageDialog method)
-
-  Widget _buildVideoThumbnail(String videoUrl, int index) {
-    return FutureBuilder<VideoPlayerController?>(
-      future: controller.initializeVideoThumbnail(videoUrl),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done &&
-            snapshot.hasData &&
-            snapshot.data != null &&
-            snapshot.data!.value.isInitialized) {
-          return Stack(
-            children: [
-              // Show video frame
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8.r),
-                child: SizedBox(
-                  width: 80.w,
-                  height: 80.h,
-                  child: FittedBox(
-                    fit: BoxFit.cover,
-                    child: SizedBox(
-                      width: snapshot.data!.value.size.width,
-                      height: snapshot.data!.value.size.height,
-                      child: VideoPlayer(snapshot.data!),
-                    ),
-                  ),
-                ),
-              ),
-              // Play button overlay
-              Center(
-                child: Container(
-                  padding: EdgeInsets.all(8.w),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.6),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.play_arrow,
-                    color: Colors.white,
-                    size: 20.h,
-                  ),
-                ),
-              ),
-            ],
-          );
-        } else if (snapshot.hasError) {
-          // Error loading video - show fallback
-          return Container(
-            width: 80.w,
-            height: 80.h,
-            decoration: BoxDecoration(
-              color: Colors.black87,
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.videocam, color: Colors.white, size: 24.h),
-                  SizedBox(height: 4.h),
-                  Text(
-                    'Video',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10.sp,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        } else {
-          // Loading
-          return Container(
-            width: 80.w,
-            height: 80.h,
-            decoration: BoxDecoration(
-              color: Colors.black87,
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.white,
-              ),
-            ),
-          );
-        }
-      },
-    );
+        ));
   }
 }
-
-
-
-
-
-
-
-
-
