@@ -41,8 +41,12 @@ class AddressAndOrderDateTile extends StatelessWidget {
           children: [
             Icon(icon, color: AppColors.c92a2ef),
             UIHelper.horizontalSpace(4.w),
-
-            Text(data, style: TextFontStyle.headline12w500c4d4d4dStyleSatoshi),
+            Expanded(
+              child: Text(data,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextFontStyle.headline12w500c4d4d4dStyleSatoshi),
+            ),
           ],
         ),
       ],

@@ -25,30 +25,16 @@ class HomeSectionAppLogoAndNotification extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           ///AppLogo
-          Container(
-            width: 64.w,
-            height: 64.h,
-            decoration: BoxDecoration(
-              color: AppColors.cFFFFFF,
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage(Assets.images.appLogo.path),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.ca4b1f2.withAlpha(80),
-                  blurRadius: 12.r,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-            ),
+          Image.asset(
+            Assets.images.appLogo.path,
+            fit: BoxFit.contain,
+            width: 0.4.sw,
+            height: 54.h,
           ),
 
           ///Section : Notification
           InkWell(
             onTap: onTap,
-
             child: Container(
               width: 48.w,
               height: 48.h,

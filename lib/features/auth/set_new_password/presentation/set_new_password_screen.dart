@@ -38,24 +38,11 @@ class SetNewPasswordScreen extends StatelessWidget {
                   UIHelper.verticalSpace(68.h),
 
                   ///AppLogo
-                  Container(
-                    width: 96.w,
-                    height: 96.h,
-                    decoration: BoxDecoration(
-                      color: AppColors.cFFFFFF,
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage(Assets.images.appLogo.path),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.ca4b1f2.withAlpha(80),
-                          blurRadius: 12.r,
-                          offset: const Offset(0, 6),
-                        ),
-                      ],
-                    ),
+                  Image.asset(
+                    Assets.images.appLogo.path,
+                    fit: BoxFit.contain,
+                    width: 0.8.sw,
+                    height: 54.h,
                   ),
                   UIHelper.verticalSpace(32.h),
 

@@ -80,7 +80,7 @@ class TextFontStyle {
   static final headline14w500cFFFFFFStyleSatoshi = TextStyle(
     fontFamily: 'Satoshi',
     fontFamilyFallback: const ['Itern', 'Satoshi'],
-    color: AppColors.cFFFFFF,
+    color: AppColors.cfdfdfd,
     fontSize: 14.sp,
     fontWeight: FontWeight.w500,
   );

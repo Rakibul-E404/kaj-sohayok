@@ -666,5 +666,6 @@ Map<String, String> banglaLanguage = {
   'are_you_sure_you_want_to_end_this_call':
       'আপনি কি নিশ্চিত যে আপনি এই কলটি শেষ করতে চান?',
   'end_calll': 'কল শেষ করুন',
-  'loading_all_categories...': 'সব ক্যাটাগরি লোড হচ্ছে...'
+  'loading_all_categories...': 'সব ক্যাটাগরি লোড হচ্ছে...',
+  'proof_of_video': 'ভিডিও প্রমাণ',
 };

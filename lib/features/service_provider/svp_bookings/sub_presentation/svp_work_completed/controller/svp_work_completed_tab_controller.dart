@@ -9,6 +9,7 @@ import '../../../../../../service/network_response.dart';
 import '../../../../../../service/secured_storage.dart';
 import '../../../../../../utilities/app_constants.dart';
 import '../../../../../../utilities/app_url.dart';
+import '../../../../../../utilities/logger_util.dart';
 
 class SvpWorkCompletedController extends GetxController {
   late ScrollController scrollController;
@@ -150,6 +151,8 @@ class SvpWorkCompletedController extends GetxController {
         (booking['userId'] as Map<String, dynamic>?)?['_userId'] as String? ??
             '';
     log("Navigating to completed work details for booking: $bookingId");
+    LoggerUtils.debug(
+        "Service Booking ID From Svp Work Completed Tab : $bookingId");
 
     Get.toNamed(
       Routes.svpWorkCompletedDetailsScreen,

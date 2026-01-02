@@ -10,6 +10,7 @@ import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/routes/routes.dart';
 import 'package:kaz_bd/utilities/app_url.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 
 import '../../../../constants/text_font_style.dart';
 import '../../../../custom_widgets/custom_text_with_readmore_button.dart';
@@ -184,20 +185,28 @@ class AboutTab extends StatelessWidget {
                           );
                         } else {
                           return InkWell(
-                            onTap: () {
-                              Get.find<MessageScreenController>().createMessage(
-                                  participantId: detailsScreenController
-                                          .serviceDetails
-                                          .value
-                                          ?.providerId
-                                          ?.userId ??
-                                      '',
-                                  name: detailsScreenController.providerName ??
-                                      "",
-                                  imageUrl: detailsScreenController
-                                          .providerProfileImage ??
-                                      '');
-                            },
+                            onTap: detailsScreenController.pvdApprovalStatus ==
+                                    "pending"
+                                ? null
+                                : () {
+                                    LoggerUtils.debug(
+                                        "pvdApproval Value : ${detailsScreenController.pvdApprovalStatus}");
+                                    Get.find<MessageScreenController>()
+                                        .createMessage(
+                                            participantId:
+                                                detailsScreenController
+                                                        .serviceDetails
+                                                        .value
+                                                        ?.providerId
+                                                        ?.userId ??
+                                                    '',
+                                            name: detailsScreenController
+                                                    .providerName ??
+                                                "",
+                                            imageUrl: detailsScreenController
+                                                    .providerProfileImage ??
+                                                '');
+                                  },
                             child: Container(
                               padding: EdgeInsets.all(6.sp),
                               decoration: BoxDecoration(
@@ -229,10 +238,16 @@ class AboutTab extends StatelessWidget {
                                     CallState.idle;
 
                             return InkWell(
-                              onTap: isCallInProgress
+                              onTap: isCallInProgress ||
+                                      detailsScreenController
+                                              .pvdApprovalStatus ==
+                                          "pending"
                                   ? null
                                   : () {
                                       // Call the controller method
+
+                                      LoggerUtils.debug(
+                                          "pvdApproval Value : ${detailsScreenController.pvdApprovalStatus}");
                                       Get.find<CallController>()
                                           .initiateAudioCallOutsideInbox(
                                               receiverId:
