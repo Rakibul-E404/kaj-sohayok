@@ -9,6 +9,7 @@ class AppUrl {
   static String registerUser = '${baseUrl}v1/auth/register';
   static String registerUserEmailVerify = '${baseUrl}v1/auth/verify-email';
   static String userLogin = '${baseUrl}v1/auth/login';
+  static String userLogOut = '${baseUrl}v1/auth/logout';
   static String forgetPassword = '${baseUrl}v1/auth/forgot-password';
   static String resetPassword = '${baseUrl}v1/auth/reset-password';
   static String changePassword = '${baseUrl}v1/auth/change-password';
