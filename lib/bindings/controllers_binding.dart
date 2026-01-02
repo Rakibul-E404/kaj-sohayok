@@ -23,6 +23,7 @@ import '../controllers/user_edit_profile_controller.dart';
 import '../controllers/user_profile_screen_controller.dart';
 import '../controllers/svp_submit_work_form_screen_controller.dart';
 import '../features/call/presentation/controller/call_controller.dart';
+import '../features/service_provider/svp_work_completed_details/controller/svp_work_completed_details_screen_controller.dart';
 
 class ControllerBindings extends Bindings {
   @override
@@ -52,6 +53,7 @@ class ControllerBindings extends Bindings {
     Get.lazyPut(() => SvpBookingsCanceledController(), fenix: true);
     Get.lazyPut(() => SvpJobRequestScreenController(), fenix: true);
     Get.lazyPut(() => SvpAcceptedBookingsScreenController(), fenix: true);
+    Get.lazyPut(() => SvpWorkCompletedDetailsScreenController(), fenix: true);
 
     // Get.lazyPut(() => NormalUserAllCategoryScreenController());
   }
