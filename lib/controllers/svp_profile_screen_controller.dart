@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -151,37 +153,56 @@ class SvpProfileScreenController extends GetxController
 
   Future<void> handleLogOut() async {
     try {
-      LoggerUtils.debug('🚪 ===== LOGOUT STARTED =====');
+      LoggerUtils.debug('===== LOGOUT STARTED =====');
 
-      // 1. Clear MessageScreenController data FIRST
-      if (Get.isRegistered<MessageScreenController>()) {
-        LoggerUtils.debug('Step 1: Clearing MessageScreenController...');
-        Get.find<MessageScreenController>().clearAllData();
+      final token = await SecureStorageService().read(AppConstants.accessToken);
+
+      final NetworkResponse response = await NetworkCaller().getRequest(
+
+          AppUrl.userLogOut, headers: {'Authorization': 'Bearer $token'}
+      );
+
+      if(response.statusCode == HttpStatus.ok || response.statusCode == HttpStatus.created){
+
+
+        // 1. Clear MessageScreenController data FIRST
+        if (Get.isRegistered<MessageScreenController>()) {
+          LoggerUtils.debug('Step 1: Clearing MessageScreenController...');
+          Get.find<MessageScreenController>().clearAllData();
+        }
+
+        // 2. Disconnect socket (also disables it)
+        LoggerUtils.debug('Step 2: Disconnecting socket...');
+        SocketServices().disconnect();
+
+        // 3. Clear storage
+        LoggerUtils.debug('Step 3: Clearing storage...');
+        await SecureStorageService().clear();
+
+        // 4. Wait for cleanup
+        await Future.delayed(Duration(milliseconds: 300));
+
+        // 5. Verify cleanup
+        final token = await SecureStorageService().read(AppConstants.accessToken);
+        LoggerUtils.debug('Verification - Token: ${token ?? "NULL"}');
+        LoggerUtils.debug('Verification - Socket: ${SocketServices().socket}');
+
+        LoggerUtils.debug('Logout complete');
+
+        // 6. Navigate
+        Get.offAllNamed(Routes.onboardingScreen);
+
+      }else{
+        Get.snackbar("Try again later", response.jsonResponse?['message'] ?? "Something went wrong",backgroundColor: AppColors.cffb701, colorText: AppColors.cee3333);
+        return ;
       }
 
-      // 2. Disconnect socket (also disables it)
-      LoggerUtils.debug('Step 2: Disconnecting socket...');
-      SocketServices().disconnect();
 
-      // 3. Clear storage
-      LoggerUtils.debug('Step 3: Clearing storage...');
-      await SecureStorageService().clear();
 
-      // 4. Wait for cleanup
-      await Future.delayed(Duration(milliseconds: 300));
 
-      // 5. Verify cleanup
-      final token = await SecureStorageService().read(AppConstants.accessToken);
-      LoggerUtils.debug('Verification - Token: ${token ?? "NULL"}');
-      LoggerUtils.debug('Verification - Socket: ${SocketServices().socket}');
-
-      LoggerUtils.debug('✅ Logout complete');
-
-      // 6. Navigate
-      Get.offAllNamed(Routes.onboardingScreen);
     } catch (e) {
       LoggerUtils.debug("Exception : ${e.toString()}");
-      Get.offAllNamed(Routes.onboardingScreen);
+      //Get.offAllNamed(Routes.onboardingScreen);
     }
   }
 

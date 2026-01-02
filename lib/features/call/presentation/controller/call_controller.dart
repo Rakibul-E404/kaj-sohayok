@@ -32,7 +32,7 @@ enum CallType {
 
 class CallController extends GetxController {
   final AgoraService _agoraService = AgoraService();
-  final SocketServices _socketService = SocketServices();
+  final SocketServices socketService = SocketServices();
   final NetworkCaller _networkCaller = NetworkCaller();
 
   // Observable states
@@ -135,13 +135,13 @@ class CallController extends GetxController {
   /// Setup socket listeners for call events
   void _setupSocketListeners() {
     // Listen for incoming calls
-    _socketService.listen('incoming-call', (data) {
+    socketService.listen('incoming-call', (data) {
       LoggerUtils.debug('📞 Incoming call: $data');
       _handleIncomingCall(data);
     });
 
     // Listen for call accepted
-    _socketService.listen('call-connected', (data) {
+    socketService.listen('call-connected', (data) {
       LoggerUtils.debug('✅ Call accepted: $data');
       if (callState.value == CallState.ringing ||
           callState.value == CallState.connecting) {
@@ -151,7 +151,7 @@ class CallController extends GetxController {
     });
 
     // Listen for call rejected
-    _socketService.listen('call-rejected', (data) {
+    socketService.listen('call-rejected', (data) {
       LoggerUtils.debug('❌ Call rejected: $data');
       if (callState.value != CallState.idle) {
         callState.value = CallState.rejected;
@@ -160,7 +160,7 @@ class CallController extends GetxController {
     });
 
     // Listen for call ended
-    _socketService.listen('call-end', (data) {
+    socketService.listen('call-end', (data) {
       LoggerUtils.debug('📴 Call ended: $data');
       if (callState.value != CallState.idle) {
         callState.value = CallState.ended;
@@ -213,7 +213,7 @@ class CallController extends GetxController {
     LoggerUtils.debug('   - Token: ${token.value.substring(0, 20)}...');
 
     // Emit call-started event via socket
-    await _socketService.emit('call-started', {
+    await socketService.emit('call-started', {
       'conversationId': convId,
     });
 
@@ -395,7 +395,7 @@ class CallController extends GetxController {
     LoggerUtils.debug('   - Channel: ${channelName.value}');
 
     // Emit call-accepted event
-    await _socketService.emit('call-accepted', {
+    await socketService.emit('call-accepted', {
       'conversationId': conversationId.value,
     });
 
@@ -446,7 +446,7 @@ class CallController extends GetxController {
       return;
     }
 
-    await _socketService.emit('call-rejected', {
+    await socketService.emit('call-rejected', {
       'conversationId': conversationId.value,
     });
 
@@ -465,7 +465,7 @@ class CallController extends GetxController {
       return;
     }
 
-    await _socketService.emit('call-end', {
+    await socketService.emit('call-end', {
       'conversationId': conversationId.value,
     });
 

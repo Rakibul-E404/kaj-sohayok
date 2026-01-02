@@ -11,6 +11,7 @@ import '../../../../controllers/chat_inbox_screen_controller.dart';
 import '../../../../controllers/message_screen_controller.dart';
 import '../../../../gen/colors.gen.dart';
 import '../../../../utilities/app_url.dart';
+import '../../../../utilities/logger_util.dart';
 import '../../../call/presentation/controller/call_controller.dart';
 import '../../chat_list/model/chat_list_response_model.dart';
 import '../widgets/chat_bubble_widget.dart';
@@ -42,11 +43,15 @@ class _PersonalInboxState extends State<PersonalInbox> {
   void initState() {
     super.initState();
     // Get or create CallController
+
+    LoggerUtils.error(conversationId);
     if (Get.isRegistered<CallController>()) {
       callController = Get.find<CallController>();
     } else {
       callController = Get.put(CallController(), permanent: true);
     }
+    callController.socketService
+        .emit("join", {"conversationId": conversationId});
   }
 
   @override
@@ -227,5 +232,12 @@ class _PersonalInboxState extends State<PersonalInbox> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    callController.socketService
+        .emit("leave", {"conversationId": conversationId});
+    super.dispose();
   }
 }
