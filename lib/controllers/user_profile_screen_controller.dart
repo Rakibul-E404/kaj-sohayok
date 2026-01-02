@@ -245,52 +245,50 @@ class UserProfileScreenController extends GetxController
       final token = await SecureStorageService().read(AppConstants.accessToken);
 
       final NetworkResponse response = await NetworkCaller().getRequest(
-          AppUrl.userLogOut,
-          headers: {'Authorization': 'Bearer $token'}
+
+        AppUrl.userLogOut, headers: {'Authorization': 'Bearer $token'}
       );
 
-      // Check response BEFORE proceeding
-      if(response.statusCode != HttpStatus.ok && response.statusCode != HttpStatus.created) {
-        LoggerUtils.debug('❌ ===== LOGOUT FAILED =====');
-        Get.snackbar(
-            "Try again later",
-            response.jsonResponse?['message'] ?? "Something went wrong",
-            backgroundColor: AppColors.cffb701,
-            colorText: AppColors.ce6e6e6
-        );
-        return; // This now properly exits the function
+      if(response.statusCode == HttpStatus.ok || response.statusCode == HttpStatus.created){
+        LoggerUtils.debug('===== LOGOUT SUCCESSFUL =====');
+
+
+        // 1. Clear MessageScreenController data FIRST
+        if (Get.isRegistered<MessageScreenController>()) {
+          LoggerUtils.debug('Step 1: Clearing MessageScreenController...');
+          Get.find<MessageScreenController>().clearAllData();
+        }
+
+        // 2. Disconnect socket (also disables it)
+        LoggerUtils.debug('Step 2: Disconnecting socket...');
+        SocketServices().disconnect();
+
+
+
+        // 3. Clear storage
+        LoggerUtils.debug('Step 3: Clearing storage...');
+        await SecureStorageService().clear();
+
+        // 4. Wait for cleanup
+        await Future.delayed(Duration(milliseconds: 300));
+
+        // 5. Verify cleanup
+
+        LoggerUtils.debug('Verification - Token: ${token ?? "NULL"}');
+        LoggerUtils.debug('Verification - Socket: ${SocketServices().socket}');
+
+        LoggerUtils.debug('✅ Logout complete');
+
+        // 6. Navigate
+        Get.offAllNamed(Routes.onboardingScreen);
+      }else{
+        Get.snackbar("Try again later", response.jsonResponse?['message'] ?? "Something went wrong",backgroundColor: AppColors.cffb701, colorText: AppColors.cee3333);
+        return ;
       }
 
-      LoggerUtils.debug(' ===== LOGOUT SUCCESSFUL =====');
-
-      // 1. Clear MessageScreenController data FIRST
-      if (Get.isRegistered<MessageScreenController>()) {
-        LoggerUtils.debug('Step 1: Clearing MessageScreenController...');
-        Get.find<MessageScreenController>().clearAllData();
-      }
-
-      // 2. Disconnect socket (also disables it)
-      LoggerUtils.debug('Step 2: Disconnecting socket...');
-      SocketServices().disconnect();
-
-      // 3. Clear storage
-      LoggerUtils.debug('Step 3: Clearing storage...');
-      await SecureStorageService().clear();
-
-      // 4. Wait for cleanup
-      await Future.delayed(Duration(milliseconds: 300));
-
-      // 5. Verify cleanup
-      LoggerUtils.debug('Verification - Token: ${token ?? "NULL"}');
-      LoggerUtils.debug('Verification - Socket: ${SocketServices().socket}');
-
-      LoggerUtils.debug('✅ Logout complete');
-
-      // 6. Navigate
-      Get.offAllNamed(Routes.onboardingScreen);
     } catch (e) {
       LoggerUtils.debug("Exception : ${e.toString()}");
-      // Don't navigate on exception - user stays logged in
+      // Get.offAllNamed(Routes.onboardingScreen);
     }
   }
 
