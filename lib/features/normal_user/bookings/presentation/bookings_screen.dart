@@ -73,6 +73,9 @@ class BookingsScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                SizedBox(
+                  height: 90,
+                )
               ],
             ),
           ),

@@ -106,6 +106,7 @@ dependencies:
   #for icon :
   flutter_launcher_icons: ^0.14.4
   flutter_native_splash: ^2.4.0
+  photo_view: ^0.15.0
 
 
 dev_dependencies:
