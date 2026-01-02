@@ -83,7 +83,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
               width: 1.sw,
               padding: EdgeInsets.all(24.sp),
               decoration: BoxDecoration(
-                color: AppColors.c4b4d51.withAlpha(150),
+                color: AppColors.c4b4d51.withAlpha(230),
                 border: Border.all(color: AppColors.c778beb),
                 borderRadius: BorderRadius.circular(32.r),
               ),
@@ -94,7 +94,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                   Image.asset(
                     Assets.images.appLogo.path,
                     width: 0.8.sw,
-                    height: 120,
+                    height: 90,
                     fit: BoxFit.contain,
                   ),
 
@@ -105,7 +105,7 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                     textAlign: TextAlign.center,
                     style: TextFontStyle.headline26w700cFFFFFFStyleSatoshi,
                   ),
-                  UIHelper.verticalSpace(16.h),
+                  UIHelper.verticalSpace(10.h),
 
                   Text(
                     'get_your_home_services_done'.tr,

@@ -10,6 +10,7 @@ import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
 import 'package:kaz_bd/routes/routes.dart';
 import 'package:kaz_bd/utilities/app_url.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 
 import '../../../../constants/text_font_style.dart';
 import '../../../../custom_widgets/custom_text_with_readmore_button.dart';
@@ -188,6 +189,8 @@ class AboutTab extends StatelessWidget {
                                     "pending"
                                 ? null
                                 : () {
+                                    LoggerUtils.debug(
+                                        "pvdApproval Value : ${detailsScreenController.pvdApprovalStatus}");
                                     Get.find<MessageScreenController>()
                                         .createMessage(
                                             participantId:
@@ -242,6 +245,9 @@ class AboutTab extends StatelessWidget {
                                   ? null
                                   : () {
                                       // Call the controller method
+
+                                      LoggerUtils.debug(
+                                          "pvdApproval Value : ${detailsScreenController.pvdApprovalStatus}");
                                       Get.find<CallController>()
                                           .initiateAudioCallOutsideInbox(
                                               receiverId:
