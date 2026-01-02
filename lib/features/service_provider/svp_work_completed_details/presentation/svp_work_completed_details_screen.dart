@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/utils.dart';
 import 'package:kaz_bd/gen/colors.gen.dart';
+import 'package:kaz_bd/utilities/logger_util.dart';
 
 import '../../../../constants/appList.dart';
 import '../../../../constants/text_font_style.dart';
@@ -37,6 +38,7 @@ class _SvpWorkCompletedDetailsScreenState
     srvBookingId = arguments?["bookingId"]?.toString() ?? '';
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      LoggerUtils.debug("Received ServiceBookingID : $srvBookingId");
       svpWorkCompletedDetailsScreenController?.setSrvBookingId(
           srvBookingID: srvBookingId);
     });

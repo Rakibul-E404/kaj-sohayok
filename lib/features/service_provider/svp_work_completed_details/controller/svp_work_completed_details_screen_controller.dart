@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:kaz_bd/gen/assets.gen.dart';
 import 'package:logger/logger.dart';
 
 import '../../../../service/network_caller.dart';
@@ -58,5 +59,26 @@ class SvpWorkCompletedDetailsScreenController extends GetxController {
     }
   }
 
-  // String get address =>modelOfSvpWorkCompletedDetails.value.data.attributes
+  ServiceBooking? get serviceBooking =>
+      modelOfSvpWorkCompletedDetails.value?.data.attributes.serviceBooking;
+  String get workAddress => serviceBooking?.address.en ?? "Address not found!";
+  String get bookingOrderDate =>
+      serviceBooking?.bookingDateTime.toIso8601String() ??
+      'Booking date time not found!';
+  String get workCompletationDate =>
+      serviceBooking?.completionDate?.toIso8601String() ??
+      'Work completation date not found!';
+  String get workDuration =>
+      serviceBooking?.duration ?? 'Work duration not found';
+  String get workInitialCost =>
+      serviceBooking?.startPrice.toString() ?? 'Initial cost not found!';
+  String get workTotalPayment =>
+      serviceBooking?.totalCost.toString() ?? 'Total paid cost not found!';
+  String get userProfileImage =>
+      serviceBooking?.providerId.profileImage.imageUrl ??
+      Assets.images.errorImage.path;
+  String get userName =>
+      serviceBooking?.providerId.name ?? 'User name not found!';
+  double get ratingsGivenByUser =>
+      modelOfSvpWorkCompletedDetails.value?.data.attributes.review ?? 0;
 }
