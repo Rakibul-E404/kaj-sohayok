@@ -66,7 +66,7 @@ dependencies:
   
   latlong2: ^0.9.1
   dotted_border: ^3.1.0
-  video_player: ^2.10.0
+  video_player: ^2.10.1
   camera: ^0.11.2
   local_auth: ^2.3.0
 

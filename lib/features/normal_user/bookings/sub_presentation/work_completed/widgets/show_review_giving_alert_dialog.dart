@@ -50,20 +50,21 @@ void showReviewGivingAlertDialog() {
             children: [
               /// User Image + Name
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  ///Section : User Image
-                  CircleAvatar(
-                    radius: 30.r,
-                    backgroundImage: AssetImage(Assets.images.userImage.path),
-                  ),
-                  UIHelper.horizontalSpace(8.w),
-
-                  ///Section : User Name
-                  Text(
-                    "Ripon Mia",
-                    style: TextFontStyle.headline16w500c202020StyleSatoshi,
-                  ),
-                  Spacer(),
+                  // ///Section : User Image
+                  // CircleAvatar(
+                  //   radius: 30.r,
+                  //   backgroundImage: AssetImage(Assets.images.userImage.path),
+                  // ),
+                  // UIHelper.horizontalSpace(8.w),
+                  //
+                  // ///Section : User Name
+                  // Text(
+                  //   "Ripon Mia",
+                  //   style: TextFontStyle.headline16w500c202020StyleSatoshi,
+                  // ),
+                  // Spacer(),
 
                   InkWell(
                     onTap: () {

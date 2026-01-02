@@ -3404,12 +3404,13 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
     );
   }
 
+
   void _requestPayment() {
     if (controller.completionDateController.text.isEmpty) {
       Get.snackbar(
-          'warning'.tr,
-          'please_select_completation_date'.tr,
-          backgroundColor: Colors.green,
+        'warning'.tr,
+        'please_select_completation_date'.tr,
+        backgroundColor: Colors.redAccent,
         colorText: Colors.white,
       );
       return;
@@ -3446,29 +3447,44 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
               Text('you_are_about_request_payment_with_these_details'.tr,
                   style: TextStyle(fontWeight: FontWeight.w500)),
               SizedBox(height: 16.h),
-              _buildDetailRow("${'completation_date'.tr}:",
-                  controller.completionDateController.text),
-              _buildDetailRow('duration'.tr,
-                  "${controller.durationTimeController.text} ${'days'.tr}"),
-              _buildDetailRow('total_files'.tr, "$totalMedia"),
+              _buildDetailRow(
+                "${'completation_date'.tr}:",
+                controller.completionDateController.text,
+              ),
+              _buildDetailRow(
+                'duration'.tr,
+                "${controller.durationTimeController.text} ${'days'.tr}",
+              ),
+              _buildDetailRow(
+                'total_files'.tr,
+                "$totalMedia",
+              ),
               if (controller.apiAttachments.isNotEmpty)
-                _buildDetailRow("  - ${'existing_files'.tr}",
-                    "${controller.apiAttachments.length}"),
+                _buildDetailRow(
+                  "  - ${'existing_files'.tr}",
+                  "${controller.apiAttachments.length}",
+                ),
               if (controller.mediaFiles.isNotEmpty)
                 _buildDetailRow(
-                    "  - ${'new_files'.tr}", "${controller.mediaFiles.length}"),
+                  "  - ${'new_files'.tr}",
+                  "${controller.mediaFiles.length}",
+                ),
               SizedBox(height: 12.h),
               Divider(),
               SizedBox(height: 12.h),
-              _buildDetailRow("${'initial_cost'.tr}:",
-                  "\${controller.initialCost.value.toStringAsFixed(2)}"),
+              _buildDetailRow(
+                "${'initial_cost'.tr}:",
+                "\$${controller.initialCost.value.toStringAsFixed(2)}",
+              ),
               if (controller.additionalCosts.isNotEmpty)
-                _buildDetailRow("${'additional_cost'.tr}:",
-                    "\${(controller.calculateTotalPayment() - controller.initialCost.value).toStringAsFixed(2)}"),
+                _buildDetailRow(
+                  "${'additional_cost'.tr}:",
+                  "\$${(controller.calculateTotalPayment() - controller.initialCost.value).toStringAsFixed(2)}",
+                ),
               SizedBox(height: 8.h),
               _buildDetailRow(
                 "${'total_payment'.tr}:",
-                "\${controller.calculateTotalPayment().toStringAsFixed(2)}",
+                "\$${controller.calculateTotalPayment().toStringAsFixed(2)}",
                 isBold: true,
               ),
               SizedBox(height: 16.h),
@@ -3517,34 +3533,35 @@ class _SvpSubmitWorkFormScreenState extends State<SvpSubmitWorkFormScreen> {
 
   Widget _buildDetailRow(String label, String value, {bool isBold = false}) {
     return Padding(
-        padding: EdgeInsets.symmetric(vertical: 2.h),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: 2,
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  color: Colors.grey.shade700,
-                ),
+      padding: EdgeInsets.symmetric(vertical: 4.h),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: Colors.grey.shade700,
+                fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
-            Expanded(
-              flex: 3,
-              child: Text(
-                value,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                  color: Colors.black,
-                ),
-              ),
+          ),
+          SizedBox(width: 8.w),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: isBold ? AppColors.c000e08 : Colors.black,
+              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
+
+
 }
 
 

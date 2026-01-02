@@ -21,159 +21,183 @@ class PaymentRequestTab extends StatelessWidget {
 
     return RefreshIndicator(
       onRefresh: () => bookingController.getPaymentRequestBookings(),
-      child: SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.8,
-          child: Obx(() {
-            if (bookingController.isLoading.value) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // CircularProgressIndicator(),
-                    UIHelper.verticalSpace(16.h),
-                    Text(
-                      'Loading Payment Request...'.tr,
-                      style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-                    ),
-                  ],
-                ),
-              );
-            }
+      child: Obx(() {
+        if (bookingController.isLoading.value) {
+          return _buildLoadingWidget();
+        }
 
-            if (bookingController.errorMessage.isNotEmpty) {
-              return Center(
-                child: Padding(
-                  padding: EdgeInsets.all(20.sp),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.error_outline,
-                        size: 64.sp,
-                        color: Colors.red,
-                      ),
-                      UIHelper.verticalSpace(16.h),
-                      Text(
-                        bookingController.errorMessage.value,
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          color: Colors.red,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      UIHelper.verticalSpace(20.h),
-                      ElevatedButton(
-                        onPressed: () =>
-                            bookingController.getPaymentRequestBookings(),
-                        child: Text('retry'.tr),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
+        if (bookingController.errorMessage.isNotEmpty) {
+          return _buildErrorWidget(bookingController);
+        }
 
-            if (bookingController.paymentRequestBookings.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.payment_outlined,
-                      size: 64.sp,
-                      color: Colors.grey,
-                    ),
-                    UIHelper.verticalSpace(16.h),
-                    Text(
-                      'no_payments_request_bookings_found'.tr,
-                      style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-                    ),
-                  ],
-                ),
-              );
-            }
+        if (bookingController.paymentRequestBookings.isEmpty) {
+          return _buildEmptyWidget(bookingController);
+        }
 
-            return Container(
-              padding: EdgeInsets.only(bottom: 100.h),
-              child: ListView.separated(
-                shrinkWrap: false,
-                physics: AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsets.only(top: 16.sp),
-                itemCount: bookingController.paymentRequestBookings.length,
-                separatorBuilder: (context, index) =>
-                    UIHelper.verticalSpace(16.h),
-                itemBuilder: (context, index) {
-                  final booking =
-                      bookingController.paymentRequestBookings[index];
-                  final bookingId =
-                      booking['_ServiceBookingId']?.toString() ?? '';
+        return _buildListWidget(bookingController, context);
+      }),
+    );
+  }
 
-                  // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
-                  final serviceProviderId = _getServiceProviderId(booking);
-                  final providerId = _getProviderUserId(booking);
+  // ─── WIDGET BUILDERS ───────────────────────────────────────────────
 
-                  // 🔍 DEBUG: Log what IDs are extracted
-                  log('🧾 [PAYMENT REQUEST TAB] Card #$index →');
-                  log('   Booking ID: "$bookingId"');
-                  log('   Service Provider ID: "$serviceProviderId"');
-                  log('   Provider User ID: "$providerId"');
-
-                  final serviceName = booking['providerDetailsId']
-                      ?['serviceName'] as Map<String, dynamic>?;
-                  final address = booking['address'] as Map<String, dynamic>?;
-                  final provider =
-                      booking['providerId'] as Map<String, dynamic>?;
-
-                  final imageUrl = _getImageUrl(bookingId, bookingController);
-                  final isNetworkImage =
-                      _isNetworkImage(bookingId, bookingController);
-
-                  return BookingDetailsCardWidget(
-                    // ➤ CARD TAP → Navigate with ALL required parameters
-
-                    onTap: () {
-                      LoggerUtils.debug(
-                          "bookingId: ${bookingId} , serviceId : ${serviceProviderId} , providerId :${providerId}");
-                      _navigateToDetailsScreen(
-                          bookingId, serviceProviderId, providerId);
-                    },
-
-                    isPaymentRequestTab: true,
-
-                    ///Button OnTap -> Pay
-                    isPaymentRequestTabPayOnTap: () {
-                      _handlePayment(bookingId, bookingController);
-                    },
-
-                    ///Button OnTap -> View
-                    isPaymentRequestTabViewOnTap: () {
-                      _navigateToDetailsScreen(
-                          bookingId, serviceProviderId, providerId);
-                    },
-
-                    // Data
-                    title: _getServiceName(serviceName),
-                    initialPayablePrice:
-                        (booking['startPrice'] ?? 0).toString(),
-                    location: _getAddress(address),
-                    dateTime: _formatDateTime(
-                        booking['bookingDateTime']?.toString() ?? ''),
-                    serviceProviderProfileImage:
-                        imageUrl ?? Assets.images.userImage.path,
-                    serviceProviderName:
-                        provider?['name'] ?? 'Unknown Provider',
-                    serviceProviderDesignation: 'services_provider'.tr,
-                    isNetworkImage: isNetworkImage,
-                  );
-                },
+  Widget _buildLoadingWidget() {
+    return SingleChildScrollView(
+      physics: AlwaysScrollableScrollPhysics(),
+      child: SizedBox(
+        height: Get.height,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              UIHelper.verticalSpace(16.h),
+              Text(
+                'Loading Payment Request...'.tr,
+                style: TextStyle(fontSize: 16.sp, color: Colors.grey),
               ),
-            );
-          }),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildErrorWidget(PaymentRequestBookingsController controller) {
+    return SingleChildScrollView(
+      physics: AlwaysScrollableScrollPhysics(),
+      child: SizedBox(
+        height: Get.height,
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.all(20.sp),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  size: 64.sp,
+                  color: Colors.red,
+                ),
+                UIHelper.verticalSpace(16.h),
+                Text(
+                  controller.errorMessage.value,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    color: Colors.red,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                UIHelper.verticalSpace(20.h),
+                ElevatedButton(
+                  onPressed: () => controller.getPaymentRequestBookings(),
+                  child: Text('retry'.tr),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyWidget(PaymentRequestBookingsController controller) {
+    return SingleChildScrollView(
+      physics: AlwaysScrollableScrollPhysics(),
+      child: SizedBox(
+        height: Get.height,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.payment_outlined,
+                size: 64.sp,
+                color: Colors.grey,
+              ),
+              UIHelper.verticalSpace(16.h),
+              Text(
+                'no_payments_request_bookings_found'.tr,
+                style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+              ),
+              UIHelper.verticalSpace(20.h),
+              ElevatedButton(
+                onPressed: () => controller.getPaymentRequestBookings(),
+                child: Text('refresh'.tr),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildListWidget(
+      PaymentRequestBookingsController controller, BuildContext context) {
+    return ListView.separated(
+      physics: AlwaysScrollableScrollPhysics(),
+      padding: EdgeInsets.only(
+        top: 16.sp,
+        bottom: MediaQuery.of(context).padding.bottom + 100.h,
+      ),
+      itemCount: controller.paymentRequestBookings.length,
+      separatorBuilder: (context, index) => UIHelper.verticalSpace(16.h),
+      itemBuilder: (context, index) {
+        final booking = controller.paymentRequestBookings[index];
+        final bookingId = booking['_ServiceBookingId']?.toString() ?? '';
+
+        // 🔴 FIXED: Extract BOTH IDs for the DetailsScreen
+        final serviceProviderId = _getServiceProviderId(booking);
+        final providerId = _getProviderUserId(booking);
+
+        // 🔍 DEBUG: Log what IDs are extracted
+        log('🧾 [PAYMENT REQUEST TAB] Card #$index →');
+        log('   Booking ID: "$bookingId"');
+        log('   Service Provider ID: "$serviceProviderId"');
+        log('   Provider User ID: "$providerId"');
+
+        final serviceName =
+        booking['providerDetailsId']?['serviceName'] as Map<String, dynamic>?;
+        final address = booking['address'] as Map<String, dynamic>?;
+        final provider = booking['providerId'] as Map<String, dynamic>?;
+
+        final imageUrl = _getImageUrl(bookingId, controller);
+        final isNetworkImage = _isNetworkImage(bookingId, controller);
+
+        return BookingDetailsCardWidget(
+          // ➤ CARD TAP → Navigate with ALL required parameters
+          onTap: () {
+            LoggerUtils.debug(
+                "bookingId: ${bookingId} , serviceId : ${serviceProviderId} , providerId :${providerId}");
+            _navigateToDetailsScreen(bookingId, serviceProviderId, providerId);
+          },
+
+          isPaymentRequestTab: true,
+
+          ///Button OnTap -> Pay
+          isPaymentRequestTabPayOnTap: () {
+            _handlePayment(bookingId, controller);
+          },
+
+          ///Button OnTap -> View
+          isPaymentRequestTabViewOnTap: () {
+            _navigateToDetailsScreen(bookingId, serviceProviderId, providerId);
+          },
+
+          // Data
+          title: _getServiceName(serviceName),
+          initialPayablePrice: (booking['startPrice'] ?? 0).toString(),
+          location: _getAddress(address),
+          dateTime:
+          _formatDateTime(booking['bookingDateTime']?.toString() ?? ''),
+          serviceProviderProfileImage:
+          imageUrl ?? Assets.images.userImage.path,
+          serviceProviderName: provider?['name'] ?? 'Unknown Provider',
+          serviceProviderDesignation: 'services_provider'.tr,
+          isNetworkImage: isNetworkImage,
+        );
+      },
     );
   }
 
@@ -203,7 +227,7 @@ class PaymentRequestTab extends StatelessWidget {
   static String _getServiceProviderId(Map<String, dynamic> booking) {
     // 1. Primary: providerDetailsId._ServiceProviderId
     final providerDetails =
-        booking['providerDetailsId'] as Map<String, dynamic>?;
+    booking['providerDetailsId'] as Map<String, dynamic>?;
     if (providerDetails?['_ServiceProviderId'] != null) {
       final id = providerDetails!['_ServiceProviderId'].toString();
       log('✅ [PAYMENT REQUEST TAB] Service Provider ID from providerDetailsId._ServiceProviderId: $id');
@@ -264,22 +288,6 @@ class PaymentRequestTab extends StatelessWidget {
     log('   ➤ serviceProviderId = "$serviceProviderId"');
     log('   ➤ providerId = "$providerId"');
 
-    // if (serviceProviderId.isEmpty) {
-    //   log('❌ [PAYMENT REQUEST TAB] Navigation ABORTED: serviceProviderId is empty!');
-    //   Get.snackbar(
-    //     'navigation_error'.tr,
-    //     'service_provider_details_unavilable'.tr,
-    //     snackPosition: SnackPosition.BOTTOM,
-    //     backgroundColor: Colors.red,
-    //     colorText: Colors.white,
-    //   );
-    //   return;
-    // }
-    //
-    // if (providerId.isEmpty) {
-    //   log('⚠️ [PAYMENT REQUEST TAB] Warning: providerId is empty (may cause issues in details screen)');
-    // }
-
     log('✅ [PAYMENT REQUEST TAB] Navigating to service details screen with required IDs');
 
     Get.toNamed(
@@ -287,8 +295,8 @@ class PaymentRequestTab extends StatelessWidget {
       arguments: {
         "status": BookingStatusEnum.paymentRequest,
         "bookingId": bookingId,
-        "serviceProviderID": serviceProviderId, // Required for service details
-        "providerID": providerId, // Required for booking flow
+        "serviceProviderID": serviceProviderId,
+        "providerID": providerId,
       },
     );
   }
@@ -300,31 +308,31 @@ class PaymentRequestTab extends StatelessWidget {
 
     // Show confirmation dialog
     bool proceed = await Get.dialog<bool>(
-          AlertDialog(
-            title: Text('proceed_to_payment'.tr),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.payment, size: 48.sp, color: Colors.blue),
-                UIHelper.verticalSpace(16.h),
-                Text(
-                  'you_will_be_redirected_to_ssl_commerce'.tr,
-                  textAlign: TextAlign.center,
-                ),
-              ],
+      AlertDialog(
+        title: Text('proceed_to_payment'.tr),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.payment, size: 48.sp, color: Colors.blue),
+            UIHelper.verticalSpace(16.h),
+            Text(
+              'you_will_be_redirected_to_ssl_commerce'.tr,
+              textAlign: TextAlign.center,
             ),
-            actions: [
-              TextButton(
-                onPressed: () => Get.back(result: false),
-                child: Text('cancel'.tr),
-              ),
-              ElevatedButton(
-                onPressed: () => Get.back(result: true),
-                child: Text('pay'.tr),
-              ),
-            ],
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(result: false),
+            child: Text('cancel'.tr),
           ),
-        ) ??
+          ElevatedButton(
+            onPressed: () => Get.back(result: true),
+            child: Text('pay'.tr),
+          ),
+        ],
+      ),
+    ) ??
         false;
 
     if (!proceed) return;
