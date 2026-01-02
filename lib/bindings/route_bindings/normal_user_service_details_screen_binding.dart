@@ -9,9 +9,7 @@ class NormalUserServiceDetailsScreenBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<DetailsScreenController>(() => DetailsScreenController());
-    Get.lazyPut<GetNrmUserServiceProviderProfileInfoController>(
-      () => GetNrmUserServiceProviderProfileInfoController(),
-    );
+    Get.lazyPut<GetNrmUserServiceProviderProfileInfoController>(() => GetNrmUserServiceProviderProfileInfoController());
     Get.lazyPut<CalendarController>(() => CalendarController());
     Get.lazyPut<NormalUserBookingServiceProviderController>(
       () => NormalUserBookingServiceProviderController(),
